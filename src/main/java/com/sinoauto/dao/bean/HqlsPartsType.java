@@ -22,7 +22,7 @@ public class HqlsPartsType implements Serializable {
 	private String typeName;
 	@ApiModelProperty("父级ID")
 	private Integer pid;
-	@ApiModelProperty("配件类型（1易损件 2车型件）")
+	@ApiModelProperty("配件类型（1易损件 2通用件）")
 	private Integer partsType;
 	
 	/**
