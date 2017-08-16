@@ -37,4 +37,41 @@
 		   store_id = #{storeId}
 	</update>
 	
+	
+	<resultMap type="com.sinoauto.dto.StoreDto" id="storeDto">
+		<id column="user_id" property="userId"/>
+		<association property="mobile" column="user_id" select="getMobile"/>
+		<collection property="hqlsStore" column="user_id" select="findStoreByUserId"/>
+	</resultMap>
+	
+	<select id="findStoreInfo" resultMap="previewDetailDto">
+		select #{userId} as userId 
+	</select>
+	
+	<select id="getMobile" resultType="String" parameterType="int">
+		SELECT
+		mobile
+		FROM
+		hqls_user 
+		where 
+		user_id=#{userId}
+	</select>
+	
+	<select id="findStoreByUserId" parameterType="int">
+		SELECT
+		sto.address,
+		sto.back_url,
+		sto.mobile as storeName,
+		sto.province_id as provinceId,
+		sto.city_id as cityId,
+		sto.county_id as countyId
+		FROM
+		hqls_store sto
+		LEFT JOIN 
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		WHERE
+		usto.user_id=#{userId}
+	</select>
 </mapper>
