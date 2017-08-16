@@ -4,25 +4,26 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        service_type_id, service_type_name, service_amount, url, is_usable
+        service_type_id, service_type_name,service_type_content, service_amount, url, is_usable
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsServiceType" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.sinoauto.dao.bean.HqlsServiceType" useGeneratedKeys="true" keyProperty="serviceTypeId">
 	    INSERT INTO hqls_service_type (
-	        service_type_name, service_amount, url, is_usable
+	    
+	        service_type_name, service_type_content ,service_amount, url, is_usable
 	    ) VALUES (
-	        #{serviceTypeName}, #{serviceAmount}, #{url}, #{isUsable}        
+	        #{serviceTypeName}, #{serviceTypeContent},#{serviceAmount}, #{url}, #{isUsable}        
 	    )
 	</insert>
 
 	<!-- 修改 -->
-	<update id="update" parameterType="HqlsServiceType">
+	<update id="update" parameterType="com.sinoauto.dao.bean.HqlsServiceType">
 	   UPDATE hqls_service_type SET
 		   service_type_name = #{serviceTypeName}, 
+		   service_type_content = #{serviceTypeContent},
 		   service_amount = #{serviceAmount}, 
-		   url = #{url}, 
-		   is_usable = #{isUsable}
+		   url = #{url}
 	   WHERE 
 		   service_type_id = #{serviceTypeId}
 	</update>
