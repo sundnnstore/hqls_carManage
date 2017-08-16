@@ -12,6 +12,8 @@ public class StoreDto {
 	private String mobile;
 	
 	private List<HqlsStore> hqlsStore;
+	
+	private List<String> storeName;
 
 	public String getMobile() {
 		return mobile;
@@ -27,6 +29,14 @@ public class StoreDto {
 
 	public void setHqlsStore(List<HqlsStore> hqlsStore) {
 		this.hqlsStore = hqlsStore;
+	}
+
+	public List<String> getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(List<String> storeName) {
+		this.storeName = storeName;
 	}
 
 	
