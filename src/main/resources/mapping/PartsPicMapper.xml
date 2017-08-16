@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.PartsPicMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        parts_pic_id, parts_id, url, sorting, remark, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsPartsPic" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_parts_pic (
+	        parts_id, url, sorting, remark, create_time
+	    ) VALUES (
+	        #{partsId}, #{url}, #{sorting}, #{remark}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsPartsPic">
+	   UPDATE hqls_parts_pic SET
+		   parts_id = #{partsId}, 
+		   url = #{url}, 
+		   sorting = #{sorting}, 
+		   remark = #{remark}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   parts_pic_id = #{partsPicId}
+	</update>
+	
+</mapper>

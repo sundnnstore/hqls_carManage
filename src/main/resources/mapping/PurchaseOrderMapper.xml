@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.PurchaseOrderMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        purchase_order_id, order_no, order_status, ship_address_id, pay_type, logistics_no, logistics_id, other_fee, total_fee, pay_no, remark, create_time, dml_time, discount_fee, pay_fee, store_id
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsPurchaseOrder" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_purchase_order (
+	        order_no, order_status, ship_address_id, pay_type, logistics_no, logistics_id, other_fee, total_fee, pay_no, remark, create_time, dml_time, discount_fee, pay_fee, store_id
+	    ) VALUES (
+	        #{orderNo}, #{orderStatus}, #{shipAddressId}, #{payType}, #{logisticsNo}, #{logisticsId}, #{otherFee}, #{totalFee}, #{payNo}, #{remark}, #{createTime}, #{dmlTime}, #{discountFee}, #{payFee}, #{storeId}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsPurchaseOrder">
+	   UPDATE hqls_purchase_order SET
+		   order_no = #{orderNo}, 
+		   order_status = #{orderStatus}, 
+		   ship_address_id = #{shipAddressId}, 
+		   pay_type = #{payType}, 
+		   logistics_no = #{logisticsNo}, 
+		   logistics_id = #{logisticsId}, 
+		   other_fee = #{otherFee}, 
+		   total_fee = #{totalFee}, 
+		   pay_no = #{payNo}, 
+		   remark = #{remark}, 
+		   create_time = #{createTime}, 
+		   dml_time = #{dmlTime}, 
+		   discount_fee = #{discountFee}, 
+		   pay_fee = #{payFee}, 
+		   store_id = #{storeId}
+	   WHERE 
+		   purchase_order_id = #{purchaseOrderId}
+	</update>
+	
+</mapper>

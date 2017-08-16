@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CustomerStoreMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        customer_store_id, customer_id, store_id, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsCustomerStore" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_customer_store (
+	        customer_id, store_id, create_time
+	    ) VALUES (
+	        #{customerId}, #{storeId}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsCustomerStore">
+	   UPDATE hqls_customer_store SET
+		   customer_id = #{customerId}, 
+		   store_id = #{storeId}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   customer_store_id = #{customerStoreId}
+	</update>
+	
+</mapper>

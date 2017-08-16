@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.ShipAddressMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        ship_address_id, store_id, recipient, mobile, province_id, city_id, county_id, address, is_default, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsShipAddress" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_ship_address (
+	        store_id, recipient, mobile, province_id, city_id, county_id, address, is_default, create_time
+	    ) VALUES (
+	        #{storeId}, #{recipient}, #{mobile}, #{provinceId}, #{cityId}, #{countyId}, #{address}, #{isDefault}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsShipAddress">
+	   UPDATE hqls_ship_address SET
+		   store_id = #{storeId}, 
+		   recipient = #{recipient}, 
+		   mobile = #{mobile}, 
+		   province_id = #{provinceId}, 
+		   city_id = #{cityId}, 
+		   county_id = #{countyId}, 
+		   address = #{address}, 
+		   is_default = #{isDefault}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   ship_address_id = #{shipAddressId}
+	</update>
+	
+</mapper>

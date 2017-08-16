@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.UserRoleMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        user_role_id, user_id, role_id
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsUserRole" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_user_role (
+	        user_id, role_id
+	    ) VALUES (
+	        #{userId}, #{roleId}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsUserRole">
+	   UPDATE hqls_user_role SET
+		   user_id = #{userId}, 
+		   role_id = #{roleId}
+	   WHERE 
+		   user_role_id = #{userRoleId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.FinanceFlowMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        finance_flow_id, store_id, transaction_no, change_type, change_money, charge_type, pay_type, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsFinanceFlow" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_finance_flow (
+	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
+	    ) VALUES (
+	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{checkStatus}, #{orderNo}, #{operPerson}, #{createTime}, #{remark}, #{dmlTime}, #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsFinanceFlow">
+	   UPDATE hqls_finance_flow SET
+		   store_id = #{storeId}, 
+		   transaction_no = #{transactionNo}, 
+		   change_type = #{changeType}, 
+		   change_money = #{changeMoney}, 
+		   charge_type = #{chargeType}, 
+		   pay_type = #{payType}, 
+		   check_status = #{checkStatus}, 
+		   order_no = #{orderNo}, 
+		   oper_person = #{operPerson}, 
+		   create_time = #{createTime}, 
+		   remark = #{remark}, 
+		   dml_time = #{dmlTime}, 
+		   account_name = #{accountName}, 
+		   account = #{account}, 
+		   bank = #{bank}, 
+		   open_bank = #{openBank}, 
+		   is_delete = #{isDelete}
+	   WHERE 
+		   finance_flow_id = #{financeFlowId}
+	</update>
+	
+</mapper>

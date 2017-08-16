@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.PartsMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        parts_id, parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsParts" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_parts (
+	        parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
+	    ) VALUES (
+	        #{partsCode}, #{partsName}, #{partsModel}, #{partsUnit}, #{partsSpec}, #{partsBrandId}, #{partsFactory}, #{origin}, #{shelfLife}, #{price}, #{discount}, #{curPrice}, #{remark}, #{isUsable}, #{partsTypeId}, #{createTime}, #{dmlTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsParts">
+	   UPDATE hqls_parts SET
+		   parts_code = #{partsCode}, 
+		   parts_name = #{partsName}, 
+		   parts_model = #{partsModel}, 
+		   parts_unit = #{partsUnit}, 
+		   parts_spec = #{partsSpec}, 
+		   parts_brand_id = #{partsBrandId}, 
+		   parts_factory = #{partsFactory}, 
+		   origin = #{origin}, 
+		   shelf_life = #{shelfLife}, 
+		   price = #{price}, 
+		   discount = #{discount}, 
+		   cur_price = #{curPrice}, 
+		   remark = #{remark}, 
+		   is_usable = #{isUsable}, 
+		   parts_type_id = #{partsTypeId}, 
+		   create_time = #{createTime}, 
+		   dml_time = #{dmlTime}
+	   WHERE 
+		   parts_id = #{partsId}
+	</update>
+	
+</mapper>

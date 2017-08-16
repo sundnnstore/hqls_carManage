@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.StoreCardMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        store_card_id, store_id, account_name, account, bank, open_bank, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsStoreCard" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_store_card (
+	        store_id, account_name, account, bank, open_bank, create_time
+	    ) VALUES (
+	        #{storeId}, #{accountName}, #{account}, #{bank}, #{openBank}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsStoreCard">
+	   UPDATE hqls_store_card SET
+		   store_id = #{storeId}, 
+		   account_name = #{accountName}, 
+		   account = #{account}, 
+		   bank = #{bank}, 
+		   open_bank = #{openBank}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   store_card_id = #{storeCardId}
+	</update>
+	
+</mapper>
