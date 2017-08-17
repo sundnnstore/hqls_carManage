@@ -27,7 +27,7 @@ public interface PurchaseOrderMapper {
 	 * 	@param order
 	 */
 	@Update("update hqls_purchase_order poo set poo.logistics_id=#{logisticsId},logistics_no=#{logisticsNo} where poo.purchase_order_id=#{purchaseOrderId}")
-	public void update(HqlsPurchaseOrder order);
+	public void confirmShipment(HqlsPurchaseOrder order);
 	
 	
 }

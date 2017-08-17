@@ -200,7 +200,7 @@ public class PurchaseOrderService {
 	 */
 	public ResponseEntity<RestModel<Integer>> confirmShipment(HqlsPurchaseOrder order){
 		try {
-			purchaseOrderMapper.update(order);
+			purchaseOrderMapper.confirmShipment(order);
 		} catch (Exception e) {
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"确认发货异常");
 		}
