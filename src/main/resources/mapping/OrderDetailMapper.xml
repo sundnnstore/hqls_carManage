@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsOrderDetail" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsOrderDetail" useGeneratedKeys="true" keyProperty="orderDetailId">
 	    INSERT INTO hqls_order_detail (
 	        purchase_order_id, parts_id, buy_price, buy_count, discount_price, create_time
 	    ) VALUES (
-	        #{purchaseOrderId}, #{partsId}, #{buyPrice}, #{buyCount}, #{discountPrice}, #{createTime}        
+	        #{purchaseOrderId}, #{partsId}, #{buyPrice}, #{buyCount}, #{discountPrice}, now()        
 	    )
 	</insert>
 

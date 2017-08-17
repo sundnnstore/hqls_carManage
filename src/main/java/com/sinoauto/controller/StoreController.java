@@ -28,7 +28,7 @@ public class StoreController {
 	private StoreService storeService;
 	
 	
-	@ApiOperation(value="根据当前登陆人查询门店信息",notes="tangrx")
+	@ApiOperation(value="根据当前登陆人查询门店信息/切换门店账号",notes="tangrx")
 	@PostMapping("findstorebyuserid")
 	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(@RequestHeader(value = "Authorization") String Authorization){
 		return storeService.getStoreInfo(Authorization);
