@@ -64,7 +64,7 @@ public class UserService {
 		// 获取当前用户
 		RestModel<TokenModel> rest = authService.validToken(token);
 		if (rest.getErrcode() != 0) {// 解析token失败
-			return null;
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_TOKEN);
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		HqlsUser user = userMapper.getUserByGloabUserId(userId);
