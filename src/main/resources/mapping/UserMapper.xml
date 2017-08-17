@@ -13,7 +13,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsUser" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsUser" useGeneratedKeys="true" keyProperty="userId">
 	    INSERT INTO hqls_user (
 	        user_name, password, global_user_id, mobile, is_useable, remark, create_time, dml_time
 	    ) VALUES (

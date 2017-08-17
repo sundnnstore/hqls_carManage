@@ -13,6 +13,9 @@ public interface UserMapper {
 
 	@Select("select * from hqls_user where global_user_id=#{1} and is_useable = 1")
 	public HqlsUser getUserByGloabUserId(Integer gloabUserId);
+	
+	
+	public int insert(HqlsUser user);
 
 	public Page<UserDto> findUsersByConditions(@Param("roleId")Integer roleId, @Param("userName")String userName, @Param("mobile")String mobile);
 
