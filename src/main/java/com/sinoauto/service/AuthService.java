@@ -241,4 +241,26 @@ public class AuthService {
 		return model;
 	}
 	
+	/**
+	 * GET /admin 根据用户名获取用户信息
+	 * @param token
+	 * @param userName
+	 * @return
+	 */
+	public RestModel<AuthUser> getUserInfoByUserName(String token, String userName) { 
+		Map<String, Object> headers = new HashMap<>();
+		headers.put("Authorization", token);
+		Map<String, Object> params = new HashMap<>();
+		params.put("userName", userName);
+		RespEntity respEntity = HttpUtil.request("GET", String.format("%s%s", AUTH_SERVICE_URL, "admin"), headers, params, null);
+		if (!respEntity.isSuccess()) {
+			return new RestModel<>(ErrorStatus.SYSTEM_EXCEPTION);
+		}
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+		RestModel<AuthUser> model = gson.fromJson(respEntity.getResult(), new TypeToken<RestModel<AuthUser>>() {
+			private static final long serialVersionUID = -8596419997122191936L;
+		}.getType());
+		return model;
+	
+	}
 }

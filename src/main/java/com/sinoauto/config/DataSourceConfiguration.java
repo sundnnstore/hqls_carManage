@@ -38,7 +38,7 @@ public class DataSourceConfiguration {
 		hikariConfig.setMinimumIdle(20);
 		hikariConfig.setIdleTimeout(240000);
 		hikariConfig.setConnectionTimeout(10000);
-		hikariConfig.setConnectionTestQuery("select 1");
+		hikariConfig.setConnectionTestQuery(" select 1 ");
 		hikariConfig.setPoolName("SPRINGHIKARICP");
 		hikariConfig.setMaxLifetime(240000);
 

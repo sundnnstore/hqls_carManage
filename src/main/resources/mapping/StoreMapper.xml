@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="storeId">
 	    INSERT INTO hqls_store (
 	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
 	    ) VALUES (
@@ -99,6 +99,7 @@
 		<if test="mobile != null"> and hqus.mobile=#{mobile}</if>
 		<if test="address != null"> and sto.address=#{address}</if>
 	</select>
+	
 	
 	
 </mapper>

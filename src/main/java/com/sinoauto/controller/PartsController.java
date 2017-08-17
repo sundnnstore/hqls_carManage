@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.github.pagehelper.Page;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
+import com.sinoauto.dto.PartsDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsService;
 
@@ -37,11 +39,17 @@ public class PartsController {
 		return partsService.findListByPid(partsTypeId);
 	}
 	
-	public ResponseEntity<RestModel<List<CommonDto>>> abc(){
-		String a="b",
-				b="ccc";
-		System.out.println(a+" "+b);
-		return null;
+	/**
+	 * 	按条件查询配件信息
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午3:33:14
+	 * 	@param partsDto
+	 * 	@return
+	 */
+	@ApiOperation(value="",notes="liud")
+	@GetMapping(value="findparts")
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@RequestBody PartsDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
+		return partsService.findPartsByCondition(partsDto);
 	}
 	
 	@ApiOperation(value = "查询配件详情", notes = "wuxiao")

@@ -11,6 +11,7 @@ import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsStore;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
+import com.sinoauto.dto.StoreTreeDto;
 
 @Mapper
 public interface StoreMapper {
@@ -49,8 +50,18 @@ public interface StoreMapper {
 	public int changeStoreAddress(@Param("address") String address,@Param("storeId") Integer storeId);
 	
 	
-	@Select("select store_id as storeId,store_name as storeName,pid from hqls_store where is_useable=1 ")
-	public List<HqlsStore> findAllStore();
+	@Select("select  store_id as storeId,store_name as storeName,pid from hqls_store where is_useable=1 and store_id=#{storeId}")
+	public StoreTreeDto getStoreByStoreId(@Param("storeId") Integer storeId);
+	
+	@Select("select  store_id as storeId,store_name as storeName,pid from hqls_store where is_useable=1 and pid=#{storeId}")
+	public List<StoreTreeDto> findSecondStore(@Param("storeId") Integer storeId);
+	
+	
+	public int insert(HqlsStore store);
+	
+	
+	
+	
 	
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.sinoauto.dao.mapper.PartsMapper">
+<<<<<<< HEAD
 
 	<resultMap type="com.sinoauto.dto.PartsDetailDto" id="detail">
 		<id column="parts_id" property="partsId" />
@@ -36,11 +37,13 @@
 		where parts.parts_id = #{partsId} and parts.is_usable = 1
 	</select>
 
+=======
+>>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
         parts_id, parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
 	</sql>
-
+	
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsParts" useGeneratedKeys="true" keyProperty="id">
 	    INSERT INTO hqls_parts (
@@ -53,25 +56,46 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="HqlsParts">
 	   UPDATE hqls_parts SET
-		   parts_code = #{partsCode}, 
-		   parts_name = #{partsName}, 
-		   parts_model = #{partsModel}, 
-		   parts_unit = #{partsUnit}, 
-		   parts_spec = #{partsSpec}, 
-		   parts_brand_id = #{partsBrandId}, 
-		   parts_factory = #{partsFactory}, 
-		   origin = #{origin}, 
-		   shelf_life = #{shelfLife}, 
-		   price = #{price}, 
-		   discount = #{discount}, 
-		   cur_price = #{curPrice}, 
-		   remark = #{remark}, 
-		   is_usable = #{isUsable}, 
-		   parts_type_id = #{partsTypeId}, 
-		   create_time = #{createTime}, 
-		   dml_time = #{dmlTime}
+		   <if test="partsCode!=null"> parts_code = #{partsCode},</if> 
+		   <if test="partsName!=null"> parts_name = #{partsName}, </if>
+		   <if test="partsModel!=null"> parts_model = #{partsModel}, </if>
+		   <if test="partsUnit!=null"> parts_unit = #{partsUnit}, </if>
+		   <if test="partsSpec!=null"> parts_spec = #{partsSpec}, </if>
+		   <if test="partsBrandId!=null"> parts_brand_id = #{partsBrandId},</if> 
+		   <if test="partsFactory!=null"> parts_factory = #{partsFactory}, </if>
+		   <if test="origin!=null"> origin = #{origin}, </if>
+		   <if test="shelfLife!=null"> shelf_life = #{shelfLife},</if> 
+		   <if test="price!=null"> price = #{price}, </if>
+		   <if test="discount!=null"> discount = #{discount},</if> 
+		   <if test="curPrice!=null"> cur_price = #{curPrice}, </if>
+		   <if test="remark!=null"> remark = #{remark}, </if>
+		   <if test="isUsable!=null"> is_usable = #{isUsable}, </if>
+		   <if test="partsTypeId!=null"> parts_type_id = #{partsTypeId},</if> 
+		   dml_time = now()
 	   WHERE 
 		   parts_id = #{partsId}
 	</update>
+	
+	<!-- 中台查询配件信息接口，详细信息查询接口，或者是编辑-->
+	<select id="findPartsByCondition" resultType="com.sinoauto.dto.PartsDto">
+		select
+			pa.parts_id,pa.parts_name,pa.parts_code,
+			pa.parts_model,pa.parts_unit,pa.parts_spec,
+			pa.parts_factory,pa.origin,pa.shelf_life,
+			pa.price,pa.discount,pa.cur_price,
+			hpt.type_name as p_name,hpt.pid,hpt.parts_type as parts_top_type_id,
+			case 
+				when hpt.parts_type=1 then '易损件' 
+				when hpt.parts_type=2 then '车型件' 
+				else '标志数字不存在' end as parts_top_type
+		from hqls_parts pa
+		inner join hqls_parts_type hpt on hpt.parts_type_id=pa.parts_type_id
+		where 1=1
+			<if test="partsCode!=null"> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
+		 	<if test="partsName!=null"> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
+		 	<if test="partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
+		 	<if test="pid!=null"> and hpt.pid=#{pid}</if>
+		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
+	</select>
 	
 </mapper>

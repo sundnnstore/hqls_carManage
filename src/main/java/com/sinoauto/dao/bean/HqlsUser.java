@@ -28,7 +28,7 @@ public class HqlsUser implements Serializable {
 	@ApiModelProperty("用户联系方式")
 	private String mobile;
 	@ApiModelProperty("是否启用（0,1）")
-	private Integer isUseable;
+	private Boolean isUseable;
 	@ApiModelProperty("备注")
 	private String remark;
 	@ApiModelProperty("创建时间")
@@ -110,14 +110,14 @@ public class HqlsUser implements Serializable {
 	 * 设置是否启用（0,1）
 	 * @param isUseable 是否启用（0,1）
 	 */
-	public void setIsUseable(Integer isUseable) {
+	public void setIsUseable(Boolean isUseable) {
 		this.isUseable = isUseable;
 	}
 	/**
 	 * 获取是否启用（0,1）
 	 * @return 是否启用（0,1）
 	 */
-	public Integer getIsUseable() {
+	public Boolean getIsUseable() {
 		return this.isUseable;
 	}
 	/**

@@ -1,5 +1,7 @@
 package com.sinoauto.dao.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -9,6 +11,8 @@ import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
+import com.sinoauto.dto.PartsDto;
+import com.sinoauto.dto.PartsOperDto;
 
 @Mapper
 public interface PartsMapper {
@@ -61,4 +65,31 @@ public interface PartsMapper {
 	 */
 	public PartsDesListDto checkShopCart(@Param("partsId") Integer partsId);
 	
+	/**
+	 * 	中台按 条件查询配件的信息
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午1:18:10
+	 * 	@param partsDto
+	 * 	@return
+	 */
+	public List<PartsDto> findPartsByCondition(PartsDto partsDto);
+	
+	/**
+	 * 	中台新增配件
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午1:19:42
+	 * 	@param partsOperDto
+	 */
+	public void insert(HqlsParts hqlsParts);
+	
+	/**
+	 * 	中台修改配件 
+	 * 		1.包括上下架
+	 * 		2.配件配置参数修改
+	 * 		3.配件图片修改
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午1:19:30
+	 * 	@param partsOperDto
+	 */
+	public void update(PartsOperDto partsOperDto);
 }
