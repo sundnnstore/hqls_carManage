@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import com.github.pagehelper.Page;
+import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
@@ -47,7 +48,7 @@ public interface PartsMapper {
 	 * 	@Date 2017年8月17日下午1:19:42
 	 * 	@param partsOperDto
 	 */
-	public void addParts(PartsOperDto partsOperDto);
+	public void insert(HqlsParts hqlsParts);
 	
 	/**
 	 * 	中台修改配件 
@@ -58,5 +59,5 @@ public interface PartsMapper {
 	 * 	@Date 2017年8月17日下午1:19:30
 	 * 	@param partsOperDto
 	 */
-	public void updateParts(PartsOperDto partsOperDto);
+	public void update(PartsOperDto partsOperDto);
 }

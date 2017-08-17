@@ -1,11 +1,25 @@
 package com.sinoauto.service;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import com.github.pagehelper.Page;
+import com.sinoauto.dao.bean.HqlsParts;
+import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsPic;
+import com.sinoauto.dao.bean.HqlsPartsType;
+import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
+import com.sinoauto.dao.mapper.PartsPicMapper;
+import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 
 
@@ -15,6 +29,15 @@ public class PartsService {
 	@Autowired
 	private PartsMapper partsMapper;
 	
+	@Autowired
+	private PartsPicMapper partsPicMapper;
+	
+	@Autowired
+	private PartsAttrExtrMapper partsAttrExtrMapper;
+	
+	@Autowired
+	private PartsTypeMapper partsTypeMapper;
+	
 	/**
 	 * 
 	 * 按条件查询配件分类
@@ -23,10 +46,22 @@ public class PartsService {
 	 * @param partsDto
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<PartsDto>>> findPartsByCondition(PartsDto partsDto){
-		List<PartsDto> partsDtos = null;//返回对象
-		
-		return RestModel.success(partsDtos);
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(PartsDto partsDto){
+		List<PartsDto> partsDtos = null;//返回集合
+		Page<PartsDto> partsDtoPage=null;//返回页面
+		try {
+			partsDtos= partsMapper.findPartsByCondition(partsDto);
+			if(partsDtos==null){
+				partsDtos =new ArrayList<>();
+				
+			}
+			partsDtoPage =(Page<PartsDto>)partsDtos;
+			return RestModel.success(partsDtoPage,(int)partsDtoPage.getTotal());
+		} catch (Exception e) {
+			//事物处理
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询信息异常");
 	}
 	
 	/**
@@ -35,9 +70,46 @@ public class PartsService {
 	 * @Date 2017年8月17日下午12:44:33
 	 * @return
 	 */
-	public Integer addParts(PartsOperDto partsOperDto){
-		
-		return 1;
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> addParts(PartsOperDto partsOperDto){
+		try {
+			if(partsOperDto!=null){
+				//配件父类
+				HqlsPartsType hqlsPartsType = new HqlsPartsType();
+				hqlsPartsType.setPartsType(partsOperDto.getPartsType());
+				hqlsPartsType.setPid(partsOperDto.getPid());
+				hqlsPartsType.setTypeName(partsOperDto.getTypeName());
+				partsTypeMapper.insert(hqlsPartsType);
+				
+				//插入配件属性基础表
+				HqlsParts hqlsParts = new HqlsParts();	
+				hqlsParts.setCreateTime(new Date());
+				hqlsParts.setCurPrice(partsOperDto.getCurPrice());
+				hqlsParts.setDiscount(partsOperDto.getDiscount());
+				hqlsParts.setDmlTime(new Date());
+				hqlsParts.setIsUsable(partsOperDto.getIsUsable());
+				hqlsParts.setOrigin(partsOperDto.getOrigin());
+				hqlsParts.setPartsBrandId(partsOperDto.getPartsBrandId());
+				hqlsParts.setPartsCode(partsOperDto.getPartsCode());
+				hqlsParts.setPartsFactory(partsOperDto.getPartsFactory());
+				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
+				hqlsParts.setPartsName(partsOperDto.getPartsName());
+				hqlsParts.setPartsSpec(partsOperDto.getPartsSpec());
+				hqlsParts.setPartsTypeId(partsOperDto.getPartsTypeId());//配件类型id,配件父类
+				hqlsParts.setPartsUnit(partsOperDto.getPartsUnit());
+				hqlsParts.setPrice(partsOperDto.getPrice());
+				hqlsParts.setRemark(partsOperDto.getRemark());
+				hqlsParts.setShelfLife(partsOperDto.getShelfLife());
+				partsMapper.insert(hqlsParts);
+				//插入配件图片,和配件动态属性
+				insertPartsPicAndAttrExr(partsOperDto,hqlsParts.getPartsId());
+			}
+			return RestModel.success();
+		} catch (Exception e) {
+			//事物处理
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"新增商品信息异常");
 	}
 	
 	/**
@@ -45,14 +117,77 @@ public class PartsService {
 	 * @User liud
 	 * @Date 2017年8月17日下午12:44:44
 	 * @return
-	 * 1. 根据 通用件 易损件 的ID查询 他们所属的子集
-	 * 2. 这些子集就是配件的父级
-	 * 3. 包含上下架的功能
-	 * 4. 可以修改 配件的参数信息
-	 *
+	 * 共用接口
+	 *		1. 编辑配件信息
+	 *		2. 上下架
 	 */
-	public Integer updateParts(PartsOperDto partsOperDto){
-		return 1;
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> updateParts(PartsOperDto partsOperDto){
+		try {
+			if(partsOperDto!=null){
+				Integer partsId = partsOperDto.getPartsId();
+				if(partsId!=null){
+					//修改配件的基本属性
+					partsMapper.update(partsOperDto);
+					Integer partsPicsSize =partsOperDto.getPartsPics().size();
+					Integer partsAttrExtrsSize=partsOperDto.getPartsAttrExtrs().size();
+					if(partsPicsSize>0){
+						//删除配件id对应的所有图片
+						partsPicMapper.delete(partsId);
+					}
+					if(partsAttrExtrsSize>0){
+						//删除配件的动态属性
+						partsAttrExtrMapper.delete(partsId);
+					}
+					
+					//插入配件图片,和配件动态属性
+					if(partsPicsSize>0||partsAttrExtrsSize>0){
+						insertPartsPicAndAttrExr(partsOperDto,partsId);
+					}
+				}
+			}
+			return RestModel.success();
+		} catch (Exception e) {
+			//事物处理
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"修改商品信息异常");
 	}
 	
+	/**
+	 * 	插入配件图片和配件参数配置
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午4:32:28
+	 * 	@param partsOperDto
+	 */
+	public void insertPartsPicAndAttrExr(PartsOperDto partsOperDto,Integer partsId){
+		/**
+		 * 配件插入表
+		 */
+		HqlsPartsAttrExtr hqlsPartsAttrExtr=null;//插入配件动态属性表
+		HqlsPartsPic partsPic=null;//插入配件图片
+		
+		//配件的配置属性
+		if(partsOperDto.getPartsAttrExtrs().size()>0){
+			for (HqlsPartsAttrExtr partsAttrExtrs : partsOperDto.getPartsAttrExtrs()) {
+				hqlsPartsAttrExtr =new HqlsPartsAttrExtr();
+				hqlsPartsAttrExtr.setAttrKey(partsAttrExtrs.getAttrKey());
+				hqlsPartsAttrExtr.setAttrValue(partsAttrExtrs.getAttrValue());
+				hqlsPartsAttrExtr.setPartsId(partsId);
+				partsAttrExtrMapper.insert(partsAttrExtrs);
+			}
+		}
+		//配件图片
+		List<HqlsPartsPic> hqlsPartsPic=partsOperDto.getPartsPics();
+		if(partsOperDto.getPartsPics().size()>0){
+			for (int i = 0; i < hqlsPartsPic.size(); i++) {
+				partsPic =new HqlsPartsPic();
+				partsPic.setPartsId(partsId);
+				partsPic.setCreateTime(new Date());
+				partsPic.setSorting(i+1);
+				partsPic.setUrl(hqlsPartsPic.get(i).getUrl());
+				partsPicMapper.insert(partsPic);
+			}
+		}
+	}
 }
