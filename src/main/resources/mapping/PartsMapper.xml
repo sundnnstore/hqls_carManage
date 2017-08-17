@@ -2,6 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.sinoauto.dao.mapper.PartsMapper">
 
+	<resultMap type="com.sinoauto.dto.PartsDetailDto" id="detail">
+		<id column="parts_id" property="partsId" />
+		<result column="parts_brand_name" property="partsBrandName" />
+		<collection property="partsPicList" column="parts_id" select="com.sinoauto.dao.mapper.PartsBrandMapper.findPartsBrandListByPartsId" />
+	</resultMap>
+	
+	<select id="getPartsDetail" resultMap="detail" parameterType="Integer">
+		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, parts.parts_spec,
+				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,
+				brand.parts_brand_name
+		from hqls_parts as parts, hqls_parts_brand as brand
+		where parts.parts_brand_id = brand.parts_brand_id
+		and parts.parts_id = #{partsId} and parts.is_usable = 1
+	</select>
+	
+	<resultMap type="com.sinoauto.dto.PartsDesListDto" id="desList">
+		<id column="parts_id" property="partsId"/>
+		<association column="parts_id" property="partsPic" select="com.sinoauto.dao.mapper.PartsPicMapper.getFirstUrlByPartsId"/>
+	</resultMap>
+	
+	<select id="findPartsListByTypeId" parameterType="Integer" resultMap="desList">
+		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
+				parts.parts_spec, parts.cur_price
+		from hqls_parts as parts
+		where parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
+	</select>
+	
+	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
+		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
+				parts.parts_spec, parts.cur_price
+		from hqls_parts as parts 
+		where parts.parts_id = #{partsId} and parts.is_usable = 1
+	</select>
+
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
         parts_id, parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
