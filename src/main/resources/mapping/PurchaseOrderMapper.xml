@@ -38,4 +38,28 @@
 		   purchase_order_id = #{purchaseOrderId}
 	</update>
 	
+	<!-- 查询采购订单信息 -->
+	<select id="findPurchaseOrderByContidion" resultType="com.sinoauto.dto.PurchaseOrderDto">
+		select hpo.order_no,hpo.order_status,
+			case when hpo.order_status=1 then '待支付' 
+				 when hpo.order_status=2 then '待发货'
+				 when hpo.order_status=3 then '待收货' 
+				 when hpo.order_status=4 then '已完成' 
+				 else '无效的标志号' end as order_status_name,
+			hs.store_id,hs.store_name,hu.user_name,hu.mobile,hpo.create_time,hsa.address,
+			hpo.total_fee,hp.parts_name,hp.parts_model,hp.parts_spec,hod.buy_count,hod.buy_price
+		from hqls_purchase_order hpo
+		INNER JOIN hqls_order_detail hod on hpo.purchase_order_id =hod.purchase_order_id
+		INNER JOIN hqls_parts hp on hp.parts_id=hod.parts_id
+		INNER JOIN hqls_store hs on hs.store_id=hpo.store_id
+		INNER JOIN hqls_user_store hus on hus.store_id=hs.store_id
+		INNER JOIN hqls_user hu on hu.user_id=hus.user_id
+		INNER JOIN hqls_ship_address hsa on hsa.ship_address_id=hpo.ship_address_id
+		where 1=1 
+		<if test="orderStatus!=null"> and hpo.order_status=#{orderStatus}</if>
+		<if test="storeId!=null"> and hs.store_id=#{storeId}</if>
+		<if test="userName!=null"> and hu.user_name like CONCAT('%',#{userName},'%')</if>
+		<if test="mobile!=null"> and hu.mobile like CONCAT('%',#{mobile},'%')</if>   
+	</select>
+	
 </mapper>

@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsOrderDetail;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
@@ -18,6 +21,7 @@ import com.sinoauto.dao.mapper.OrderDetailMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dao.mapper.ShipAddressMapper;
 import com.sinoauto.dto.PartsDesListDto;
+import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
@@ -165,4 +169,26 @@ public class PurchaseOrderService {
 		return result.doubleValue();
 	}
 
+	/**
+	 * 	查询采购订单列表
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午5:59:44
+	 * 	@param purchaseOrderDto
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(PurchaseOrderDto purchaseOrderDto,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex,pageSize);
+		List<PurchaseOrderDto> purchaseOrders=null;
+		Page<PurchaseOrderDto> PurchaseOrderpage=null;
+		try {
+			purchaseOrders = purchaseOrderMapper.findPurchaseOrderByContidion(purchaseOrderDto);
+			if(purchaseOrders==null){
+				purchaseOrders =new ArrayList<>();
+			}
+			PurchaseOrderpage=(Page<PurchaseOrderDto>)purchaseOrders;
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询采购订单异常");
+		}
+		return RestModel.success(PurchaseOrderpage);
+	}
 }
