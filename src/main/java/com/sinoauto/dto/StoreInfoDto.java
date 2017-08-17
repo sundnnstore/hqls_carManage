@@ -1,5 +1,7 @@
 package com.sinoauto.dto;
 
+import com.sinoauto.dao.bean.HqlsStore;
+
 import io.swagger.annotations.ApiModelProperty;
 
 public class StoreInfoDto {
@@ -13,14 +15,8 @@ public class StoreInfoDto {
 	@ApiModelProperty("联系人号码")
 	private String mobile;
 	
-	@ApiModelProperty(value="地址")
-	private String address;
+	private HqlsStore store;
 	
-	@ApiModelProperty(value="图片")
-	private String backUrl;
-	
-	@ApiModelProperty("是否启用")
-	private Integer isUseable;
 
 	public String getStoreName() {
 		return storeName;
@@ -46,29 +42,16 @@ public class StoreInfoDto {
 		this.mobile = mobile;
 	}
 
-	public String getAddress() {
-		return address;
+	public HqlsStore getStore() {
+		return store;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setStore(HqlsStore store) {
+		this.store = store;
 	}
 
-	public String getBackUrl() {
-		return backUrl;
-	}
-
-	public void setBackUrl(String backUrl) {
-		this.backUrl = backUrl;
-	}
-
-	public Integer getIsUseable() {
-		return isUseable;
-	}
-
-	public void setIsUseable(Integer isUseable) {
-		this.isUseable = isUseable;
-	}
-
+	
+	
+	
 	
 }

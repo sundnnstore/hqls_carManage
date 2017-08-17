@@ -36,7 +36,7 @@ public class HqlsShipAddress implements Serializable {
 	@ApiModelProperty("市名称")
 	private String cityName;
 	@ApiModelProperty("区县名称")
-	private String countName;
+	private String countyName;
 	@ApiModelProperty("收货地址")
 	private String address;
 	@ApiModelProperty("是否是默认地址(0,1)")
@@ -202,15 +202,14 @@ public class HqlsShipAddress implements Serializable {
 		}
 		
 	}
-	public String getCountName() {
-		return countName;
+	public String getCountyName() {
+		return countyName;
 	}
-	public void setCountName(String countName) {
-		if(countName != null) {
-			this.countName = countName;
-		}
-		
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
 	}
+	
+	
 
 }
 
