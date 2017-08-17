@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsStoreFinance" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsStoreFinance" >
 	    INSERT INTO hqls_store_finance (
 	        store_id, balance, cash_able, cash_disable, remark, create_time, dml_time
 	    ) VALUES (
-	        #{storeId}, #{balance}, #{cashAble}, #{cashDisable}, #{remark}, #{createTime}, #{dmlTime}        
+	        #{storeId}, 0, 0, 0, #{remark}, now(), now()        
 	    )
 	</insert>
 

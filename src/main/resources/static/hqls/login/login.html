@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>login</title>
+		<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="css/demo.css" />
+		<!--必要样式-->
+		<link rel="stylesheet" type="text/css" href="css/component.css" />
+		<script src="../js/jquery-3.2.1.min.js"></script>
+		<!--[if IE]>
+<script src="js/html5.js"></script>
+<![endif]-->
+	</head>
+
+	<body>
+		<div class="container demo-1">
+			<div class="content">
+				<div id="large-header" class="large-header">
+					<canvas id="demo-canvas"></canvas>
+					<div class="logo_box">
+						<h3>华汽连锁欢迎你</h3>
+							<div class="input_outer">
+								<span class="u_user"></span>
+								<input id="logname" class="text" style="color: #FFFFFF !important" type="text" placeholder="请输入账户">
+							</div>
+							<div class="input_outer">
+								<span class="us_uer"></span>
+								<input id="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;" value="" type="password" placeholder="请输入密码">
+							</div>
+							<div class="mb2">
+								<a class="act-but submit" href="javascript:;" onclick="login()" style="color: #FFFFFF">登录</a>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /container -->
+		<script src="js/TweenLite.min.js"></script>
+		<script src="js/EasePack.min.js"></script>
+		<script src="js/rAF.js"></script>
+		<script src="js/demo-1.js"></script>
+		<script type="text/javascript" src="../common/layui/lay/dest/layui.all.js">
+			
+		</script>
+		
+		<script type="text/javascript">
+			layui.use(['jquery','layer','element'],function(){
+				var $=layui.jquery;
+				var layer=layui.layer;
+				//登录方法
+				//登录失败调用提示信息
+				//layui.msg('错误信息')
+			})
+		</script>
+		<div style="text-align:center;">
+
+		</div>
+		<script type="text/javascript">
+			function login(){
+				$.ajax({
+					url:"http://localhost:8881/login",
+					type:"post",
+					async:false,
+					data:{"userName":$("#logname").val(),"passWord":$("#logpass").val()},
+					success:function(data){
+						console.log(data);
+						if(data.errcode == 0){
+							localStorage.token="Bearer "+data.result;
+							window.location.href="../index.html";
+						}else{
+							alert(data.errmsg)
+						}
+					},
+					error:function(data){
+						alert(JSON.parse(data.responseText).errmsg);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>
