@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.mapper.StoreMapper;
+import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.entity.RestModel;
@@ -24,6 +26,9 @@ public class StoreService {
 	
 	@Autowired
 	private AuthService authService;
+	
+	@Autowired
+	private UserMapper userMapper;
 	
 	
 	/**
@@ -40,7 +45,9 @@ public class StoreService {
             return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
         }
         Integer userId = rest.getResult().getUserId();// 当前登录人的userid
-		List<StoreDto> storeList = storeMapper.findStoreInfo(userId);
+        //获取userId
+        HqlsUser user = userMapper.getUserByGloabUserId(userId);
+		List<StoreDto> storeList = storeMapper.findStoreInfo(user.getUserId());
 		return  RestModel.success(storeList);
 		
 	}

@@ -38,63 +38,37 @@
 	</update>
 	
 	
-	<resultMap type="com.sinoauto.dto.StoreDto" id="storeDto">
-		<id column="user_id" property="userId"/>
-		<association property="mobile" column="user_id" select="getMobile"/>
-		<collection property="hqlsStore" column="user_id" select="findStoreByUserId"/>
-		<collection property="storeName" column="user_id" select="findStoreName"/>
-	</resultMap>
-	
-	<select id="findStoreInfo" resultMap="storeDto">
-		select #{userId} as userId 
-	</select>
-	
-	<select id="getMobile" resultType="String" parameterType="int">
-		SELECT
-		mobile
-		FROM
-		hqls_user 
-		where 
-		user_id=#{userId}
-		and is_useable=1
-	</select>
-	
-	<select id="findStoreByUserId" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsStore">
+	<select id="findStoreInfo" parameterType="int" resultType="com.sinoauto.dto.StoreDto">
 		SELECT
 		sto.address,
-		sto.back_url,
-		sto.mobile as storeName,
+		sto.back_url as backUrl,
+		sto.mobile as stoMobile,
 		sto.province_id as provinceId,
 		sto.city_id as cityId,
 		sto.county_id as countyId,
-		sto.store_id as storeId
+		sto.store_id as storeId,
+		sto.longitude,
+		sto.latitude,
+		sto.is_useable as isUseable,
+		users.mobile as userMobile,
+		sto.store_name as storeName,
+		sto.store_code as storeCode
 		FROM
 		hqls_store sto
 		LEFT JOIN 
 		hqls_user_store usto
 		ON
 		sto.store_id=usto.store_id
+		left join
+		hqls_user users
+		on users.user_id = usto.user_id
 		WHERE
-		usto.user_id=#{userId}
-		and usto.is_useable=1
+		users.user_id=#{userId}
+		and users.is_useable=1
 		and sto.is_useable=1
 		order by sto.create_time
 	</select>
 	
-	<select id="findStoreName" parameterType="int" resultType="String">
-		SELECT
-		sto.mobile as storeName
-		FROM
-		hqls_store sto
-		LEFT JOIN 
-		hqls_user_store usto
-		ON
-		sto.store_id=usto.store_id
-		WHERE
-		usto.user_id=#{userId}
-		and usto.is_useable=1
-		and sto.is_useable=1
-	</select>
 	
 	<select id="getStore" resultType="com.sinoauto.dto.StoreInfoDto">
 		select 
