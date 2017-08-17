@@ -5,15 +5,19 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dao.bean.HqlsAuthority;
 import com.sinoauto.dto.UserDto;
+import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.UserService;
 
@@ -50,5 +54,15 @@ public class UserController {
 	@GetMapping(value = "findusers")
 	public ResponseEntity<RestModel<List<UserDto>>> findUsersByConditions(Integer roleId,String userName,String mobile,Integer pageIndex,Integer pageSize){
 		return userService.findUsersByConditions(roleId, userName, mobile, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "新增人员信息", notes = "tangwt")
+	@PostMapping("adduser")
+	public ResponseEntity<RestModel<String>> addUser(@RequestBody UserDto userDto){
+		if(StringUtils.isEmpty(userDto.getMobile())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"手机号为空！");
+		}
+		//return userService.login(userName, passWord);
+		return null;
 	}
 }
