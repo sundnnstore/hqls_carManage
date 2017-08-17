@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
+import com.sinoauto.dao.bean.HqlsStore;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 
@@ -45,6 +47,10 @@ public interface StoreMapper {
 	
 	
 	public int changeStoreAddress(@Param("address") String address,@Param("storeId") Integer storeId);
+	
+	
+	@Select("select store_id as storeId,store_name as storeName,pid from hqls_store where is_useable=1 ")
+	public List<HqlsStore> findAllStore();
 	
 
 }

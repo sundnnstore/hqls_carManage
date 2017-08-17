@@ -56,6 +56,7 @@
 		hqls_user 
 		where 
 		user_id=#{userId}
+		and is_useable=1
 	</select>
 	
 	<select id="findStoreByUserId" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsStore">
@@ -75,6 +76,8 @@
 		sto.store_id=usto.store_id
 		WHERE
 		usto.user_id=#{userId}
+		and usto.is_useable=1
+		and sto.is_useable=1
 		order by sto.create_time
 	</select>
 	
@@ -89,6 +92,8 @@
 		sto.store_id=usto.store_id
 		WHERE
 		usto.user_id=#{userId}
+		and usto.is_useable=1
+		and sto.is_useable=1
 	</select>
 	
 	<select id="getStore" resultType="com.sinoauto.dto.StoreInfoDto">
@@ -110,7 +115,8 @@
 		hqls_user hqus
 		on
 		hqus.user_id = usto.user_id
-		WHERE 1=1 
+		WHERE hqus.is_useable=1
+		and sto.is_useable=1
 		<if test="storeName !=null"> and sto.store_name=#{storeName}</if>
 		<if test="userName != null"> and hqus.user_name=#{userName}</if>
 		<if test="mobile != null"> and hqus.mobile=#{mobile}</if>

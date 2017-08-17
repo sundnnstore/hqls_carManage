@@ -135,6 +135,19 @@ public class StoreService {
 		return RestModel.success();
 	}
 	
+	/**
+	 * 新增门店信息
+	 * @return
+	 */
+	/*public ResponseEntity<RestModel<HqlsStore>> insertStore(){
+		//查询所有启用的门店信息
+		List<HqlsStore> store = storeMapper.findAllStore();
+		
+		
+		//新增门店信息
+		return 
+	}*/
+	
 	
 
 }

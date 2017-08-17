@@ -90,4 +90,11 @@ public class StoreController {
 		return storeService.changeStoreAddress(provinceId,cityId,countyId,address,storeId);
 	}
 	
+	
+	/*@ApiOperation(value = "新增门店",notes = "tangrx")
+	@PostMapping("insertstore")
+	public ResponseEntity<RestModel<HqlsStore>> insertStore(){
+		return storeService.insertStore();
+		
+	}*/
 }
