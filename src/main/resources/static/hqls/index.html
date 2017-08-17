@@ -8,8 +8,15 @@
     <title>华汽连锁</title>
     <link rel="stylesheet" href="common/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" href="common/style.css" />
-
+	<script src="js/jquery-3.2.1.min.js"></script>
 </head>
+
+<script type="text/javascript">
+var token = localStorage.token;
+if(token == null || token == ''){
+	window.location.href="login/login.html"
+}
+</script>
 
 <body>
     <!-- html的代码 -->
@@ -21,77 +28,9 @@
             </a>
         </div>
     </div>
-    <ul class="layui-nav layui-nav-tree  layui-nav-side" lay-filter="test">
+    <ul class="layui-nav layui-nav-tree  layui-nav-side" lay-filter="test" id="hq_menu">
         <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
-        <li class="layui-nav-item layui-nav-itemed">
-            <a href="javascript:;">基本信息</a>
-            <dl class="layui-nav-child">
-                <dd name="BasicInformation/Categories/Categories.html">
-                    <a>商品分类</a>
-                </dd>
-                <dd name='BasicInformation/CommodityManage/CommodityManage.html'>
-                    <a>商品管理</a>
-                </dd>
-                <dd name='BasicInformation/StoreManage/StoreManage.html'>
-                    <a>门店管理</a>
-                </dd>
-                <dd name='BasicInformation/archivesManage/archivesManage.html'>
-                    <a>角色管理</a>
-                </dd>
-                <dd name='BasicInformation/roleManage/roleManage.html'>
-                    <a>档案管理</a>
-                </dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">返利</a>
-            <dl class="layui-nav-child">
-                <dd name="Rebate/RebateSetting/RebateSetting.html">
-                    <a href="javascript:;">返利设置</a>
-                </dd>
-            </dl>
 
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">订单</a>
-            <dl class="layui-nav-child">
-                <dd name="order/orderManage/orderManage.html">
-                    <a> 订单管理</a>
-                </dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">配置</a>
-            <dl class="layui-nav-child">
-                <dd name="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.html">
-                    <a>服务订单配置</a>
-                </dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">提现</a>
-            <dl class="layui-nav-child">
-                <dd name="withdraw/withdrawpost/withdrawpost.html">
-                    <a>提现请求</a>
-                </dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">账户</a>
-            <dl class="layui-nav-child">
-                <dd name="Account/AccountManage/AccountManage.html">
-                    <a> 账户管理</a>
-                </dd>
-            </dl>
-        </li>
-        <li class="layui-nav-item">
-            <a href="javascript:;">日志查询</a>
-            <dl class="layui-nav-child">
-                <dd name="Log/AccountrechargeLog/AccountrechargeLog.html">
-                    <a href="javascript:;">账户充值日志</a>
-                </dd>
-            </dl>
-        </li>
     </ul>
     <!-- 内容展示-->
     <div id="myContent" class="layui-body layui-tab-content site-demo site-demo-body">
@@ -101,6 +40,42 @@
     <script src="common/layui/layui.js"></script>
     <!-- 自己的代码 -->
     <script type="text/javascript" src="common/index.js">
+    </script>
+    <script type="text/javascript">
+    	//动态加载菜单
+		$.ajax({
+			url:"http://localhost:8881/authorities",
+			type:"post",
+			data:{"isBack":2},
+			headers:{
+				  "Authorization":token
+				 },
+			success:function(data){
+				console.log(data)
+				var map = data.result;
+				var menu_ul = $("#hq_menu");
+				var li_html="";
+				for(key in map){
+					li_html += '<li class="layui-nav-item ">'+
+			            	   '<a href="javascript:;">'+key+'</a>'+
+			            	   '<dl class="layui-nav-child">';
+			        var menus = map[key];
+			        for(i=0;i<menus.length;i++){
+						var menu = menus[i];			        	
+			        	li_html += '<dd name="'+menu.remark+'">'+
+			        				'<a href="javascript:;">'+menu.authorityName+'</a>'+
+			        				'</dd>';
+			        	if(i == menus.length-1){
+			        		li_html += '</dl></li>'
+			        	}
+			        }
+				}
+				menu_ul.html(li_html);
+			},
+			error:function(data){
+				window.location.href="login/login.html";
+			}
+		});
     </script>
 
 </body>
