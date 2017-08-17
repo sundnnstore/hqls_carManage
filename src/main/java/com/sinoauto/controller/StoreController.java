@@ -24,7 +24,6 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "门店管理")
 @RestController
 public class StoreController {
-	
 	@Autowired
 	private StoreService storeService;
 	
@@ -32,7 +31,6 @@ public class StoreController {
 	@ApiOperation(value="根据当前登陆人查询门店信息",notes="tangrx")
 	@PostMapping("findstorebyuserid")
 	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(@RequestHeader(value = "Authorization") String Authorization){
-		
 		return storeService.getStoreInfo(Authorization);
 	}
 	
@@ -40,7 +38,6 @@ public class StoreController {
 	@ApiOperation(value = "修改门店名称",notes = "tangrx")
 	@PostMapping("changestorename")
 	public ResponseEntity<RestModel<String>> changeStoreName(@RequestParam(value = "storeName") String storeName,@RequestParam(value="storeId") Integer storeId){
-		
 		return storeService.changeStoreName(storeName,storeId);
 		
 	}
@@ -48,7 +45,6 @@ public class StoreController {
 	@ApiOperation(value = "修改门店联系方式",notes = "tangrx")
 	@PostMapping("changestoremobile")
 	public ResponseEntity<RestModel<String>> changeStoreMobile(@RequestParam(value = "mobile") String mobile,@RequestParam(value="storeId") Integer storeId){
-		
 		return storeService.changeStoreMobile(mobile,storeId);
 		
 	}
@@ -56,7 +52,6 @@ public class StoreController {
 	@ApiOperation(value ="修改门店背景",notes ="tangrx")
 	@PostMapping("changeurl")
 	public ResponseEntity<RestModel<String>> changeStoreUrl(@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="storeId") Integer storeId){
-		
 			return storeService.changeStoreUrl(backUrl,storeId);
 	}
 	
@@ -70,7 +65,6 @@ public class StoreController {
 						 @ApiImplicitParam(paramType = "query", name = "pageSize", value = "个数", required = true, dataType = "int")})
 	@PostMapping("findstoreinfo")
 	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,String address,Integer pageIndex,Integer pageSize){
-		
 		return storeService.findStore(storeName,userName,mobile,address,pageIndex,pageSize);
 		
 	}
@@ -79,7 +73,6 @@ public class StoreController {
 	@ApiOperation(value = "门店禁用与启用",notes ="tangrx")
 	@PostMapping("storeisuseable")
 	public ResponseEntity<RestModel<String>> changeIsUseable(@RequestParam(value="storeId") Integer storeId){
-		
 		return storeService.changeIsUseable(storeId);
 		
 	}
@@ -104,17 +97,15 @@ public class StoreController {
 	@ApiOperation(value = "新增门店信息",notes = "tangrx")
 	@PostMapping("insertstore")
 	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
-		
 		return storeService.insertStore(Authorization,storeInfoDto);
 		
 	}
 	
-	/*@ApiOperation(value = "修改账号",notes = "tangrx")
+	@ApiOperation(value = "修改账号",notes = "tangrx")
 	@PostMapping("changeaccount")
-	public ResponseEntity<RestModel<String>> changeAccount(@RequestParam(value="account") String account){
-		return storeService.changeAccount(account);
+	public ResponseEntity<RestModel<String>> changeAccount(@RequestHeader(value = "Authorization") String Authorization,@RequestParam(value="account") String account){
+		return storeService.changeAccount(Authorization,account);
 		
-	}*/
-	
+	}
 	
 }
