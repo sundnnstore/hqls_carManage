@@ -29,40 +29,52 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "用户操作")
 @RestController
 public class UserController {
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@ApiOperation(value = "登录获取token", notes = "tangwt")
 	@PostMapping("login")
-	public ResponseEntity<RestModel<String>> login(@RequestParam(value="userName",required=true)String userName,@RequestParam(value="passWord",required=true)String passWord){
+	public ResponseEntity<RestModel<String>> login(@RequestParam(value = "userName", required = true) String userName,
+			@RequestParam(value = "passWord", required = true) String passWord) {
 		return userService.login(userName, passWord);
 	}
-	
+
 	@ApiOperation(value = "获取权限集合", notes = "tangwt")
 	@PostMapping("authorities")
-	public ResponseEntity<RestModel< Map<String, Set<HqlsAuthority>>>> findUserAuthority(@RequestHeader String Authorization,@RequestParam(value="isBack",required=true)Integer isBack){
+	public ResponseEntity<RestModel<Map<String, Set<HqlsAuthority>>>> findUserAuthority(@RequestHeader String Authorization,
+			@RequestParam(value = "isBack", required = true) Integer isBack) {
 		return userService.findUserAuthority(Authorization, isBack);
 	}
-	
+
 	@ApiOperation(value = "按条件查找人员信息集合", notes = "tangwt")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "roleId", value = "角色ID", required = false, dataType = "int"),
-		@ApiImplicitParam(paramType = "query", name = "userName", value = "姓名", required = false, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "mobile", value = "手机号", required = false, dataType = "String"),
-		@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", required = true, dataType = "int"),
-		@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "int") })
+			@ApiImplicitParam(paramType = "query", name = "userName", value = "姓名", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "mobile", value = "手机号", required = false, dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", required = true, dataType = "int"),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "int") })
 	@GetMapping(value = "findusers")
-	public ResponseEntity<RestModel<List<UserDto>>> findUsersByConditions(Integer roleId,String userName,String mobile,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<List<UserDto>>> findUsersByConditions(Integer roleId, String userName, String mobile, Integer pageIndex,
+			Integer pageSize) {
 		return userService.findUsersByConditions(roleId, userName, mobile, pageIndex, pageSize);
 	}
-	
+
 	@ApiOperation(value = "新增人员信息", notes = "tangwt")
 	@PostMapping("adduser")
-	public ResponseEntity<RestModel<String>> addUser(@RequestBody UserDto userDto){
-		if(StringUtils.isEmpty(userDto.getMobile())){
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"手机号为空！");
+	public ResponseEntity<RestModel<String>> addUser(@RequestHeader String Authorization, @RequestBody UserDto userDto) {
+		if (StringUtils.isEmpty(userDto.getMobile())) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "手机号为空！");
 		}
-		//return userService.login(userName, passWord);
-		return null;
+		return userService.addUser(userDto, Authorization);
 	}
+
+	@ApiOperation(value = "禁用/启用人员状态", notes = "tangwt")
+	@PostMapping("updateuserstatus")
+	public ResponseEntity<RestModel<String>> updateUserStatus(@RequestParam("userId") Integer userId) {
+		if (userId == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "用户ID为空！");
+		}
+		return userService.updateUserStatus(userId);
+	}
+
 }

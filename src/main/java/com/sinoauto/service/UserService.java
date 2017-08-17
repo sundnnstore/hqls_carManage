@@ -12,13 +12,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsAuthority;
+import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
 import com.sinoauto.dao.mapper.UserMapper;
+import com.sinoauto.dao.mapper.UserRoleMapper;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.ErrorStatus;
@@ -34,6 +38,8 @@ public class UserService {
 	private UserMapper userMapper;
 	@Autowired
 	private AuthorityMapper authorityMapper;
+	@Autowired
+	private UserRoleMapper userRoleMapper;
 
 	/**
 	 * 登录
@@ -102,41 +108,77 @@ public class UserService {
 		Page<UserDto> users = userMapper.findUsersByConditions(roleId, userName, mobile);
 		return RestModel.success(users, (int) users.getTotal());
 	}
-	
+
 	/**
 	 * 新增用户
 	 * @param userDto
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> addUser(UserDto userDto){
-		RestModel<Integer> registerInfo = authService.register(userDto.getMobile(),"123456");
-		HqlsUser user = new HqlsUser();
-		user.setIsUseable(true);
-		user.setMobile(userDto.getMobile());
-		user.setPassword("123456");
-		user.setUserName(userDto.getUserName());
-		Integer globalUserId = null;
-		if (registerInfo.getErrcode() == 0) {//注册成功
-			globalUserId = registerInfo.getResult(); //用户中心的编号
-			user.setGlobalUserId(globalUserId);
-			//return RestModel.success(userMapper.insert(user));
-			
-		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
-			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
-			if(uInfo.getErrcode() == 0){
-				globalUserId = uInfo.getResult().getUserId();
-				user.setGlobalUserId(globalUserId);
-				//return RestModel.success(userMapper.insert(user));
-			} else {
-				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+	public ResponseEntity<RestModel<String>> addUser(UserDto userDto, String token) {
+		try {
+			RestModel<Integer> registerInfo = authService.register(userDto.getMobile(), "123456");
+			HqlsUser user = userMapper.getUserInfoByMobile(userDto.getMobile());
+			Boolean flag = false;
+			if (user == null) {
+				user = new HqlsUser();
+				user.setIsUseable(true);
+				user.setMobile(userDto.getMobile());
+				user.setPassword("123456");
+				user.setUserName(userDto.getUserName());
+				flag = true;// 用户信息不存在
 			}
-			
-		} else {
-			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
-			
+			Integer globalUserId = null;
+			if (registerInfo.getErrcode() == 0) {// 注册成功
+				globalUserId = registerInfo.getResult(); // 用户中心的编号
+				user.setGlobalUserId(globalUserId);
+				if (flag) {// 本系统中用户不存在
+					userMapper.insert(user);
+				} else {// 修改本系统中用户的全局用户ID
+					userMapper.updateGlobalUserId(globalUserId, user.getUserId());
+				}
+			} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息,
+				RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, userDto.getMobile());
+				if (uInfo.getErrcode() == 0) {
+					globalUserId = uInfo.getResult().getUserId();
+					user.setGlobalUserId(globalUserId);
+					if (flag) {// 本系统中用户不存在
+						userMapper.insert(user);
+					} else {// 修改本系统中用户的全局用户ID
+						userMapper.updateGlobalUserId(globalUserId, user.getUserId());
+					}
+				} else {
+					return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+				}
+			} else {
+				return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+
+			}
+			// 插入用户角色信息
+			List<HqlsRole> roles = userDto.getRoles();
+			if (roles != null && roles.size() > 0) {
+				userRoleMapper.deleteUserRolesByUserId(user.getUserId());
+				for (HqlsRole role : roles) {
+					HqlsUserRole userRole = new HqlsUserRole();
+					userRole.setRoleId(role.getRoleId());
+					userRole.setUserId(user.getUserId());
+					userRoleMapper.insert(userRole);
+				}
+			}
+			return RestModel.success("添加成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
-		return null;
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "添加失败");
+	}
+
+	public ResponseEntity<RestModel<String>> updateUserStatus(Integer userId) {
+		int result = userMapper.updateUserStatus(userId);
+		if (result == 1) {
+			return RestModel.success("编辑成功");
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "编辑失败");
 	}
 
 }
