@@ -31,11 +31,4 @@ public class PartsController {
 		return null;
 	}
 	
-	public ResponseEntity<RestModel<List<CommonDto>>> abc(){
-		String a="b",
-				b="ccc";
-		System.out.println(a+" "+b);
-		return null;
-	}
-	
 }
