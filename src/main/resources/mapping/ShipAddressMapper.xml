@@ -34,4 +34,15 @@
 		   ship_address_id = #{shipAddressId}
 	</update>
 	
+	<delete id="delete" parameterType="Integer">
+		delete from hqls_ship_address where ship_address_id = #{addressId}
+	</delete>
+	
+	<delete id="batchDelete">
+		delete from hqls_ship_address where ship_address_id in
+		<foreach collection="addressIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+	</delete>
+	
 </mapper>
