@@ -37,6 +37,12 @@ public class HqlsStore implements Serializable {
 	private Integer cityId;
 	@ApiModelProperty("区县ID")
 	private Integer countyId;
+	@ApiModelProperty("省名称")
+	private String provinceName;
+	@ApiModelProperty("市名称")
+	private String cityName;
+	@ApiModelProperty("区县名称")
+	private String countName;
 	@ApiModelProperty("详细地址")
 	private String address;
 	@ApiModelProperty("背景图片URL")
@@ -258,6 +264,30 @@ public class HqlsStore implements Serializable {
 	public Date getDmlTime() {
 		return this.dmlTime;
 	}
-
+	public String getProvinceName() {
+		return provinceName;
+	}
+	public void setProvinceName(String provinceName) {
+		if (provinceName != null) {
+			this.provinceName = provinceName;
+		}
+	}
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		if (cityName != null) {
+			this.cityName = cityName;
+		}
+	}
+	public String getCountName() {
+		return countName;
+	}
+	public void setCountName(String countName) {
+		if (countName != null) {
+			this.countName = countName;
+		}
+	}
+	
 }
 
