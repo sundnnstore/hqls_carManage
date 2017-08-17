@@ -27,13 +27,10 @@ import com.sinoauto.entity.TokenModel;
 @Service
 public class StoreService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
-	
 	@Autowired
 	private StoreMapper storeMapper;
-	
 	@Autowired
 	private AuthService authService;
-	
 	@Autowired
 	private UserMapper userMapper;
 	
@@ -64,12 +61,9 @@ public class StoreService {
 	 * @param storeName
 	 * @return
 	 */
-	@Transactional
 	public ResponseEntity<RestModel<String>> changeStoreName(String storeName,Integer storeId){
-		
         //修改当前门店名称
         storeMapper.changeStoreName(storeName,storeId);
-        
         return RestModel.success();
 		
 	}
@@ -81,12 +75,9 @@ public class StoreService {
 	 * @param storeId
 	 * @return
 	 */
-	@Transactional
 	public ResponseEntity<RestModel<String>> changeStoreMobile(String storeMobile,Integer storeId){
-		
         //修改门店联系方式
         storeMapper.changeStoreMobile(storeMobile,storeId);
-        
         return RestModel.success();
 		
 	}
@@ -98,12 +89,9 @@ public class StoreService {
 	 * @param storeId
 	 * @return
 	 */
-	@Transactional
 	public ResponseEntity<RestModel<String>> changeStoreUrl(String backUrl,Integer storeId){
-		
         //修改门店背景图片
         storeMapper.changeStoreUrl(backUrl,storeId);
-        
         return RestModel.success();
 		
 	}
@@ -128,11 +116,8 @@ public class StoreService {
 	 * @param storeId
 	 * @return
 	 */
-	@Transactional
 	public ResponseEntity<RestModel<String>> changeIsUseable(Integer storeId){
-		
         storeMapper.changeIsUseable(storeId);
-        
         return RestModel.success();
 		
 	}
@@ -142,9 +127,7 @@ public class StoreService {
 	 * 修改门店地址
 	 * @return
 	 */
-	@Transactional
 	public ResponseEntity<RestModel<String>> changeStoreAddress(Integer provinceId,Integer cityId,Integer countyId,String address,Integer storeId){
-		
 		storeMapper.changeStoreAddress(address,storeId);
 		return RestModel.success();
 	}
@@ -164,7 +147,6 @@ public class StoreService {
 			store.setStoreTreeList(new ArrayList<>());
 			for (StoreTreeDto st : storeList) {
 				StoreTreeDto t = findStoreIsUseable(st.getStoreId());// 递归查询
-				
 				store.getStoreTreeList().add(t);
 			}
 		}
@@ -179,7 +161,6 @@ public class StoreService {
 	 */
 	@Transactional
 	public ResponseEntity<RestModel<Integer>> insertStore(String token,StoreInfoDto storeInfoDto){
-		
 		HqlsUser user = new HqlsUser();
 		String mobile = storeInfoDto.getMobile();
 		String userName = storeInfoDto.getUserName();
@@ -190,16 +171,18 @@ public class StoreService {
 		user.setIsUseable(true);
 		user.setCreateTime(new Date());
 		user.setDmlTime(new Date());
-		
-		
-		storeMapper.insert(storeInfoDto.getStore());
+		//新增门店信息
+		int storeId = storeMapper.insert(storeInfoDto.getStore());
 		//注册用户信息
 		RestModel<Integer> registerInfo = authService.register(mobile,password);
+		//查询当前用户在系统中是否存在
+		HqlsUser hquser =	userMapper.getUserInfoByMobile(mobile);
 		Integer globalUserId = null;
 		if (registerInfo.getErrcode() == 0) {//注册成功
 			logger.info("注册，新增用户。");
 			globalUserId = registerInfo.getResult(); //用户中心的编号
 			user.setGlobalUserId(globalUserId);
+			
 			return RestModel.success(userMapper.insert(user));
 			
 		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
@@ -213,14 +196,10 @@ public class StoreService {
 				logger.info("注册失败.");
 				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
 			}
-			
 		} else {
 			logger.info("注册失败....");
 			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
 			
 		}
-		
-		
 	}
-	
 }

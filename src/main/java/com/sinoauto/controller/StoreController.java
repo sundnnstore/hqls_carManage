@@ -112,6 +112,7 @@ public class StoreController {
 	/*@ApiOperation(value = "修改账号",notes = "tangrx")
 	@PostMapping("changeaccount")
 	public ResponseEntity<RestModel<String>> changeAccount(@RequestParam(value="account") String account){
+		return storeService.changeAccount(account);
 		
 	}*/
 	
