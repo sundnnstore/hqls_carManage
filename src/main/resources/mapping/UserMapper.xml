@@ -17,7 +17,7 @@
 	    INSERT INTO hqls_user (
 	        user_name, password, global_user_id, mobile, is_useable, remark, create_time, dml_time
 	    ) VALUES (
-	        #{userName}, #{password}, #{globalUserId}, #{mobile}, #{isUseable}, #{remark}, #{createTime}, #{dmlTime}        
+	        #{userName}, #{password}, #{globalUserId}, #{mobile}, #{isUseable}, #{remark}, now(), now()        
 	    )
 	</insert>
 
