@@ -46,8 +46,8 @@ public interface StoreMapper {
 				" where store_id=#{storeId} ")
 	public int changeIsUseable(@Param("storeId") Integer storeId);
 	
-	
-	public int changeStoreAddress(@Param("address") String address,@Param("storeId") Integer storeId);
+	@Update("UPDATE hqls_store SET province_id=#{provinceId},city_id=#{cityId},county_id=#{countyId},address=#{address} where store_id=#{storeId}")
+	public int changeStoreAddress(@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,@Param("countyId") Integer countyId,@Param("address") String address,@Param("storeId") Integer storeId);
 	
 	
 	@Select("select  store_id as storeId,store_name as storeName,pid from hqls_store where is_useable=1 and store_id=#{storeId}")

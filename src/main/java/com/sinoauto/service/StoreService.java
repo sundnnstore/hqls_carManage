@@ -132,7 +132,7 @@ public class StoreService {
 	 * @return
 	 */
 	public ResponseEntity<RestModel<String>> changeStoreAddress(Integer provinceId,Integer cityId,Integer countyId,String address,Integer storeId){
-		storeMapper.changeStoreAddress(address,storeId);
+		storeMapper.changeStoreAddress( provinceId,cityId,countyId,address,storeId);
 		return RestModel.success();
 	}
 	
