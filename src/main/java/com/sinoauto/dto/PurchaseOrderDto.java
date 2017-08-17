@@ -38,13 +38,107 @@ public class PurchaseOrderDto {
 	private String partsModel;
 	@ApiModelProperty("规格")
 	private String partsSpec;
-	@ApiModelProperty("现价")
-	private Double curPrice;
+	@ApiModelProperty("金额总计")
+	private Double totalFee;
+	@ApiModelProperty("购买金额")
+	private Double buyPrice;
+	@ApiModelProperty("购买数量")
+	private Integer buyCount;
 	/**
 	 * 共有属性
 	 */
 	@ApiModelProperty("联系人姓名")
-	private String name;
+	private String userName;
 	@ApiModelProperty("联系人电话")
 	private String mobile;
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+	public Integer getStoreId() {
+		return storeId;
+	}
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+	public String getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
+	}
+	public String getOrderStatusName() {
+		return orderStatusName;
+	}
+	public void setOrderStatusName(String orderStatusName) {
+		this.orderStatusName = orderStatusName;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getStoreName() {
+		return storeName;
+	}
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+	public String getPartsName() {
+		return partsName;
+	}
+	public void setPartsName(String partsName) {
+		this.partsName = partsName;
+	}
+	public String getPartsModel() {
+		return partsModel;
+	}
+	public void setPartsModel(String partsModel) {
+		this.partsModel = partsModel;
+	}
+	public String getPartsSpec() {
+		return partsSpec;
+	}
+	public void setPartsSpec(String partsSpec) {
+		this.partsSpec = partsSpec;
+	}
+	public Double getTotalFee() {
+		return totalFee;
+	}
+	public void setTotalFee(Double totalFee) {
+		this.totalFee = totalFee;
+	}
+	public Double getBuyPrice() {
+		return buyPrice;
+	}
+	public void setBuyPrice(Double buyPrice) {
+		this.buyPrice = buyPrice;
+	}
+	public Integer getBuyCount() {
+		return buyCount;
+	}
+	public void setBuyCount(Integer buyCount) {
+		this.buyCount = buyCount;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 }

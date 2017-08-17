@@ -1,0 +1,329 @@
+<link rel="stylesheet" type="text/css" href="order/orderManage/orderManage.css" />
+<div>
+	订单管理
+</div>
+<div>
+	<div class="layui-inline">
+		<label class="layui-form-label">订单状态</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
+				<option value="0">待支付</option>
+				<option value="1">代发货</option>
+				<option value="2">待收货</option>
+				<option value="3">已完成</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">门店</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
+				<option value="0">门店</option>
+
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">联系人</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">联系电话</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<button class="layui-btn" id='searchOrder'>搜索</button>
+	</div>
+</div>
+<div class="All-order-list">
+	<table class="layui-table mylayui-table">
+		<tbody>
+			<tr>
+				<td>订单编号:</td>
+				<td>*****************</td>
+				<td>订单状态:</td>
+				<td>待支付</td>
+				<td>订单时间:</td>
+				<td>2016-11-29</td>
+				<td>收货地址:</td>
+				<td>******************</td>
+				<td>联系人:</td>
+				<td>唐五点</td>
+				<td>联系电话:</td>
+				<td>25025025025</td>
+				<td>门店:</td>
+				<td>*************</td>
+				<td>金额总计:</td>
+				<td>250.00￥</td>
+			</tr>
+			<tr>
+				<td>订单编号:</td>
+				<td>*****************</td>
+				<td>订单状态:</td>
+				<td>带发货</td>
+				<td>订单时间:</td>
+				<td>2016-11-29</td>
+				<td>收货地址:</td>
+				<td>******************</td>
+				<td>联系人:</td>
+				<td>唐五点</td>
+				<td>联系电话:</td>
+				<td>25025025025</td>
+				<td>门店:</td>
+				<td>*************</td>
+				<td>金额总计:</td>
+				<td>250.00￥</td>
+				<td><button class="layui-btn Ship">发货</button></td>
+			</tr>
+			<tr>
+				<td>订单编号:</td>
+				<td>*****************</td>
+				<td>订单状态:</td>
+				<td>带收货</td>
+				<td>订单时间:</td>
+				<td>2016-11-29</td>
+				<td>收货地址:</td>
+				<td>******************</td>
+				<td>联系人:</td>
+				<td>唐五点</td>
+				<td>联系电话:</td>
+				<td>25025025025</td>
+				<td>门店:</td>
+				<td>*************</td>
+				<td>金额总计:</td>
+				<td>250.00￥</td>
+				<td><button class="layui-btn layui-btn-normal logisticsInfo">查看物流</button></td>
+			</tr>
+			<tr>
+				<td>订单编号:</td>
+				<td>*****************</td>
+				<td>订单状态:</td>
+				<td>带收货</td>
+				<td>订单时间:</td>
+				<td>2016-11-29</td>
+				<td>收货地址:</td>
+				<td>*********sddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd*********</td>
+				<td>联系人:</td>
+				<td>唐五点</td>
+				<td>联系电话:</td>
+				<td>25025025025</td>
+				<td>门店:</td>
+				<td>*************</td>
+				<td>金额总计:</td>
+				<td>250.00￥</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div id='orderdetailPage' style="display: none;">
+	<table class="layui-table ">
+		<thead>
+			<tr>
+				<th>商品名称</th>
+				<th>型号</th>
+				<th>规格</th>
+				<th>数量</th>
+				<th>金额</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>*****</td>
+				<td>**-----***</td>
+				<td>++++++-----++++</td>
+				<td>4545</td>
+				<td>250.00$</td>
+			</tr>
+
+		</tbody>
+	</table>
+</div>
+<div id="shipPage" style="display: none;">
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">快递公司</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
+				<option value=""></option>
+				<option value="0">写作</option>
+				<option value="1" selected="">阅读</option>
+				<option value="2">游戏</option>
+				<option value="3">音乐</option>
+				<option value="4">旅行</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">快递单号</label>
+		<div class="layui-input-block">
+			<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text mylayui-item ">
+		<label class="layui-form-label">备注</label>
+		<div class="layui-input-block">
+			<textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text shipbox">
+		<button class="layui-btn">确认发货</button>
+	</div>
+</div>
+<div id="logisticsInfoPage" style="display: none;">
+	<div class="jclogistics">
+		<div>
+			<span>运单号码:</span><span>151564548454</span>
+			<span>物流公司:</span><span>中通快递</span>
+			<span>客服电话:</span><span>96311</span>
+		</div>
+		<div>
+			<span>卖家昵称:</span><span>********</span>
+		</div>
+		<div>
+			<span>发货地址:</span>
+			<span>*********************************************</span>
+		</div>
+		<div>
+			<span>收货地址:</span><span>************</span>
+		</div>
+	</div>
+
+	<div class="logisList">
+		<div class="logisList-header">
+			<span>2017-08-13</span>
+			<span>周日</span>
+		</div>
+		<div class="logisList-content">
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+
+		</div>
+	</div>
+	<div class="logisList">
+		<div class="logisList-header">
+			<span>2017-08-13</span>
+			<span>周日</span>
+		</div>
+		<div class="logisList-content">
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+
+		</div>
+	</div>
+		<div class="logisList">
+		<div class="logisList-header">
+			<span>2017-08-13</span>
+			<span>周日</span>
+		</div>
+		<div class="logisList-content">
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+
+		</div>
+	</div>
+		<div class="logisList">
+		<div class="logisList-header">
+			<span>2017-08-13</span>
+			<span>周日</span>
+		</div>
+		<div class="logisList-content">
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+			<div>
+				<span>
+				15:06:34
+			</span>
+				<span>
+				卖家发货
+			</span>
+			</div>
+
+		</div>
+	</div>
+</div>
+<script src="order/orderManage/orderManage.js" type="text/javascript" charset="utf-8"></script>

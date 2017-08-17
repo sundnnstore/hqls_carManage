@@ -6,7 +6,7 @@ import com.sinoauto.dao.bean.HqlsFinanceFlow;
 
 @Mapper
 public interface FinanceFlowMapper {
-
-	public int insert(HqlsFinanceFlow flow);
 	
+	public int insert(HqlsFinanceFlow financeFlow);
+
 }

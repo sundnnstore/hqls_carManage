@@ -1,0 +1,91 @@
+<link rel="stylesheet" type="text/css" href="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.css" />
+<div>
+	服务订单配置
+</div>
+<div>
+	<div class="layui-inline">
+		<label class="layui-form-label">服务名称</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+
+	<div class="layui-inline">
+		<button class="layui-btn" id='searchService'>搜索</button>
+		<button class="layui-btn layui-btn-normal" id='addService'>新增</button>
+	</div>
+</div>
+<div>
+	<table class="layui-table ">
+		<thead>
+			<tr>
+				<th>服务名称</th>
+				<th>服务内容</th>
+				<th>金额</th>
+				<th>图片</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>*****</td>
+				<td>**-----***</td>
+				<td>++++++-----++++</td>
+				<td><button class="layui-btn toView" >查看</button></td>
+				<td>
+					<button class="layui-btn layui-btn-normal uORd" >上架</button>
+				</td>
+			</tr>
+			<tr>
+				<td>*****</td>
+				<td>**-----***</td>
+				<td>++++++-----++++</td>
+				<td><button class="layui-btn">查看</button></td>
+				<td>
+					<button  class="layui-btn  layui-btn-primary uORd">下架</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div id="addServicePage" style="display: none;">
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">服务名称</label>
+		<div class="layui-input-block">
+			<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text mylayui-item ">
+		<label class="layui-form-label">服务内容</label>
+		<div class="layui-input-block">
+			<textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">金额</label>
+		<div class="layui-input-block">
+			<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">图片</label>
+		<div class="imgBox">
+			<!--图片展示 例子如下注释的 -->
+
+			<!--<img src="" alt=""  class="mylayui-img"/>-->
+		</div>
+		<div class="layui-box layui-upload-button">
+			<form>
+				<input type="file" name="file" class="layui-upload-file">
+			</form>
+			<span class="layui-upload-icon">
+				<i class="layui-icon"></i>上传图片
+			</span>
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text shipbox">
+		<button class="layui-btn">确认发货</button>
+	</div>
+</div>
+</div>
+<script src="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.js" type="text/javascript" charset="utf-8"></script>
