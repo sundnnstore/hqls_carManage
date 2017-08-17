@@ -1,39 +1,29 @@
 package com.sinoauto.service;
-<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
-=======
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
->>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-<<<<<<< HEAD
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import com.sinoauto.dto.PurchaseOrderDto;
-=======
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
 import com.sinoauto.dao.bean.HqlsOrderDetail;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.mapper.OrderDetailMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
-import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import com.sinoauto.dao.mapper.ShipAddressMapper;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
->>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 import com.sinoauto.entity.RestModel;
 
 
@@ -176,9 +166,5 @@ public class PurchaseOrderService {
 		result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
-	
-	
-	
-	 
->>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
+
 }
