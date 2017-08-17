@@ -191,4 +191,19 @@ public class PurchaseOrderService {
 		}
 		return RestModel.success(PurchaseOrderpage);
 	}
+	
+	/**
+	 *  确认发货
+	 * 	@User liud
+	 * 	@Date 2017年8月17日下午8:14:08
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Integer>> confirmShipment(HqlsPurchaseOrder order){
+		try {
+			purchaseOrderMapper.update(order);
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"确认发货异常");
+		}
+		return RestModel.success();
+	}
 }
