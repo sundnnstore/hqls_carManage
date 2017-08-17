@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
+import com.sinoauto.dto.StoreTreeDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.StoreService;
 
@@ -91,10 +93,27 @@ public class StoreController {
 	}
 	
 	
-	/*@ApiOperation(value = "新增门店",notes = "tangrx")
+	@ApiOperation(value = "查询级别门店",notes = "tangrx")
+	@PostMapping("findstore")
+	public ResponseEntity<RestModel<StoreTreeDto>> findStore(){
+			int storeId =1;
+		return RestModel.success(storeService.findStoreIsUseable(storeId));
+		
+	}
+	
+	@ApiOperation(value = "新增门店信息",notes = "tangrx")
 	@PostMapping("insertstore")
-	public ResponseEntity<RestModel<HqlsStore>> insertStore(){
-		return storeService.insertStore();
+	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
+		
+		return storeService.insertStore(Authorization,storeInfoDto);
+		
+	}
+	
+	/*@ApiOperation(value = "修改账号",notes = "tangrx")
+	@PostMapping("changeaccount")
+	public ResponseEntity<RestModel<String>> changeAccount(@RequestParam(value="account") String account){
 		
 	}*/
+	
+	
 }

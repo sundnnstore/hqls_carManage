@@ -1,6 +1,10 @@
 package com.sinoauto.service;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +18,15 @@ import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
+import com.sinoauto.dto.StoreTreeDto;
+import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 
 
 @Service
 public class StoreService {
+	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	
 	@Autowired
 	private StoreMapper storeMapper;
@@ -143,18 +150,77 @@ public class StoreService {
 	}
 	
 	/**
-	 * 新增门店信息
+	 * 查询门店信息
 	 * @return
 	 */
-	/*public ResponseEntity<RestModel<HqlsStore>> insertStore(){
-		//查询所有启用的门店信息
-		List<HqlsStore> store = storeMapper.findAllStore();
-		
-		
-		//新增门店信息
-		return 
-	}*/
+	public StoreTreeDto findStoreIsUseable(Integer storeId) {
+		// 查询一级门店
+		StoreTreeDto store = storeMapper.findStoreByStoreId(storeId);
+		// 判断一级门店是否存在
+		store = store == null ? new StoreTreeDto() : store;
+		// 查询二级门店
+		List<StoreTreeDto> storeList = storeMapper.findSecondStore(store.getStoreId());
+		if (storeList != null && !storeList.isEmpty()) {
+			store.setStoreTreeList(new ArrayList<>());
+			for (StoreTreeDto st : storeList) {
+				StoreTreeDto t = findStoreIsUseable(st.getStoreId());// 递归查询
+				
+				store.getStoreTreeList().add(t);
+			}
+		}
+		return store;
+	}
 	
 	
-
+	/**
+	 * 新增门店信息
+	 * @param storeInfoDto
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> insertStore(String token,StoreInfoDto storeInfoDto){
+		
+		HqlsUser user = new HqlsUser();
+		String mobile = storeInfoDto.getMobile();
+		String userName = storeInfoDto.getUserName();
+		String password ="123456";
+		user.setMobile(mobile);
+		user.setUserName(userName);
+		user.setPassword(password);
+		user.setIsUseable(1);
+		user.setCreateTime(new Date());
+		user.setDmlTime(new Date());
+		
+		
+		storeMapper.insert(storeInfoDto.getStore());
+		//注册用户信息
+		RestModel<Integer> registerInfo = authService.register(mobile,password);
+		Integer globalUserId = null;
+		if (registerInfo.getErrcode() == 0) {//注册成功
+			logger.info("注册，新增用户。");
+			globalUserId = registerInfo.getResult(); //用户中心的编号
+			user.setGlobalUserId(globalUserId);
+			return RestModel.success(userMapper.insert(user));
+			
+		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+			logger.info("用户已注册，则同步用户信息");
+			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
+			if(uInfo.getErrcode() == 0){
+				globalUserId = uInfo.getResult().getUserId();
+				user.setGlobalUserId(globalUserId);
+				return RestModel.success(userMapper.insert(user));
+			} else {
+				logger.info("注册失败.");
+				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+			}
+			
+		} else {
+			logger.info("注册失败....");
+			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+			
+		}
+		
+		
+	}
+	
 }
