@@ -4,33 +4,58 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        service_order_id, order_no, customer_id, service_type_id, store_id, order_status, car_no, car_model, order_amount, create_time, dml_time
+		service_order_id, order_no, customer_id, service_type_id, store_id, order_status,
+		car_no, car_model, order_amount, create_time, dml_time
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsServiceOrder" useGeneratedKeys="true" keyProperty="id">
-	    INSERT INTO hqls_service_order (
-	        order_no, customer_id, service_type_id, store_id, order_status, car_no, car_model, order_amount, create_time, dml_time
-	    ) VALUES (
-	        #{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, #{orderStatus}, #{carNo}, #{carModel}, #{orderAmount}, #{createTime}, #{dmlTime}        
-	    )
+	<insert id="insert" parameterType="HqlsServiceOrder"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO hqls_service_order (
+		order_no, customer_id, service_type_id, store_id, order_status, car_no,
+		car_model, order_amount, create_time, dml_time
+		) VALUES (
+		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, #{orderStatus},
+		#{carNo}, #{carModel}, #{orderAmount}, #{createTime}, #{dmlTime}
+		)
 	</insert>
 
 	<!-- 修改 -->
 	<update id="update" parameterType="HqlsServiceOrder">
-	   UPDATE hqls_service_order SET
-		   order_no = #{orderNo}, 
-		   customer_id = #{customerId}, 
-		   service_type_id = #{serviceTypeId}, 
-		   store_id = #{storeId}, 
-		   order_status = #{orderStatus}, 
-		   car_no = #{carNo}, 
-		   car_model = #{carModel}, 
-		   order_amount = #{orderAmount}, 
-		   create_time = #{createTime}, 
-		   dml_time = #{dmlTime}
-	   WHERE 
-		   service_order_id = #{serviceOrderId}
+		UPDATE hqls_service_order SET
+		order_no = #{orderNo},
+		customer_id = #{customerId},
+		service_type_id = #{serviceTypeId},
+		store_id = #{storeId},
+		order_status = #{orderStatus},
+		car_no = #{carNo},
+		car_model = #{carModel},
+		order_amount = #{orderAmount},
+		create_time = #{createTime},
+		dml_time = #{dmlTime}
+		WHERE
+		service_order_id = #{serviceOrderId}
 	</update>
-	
+
+	<select id="findServiceOrdersByOrderStatus" resultType="com.sinoauto.dto.ServiceOrderDto">
+		SELECT
+		hso.service_order_id,
+		hso.order_no,
+		hc.customer_name,
+		hc.mobile as customerMobile,
+		hst.service_type_name as serviceType,
+		hso.order_status,
+		hso.car_no,
+		hso.car_model,
+		hso.order_amount,
+		hso.expect_arrive_time
+		FROM hqls_service_order hso
+		LEFT JOIN hqls_customer hc
+		ON hso.customer_id = hc.customer_id
+		LEFT JOIN hqls_service_type hst
+		ON hso.service_type_id = hst.service_type_id
+		WHERE hso.order_status = #{orderStatus}
+		AND hso.store_id = #{storeId}
+	</select>
+
 </mapper>
