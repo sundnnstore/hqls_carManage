@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.sinoauto.dao.mapper.UserMapper">
 
+	<resultMap type="com.sinoauto.dto.UserDto" id="userDto">
+		<id column="user_id" property="userId"/>
+		<collection property="roles" column="user_id" select="com.sinoauto.dao.mapper.RoleMapper.findRolesByUserId"/>
+	</resultMap>
+
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
         user_id, user_name, password, global_user_id, mobile, is_useable, remark, create_time, dml_time
@@ -30,5 +35,26 @@
 	   WHERE 
 		   user_id = #{userId}
 	</update>
+	
+	<select id="findUsersByConditions" resultMap="userDto">
+		select 
+		hu.* 
+		from hqls_user hu
+		<if test="roleId != null">
+			left join hqls_user_role hur
+			on hu.user_id = hur.user_id
+		</if>
+		where
+		1=1
+		<if test="roleId != null">
+			and hur.role_id = #{roleId}
+		</if>
+		<if test="userName != null and userName != '' ">
+			and hu.user_name like concat('%',#{userName},'%')
+		</if>
+		<if test="mobile != null and mobile != '' ">
+			and hu.mobile like concat('%',#{mobile},'%')
+		</if>
+	</select>
 	
 </mapper>

@@ -5,8 +5,6 @@ import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
 
-
-
 /**
  * 权限表权限表<br>
  * @author tangwt
@@ -14,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class HqlsAuthority implements Serializable {
-	
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("权限ID")
 	private Integer authorityId;
@@ -27,7 +25,7 @@ public class HqlsAuthority implements Serializable {
 	private String remark;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
-	
+
 	/**
 	 * 设置权限ID
 	 * @param authorityId 权限ID
@@ -35,6 +33,7 @@ public class HqlsAuthority implements Serializable {
 	public void setAuthorityId(Integer authorityId) {
 		this.authorityId = authorityId;
 	}
+
 	/**
 	 * 获取权限ID
 	 * @return 权限ID
@@ -42,6 +41,7 @@ public class HqlsAuthority implements Serializable {
 	public Integer getAuthorityId() {
 		return this.authorityId;
 	}
+
 	/**
 	 * 设置权限名称
 	 * @param authorityName 权限名称
@@ -49,6 +49,7 @@ public class HqlsAuthority implements Serializable {
 	public void setAuthorityName(String authorityName) {
 		this.authorityName = authorityName;
 	}
+
 	/**
 	 * 获取权限名称
 	 * @return 权限名称
@@ -56,6 +57,7 @@ public class HqlsAuthority implements Serializable {
 	public String getAuthorityName() {
 		return this.authorityName;
 	}
+
 	/**
 	 * 设置父级ID
 	 * @param pid 父级ID
@@ -63,6 +65,7 @@ public class HqlsAuthority implements Serializable {
 	public void setPid(Integer pid) {
 		this.pid = pid;
 	}
+
 	/**
 	 * 获取父级ID
 	 * @return 父级ID
@@ -70,6 +73,7 @@ public class HqlsAuthority implements Serializable {
 	public Integer getPid() {
 		return this.pid;
 	}
+
 	/**
 	 * 设置备注
 	 * @param remark 备注
@@ -77,6 +81,7 @@ public class HqlsAuthority implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
 	/**
 	 * 获取备注
 	 * @return 备注
@@ -84,6 +89,7 @@ public class HqlsAuthority implements Serializable {
 	public String getRemark() {
 		return this.remark;
 	}
+
 	/**
 	 * 设置创建时间
 	 * @param createTime 创建时间
@@ -91,6 +97,7 @@ public class HqlsAuthority implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
 	/**
 	 * 获取创建时间
 	 * @return 创建时间
@@ -99,5 +106,15 @@ public class HqlsAuthority implements Serializable {
 		return this.createTime;
 	}
 
-}
+	@Override
+	public int hashCode() {
+		return pid.hashCode()+authorityId.hashCode()+authorityName.hashCode();
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		HqlsAuthority au = (HqlsAuthority) obj;
+		return this.pid==au.pid && this.authorityId == au.authorityId && this.authorityName.equals(au.authorityName);
+	}
+
+}
