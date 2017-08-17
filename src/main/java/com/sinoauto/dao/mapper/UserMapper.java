@@ -18,5 +18,9 @@ public interface UserMapper {
 	public int insert(HqlsUser user);
 
 	public Page<UserDto> findUsersByConditions(@Param("roleId")Integer roleId, @Param("userName")String userName, @Param("mobile")String mobile);
+	
+	
+	@Select("select * from hqls_user where mobile=#{mobile}")
+	public HqlsUser getUserInfoByMobile(@Param("mobile") String mobile);
 
 }
