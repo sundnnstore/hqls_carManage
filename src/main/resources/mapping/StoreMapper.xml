@@ -4,15 +4,15 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, address, back_url, is_useable, create_time, dml_time
+        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
 	</sql>
 
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="id">
 	    INSERT INTO hqls_store (
-	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, address, back_url, is_useable, create_time, dml_time
+	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
 	    ) VALUES (
-	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{address}, #{backUrl}, #{isUseable}, #{createTime}, #{dmlTime}        
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable}, #{createTime}, #{dmlTime}        
 	    )
 	</insert>
 
@@ -27,7 +27,10 @@
 		   store_code = #{storeCode}, 
 		   province_id = #{provinceId}, 
 		   city_id = #{cityId}, 
-		   county_id = #{countyId}, 
+		   county_id = #{countyId},
+		   province_name = #{provinceName}, 
+		   city_name = #{cityName}, 
+		   county_name = #{countyName}, 
 		   address = #{address}, 
 		   back_url = #{backUrl}, 
 		   is_useable = #{isUseable}, 

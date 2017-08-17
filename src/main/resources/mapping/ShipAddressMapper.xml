@@ -4,15 +4,15 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        ship_address_id, store_id, recipient, mobile, province_id, city_id, county_id, address, is_default, create_time
+        ship_address_id, store_id, recipient, mobile, province_id, city_id, county_id, province_name, city_name, county_name, address, is_default, create_time
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsShipAddress" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsShipAddress" useGeneratedKeys="true" keyProperty="shipAddressId">
 	    INSERT INTO hqls_ship_address (
-	        store_id, recipient, mobile, province_id, city_id, county_id, address, is_default, create_time
+	        store_id, recipient, mobile, province_id, city_id, county_id, province_name, city_name, county_name, address, is_default, create_time
 	    ) VALUES (
-	        #{storeId}, #{recipient}, #{mobile}, #{provinceId}, #{cityId}, #{countyId}, #{address}, #{isDefault}, #{createTime}        
+	        #{storeId}, #{recipient}, #{mobile}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{isDefault}, now()       
 	    )
 	</insert>
 
@@ -25,9 +25,11 @@
 		   province_id = #{provinceId}, 
 		   city_id = #{cityId}, 
 		   county_id = #{countyId}, 
+		   province_name = #{provinceName}, 
+		   city_name = #{cityName}, 
+		   county_name = #{countyName},
 		   address = #{address}, 
-		   is_default = #{isDefault}, 
-		   create_time = #{createTime}
+		   is_default = #{isDefault}
 	   WHERE 
 		   ship_address_id = #{shipAddressId}
 	</update>
