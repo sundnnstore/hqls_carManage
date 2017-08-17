@@ -1,15 +1,25 @@
 package com.sinoauto.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sinoauto.dto.StoreDto;
+import com.sinoauto.dto.StoreInfoDto;
+import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.StoreService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-@Api(tags = "门店")
+@Api(tags = "门店管理")
 @RestController
 public class StoreController {
 	
@@ -17,15 +27,74 @@ public class StoreController {
 	private StoreService storeService;
 	
 	
-	@ApiOperation(value="根据账号密码查询门店信息",notes="tangrx")
-	@PostMapping("findstoreinfo")
-	public String findStoreInfo(){
-		return null;
+	@ApiOperation(value="根据当前登陆人查询门店信息",notes="tangrx")
+	@PostMapping("findstorebyuserid")
+	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(@RequestHeader(value = "Authorization") String Authorization){
+		
+		return storeService.getStoreInfo(Authorization);
 	}
 	
 	
+	@ApiOperation(value = "修改门店名称",notes = "tangrx")
+	@PostMapping("changestorename")
+	public ResponseEntity<RestModel<String>> changeStoreName(@RequestParam(value = "storeName") String storeName,@RequestParam(value="storeId") Integer storeId){
+		
+		return storeService.changeStoreName(storeName,storeId);
+		
+	}
+	
+	@ApiOperation(value = "修改门店联系方式",notes = "tangrx")
+	@PostMapping("changestoremobile")
+	public ResponseEntity<RestModel<String>> changeStoreMobile(@RequestParam(value = "mobile") String mobile,@RequestParam(value="storeId") Integer storeId){
+		
+		return storeService.changeStoreMobile(mobile,storeId);
+		
+	}
+	
+	@ApiOperation(value ="修改门店背景",notes ="tangrx")
+	@PostMapping("changeurl")
+	public ResponseEntity<RestModel<String>> changeStoreUrl(@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="storeId") Integer storeId){
+		
+			return storeService.changeStoreUrl(backUrl,storeId);
+	}
 	
 	
-	
+	@ApiOperation(value = "根据门店名称/联系人/联系人电话/地址 分页查询门店信息",notes = "tangrx")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeName", value = "门店名称", required = false, dataType = "String"),
+						 @ApiImplicitParam(paramType = "query", name = "userName", value = "联系人", required = false, dataType = "String"),
+						 @ApiImplicitParam(paramType = "query", name = "mobile", value = "联系人号码", required = false, dataType = "String"),
+						 @ApiImplicitParam(paramType = "query", name = "address", value = "地址", required = false, dataType = "String"),
+						 @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页数", required = true, dataType = "int"),
+						 @ApiImplicitParam(paramType = "query", name = "pageSize", value = "个数", required = true, dataType = "int")})
+	@PostMapping("findstoreinfo")
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,String address,Integer pageIndex,Integer pageSize){
+		
+		return storeService.findStore(storeName,userName,mobile,address,pageIndex,pageSize);
+		
+	}
 
+	
+	@ApiOperation(value = "门店禁用与启用",notes ="tangrx")
+	@PostMapping("storeisuseable")
+	public ResponseEntity<RestModel<String>> changeIsUseable(@RequestParam(value="storeId") Integer storeId){
+		
+		return storeService.changeIsUseable(storeId);
+		
+	}
+	
+	@ApiOperation(value = "修改门店地址",notes = "tangrx")
+	@PostMapping("changestoreaddress")
+	public ResponseEntity<RestModel<String>> changeStoreAddress(@RequestParam(value="provinceId") Integer provinceId,@RequestParam(value="cityId") Integer cityId,
+																 @RequestParam(value="countyId") Integer countyId,@RequestParam(value="address") String address,
+																 @RequestParam(value="storeId") Integer storeId){
+		return storeService.changeStoreAddress(provinceId,cityId,countyId,address,storeId);
+	}
+	
+	
+	/*@ApiOperation(value = "新增门店",notes = "tangrx")
+	@PostMapping("insertstore")
+	public ResponseEntity<RestModel<HqlsStore>> insertStore(){
+		return storeService.insertStore();
+		
+	}*/
 }

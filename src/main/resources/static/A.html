@@ -1,0 +1,17 @@
+<html>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<div style="border: 1px red solid;width: 300px;height: 300px;"></div>
+<script type="text/javascript">
+	$.ajax({
+		url:"http://localhost:8881/findservicetypesbytypename",
+		type:"get",
+		data:{"typeName":"","pageIndex":1,"pageSize":2},
+		async:false,
+		success:function(data){
+			console.log(data);
+		}
+		
+	});
+</script>
+
+</html>

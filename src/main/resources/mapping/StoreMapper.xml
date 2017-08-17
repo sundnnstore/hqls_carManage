@@ -37,4 +37,91 @@
 		   store_id = #{storeId}
 	</update>
 	
+	
+	<resultMap type="com.sinoauto.dto.StoreDto" id="storeDto">
+		<id column="user_id" property="userId"/>
+		<association property="mobile" column="user_id" select="getMobile"/>
+		<collection property="hqlsStore" column="user_id" select="findStoreByUserId"/>
+		<collection property="storeName" column="user_id" select="findStoreName"/>
+	</resultMap>
+	
+	<select id="findStoreInfo" resultMap="storeDto">
+		select #{userId} as userId 
+	</select>
+	
+	<select id="getMobile" resultType="String" parameterType="int">
+		SELECT
+		mobile
+		FROM
+		hqls_user 
+		where 
+		user_id=#{userId}
+		and is_useable=1
+	</select>
+	
+	<select id="findStoreByUserId" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsStore">
+		SELECT
+		sto.address,
+		sto.back_url,
+		sto.mobile as storeName,
+		sto.province_id as provinceId,
+		sto.city_id as cityId,
+		sto.county_id as countyId,
+		sto.store_id as storeId
+		FROM
+		hqls_store sto
+		LEFT JOIN 
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		WHERE
+		usto.user_id=#{userId}
+		and usto.is_useable=1
+		and sto.is_useable=1
+		order by sto.create_time
+	</select>
+	
+	<select id="findStoreName" parameterType="int" resultType="String">
+		SELECT
+		sto.mobile as storeName
+		FROM
+		hqls_store sto
+		LEFT JOIN 
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		WHERE
+		usto.user_id=#{userId}
+		and usto.is_useable=1
+		and sto.is_useable=1
+	</select>
+	
+	<select id="getStore" resultType="com.sinoauto.dto.StoreInfoDto">
+		select 
+		hqus.user_name as userName,
+		hqus.mobile ,
+		sto.address,
+		sto.back_url,
+		sto.is_useable as isUseable,
+		sto.store_name as storeName,
+		sto.store_id as storeId
+		FROM
+		hqls_store sto
+		LEFT JOIN
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		LEFT JOIN 
+		hqls_user hqus
+		on
+		hqus.user_id = usto.user_id
+		WHERE hqus.is_useable=1
+		and sto.is_useable=1
+		<if test="storeName !=null"> and sto.store_name=#{storeName}</if>
+		<if test="userName != null"> and hqus.user_name=#{userName}</if>
+		<if test="mobile != null"> and hqus.mobile=#{mobile}</if>
+		<if test="address != null"> and sto.address=#{address}</if>
+	</select>
+	
+	
 </mapper>
