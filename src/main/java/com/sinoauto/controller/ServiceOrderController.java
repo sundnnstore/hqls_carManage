@@ -9,11 +9,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.sinoauto.dao.bean.HqlsServiceType;
+import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.service.ServiceOrderService;
 import com.sinoauto.service.ServiceTypeService;
 
 import io.swagger.annotations.Api;
@@ -27,6 +30,8 @@ public class ServiceOrderController {
 	
 	@Autowired
 	private ServiceTypeService serviceTypeService;
+	@Autowired
+	private ServiceOrderService serviceOrderService;
 
 	@ApiOperation(value = "按服务项目名称查找服务项目集合", notes = "tangwt")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "typeName", value = "服务项目名称", required = false, dataType = "String"),
@@ -71,6 +76,22 @@ public class ServiceOrderController {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"项目ID为空");
 		}
 		return serviceTypeService.updateServiceTypeStatus(serviceTypeId);
+	}
+	
+	@ApiOperation(value = "按订单状态查找服务订单集合", notes = "tangwt")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "orderStatus", value = "服务订单状态", required = true, dataType = "int"),
+			@ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", required = true, dataType = "int"),
+			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", required = true, dataType = "int"),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "每页条数", required = true, dataType = "int") })
+	@GetMapping(value = "findordersbystatus")
+	public ResponseEntity<RestModel<List<ServiceOrderDto>>> findServiceOrdersByOrderStatus(Integer orderStatus,Integer storeId, Integer pageIndex, Integer pageSize) {
+		return serviceOrderService.findServiceOrdersByOrderStatus(orderStatus,storeId, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "服务订单完成接口", notes = "tangwt")
+	@PostMapping("finishorder")
+	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("serviceOrderId")Integer serviceOrderId){
+		return serviceOrderService.finishOrder(Authorization,serviceOrderId);
 	}
 
 }

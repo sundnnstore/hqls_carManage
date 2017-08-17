@@ -1,0 +1,144 @@
+.commodity,
+.addCommodity {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.head>div {
+    margin: 5px 20px 0 0;
+}
+
+.head>div>label {
+    width: inherit;
+    padding: 9px 0;
+    text-align: left;
+}
+
+.head>div>div {
+    margin-left: 68px;
+}
+
+.head>.lastchild>div {
+    margin-left: 40px;
+}
+
+button {
+    width: 90px;
+    border-radius: 4px;
+    margin: 5px 5px 0 5px !important;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 20px;
+}
+
+.tableContainer>table th,
+.modelTableContainer>table th,
+.tableContainer>table td,
+.modelTableContainer>table td {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.tableContainer .operation {
+    padding: 0 15px;
+}
+
+.tableContainer .operation>a {
+    min-width: 60px;
+    display: inline-block;
+    text-align: center;
+    padding: 9px 0;
+    cursor: pointer;
+}
+
+
+/* 新增商品信息的样式 */
+
+.addCommodity {
+    padding: 15px 20px;
+}
+
+.addCommodity .head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.addCommodity .head>div {
+    padding-right: 40px;
+}
+
+.addCommodity .head input,
+.addCommodity .head select {
+    width: 210px;
+}
+
+.modelTableContainer table {
+    padding-right: 40px;
+}
+
+.modelTableContainer .caption {
+    text-align: left;
+    padding: 10px 0 8px 0;
+}
+
+.modelTableContainer td {
+    width: 25%;
+    padding: 9px 10px;
+}
+
+.modelTableContainer td input {
+    width: 100%;
+    border: none;
+    background: transparent;
+}
+
+.modelTableContainer .newParam {
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: #fff;
+    font-size: 20px;
+    background: cornflowerblue;
+    border-radius: 50%;
+    text-align: center;
+    float: right;
+    cursor: pointer;
+}
+
+.uploadImgTitle {
+    margin: 20px 0 8px 0px;
+}
+
+.uploadImg .siteUpload {
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    margin-right: 8px;
+}
+
+.uploadImg .siteUpload:last-child {
+    margin-right: 0;
+}
+
+.uploadImg .siteUpload img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.uploadImg .siteUpload .layui-box {
+    width: 118px;
+    height: 120px;
+    line-height: 120px;
+}

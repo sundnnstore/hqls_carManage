@@ -1,0 +1,60 @@
+.layui-main {
+	width: auto;
+	margin: 0 15px;
+}
+.layui-form-label{
+	text-align: center;
+}
+.layui-nav-side {
+	top: 60px;
+}
+
+.header-demo .logo {
+	left: 40px;
+}
+
+.logo {
+	position: absolute;
+	left: 0;
+	top: 16px;
+}
+
+.logo img {
+	width: 82px;
+	height: 31px;
+}
+
+img {
+	display: inline-block;
+	border: none;
+}
+
+.header-demo .layui-nav {
+	top: 0;
+}
+
+.header {
+	background-color: #393D49;
+}
+
+.header .layui-nav {
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding: 0;
+	background: none;
+}
+.layui-nav-tree .layui-nav-child a{
+	padding-left: 30px;
+}
+.layui-tab-content{
+	top:60px;
+	padding: 20px 15px;
+}
+.layui-table td, .layui-table th{
+	text-align: center;
+}
+.layui-btn {
+	width: 76px;
+	padding: 0px 11px;
+}

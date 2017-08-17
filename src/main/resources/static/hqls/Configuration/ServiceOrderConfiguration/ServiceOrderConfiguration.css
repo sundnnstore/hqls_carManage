@@ -1,0 +1,37 @@
+.mylayui-table,
+.layui-table {
+	width: auto;
+	background-color: transparent;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.layui-table {
+	margin: 0px;
+}
+
+.layui-table td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.mylayui-item {
+	padding: 0px 40px
+}
+
+.shipbox {
+	text-align: center;
+}
+
+.shipbox button {
+	width: 200px;
+}
+.imgBox{
+	display: inline-block;
+}
+.mylayui-img{
+	width: 120px;
+	height: 120px;
+}
+
