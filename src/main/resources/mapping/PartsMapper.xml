@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.sinoauto.dao.mapper.PartsMapper">
-<<<<<<< HEAD
 
 	<resultMap type="com.sinoauto.dto.PartsDetailDto" id="detail">
 		<id column="parts_id" property="partsId" />
@@ -37,8 +36,6 @@
 		where parts.parts_id = #{partsId} and parts.is_usable = 1
 	</select>
 
-=======
->>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
         parts_id, parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
