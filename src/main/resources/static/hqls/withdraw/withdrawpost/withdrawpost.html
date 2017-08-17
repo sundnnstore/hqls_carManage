@@ -1,0 +1,104 @@
+<link rel="stylesheet" type="text/css" href="withdraw/withdrawpost/withdrawpost.css" />
+<div>
+	提现请求管理
+</div>
+<div>
+	<div class="layui-inline">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
+				<option value="0">已驳回</option>
+				<option value="1">已通过</option>
+				<option value="2">待审核</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">门店</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
+				<option value="0">门店</option>
+
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">操作人</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入操作人" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">时间</label>
+		<div class="layui-input-inline">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<button class="layui-btn" id='searchOrder'>搜索</button>
+	</div>
+</div>
+<div class="All-order-list">
+	<table class="layui-table mylayui-table">
+		<tbody>
+			<tr>
+				<td>提现门店:</td>
+				<td>*****************</td>
+				<td>提现金额:</td>
+				<td>505050</td>
+				<td>选择银行:</td>
+				<td>222******</td>
+				<td>银行账号:</td>
+				<td>******************</td>
+				<td>开户行:</td>
+				<td>**********-*****</td>
+				<td>状态:</td>
+				<td>待审核</td>
+				<td>操作:</td>
+				<td class="operating">
+					<button class="layui-btn layui-btn-normal operating-btn">确认</button>
+					<button class="layui-btn layui-btn-danger operating-btn">拒绝</button>
+				</td>
+			</tr>
+			<tr>
+				<td>提现门店:</td>
+				<td>*****************</td>
+				<td>提现金额:</td>
+				<td>505050</td>
+				<td>选择银行:</td>
+				<td>222******</td>
+				<td>银行账号:</td>
+				<td>******************</td>
+				<td>开户行:</td>
+				<td>**********-*****</td>
+				<td>状态:</td>
+				<td>待审核</td>
+				<td>操作人:</td>
+				<td>*****</td>
+				<td>操作时间</td>
+				<td>2016-12-06</td>
+			</tr>
+
+			<tr>
+				<td>提现门店:</td>
+				<td>*****************</td>
+				<td>提现金额:</td>
+				<td>505050</td>
+				<td>选择银行:</td>
+				<td>222******</td>
+				<td>银行账号:</td>
+				<td>******************</td>
+				<td>开户行:</td>
+				<td>**********-*****</td>
+				<td>状态:</td>
+				<td>待审核</td>
+				<td>操作人:</td>
+				<td>*****</td>
+				<td>操作时间</td>
+				<td>2016-12-06</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript" src="withdraw/withdrawpost/withdrawpost.js">
+</script>
