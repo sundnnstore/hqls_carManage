@@ -42,7 +42,7 @@ public class HqlsStore implements Serializable {
 	@ApiModelProperty("市名称")
 	private String cityName;
 	@ApiModelProperty("区县名称")
-	private String countName;
+	private String countyName;
 	@ApiModelProperty("详细地址")
 	private String address;
 	@ApiModelProperty("背景图片URL")
@@ -280,13 +280,11 @@ public class HqlsStore implements Serializable {
 			this.cityName = cityName;
 		}
 	}
-	public String getCountName() {
-		return countName;
+	public String getCountyName() {
+		return countyName;
 	}
-	public void setCountName(String countName) {
-		if (countName != null) {
-			this.countName = countName;
-		}
+	public void setCountyName(String countyName) {
+		this.countyName = countyName;
 	}
 	
 }
