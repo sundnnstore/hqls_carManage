@@ -1,6 +1,7 @@
 package com.sinoauto.dao.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Param;
 
 import com.sinoauto.dao.bean.HqlsPartsPic;
@@ -8,6 +9,9 @@ import com.sinoauto.dao.bean.HqlsPartsPic;
 @Mapper
 public interface PartsPicMapper {
 
+	@Select("select url from hqls_parts_pic where parts_id = #{1} order by sorting limit 0,1")
+	public String getFirstUrlByPartsId(Integer partsId);
+	
 	/**
 	 *  新增商品图片
 	 * 	@User liud
