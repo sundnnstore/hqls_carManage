@@ -21,4 +21,7 @@ public interface ShipAddressMapper {
 	@Select("select * from hqls_ship_address")
 	public Page<HqlsShipAddress> findAll();
 	
+	@Select("select * from hqls_ship_address where ship_address_id = #{1}")
+	public HqlsShipAddress getShipAddressById(Integer shipAddressId);
+	
 }

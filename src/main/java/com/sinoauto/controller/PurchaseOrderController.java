@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -103,6 +104,35 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<ShopCartInfoDto>> checkShopCart(@RequestBody List<ShopCartParamDto> param) {
 		
 		return purchaseOrderService.checkShopCart(param);
+	}
+	
+	@ApiOperation(value = "按订单状态查询", notes = "wuxiao")
+	@GetMapping("findorderbystoreidandstatus")
+	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
+			@RequestParam(value = "storeId", required = true) Integer storeId,
+			@RequestParam(value = "orderStatus", required = false) Integer orderStatus) {
+		
+		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
+	}
+	
+	@ApiOperation(value = "按订单Id查询", notes = "wuxiao")
+	@GetMapping("findorderbyorderid")
+	public ResponseEntity<RestModel<PurchaseOrderParamDto>> findOrderByOrderId(
+			@RequestParam(value = "orderId", required = true) Integer orderId) {
+		
+		return purchaseOrderService.getOrderByOrderId(orderId);
+	}
+	
+	@ApiOperation(value = "支付操作", notes = "wuxiao")
+	@GetMapping("payoperation")
+	public ResponseEntity<RestModel<String>> payOperation(
+			@RequestParam(value = "orderId", required = true) Integer orderId,
+			@RequestParam(value = "payType", required = true) Integer payType,
+			@RequestParam(value = "money", required = true) Double money,
+			@RequestParam(value = "payNo", required = true) String payNo,
+			@RequestHeader(value="Authorization") String Authorization) {
+		
+		return purchaseOrderService.payOperation(orderId, payType, money, payNo, Authorization);
 	}
 	
 }

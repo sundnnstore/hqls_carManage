@@ -24,8 +24,12 @@ public class PartsDesListDto {
 	private Double curPrice;
 	@ApiModelProperty("封面图")
 	private String partsPic;
+	@ApiModelProperty("下单时价格")
+	private Double buyPrice;
 	@ApiModelProperty("购买数量")
 	private Integer purchaseNum;
+	@ApiModelProperty("上下架")
+	private Integer isUsable;
 
 	public Integer getPartsId() {
 		return partsId;
@@ -106,4 +110,15 @@ public class PartsDesListDto {
 			this.purchaseNum = purchaseNum;
 		}
 	}
+
+	public Double getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(Double buyPrice) {
+		if (buyPrice != null) {
+			this.buyPrice = buyPrice;
+		}
+	}
+	
 }
