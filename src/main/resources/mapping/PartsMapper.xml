@@ -18,28 +18,27 @@
 	<!-- 修改 -->
 	<update id="update" parameterType="HqlsParts">
 	   UPDATE hqls_parts SET
-		   parts_code = #{partsCode}, 
-		   parts_name = #{partsName}, 
-		   parts_model = #{partsModel}, 
-		   parts_unit = #{partsUnit}, 
-		   parts_spec = #{partsSpec}, 
-		   parts_brand_id = #{partsBrandId}, 
-		   parts_factory = #{partsFactory}, 
-		   origin = #{origin}, 
-		   shelf_life = #{shelfLife}, 
-		   price = #{price}, 
-		   discount = #{discount}, 
-		   cur_price = #{curPrice}, 
-		   remark = #{remark}, 
-		   is_usable = #{isUsable}, 
-		   parts_type_id = #{partsTypeId}, 
-		   create_time = #{createTime}, 
-		   dml_time = #{dmlTime}
+		   <if test="partsCode!=null"> parts_code = #{partsCode},</if> 
+		   <if test="partsName!=null"> parts_name = #{partsName}, </if>
+		   <if test="partsModel!=null"> parts_model = #{partsModel}, </if>
+		   <if test="partsUnit!=null"> parts_unit = #{partsUnit}, </if>
+		   <if test="partsSpec!=null"> parts_spec = #{partsSpec}, </if>
+		   <if test="partsBrandId!=null"> parts_brand_id = #{partsBrandId},</if> 
+		   <if test="partsFactory!=null"> parts_factory = #{partsFactory}, </if>
+		   <if test="origin!=null"> origin = #{origin}, </if>
+		   <if test="shelfLife!=null"> shelf_life = #{shelfLife},</if> 
+		   <if test="price!=null"> price = #{price}, </if>
+		   <if test="discount!=null"> discount = #{discount},</if> 
+		   <if test="curPrice!=null"> cur_price = #{curPrice}, </if>
+		   <if test="remark!=null"> remark = #{remark}, </if>
+		   <if test="isUsable!=null"> is_usable = #{isUsable}, </if>
+		   <if test="partsTypeId!=null"> parts_type_id = #{partsTypeId},</if> 
+		   dml_time = now()
 	   WHERE 
 		   parts_id = #{partsId}
 	</update>
 	
-	<!-- 中台查询配件信息 -->
+	<!-- 中台查询配件信息接口，详细信息查询接口，或者是编辑-->
 	<select id="findPartsByCondition" resultType="com.sinoauto.dto.PartsDto">
 		select
 			pa.parts_id,pa.parts_name,pa.parts_code,
@@ -59,6 +58,6 @@
 		 	<if test="partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
 		 	<if test="pid!=null"> and hpt.pid=#{pid}</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
-		
-</select>
+	</select>
+	
 </mapper>
