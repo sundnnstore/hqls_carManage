@@ -28,7 +28,7 @@ public interface UserMapper {
 	@Update("UPDATE hqls_user SET is_useable= " + " CASE is_useable " + " WHEN 0 THEN 1 " + " WHEN 1 THEN 0 " + "END " + "WHERE user_id = #{1}")
 	public int updateUserStatus(Integer userId);
 
-	@Select("UPDATE hqls_user set mobile=#{account} where user_id = #{userId}")
+	@Update("UPDATE hqls_user set mobile=#{account} where user_id = #{userId}")
 	public String changeAccount(@Param("account") String account, @Param("userId") Integer userId);
 
 }
