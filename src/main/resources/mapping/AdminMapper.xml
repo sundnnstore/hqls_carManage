@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.AdminMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        user_id, global_user_id, user_name, mobile, is_useable, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsAdmin" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_admin (
+	        global_user_id, user_name, mobile, is_useable, create_time
+	    ) VALUES (
+	        #{globalUserId}, #{userName}, #{mobile}, #{isUseable}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsAdmin">
+	   UPDATE hqls_admin SET
+		   global_user_id = #{globalUserId}, 
+		   user_name = #{userName}, 
+		   mobile = #{mobile}, 
+		   is_useable = #{isUseable}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   user_id = #{userId}
+	</update>
+	
+</mapper>
