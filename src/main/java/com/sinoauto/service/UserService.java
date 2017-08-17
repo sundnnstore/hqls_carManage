@@ -20,6 +20,7 @@ import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.mapper.AuthorityMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.UserDto;
+import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
@@ -109,6 +110,32 @@ public class UserService {
 	 */
 	@Transactional
 	public ResponseEntity<RestModel<String>> addUser(UserDto userDto){
+		RestModel<Integer> registerInfo = authService.register(userDto.getMobile(),"123456");
+		HqlsUser user = new HqlsUser();
+		user.setIsUseable(true);
+		user.setMobile(userDto.getMobile());
+		user.setPassword("123456");
+		user.setUserName(userDto.getUserName());
+		Integer globalUserId = null;
+		if (registerInfo.getErrcode() == 0) {//注册成功
+			globalUserId = registerInfo.getResult(); //用户中心的编号
+			user.setGlobalUserId(globalUserId);
+			//return RestModel.success(userMapper.insert(user));
+			
+		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
+			if(uInfo.getErrcode() == 0){
+				globalUserId = uInfo.getResult().getUserId();
+				user.setGlobalUserId(globalUserId);
+				//return RestModel.success(userMapper.insert(user));
+			} else {
+				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+			}
+			
+		} else {
+			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+			
+		}
 		return null;
 	}
 
