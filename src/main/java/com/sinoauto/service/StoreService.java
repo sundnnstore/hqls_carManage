@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sinoauto.dao.bean.HqlsStore;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.bean.HqlsUserStore;
 import com.sinoauto.dao.mapper.StoreMapper;
@@ -175,8 +176,25 @@ public class StoreService {
 		user.setIsUseable(true);
 		user.setCreateTime(new Date());
 		user.setDmlTime(new Date());
+		HqlsStore store = new HqlsStore();
+		store.setAddress(storeInfoDto.getAddress());
+		store.setBackUrl(storeInfoDto.getBackUrl());
+		store.setCityId(storeInfoDto.getCityId());
+		store.setCityName(storeInfoDto.getCityName());
+		store.setCountyId(storeInfoDto.getCountyId());
+		store.setCountyName(storeInfoDto.getCountyName());
+		store.setIsUseable(1);
+		store.setLatitude(storeInfoDto.getLatitude());
+		store.setLongitude(storeInfoDto.getLongitude());
+		store.setMobile(storeInfoDto.getStoreMobile());
+		store.setPid(storeInfoDto.getPid());
+		store.setProvinceId(storeInfoDto.getProvinceId());
+		store.setProvinceName(storeInfoDto.getProvinceName());
+		store.setStoreCode(storeInfoDto.getStoreId().toString());
+		store.setStoreName(storeInfoDto.getStoreName());
+		
 		//新增门店信息
-		int storeId = storeMapper.insert(storeInfoDto.getStore());
+		int storeId = storeMapper.insert(store);
 		//注册用户信息
 		RestModel<Integer> registerInfo = authService.register(mobile,password);
 		//查询当前用户在系统中是否存在
@@ -192,7 +210,6 @@ public class StoreService {
 			}else{
 				userMapper.insert(user);
 				userId = user.getUserId();
-				return RestModel.success(userId);
 			}
 			//新增用户门店信息表
 			HqlsUserStore userStore = new HqlsUserStore();
@@ -211,7 +228,6 @@ public class StoreService {
 				}else{
 					userMapper.insert(user);
 					userId = user.getUserId();
-					return RestModel.success(userId);
 				}
 				//新增用户门店信息表
 				HqlsUserStore userStore = new HqlsUserStore();
