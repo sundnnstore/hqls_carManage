@@ -45,7 +45,7 @@ public class PartsController {
 	@ApiOperation(value="",notes="liud")
 	@GetMapping(value="findparts")
 	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@RequestBody PartsDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
-		return partsService.findPartsByCondition(partsDto);
+		return partsService.findPartsByCondition(partsDto,pageIndex,pageSize);
 	}
 	
 }

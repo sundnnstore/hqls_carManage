@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dao.bean.HqlsPartsPic;
@@ -46,7 +47,8 @@ public class PartsService {
 	 * @param partsDto
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(PartsDto partsDto){
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(PartsDto partsDto,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
 		List<PartsDto> partsDtos = null;//返回集合
 		Page<PartsDto> partsDtoPage=null;//返回页面
 		try {
