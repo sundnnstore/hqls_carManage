@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsUserStore" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsUserStore" useGeneratedKeys="true" keyProperty="userStoreId">
 	    INSERT INTO hqls_user_store (
 	        user_id, store_id
 	    ) VALUES (

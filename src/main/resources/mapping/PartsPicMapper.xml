@@ -28,4 +28,8 @@
 		   parts_pic_id = #{partsPicId}
 	</update>
 	
+	
+	<delete id="delete">
+		delete from hqls_parts_pic where parts_id =#{partsId}
+	</delete>
 </mapper>

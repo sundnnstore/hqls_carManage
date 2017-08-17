@@ -26,4 +26,8 @@
 		   parts_attr_extr_id = #{partsAttrExtrId}
 	</update>
 	
+	<delete id="delete">
+		delete from hqls_parts_attr_extr where parts_id =#{partsId}
+	</delete>
+	
 </mapper>
