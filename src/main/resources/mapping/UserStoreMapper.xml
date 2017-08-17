@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.UserStoreMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        user_store_id, user_id, store_id
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsUserStore" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_user_store (
+	        user_id, store_id
+	    ) VALUES (
+	        #{userId}, #{storeId}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsUserStore">
+	   UPDATE hqls_user_store SET
+		   user_id = #{userId}, 
+		   store_id = #{storeId}
+	   WHERE 
+		   user_store_id = #{userStoreId}
+	</update>
+	
+</mapper>

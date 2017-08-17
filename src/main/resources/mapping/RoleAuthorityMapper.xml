@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.RoleAuthorityMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        role_authority_id, role_id, authority_id
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsRoleAuthority" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_role_authority (
+	        role_id, authority_id
+	    ) VALUES (
+	        #{roleId}, #{authorityId}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsRoleAuthority">
+	   UPDATE hqls_role_authority SET
+		   role_id = #{roleId}, 
+		   authority_id = #{authorityId}
+	   WHERE 
+		   role_authority_id = #{roleAuthorityId}
+	</update>
+	
+</mapper>

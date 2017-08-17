@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.StoreMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_store (
+	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
+	    ) VALUES (
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable}, #{createTime}, #{dmlTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsStore">
+	   UPDATE hqls_store SET
+		   pid = #{pid}, 
+		   store_name = #{storeName}, 
+		   mobile = #{mobile}, 
+		   longitude = #{longitude}, 
+		   latitude = #{latitude}, 
+		   store_code = #{storeCode}, 
+		   province_id = #{provinceId}, 
+		   city_id = #{cityId}, 
+		   county_id = #{countyId},
+		   province_name = #{provinceName}, 
+		   city_name = #{cityName}, 
+		   county_name = #{countyName}, 
+		   address = #{address}, 
+		   back_url = #{backUrl}, 
+		   is_useable = #{isUseable}, 
+		   create_time = #{createTime}, 
+		   dml_time = #{dmlTime}
+	   WHERE 
+		   store_id = #{storeId}
+	</update>
+	
+	
+	<select id="findStoreInfo" parameterType="int" resultType="com.sinoauto.dto.StoreDto">
+		SELECT
+		sto.address,
+		sto.back_url as backUrl,
+		sto.mobile as stoMobile,
+		sto.province_id as provinceId,
+		sto.city_id as cityId,
+		sto.county_id as countyId,
+		sto.store_id as storeId,
+		sto.longitude,
+		sto.latitude,
+		sto.is_useable as isUseable,
+		users.mobile as userMobile,
+		sto.store_name as storeName,
+		sto.store_code as storeCode
+		FROM
+		hqls_store sto
+		LEFT JOIN 
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		left join
+		hqls_user users
+		on users.user_id = usto.user_id
+		WHERE
+		users.user_id=#{userId}
+		and users.is_useable=1
+		and sto.is_useable=1
+		order by sto.create_time
+	</select>
+	
+	
+	<select id="getStore" resultType="com.sinoauto.dto.StoreInfoDto">
+		select 
+		hqus.user_name as userName,
+		hqus.mobile ,
+		sto.address,
+		sto.back_url,
+		sto.is_useable as isUseable,
+		sto.store_name as storeName,
+		sto.store_id as storeId
+		FROM
+		hqls_store sto
+		LEFT JOIN
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		LEFT JOIN 
+		hqls_user hqus
+		on
+		hqus.user_id = usto.user_id
+		WHERE hqus.is_useable=1
+		and sto.is_useable=1
+		<if test="storeName !=null"> and sto.store_name=#{storeName}</if>
+		<if test="userName != null"> and hqus.user_name=#{userName}</if>
+		<if test="mobile != null"> and hqus.mobile=#{mobile}</if>
+		<if test="address != null"> and sto.address=#{address}</if>
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.OrderDetailMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        order_detail_id, purchase_order_id, parts_id, buy_price, buy_count, discount_price, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsOrderDetail" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_order_detail (
+	        purchase_order_id, parts_id, buy_price, buy_count, discount_price, create_time
+	    ) VALUES (
+	        #{purchaseOrderId}, #{partsId}, #{buyPrice}, #{buyCount}, #{discountPrice}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsOrderDetail">
+	   UPDATE hqls_order_detail SET
+		   purchase_order_id = #{purchaseOrderId}, 
+		   parts_id = #{partsId}, 
+		   buy_price = #{buyPrice}, 
+		   buy_count = #{buyCount}, 
+		   discount_price = #{discountPrice}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   order_detail_id = #{orderDetailId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.PartsAttrExtrMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        parts_attr_extr_id, parts_id, attr_key, attr_value
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsPartsAttrExtr" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO hqls_parts_attr_extr (
+	        parts_id, attr_key, attr_value
+	    ) VALUES (
+	        #{partsId}, #{attrKey}, #{attrValue}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HqlsPartsAttrExtr">
+	   UPDATE hqls_parts_attr_extr SET
+		   parts_id = #{partsId}, 
+		   attr_key = #{attrKey}, 
+		   attr_value = #{attrValue}
+	   WHERE 
+		   parts_attr_extr_id = #{partsAttrExtrId}
+	</update>
+	
+</mapper>
