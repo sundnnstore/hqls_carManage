@@ -187,7 +187,7 @@ public class StoreService {
 		user.setMobile(mobile);
 		user.setUserName(userName);
 		user.setPassword(password);
-		user.setIsUseable(1);
+		user.setIsUseable(true);
 		user.setCreateTime(new Date());
 		user.setDmlTime(new Date());
 		
