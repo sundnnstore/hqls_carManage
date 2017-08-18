@@ -69,8 +69,8 @@ public class UserService {
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		HqlsUser user = userMapper.getUserByGloabUserId(userId);
 		if (user != null) {
-			List<HqlsAuthority> firstAuthority = authorityMapper.findFirstAuthorities(userId, isBack);
-			List<HqlsAuthority> secondAuthority = authorityMapper.findSecondAuthorities(userId, isBack);
+			List<HqlsAuthority> firstAuthority = authorityMapper.findFirstAuthorities(user.getUserId(), isBack);
+			List<HqlsAuthority> secondAuthority = authorityMapper.findSecondAuthorities(user.getUserId(), isBack);
 			// 组合map
 			Map<HqlsAuthority, Set<HqlsAuthority>> menuMap = new HashMap<>();
 			Map<String, Set<HqlsAuthority>> returnMap = new HashMap<>();
