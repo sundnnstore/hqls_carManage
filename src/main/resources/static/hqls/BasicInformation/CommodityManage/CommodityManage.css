@@ -23,37 +23,14 @@
     margin-left: 40px;
 }
 
-button {
-    width: 90px;
-    border-radius: 4px;
+.head>button {
     margin: 5px 5px 0 5px !important;
 }
 
 .tableContainer {
     width: 100%;
     overflow: auto;
-    margin-top: 20px;
-}
-
-.tableContainer>table th,
-.modelTableContainer>table th,
-.tableContainer>table td,
-.modelTableContainer>table td {
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-.tableContainer .operation {
-    padding: 0 15px;
-}
-
-.tableContainer .operation>a {
-    min-width: 60px;
-    display: inline-block;
-    text-align: center;
-    padding: 9px 0;
-    cursor: pointer;
+    margin-top: 15px;
 }
 
 
