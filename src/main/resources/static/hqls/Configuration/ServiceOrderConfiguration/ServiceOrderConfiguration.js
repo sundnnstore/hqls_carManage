@@ -29,6 +29,11 @@ layui.use(['jquery', 'layer','laypage'], function() {
 			shade: 0
 		})
 	})
+	
+	$(".layui-btn").click(function(){
+		
+	});
+	
 	// 点击上架还是下架
 	$('body').on('click','.uORd', function() {
 		let flag = changeStatus($(this).attr("name"));
