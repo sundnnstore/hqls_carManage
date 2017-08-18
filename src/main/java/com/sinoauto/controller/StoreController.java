@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -66,7 +67,7 @@ public class StoreController {
 						 @ApiImplicitParam(paramType = "query", name = "countyId", value = "区县ID", required = false, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页数", required = true, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "pageSize", value = "个数", required = true, dataType = "int")})
-	@PostMapping("findstoreinfo")
+	@GetMapping("findstoreinfo")
 	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId,Integer pageIndex,Integer pageSize){
 		return storeService.findStore(storeName,userName,mobile,address,provinceId,cityId,countyId,pageIndex,pageSize);
 		

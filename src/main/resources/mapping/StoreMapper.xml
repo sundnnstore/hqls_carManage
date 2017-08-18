@@ -98,10 +98,10 @@
 		on
 		hqus.user_id = usto.user_id
 		where 1=1 
-		<if test="storeName !=null and storeName != '' "> and sto.store_name=#{storeName}</if>
-		<if test="userName != null and userName != '' "> and hqus.user_name=#{userName}</if>
-		<if test="mobile != null and mobile != '' "> and hqus.mobile=#{mobile}</if>
-		<if test="address != null and address !='' " > and sto.address=#{address}</if>
+		<if test="storeName !=null and storeName != '' "> and sto.store_name like concat('%',#{storeName},'%')</if>
+		<if test="userName != null and userName != '' "> and hqus.user_name like concat('%',#{userName},'%')</if>
+		<if test="mobile != null and mobile != '' "> and hqus.mobile like concat('%',#{mobile},'%')</if>
+		<if test="address != null and address !='' " > and sto.address like concat('%',#{address},'%')</if>
 		<if test="provinceId != null and provinceId != '' "> and sto.province_id = #{provinceId}</if>
 		<if test="cityId != null and cityId != '' "> and sto.city_id =#{cityId}</if>
 		<if test="countyId != null and countyId != '' "> and sto.county_id =#{countyId}</if>

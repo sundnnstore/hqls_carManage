@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <button id="searchStore" class="layui-btn" onclick="findStore()">搜索</button>
+        <button id="searchStore" class="layui-btn" >搜索</button>
         <button id="addStore" class="layui-btn" onclick="addStore()">新增</button>
     </div>
     <!-- 门店信息展示 -->
@@ -86,6 +86,7 @@
                     </tr> -->
                 </tbody>
             </table>
+            <div id="pages" style="text-align: right;"></div>
         </div>
     </div>
 </div>
@@ -124,47 +125,7 @@
  	 }
  	 $("#county").html(ci);
  }
-	function findStore(){
-		$.ajax({
-    	url : "http://localhost:8881/findstoreinfo",
-		type : "post",
-		data : { "storeName":$("#storeName").val(),"userName":$("#userName").val(),
-				 "userMobile":$("#userMobile").val(), 
-				 "provinceId":$("#province").val(),
-				 "cityId":$("#city").val(),
-				 "countyId":$("#county").val(), 
-				 "pageIndex":1,
-				 "pageSize":5},
-				
-		
-    	success : function(data){
-    		var list = data.result;
-    		var tb_html="";
-    		var store_tb = $("#store_tb");
-    		for(i=0;i<list.length;i++){
-    			var tr_html=list[i];
-    			var status = "启用";
-    			if(tr_html.isUseable){
-    				status = "禁用";
-    			}
-    			tb_html += '<tr><td>'+tr_html.storeName+'</td>'+
-    						'<td>'+tr_html.userName+'</td>'+
-    						'<td>'+tr_html.mobile+'</td>'+
-    						'<td>'+tr_html.address+'</td>'+
-    						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
-    						'<td>'+
-    						'<a data-method="view">查看</a> '+
-    						'<a data-method="edit">编辑</a> '+
-    						'<a data-method="idEnable" onclick="isEnable('+tr_html.storeId+')">'+status+'</a> '+
-    						'</td></tr>'
-    				
-    		}
-    			store_tb.html(tb_html);
-    		
-    		}
-    		
-    }); 
-}
+	
 	
 	
 	function isEnable(storeId){
