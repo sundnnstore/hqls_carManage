@@ -19,6 +19,8 @@
 	
 	<resultMap type="com.sinoauto.dto.PartsDesListDto" id="desList">
 		<id column="parts_id" property="partsId"/>
+		<result column="buy_count" property="purchaseNum" />
+		<result column="buy_price" property="buyPrice"/>
 		<association column="parts_id" property="partsPic" select="com.sinoauto.dao.mapper.PartsPicMapper.getFirstUrlByPartsId"/>
 	</resultMap>
 	
@@ -31,9 +33,18 @@
 	
 	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
 		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
-				parts.parts_spec, parts.cur_price
+				parts.parts_spec, parts.cur_price, parts.is_usable
 		from hqls_parts as parts 
-		where parts.parts_id = #{partsId} and parts.is_usable = 1
+		where parts.parts_id = #{partsId}
+	</select>
+	
+	<select id="findPartsListByOrderId" parameterType="Integer" resultMap="desList">
+		select detail.buy_count, detail.buy_price,
+				parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
+				parts.parts_spec, parts.cur_price, parts.is_usable
+		from hqls_order_detail as detail
+		left join hqls_parts as parts on detail.parts_id = parts.parts_id
+		where detail.purchase_order_id = #{orderId}
 	</select>
 
 	<!-- 用于select查询公用抽取的列 -->

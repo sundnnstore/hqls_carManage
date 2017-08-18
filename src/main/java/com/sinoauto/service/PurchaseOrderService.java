@@ -11,15 +11,19 @@ import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsOrderDetail;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
+import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.OrderDetailMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dao.mapper.ShipAddressMapper;
+import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
@@ -27,6 +31,7 @@ import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.entity.TokenModel;
 
 
 @Service
@@ -39,6 +44,12 @@ public class PurchaseOrderService {
 	private PurchaseOrderMapper purchaseOrderMapper;
 	@Autowired
 	private OrderDetailMapper orderDetailMapper;
+	@Autowired
+	private AuthService authService;
+	@Autowired
+	private UserMapper userMapper;
+	@Autowired
+	private FinanceFlowMapper financeFlowMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -150,6 +161,72 @@ public class PurchaseOrderService {
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "购物车查询异常");
 	}
 	
+	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus) {
+		
+		return RestModel.success(purchaseOrderMapper.findOrder(storeId, orderStatus));
+	}
+	
+	public ResponseEntity<RestModel<PurchaseOrderParamDto>> getOrderByOrderId(Integer orderId) {
+		//计算总费用
+		PurchaseOrderParamDto order = purchaseOrderMapper.getOrderByOrderId(orderId);
+		BigDecimal totalFee = new BigDecimal(calculationAmount(order.getPartsList()));
+		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
+		order.setTotalFee(totalFee.setScale(2, RoundingMode.HALF_UP).doubleValue());
+		
+		return RestModel.success(order);
+	}
+	
+	@Transactional
+	public ResponseEntity<RestModel<String>> payOperation(Integer orderId, Integer payType, double money, String payNo, String token) {
+		// 获取当前用户
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		HqlsUser user = userMapper.getUserByGloabUserId(userId);
+		if (user == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "用户不存在");
+		}
+		
+		try {
+			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+			if (null == order) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单不存在");
+			}
+			List<HqlsOrderDetail> detail = orderDetailMapper.getDetailByOrderId(orderId);
+			// 计算优惠
+			BigDecimal originPrice = new BigDecimal(0.00);
+			for (HqlsOrderDetail d: detail) {
+				originPrice = originPrice.add(new BigDecimal(d.getBuyPrice()).multiply(new BigDecimal(d.getBuyCount())));
+			}
+			Double discountFee = (originPrice.divide(new BigDecimal(money))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			discountFee = discountFee < 0 ? 0.00 : discountFee;
+			// 修改订单
+			order.setDiscountFee(discountFee);
+			order.setOrderStatus(2);
+			order.setPayFee(money);
+			order.setPayType(payType);
+			order.setPayNo(payNo);
+			purchaseOrderMapper.payOperation(order);
+			
+			//添加财务流水
+			HqlsFinanceFlow flow = new HqlsFinanceFlow();
+			flow.setChangeMoney(money);
+			flow.setChangeType(3);
+			flow.setChargeType(2);
+			flow.setIsDelete(0);
+			flow.setOperPerson(user.getUserName());
+			flow.setOrderNo(order.getOrderNo());
+			flow.setTransactionNo(payNo);
+			financeFlowMapper.insert(flow);
+			return RestModel.success("支付成功");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "支付异常");
+	}
 	
 	
 	/**

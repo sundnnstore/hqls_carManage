@@ -12,7 +12,7 @@
 	    INSERT INTO hqls_finance_flow (
 	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
 	    ) VALUES (
-	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, 0        
+	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
 	    )
 	</insert>
 

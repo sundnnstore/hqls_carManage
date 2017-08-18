@@ -1,7 +1,6 @@
 package com.sinoauto.service;
 import java.util.List;
-
-import org.apache.http.HttpResponse;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +18,28 @@ public class LogisticsLogService {
 	private LogisticsLogMapper logisticsLogMapper; 
 	
 	/**
-	 * 	
+	 * 	物流信息
 	 * 	@User liud
 	 * 	@Date 2017年8月17日下午8:19:57
 	 */
-	public void findLogisticsLogs(Integer purchaseOrderId,HttpResponse response){
-		List<HqlsLogisticsLog> hqlsLogisticsLogs =logisticsLogMapper.findLogisticsLogs(purchaseOrderId);
-		StringBuilder logHtml = new StringBuilder();
-		if(hqlsLogisticsLogs!=null){
-			for (HqlsLogisticsLog hqlsLogisticsLog : hqlsLogisticsLogs) {
-				logHtml.append(hqlsLogisticsLog+"\n");
+	public void findLogisticsLogs(Integer purchaseOrderId,HttpServletResponse response){
+		try {
+			List<HqlsLogisticsLog> hqlsLogisticsLogs =logisticsLogMapper.findLogisticsLogs(purchaseOrderId);
+			String logHtml = "<html>";
+			if(hqlsLogisticsLogs!=null){
+				for (HqlsLogisticsLog hqlsLogisticsLog : hqlsLogisticsLogs) {
+					logHtml+="<div><hr>"+System.currentTimeMillis()+"</hr>";
+					logHtml+=""+hqlsLogisticsLog.getRemark()+"";
+					logHtml+="</div><br>";
+				}
+				logHtml+="</html>";
 			}
+			  response.getWriter().write(logHtml.toString());//直接将完整的表单html输出到页面 
+			  response.getWriter().flush(); 
+			  response.getWriter().close();
+		} catch (Exception e) {
 		}
+		
 	}
 	
 	/**

@@ -2,6 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.sinoauto.dao.mapper.PurchaseOrderMapper">
 
+	<resultMap type="com.sinoauto.dto.PurchaseOrderParamDto" id="orderList">
+		<id column="order_id" property="orderId"/>
+		<result column="ship_address_id" property="shipAddressId" />
+		<association column="ship_address_id" property="shipAddress" select="com.sinoauto.dao.mapper.ShipAddressMapper.getShipAddressById" ></association>
+		<collection column="order_id" property="partsList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
+	</resultMap>
+	
+	<select id="findOrder" parameterType="Integer" resultMap="orderList">
+		select order_id, ship_address_id 
+		from hqls_purchase_order 
+		where store_id = #{storeId}
+		<if test="orderStatus != null">
+			and order_status = #{orderStatus}
+		</if>
+	</select>
+	
+	<select id="findOrderByOrderId" parameterType="Integer" resultMap="orderList">
+		select order_id, ship_address_id, other_fee, remark
+		from hqls_purchase_order
+		where order_id = #{orderId}
+	</select>
+	
+	<update id="payOperation" parameterType="HqlsPurchaseOrder">
+		update hqls_purchase_order set
+		   order_status = #{orderStatus}, 
+		   pay_type = #{payType}, 
+		   pay_no = #{payNo}, 
+		   dml_time = now(), 
+		   discount_fee = #{discountFee}, 
+		   pay_fee = #{payFee}
+	   WHERE 
+		   purchase_order_id = #{purchaseOrderId}
+	</update>
+
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
         purchase_order_id, order_no, order_status, ship_address_id, pay_type, logistics_no, logistics_id, other_fee, total_fee, pay_no, remark, create_time, dml_time, discount_fee, pay_fee, store_id
