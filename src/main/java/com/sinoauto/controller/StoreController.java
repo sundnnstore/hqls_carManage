@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
@@ -108,6 +109,12 @@ public class StoreController {
 	public ResponseEntity<RestModel<String>> changeAccount(@RequestHeader(value = "Authorization") String Authorization,@RequestParam(value="account") String account){
 		return storeService.changeAccount(Authorization,account);
 		
+	}
+	
+	@ApiOperation(value = "查询所有门店",notes = "tangrx")
+	@PostMapping("findallstore")
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
+		return storeService.findAllStore();
 	}
 	
 }

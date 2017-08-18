@@ -30,5 +30,7 @@ public interface UserMapper {
 
 	@Update("UPDATE hqls_user set mobile=#{account} where user_id = #{userId}")
 	public String changeAccount(@Param("account") String account, @Param("userId") Integer userId);
+	
+	
 
 }

@@ -19,6 +19,7 @@ import com.sinoauto.dao.bean.HqlsUserStore;
 import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserStoreMapper;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
@@ -271,5 +272,12 @@ public class StoreService {
         }
 		return RestModel.success();
 		
+	}
+	
+	
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
+		
+		List<CommonDto> store = storeMapper.findAllStore();
+		return RestModel.success(store);
 	}
 }

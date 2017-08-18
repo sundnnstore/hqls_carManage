@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsStore;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
@@ -59,6 +60,10 @@ public interface StoreMapper {
 	
 	
 	public int insert(HqlsStore store);
+	
+	
+	@Select("select store_id,store_name from hqls_store")
+	public List<CommonDto> findAllStore();
 	
 	
 	
