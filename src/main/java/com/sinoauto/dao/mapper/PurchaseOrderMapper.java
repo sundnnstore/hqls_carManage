@@ -49,7 +49,7 @@ public interface PurchaseOrderMapper {
 	 */
 	public int payOperation(HqlsPurchaseOrder order);
 	/**
-	 * 	查询配件列表
+	 * 	查询订单列表
 	 * 	@User liud
 	 * 	@Date 2017年8月17日下午6:06:04
 	 * 	@param purchaseOrderDto
@@ -63,7 +63,7 @@ public interface PurchaseOrderMapper {
 	 * 	@Date 2017年8月17日下午7:43:59
 	 * 	@param order
 	 */
-	@Update("update hqls_purchase_order poo set poo.logistics_id=#{logisticsId},logistics_no=#{logisticsNo} where poo.purchase_order_id=#{purchaseOrderId}")
+	@Update("update hqls_purchase_order poo set poo.logistics_id=#{logisticsId},logistics_no=#{logisticsNo},remark=#{remark} where poo.purchase_order_id=#{purchaseOrderId}")
 	public void confirmShipment(HqlsPurchaseOrder order);
 	
 	/**
