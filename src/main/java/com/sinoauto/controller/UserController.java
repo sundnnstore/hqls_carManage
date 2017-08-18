@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dao.bean.HqlsAuthority;
 import com.sinoauto.dto.UserDto;
+import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.UserService;
@@ -35,7 +36,7 @@ public class UserController {
 
 	@ApiOperation(value = "登录获取token", notes = "tangwt")
 	@PostMapping("login")
-	public ResponseEntity<RestModel<String>> login(@RequestParam(value = "userName", required = true) String userName,
+	public ResponseEntity<RestModel<UserLoginDto>> login(@RequestParam(value = "userName", required = true) String userName,
 			@RequestParam(value = "passWord", required = true) String passWord) {
 		return userService.login(userName, passWord);
 	}

@@ -24,6 +24,7 @@ import com.sinoauto.dao.mapper.AuthorityMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
 import com.sinoauto.dto.UserDto;
+import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
@@ -47,7 +48,7 @@ public class UserService {
 	 * @param password
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> login(String userName, String passWord) {
+	public ResponseEntity<RestModel<UserLoginDto>> login(String userName, String passWord) {
 		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "st", "web", "1.0", UUID.randomUUID().toString());
 		if (rest.getErrcode() != 0) {// 解析token失败
 			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
@@ -57,7 +58,11 @@ public class UserService {
 		if (user == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
 		}
-		return RestModel.success(rest.getResult().getToken());
+		UserLoginDto ul = new UserLoginDto();
+		ul.setMobile(user.getMobile());
+		ul.setUserName(user.getUserName());
+		ul.setToken(rest.getResult().getToken());
+		return RestModel.success(ul);
 	}
 
 	public ResponseEntity<RestModel<Map<String, Set<HqlsAuthority>>>> findUserAuthority(String token, Integer isBack) {
