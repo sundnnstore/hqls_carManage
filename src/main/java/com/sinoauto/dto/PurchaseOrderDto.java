@@ -1,7 +1,8 @@
 package com.sinoauto.dto;
 
 import java.util.Date;
-
+import java.util.List;
+import com.sinoauto.dao.bean.HqlsParts;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -22,6 +23,8 @@ public class PurchaseOrderDto {
 	/**
 	 * 返回集合属性
 	 */
+	List<HqlsParts> parts;
+	
 	@ApiModelProperty("订单编号")
 	private String orderNo;
 	@ApiModelProperty("订单状态名称")
@@ -32,16 +35,16 @@ public class PurchaseOrderDto {
 	private String address;
 	@ApiModelProperty("门店名称")
 	private String storeName;
-	@ApiModelProperty("配件名称")
-	private String partsName;
-	@ApiModelProperty("型号")
-	private String partsModel;
-	@ApiModelProperty("规格")
-	private String partsSpec;
+//	@ApiModelProperty("配件名称")
+//	private String partsName;
+//	@ApiModelProperty("型号")
+//	private String partsModel;
+//	@ApiModelProperty("规格")
+//	private String partsSpec;
+//	@ApiModelProperty("购买金额")
+//	private Double buyPrice;
 	@ApiModelProperty("金额总计")
 	private Double totalFee;
-	@ApiModelProperty("购买金额")
-	private Double buyPrice;
 	@ApiModelProperty("购买数量")
 	private Integer buyCount;
 	/**
@@ -93,36 +96,6 @@ public class PurchaseOrderDto {
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
 	}
-	public String getPartsName() {
-		return partsName;
-	}
-	public void setPartsName(String partsName) {
-		this.partsName = partsName;
-	}
-	public String getPartsModel() {
-		return partsModel;
-	}
-	public void setPartsModel(String partsModel) {
-		this.partsModel = partsModel;
-	}
-	public String getPartsSpec() {
-		return partsSpec;
-	}
-	public void setPartsSpec(String partsSpec) {
-		this.partsSpec = partsSpec;
-	}
-	public Double getTotalFee() {
-		return totalFee;
-	}
-	public void setTotalFee(Double totalFee) {
-		this.totalFee = totalFee;
-	}
-	public Double getBuyPrice() {
-		return buyPrice;
-	}
-	public void setBuyPrice(Double buyPrice) {
-		this.buyPrice = buyPrice;
-	}
 	public Integer getBuyCount() {
 		return buyCount;
 	}
@@ -140,5 +113,17 @@ public class PurchaseOrderDto {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	public List<HqlsParts> getParts() {
+		return parts;
+	}
+	public void setParts(List<HqlsParts> parts) {
+		this.parts = parts;
+	}
+	public Double getTotalFee() {
+		return totalFee;
+	}
+	public void setTotalFee(Double totalFee) {
+		this.totalFee = totalFee;
 	}
 }
