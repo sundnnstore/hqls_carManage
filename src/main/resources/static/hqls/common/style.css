@@ -1,10 +1,37 @@
 .layui-main {
-	width: auto;
 	margin: 0 15px;
+	display: inline-block;
+	width: 165px;
+	text-align: center;
+	line-height: 60px;
+	height: 60px;
 }
-.layui-form-label{
+
+.layui-main a h1 {
+	color: #fff;
+	font-size: 32px;
+}
+
+.layui-admin {
+	height: 60px;
+	display: inline-block;
+	text-align: right;
+	line-height: 60px;
+	position: absolute;
+	right: 50px;
+}
+
+.layui-admin span {
+	color: #fff;
+	display: inline-block;
+	font-size: 16px;
+	margin-right: 20px;
+}
+
+.layui-form-label {
 	text-align: center;
 }
+
 .layui-nav-side {
 	top: 60px;
 }
@@ -44,16 +71,21 @@ img {
 	padding: 0;
 	background: none;
 }
-.layui-nav-tree .layui-nav-child a{
+
+.layui-nav-tree .layui-nav-child a {
 	padding-left: 30px;
 }
-.layui-tab-content{
-	top:60px;
+
+.layui-tab-content {
+	top: 60px;
 	padding: 20px 15px;
 }
-.layui-table td, .layui-table th{
+
+.layui-table td,
+.layui-table th {
 	text-align: center;
 }
+
 .layui-btn {
 	width: 76px;
 	padding: 0px 11px;

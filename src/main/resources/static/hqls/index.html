@@ -23,12 +23,20 @@ if(token == null || token == ''){
     <!-- html的代码 -->
     <!--顶部展示栏-->
     <div class="layui-header header header-demo">
-        <div class="layui-main">
-            <a class="logo" href="/">
+			<div class="layui-main">
+				<!--<a class="logo" href="/">
                 <img src="images/logo.png">
-            </a>
-        </div>
-    </div>
+            </a>-->
+				<a>
+					<h1>华汽连锁</h1>
+				</a>
+
+			</div>
+			<div class="layui-admin">
+				<span>*****登录</span>
+				<button class="layui-btn" id="logout">退出</button>
+			</div>
+		</div>
     <ul class="layui-nav layui-nav-tree  layui-nav-side" lay-filter="test" id="hq_menu">
         <!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
  <!-- <li class="layui-nav-item layui-nav-itemed">
@@ -147,7 +155,10 @@ if(token == null || token == ''){
     <script type="text/javascript" src="common/index.js">
     </script>
 	<script type="text/javascript">
-	findChildrenByPid(320100);
+	$("#logout").click(function(){
+		localStorage.removeItem("token");//清除token
+		window.location.href="login/login.html"
+	});
 	</script>
 </body>
 
