@@ -16,6 +16,32 @@ layui.use(['jquery', 'layer','laypage'], function() {
 			shade: 0
 		})
 	})
+	
+	$("#okadd").on ('click',function(){
+		var serviceType = {};
+			serviceType.serviceTypeName = $("#service_type_name").val();
+			serviceType.serviceTypeContent=$("#service_type_content").val();
+			serviceType.serviceAmount=$("#service_amount").val();
+			serviceType.url="ceshi";
+			//TODO上传功能
+			serviceType.isUsable=true;
+		$.ajax({
+			url : "http://localhost:8881/addservicetype",
+			type : "post",
+			data:JSON.stringify(serviceType),
+			contentType: 'application/json;charset=utf-8',
+			success : function(data){
+				$("#service_type_name").val("");
+				$("#service_type_content").val("");
+				$("#service_amount").val("");
+				layer.msg("添加成功！");
+			},
+			error : function(data){
+				layer.msg("添加失败！");
+			}
+		});
+	});
+	
 	$('body').on('click','.toView', function() {
 		layer.open({
 			type: 1, // 添加一个模板
@@ -30,9 +56,6 @@ layui.use(['jquery', 'layer','laypage'], function() {
 		})
 	})
 	
-	$(".layui-btn").click(function(){
-		
-	});
 	
 	// 点击上架还是下架
 	$('body').on('click','.uORd', function() {
