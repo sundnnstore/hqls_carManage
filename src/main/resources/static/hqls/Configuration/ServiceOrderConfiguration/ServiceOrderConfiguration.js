@@ -15,6 +15,7 @@ layui.use(['jquery', 'layer'], function() {
 		})
 	})
 	$('.toView').on('click', function() {
+		console.log(11111)
 		layer.open({
 			type: 1, //添加一个模板
 			title: '图片查看',
@@ -36,4 +37,5 @@ layui.use(['jquery', 'layer'], function() {
 		console.log('zq');
 		layer.msg($(this).text()+'成功')
 	})
+	
 })
