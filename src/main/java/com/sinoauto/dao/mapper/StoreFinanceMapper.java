@@ -17,5 +17,10 @@ public interface StoreFinanceMapper {
 	public int getStoreFinanceByStoreId(@Param("storeId")Integer storeId);
 	
 	public int insert(HqlsStoreFinance finance);
+	
+	@Select("select * from hqls_store_finance where store_id = #{storeId}")
+	public HqlsStoreFinance getStoreFinance(Integer storeId);
+	
+	public int updateBalance(HqlsStoreFinance finance);
 
 }

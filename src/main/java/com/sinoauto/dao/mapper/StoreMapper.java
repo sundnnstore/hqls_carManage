@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsStore;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
@@ -34,7 +35,8 @@ public interface StoreMapper {
 	public int changeStoreUrl(@Param("backUrl") String backUrl,@Param("storeId") Integer storeId);
 	
 	
-	public Page<StoreInfoDto> getStore(@Param("storeName") String storeName,@Param("userName") String userName,@Param("mobile") String mobile, @Param("address") String address);
+	public Page<StoreInfoDto> findStore(@Param("storeName") String storeName,@Param("userName") String userName,@Param("mobile") String mobile,
+										 @Param("address") String address,@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,@Param("countyId") Integer countyId);
 	
 	
 	
@@ -58,6 +60,10 @@ public interface StoreMapper {
 	
 	
 	public int insert(HqlsStore store);
+	
+	
+	@Select("select store_id as `key`,store_name as `value` from hqls_store")
+	public List<CommonDto> findAllStore();
 	
 	
 	

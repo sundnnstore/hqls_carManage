@@ -2,58 +2,48 @@
 <div class="store">
     门店管理
     <!-- 门店信息搜索 && 添加门店 -->
-    <div class="head layui-form">
+    <div class="head ">
         <div class="layui-input-inline">
-            <label for="first_title" class="layui-form-label">门店地址</label>
+            <label for="first_title" class="layui-form-label">门店名称</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="storeName" id="storeName" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">联系人</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="userName" id="userName" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">联系人号码</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="userMobile" id="userMobile" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">地址</label>
             <div class="layui-input-block">
                 <div class="layui-input-inline">
-                    <select name="prov">
-                        <option value="">请选择省</option>
-                        <option value="浙江省" selected>浙江省</option>
-                        <option value="江西省">江西省</option>
-                        <option value="福建省">福建省</option>
+                    <select name="prov" id="province" onchange="getCitys(this)" class="layui-select">
+                        
                     </select>
                 </div>
                 <div class="layui-input-inline">
-                    <select name="city">
+                    <select name="city" id="city" onchange="getCountys(this)" class="layui-select">
                         <option value="">请选择市</option>
-                        <option value="杭州"selected>杭州</option>
-                        <option value="宁波">宁波</option>
-                        <option value="温州">温州</option>
-                        <option value="温州">台州</option>
-                        <option value="温州">绍兴</option>
+                        
                     </select>
                 </div>
                 <div class="layui-input-inline">
-                    <select name="area">
+                    <select name="area" id="county" class="layui-select">
                         <option value="">请选择县/区</option>
-                        <option value="西湖区"selected>西湖区</option>
-                        <option value="余杭区">余杭区</option>
-                        <option value="拱墅区">临安市</option>
                     </select>
                 </div>
             </div>
         </div>
-        <button id="searchStore" class="layui-btn">搜索</button>
-        <button id="addStore" class="layui-btn">新增</button>
+        <button id="searchStore" class="layui-btn" >搜索</button>
+        <button id="addStore" class="layui-btn" onclick="addStore()">新增</button>
     </div>
     <!-- 门店信息展示 -->
     <div class="content">
@@ -69,8 +59,8 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody id="store_tb">
+                    <!-- <tr>
                         <td>华汽总部</td>
                         <td>江苏省公司</td>
                         <td>南京新街口店</td>
@@ -91,13 +81,65 @@
                         <td class="operation">
                             <a id="view" data-method="view">查看</a>
                             <a id="edit" data-method="edit">编辑</a>
-                            <a id="isEnable" data-method="isEnable">启用</a>
+                            <a id="isEnable" data-method="isEnable" >启用</a>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
+            <div id="pages" style="text-align: right;"></div>
         </div>
     </div>
 </div>
+ <script type="text/javascript">
+ 
+ var pros = findAllProvinces();
+ var p = null;
+ var provinces = '<option value="">请选择省</option>';
+ for(i=0;i<pros.length;i++){
+	 p= pros[i];
+	 provinces += '<option value="'+p.id+'">'+p.name+'</option>';
+ }
+ $("#province").html(provinces);
+ 
 
+ function getCitys(obj){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择市</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		 var  c = citys[i];
+ 		 ci += '<option value="'+c.id+'">'+c.name+'</option>';
+ 	 }
+ 	 $("#city").html(ci);
+ }
+
+ function getCountys(obj){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择县</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		var cs = citys[i];
+ 		 ci += '<option value="'+cs.id+'">'+cs.name+'</option>';
+ 	 }
+ 	 $("#county").html(ci);
+ }
+	
+	
+	
+	function isEnable(storeId){
+		$.ajax({
+	    	url : "http://localhost:8881/storeisuseable",
+			type : "post",
+			data : {"storeId":storeId},
+	    	success : function(data){
+	    		 window.location.reload();
+	    			
+	    		}
+	    }); 
+	}
+
+	
+</script> 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>
