@@ -66,7 +66,7 @@ public class PurchaseOrderController {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.PARAM_NOT_NULL, "省市区不能为空");
 		}
 		
-		return purchaseOrderService.addShipAddress(shipAddress);
+		return purchaseOrderService.updateShipAddress(shipAddress);
 	}
 	
 	@ApiOperation(value = "删除收货地址", notes = "wuxiao")
@@ -78,7 +78,7 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "批量删除收货地址", notes = "wuxiao")
 	@DeleteMapping("batchdeleteshipaddress")
-	public ResponseEntity<RestModel<String>> batchDeleteShipAddress(@RequestBody List<Integer> shipAddressIds) {
+	public ResponseEntity<RestModel<String>> batchDeleteShipAddress(@RequestBody Integer[] shipAddressIds) {
 		
 		return purchaseOrderService.batchDeleteShipAddress(shipAddressIds);
 	}
@@ -133,6 +133,20 @@ public class PurchaseOrderController {
 			@RequestHeader(value="Authorization") String Authorization) {
 		
 		return purchaseOrderService.payOperation(orderId, payType, money, payNo, Authorization);
+	}
+	
+	@ApiOperation(value = "查询门店余额", notes = "wuxiao")
+	@GetMapping("checkbalance")
+	public ResponseEntity<RestModel<Double>> checkBalance(@RequestParam(value = "storeId", required = true) Integer storeId) {
+		
+		return purchaseOrderService.queryBalance(storeId);
+	}
+	
+	@ApiOperation(value = "确认收货", notes = "wuxiao")
+	@GetMapping("confirmReceipt")
+	public ResponseEntity<RestModel<String>> confirmReceipt(@RequestParam(value = "orderId", required = true) Integer orderId) {
+		
+		return purchaseOrderService.confirmReceipt(orderId);
 	}
 	
 }

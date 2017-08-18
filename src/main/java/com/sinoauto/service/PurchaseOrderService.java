@@ -18,11 +18,13 @@ import com.sinoauto.dao.bean.HqlsOrderDetail;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
+import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.OrderDetailMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dao.mapper.ShipAddressMapper;
+import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
@@ -37,6 +39,7 @@ import com.sinoauto.entity.TokenModel;
 @Service
 public class PurchaseOrderService {
 
+	@Autowired
 	private ShipAddressMapper shipAddressMapper;
 	@Autowired
 	private PartsMapper partsMapper;
@@ -50,6 +53,8 @@ public class PurchaseOrderService {
 	private UserMapper userMapper;
 	@Autowired
 	private FinanceFlowMapper financeFlowMapper;
+	@Autowired
+	private StoreFinanceMapper storeFinanceMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -88,10 +93,9 @@ public class PurchaseOrderService {
 	}
 	
 	@Transactional
-	public ResponseEntity<RestModel<String>> batchDeleteShipAddress(List<Integer> shipAddressIds) {
+	public ResponseEntity<RestModel<String>> batchDeleteShipAddress(Integer[] shipAddressIds) {
 		try {
-			Integer[] addressIds = (Integer[]) shipAddressIds.toArray();
-			shipAddressMapper.batchDelete(addressIds);
+			shipAddressMapper.batchDelete(shipAddressIds);
 			return RestModel.success("批量删除收货地址成功");
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -194,13 +198,24 @@ public class PurchaseOrderService {
 			if (null == order) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单不存在");
 			}
+			// 从财务余额中扣掉支付金额
+			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(order.getStoreId());
+			Double[] returnMoney = calculationBalance(finance, money);
+			if (returnMoney == null) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "余额不足！");
+			}
+			finance.setBalance(returnMoney[0]);
+			finance.setCashAble(returnMoney[2]);
+			finance.setCashDisable(returnMoney[1]);
+			storeFinanceMapper.updateBalance(finance);
+			
 			List<HqlsOrderDetail> detail = orderDetailMapper.getDetailByOrderId(orderId);
 			// 计算优惠
 			BigDecimal originPrice = new BigDecimal(0.00);
 			for (HqlsOrderDetail d: detail) {
 				originPrice = originPrice.add(new BigDecimal(d.getBuyPrice()).multiply(new BigDecimal(d.getBuyCount())));
 			}
-			Double discountFee = (originPrice.divide(new BigDecimal(money))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			Double discountFee = (originPrice.subtract(new BigDecimal(money))).setScale(2, RoundingMode.HALF_UP).doubleValue();
 			discountFee = discountFee < 0 ? 0.00 : discountFee;
 			// 修改订单
 			order.setDiscountFee(discountFee);
@@ -210,7 +225,7 @@ public class PurchaseOrderService {
 			order.setPayNo(payNo);
 			purchaseOrderMapper.payOperation(order);
 			
-			//添加财务流水
+			// 添加财务流水
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
 			flow.setChangeMoney(money);
 			flow.setChangeType(3);
@@ -220,6 +235,7 @@ public class PurchaseOrderService {
 			flow.setOrderNo(order.getOrderNo());
 			flow.setTransactionNo(payNo);
 			financeFlowMapper.insert(flow);
+			
 			return RestModel.success("支付成功");
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
@@ -228,9 +244,62 @@ public class PurchaseOrderService {
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "支付异常");
 	}
 	
+	public ResponseEntity<RestModel<Double>> queryBalance(Integer storeId) {
+		HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(storeId);
+		if (finance == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "门店Id不存在！");
+		}
+		return RestModel.success(finance.getBalance());
+	}
+	
+	public ResponseEntity<RestModel<String>> confirmReceipt(Integer orderId) {
+		try {
+			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+			if (order == null) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单不存在！");
+			}
+			order.setOrderStatus(4);
+			purchaseOrderMapper.confirmReceipt(order);
+			return RestModel.success("确认收货完成");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "确认收货异常");
+	}
 	
 	/**
-	 * 计算结算金额
+	 * 计算门店财务余额
+	 * @return
+	 */
+	public Double[] calculationBalance(HqlsStoreFinance finance, Double payMoney) {
+		BigDecimal diffBalance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(payMoney)).setScale(2, RoundingMode.HALF_UP);
+		if (diffBalance.doubleValue() < 0) {
+			return null;
+		}
+		BigDecimal diff = new BigDecimal(finance.getCashDisable()).subtract(new BigDecimal(payMoney)).setScale(2, RoundingMode.HALF_UP);
+		Double[] returnMoney = new Double[3];
+		// 剩余余额
+		returnMoney[0] = diffBalance.doubleValue();
+		if (diff.doubleValue() < 0) {
+			// 先扣除不可用提现，再扣可用提现
+			Double CashAble = (new BigDecimal(finance.getCashAble())
+					.subtract(new BigDecimal(payMoney).subtract(new BigDecimal(finance.getCashAble())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+			// 不可用提现用完
+			returnMoney[1] = 0.00;
+			// 可用提现
+			returnMoney[2] = CashAble;
+		} else {
+			// 不可用提现
+			returnMoney[1] = diff.doubleValue();
+			// 可用提现
+			returnMoney[2] = finance.getCashAble();
+		}
+		return returnMoney;
+	}
+	
+	/**
+	 * 计算购物车、支付操作时的所有商品金额
 	 * @return
 	 */
 	public Double calculationAmount(List<PartsDesListDto> parts) {

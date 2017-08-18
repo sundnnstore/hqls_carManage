@@ -30,4 +30,13 @@
 		   store_finance_id = #{storeFinanceId}
 	</update>
 	
+	<update id="updateBalance" parameterType="HqlsStoreFinance">
+		UPDATE hqls_store_finance SET
+		   balance = #{balance}, 
+		   cash_able = #{cashAble}, 
+		   dml_time = now()
+	   WHERE 
+		   store_finance_id = #{storeFinanceId}
+	</update>
+	
 </mapper>
