@@ -31,7 +31,7 @@ public class PartsController {
 		return partsService.findListByType(partsType);
 	}
 	
-	@ApiOperation(value = "按配件类型查询配件列表", notes = "wuxiao")
+	@ApiOperation(value = "按配件Id查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbypid")
 	public ResponseEntity<RestModel<Object>> findPartsListByPid(@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId) {
 		

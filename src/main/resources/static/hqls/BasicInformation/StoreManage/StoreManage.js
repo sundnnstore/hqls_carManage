@@ -41,7 +41,7 @@ layui.use(['form', 'layer','laypage'], function() {
         }
     }
     $('.layui-table').on('click', 'a', function() {
-        var othis = $(this),
+        var othis = $(this),	
             method = othis.data('method');
         active[method] ? active[method].call(this, othis) : '';
     });

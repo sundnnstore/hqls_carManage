@@ -48,7 +48,7 @@ public class StoreService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<List<StoreDto>>> getStoreInfo(String token) {
+	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(String token) {
 		// 获取当前用户
         RestModel<TokenModel> rest = authService.validToken(token);
         if (rest.getErrcode() != 0) {// 解析token失败

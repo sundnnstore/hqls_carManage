@@ -10,7 +10,8 @@ import com.sinoauto.dao.bean.HqlsPartsBrand;
 @Mapper
 public interface PartsBrandMapper {
 
-	@Select("select * from hqls_parts_brand where parts_id = #{1}")
+	@Select("select brand.* from hqls_parts as parts, hqls_parts_brand as brand "
+			+ "where parts.parts_brand_id = brand.parts_brand_id and parts.parts_id = #{1}")
 	public List<HqlsPartsBrand> findPartsBrandListByPartsId(Integer partsId);
 	
 }
