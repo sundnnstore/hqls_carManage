@@ -92,4 +92,16 @@ public interface PartsMapper {
 	 * 	@param partsOperDto
 	 */
 	public void update(PartsOperDto partsOperDto);
+	
+	/**
+	 *  根据采购订单ID查询，查询配件信息
+	 * 	@User liud
+	 * 	@Date 2017年8月18日下午4:00:55
+	 * 	@param purchaseOrderId
+	 * 	@return
+	 */
+	@Select("select hp.* from hqls_order_detail hod "
+			+ "inner join hqls_parts hp on hod.parts_id=hp.parts_id "
+			+ "where hod.purchase_order_id=#{purchaseOrderId}")
+	public List<HqlsParts> findPartsByPurchOrderId(@Param("purchaseOrderId") Integer purchaseOrderId);
 }

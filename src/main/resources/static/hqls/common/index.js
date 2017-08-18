@@ -1,5 +1,5 @@
 layui.use(['layer', 'jquery', 'element', 'laydate'], function() {
-    var url="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.html";
+    var url="welcome.html";
     if (window.sessionStorage.getItem('url')) {
         url = window.sessionStorage.getItem('url');
     } 

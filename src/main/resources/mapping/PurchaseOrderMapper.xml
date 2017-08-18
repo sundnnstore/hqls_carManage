@@ -9,6 +9,13 @@
 		<collection column="order_id" property="partsList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
 	</resultMap>
 	
+	<!-- 中天采购订单 -->
+	<resultMap id="purchOrder" type="com.sinoauto.dto.PurchaseOrderDto">
+		<!-- 查询订单的配件集合 -->
+		<collection property="parts" column="purchase_order_id"  select="com.sinoauto.dao.mapper.PartsMapper.findPartsByPurchOrderId"></collection>
+	</resultMap>
+	
+	
 	<select id="findOrder" parameterType="Integer" resultMap="orderList">
 		select order_id, ship_address_id 
 		from hqls_purchase_order 
@@ -73,7 +80,7 @@
 	</update>
 	
 	<!-- 查询采购订单信息 -->
-	<select id="findPurchaseOrderByContidion" resultType="com.sinoauto.dto.PurchaseOrderDto">
+	<select id="findPurchaseOrderByContidion" resultMap="purchOrder">
 		select hpo.order_no,hpo.order_status,
 			case when hpo.order_status=1 then '待支付' 
 				 when hpo.order_status=2 then '待发货'
