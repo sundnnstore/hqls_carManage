@@ -3,6 +3,8 @@ layui.use(['layer', 'form'], function() {
         layer = layui.layer,
         form = layui.form;
     var title; // 弹出框的标题
+    var laypage=layui.laypage;
+	var pageSize = 10;
     var active = {
         addCommodity: function(othis) {
             var type = othis.data('type'),
@@ -46,4 +48,20 @@ layui.use(['layer', 'form'], function() {
             $(this).text('上架')
         }
     });
+    
+    
+    //查询分页数据
+    function getData(pageIndex){
+    	//拼接请求的json对象
+    	var dataJson ="{}";
+		$.ajax({
+			url : "", //请求地址
+			type : "get",
+			async : false,
+			data : {"typeName":$("#service_title").val(),"pageSize":pageSize,"pageIndex":pageIndex},
+			success : function(data){
+				comboTable(data,pageIndex);
+			}
+		});
+	}
 });
