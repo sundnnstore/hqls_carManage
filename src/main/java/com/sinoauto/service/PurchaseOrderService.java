@@ -29,6 +29,7 @@ import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
+import com.sinoauto.dto.PurchaseOrderQueryDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -322,7 +323,7 @@ public class PurchaseOrderService {
 	 * 	@param purchaseOrderDto
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(PurchaseOrderDto purchaseOrderDto,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(PurchaseOrderQueryDto purchaseOrderDto,Integer pageIndex,Integer pageSize){
 		PageHelper.startPage(pageIndex,pageSize);
 		List<PurchaseOrderDto> purchaseOrders=null;
 		Page<PurchaseOrderDto> PurchaseOrderpage=null;

@@ -11,14 +11,6 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class PurchaseOrderDto {
 	/**
-	 * 查询条件
-	 */
-	@ApiModelProperty("订单状态")
-	private Integer orderStatus;
-	@ApiModelProperty("门店ID")
-	private Integer storeId;
-	
-	/**
 	 * 返回集合属性
 	 */
 	@ApiModelProperty("订单编号")
@@ -52,18 +44,7 @@ public class PurchaseOrderDto {
 	private String userName;
 	@ApiModelProperty("联系人电话")
 	private String mobile;
-	public Integer getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(Integer orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	public Integer getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(Integer storeId) {
-		this.storeId = storeId;
-	}
+	
 	public String getOrderNo() {
 		return orderNo;
 	}

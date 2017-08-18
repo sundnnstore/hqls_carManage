@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dto.PurchaseOrderParamDto;
+import com.sinoauto.dto.PurchaseOrderQueryDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 
 @Mapper
@@ -55,7 +56,7 @@ public interface PurchaseOrderMapper {
 	 * 	@param purchaseOrderDto
 	 * 	@return
 	 */
-	public List<PurchaseOrderDto> findPurchaseOrderByContidion(PurchaseOrderDto purchaseOrderDto);
+	public List<PurchaseOrderDto> findPurchaseOrderByContidion(PurchaseOrderQueryDto purchaseOrderDto);
 
 	/**
 	 * 	确认发货
