@@ -115,4 +115,7 @@ layui.use(['form', 'layer','laypage'], function() {
 			store_tb.html(tb_html);
 		initPage(res.totalCount,pageIndex);
 	}
+	
+	
+	
 });
