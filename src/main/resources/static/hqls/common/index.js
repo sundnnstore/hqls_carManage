@@ -2,9 +2,7 @@ layui.use(['layer', 'jquery', 'element', 'laydate'], function() {
     var url;
     if (window.sessionStorage.getItem('url')) {
         url = window.sessionStorage.getItem('url');
-    } else {
-        url = 'BasicInformation/Categories/Categories.html';
-    }
+    } 
 
     var $ = layui.jquery;
 

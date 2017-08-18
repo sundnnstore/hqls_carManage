@@ -105,6 +105,7 @@ if(token == null || token == ''){
 		 $.ajax({
 			url:"http://localhost:8881/authorities",
 			type:"post",
+			async:false,
 			data:{"isBack":2},
 			headers:{
 				  "Authorization":token
