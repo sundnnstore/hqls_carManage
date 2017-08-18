@@ -18,7 +18,7 @@
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">联系人号码</label>
             <div class="layui-input-block">
-                <input type="text" name="userMobile" id="userMobile" class="layui-input" />
+                <input type="text" name="userMobile" id="userMobile" class="layui-input"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"/>
             </div>
         </div>
         <div class="layui-input-inline">
@@ -43,7 +43,8 @@
             </div>
         </div>
         <button id="searchStore" class="layui-btn" >搜索</button>
-        <button id="addStore" class="layui-btn" onclick="addStore()">新增</button>
+        <button id="addStore" class="layui-btn layui-btn-normal" onclick="addStore()" data-method="addStore">新增</button>
+        
     </div>
     <!-- 门店信息展示 -->
     <div class="content">
@@ -89,8 +90,100 @@
             <div id="pages" style="text-align: right;"></div>
         </div>
     </div>
-    
-    
+</div>
+<!-- 弹框一：门店树状结构 -->
+<div id="storeTreeBox" class="storeTreeBox">
+    <ul id="storeTree"></ul>
+</div>
+<!-- 弹框二：询问门店添加位置 -->
+<div id="storeLocate" class="storeLocate">
+    您当前选中的门店是：<span id="choosedName"></span>
+</div>
+<!-- 弹框三：门店信息添加与编辑 -->
+<div id="storeInfoEdit" class="storeInfo">
+    <table class="layui-table layui-form">
+        <!-- input框的name值请根据需要自行设置 -->
+        <tbody>
+            <tr>
+                <td>门店名称</td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入门店名称" id ="storeName"></td>
+            </tr>
+            <tr>
+                <td>门店联系人</td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入门店联系人"  id = "userName" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)"></td>
+            </tr>
+            <tr>
+                <td>联系人电话</td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入联系人电话" id="mobile"></td>
+            </tr>
+            <tr>
+                <td>门店地址</td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入门店地址" onchange="areaChange()" id="address"></td>
+            </tr>
+            <tr>
+                <td>门店位置</td>
+                <td id="storeUrl"><input type="text" name="" class="layui-input" placeholder="请输入位置"/></td>
+            </tr>
+            <tr>
+                <td>图片上传</td>
+                <td>
+                    <input type="file" name="" id="storeImg" class="layui-input" >
+                </td>
+            </tr>
+            <tr>
+                <td>是否启用</td>
+                <td>
+                    <!-- 单选框的value的值请根据需要重新设置 -->
+                    <input type="radio" name="isEnable" value="1" title="是">
+                    <input type="radio" name="isEnable" value="0" title="否">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="storeInfoView" class="storeInfo">
+    <table class="layui-table">
+        <!-- input框的name值请根据需要自行设置 -->
+        <tbody id="store_view">
+            <!-- <tr>
+                <td>门店名称</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>门店联系人</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>联系人电话</td>
+                <td>3</td>
+            </tr>
+            <tr>
+                <td>门店地址</td>
+                <td>4</td>
+            </tr>
+            <tr>
+                <td>门店位置</td>
+                <td>5</td>
+            </tr>
+            <tr>
+                <td>图片</td>
+                <td><button id="seePic" class="layui-btn-primary">查看图片</button></td>
+            </tr>
+            <tr>
+                <td>是否启用</td>
+                <td>
+                    单选框的value的值请根据需要重新设置
+                    <input type="radio" name="isEnable" value="yes" title="是" selected>
+                    <input type="radio" name="isEnable" value="no" title="否">
+                </td>
+            </tr> -->
+        </tbody>
+    </table>
+</div>
+<!-- 弹框四：门店图片 -->
+<div id="storeImage" style="display: none">
+    <!-- 为看效果图片路径暂定死，更改后请删除 -->
+    <img src="../../images/icon1.jpg" alt="门店图片">
 </div>
 
  <script type="text/javascript">
@@ -142,7 +235,37 @@
 	    		}
 	    }); 
 	}
-
+	
+	function getStoreInfo(storeId){
+		$.ajax({
+	    	url : "http://localhost:8881/getstorebystoreid",
+			type : "get",
+			data : {"storeId":storeId},
+	    	success : function(data){
+	    		var result = data.result;
+	    		var tb_html="";
+	    		var store_view = $("#store_view");
+	    		var status = result.isUseable?"是":"否";
+	    		
+	    		
+	    			tb_html= '<tr><td>门店名称</td><td>'+result.storeName+'</td></tr>'+
+	    						'<tr><td>门店联系人</td><td>'+result.userName+'</td></tr>'+
+	    						'<tr><td>联系人电话</td><td>'+result.mobile+'</td></tr>'+
+	    						'<tr><td>门店地址</td><td>'+result.address+'</td></tr>'+
+	    						'<tr><td>门店位置</td><td>('+result.longitude+','+result.latitude+')</td></tr>'+
+	    						'<tr><td>图片</td>'+
+	    						 '<td><button id="seePic" class="layui-btn-primary"/>查看图片</td></tr>'+
+	    						'<tr><td>是否启用</td>'+
+	    						'<td>'+status+'</td></tr>'
+	    			store_view.html(tb_html);
+	    						
+	    		}
+	    }); 
+		
+	}
+	
+	
+	
 	
 </script> 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>

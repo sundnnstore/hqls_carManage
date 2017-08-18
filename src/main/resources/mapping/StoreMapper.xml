@@ -107,6 +107,16 @@
 		<if test="countyId != null and countyId != '' "> and sto.county_id =#{countyId}</if>
 	</select>
 	
+	<update id="updateStoreByStoreId">
+		update hqls_store
+		set
+		<if test="storeName != null and storeName != '' ">store_name = #{storeName},</if>
+		<if test="mobile != null and mobile != '' ">mobile = #{mobile},</if>
+		<if test="address != null and address != '' ">address = #{address},</if>
+		<if test="backUrl != null and backUrl != '' ">backUrl = #{backUrl},</if>
+		create_time = NOW()
+		where store_id=#{storeId}
+	</update>
 	
 	
 </mapper>

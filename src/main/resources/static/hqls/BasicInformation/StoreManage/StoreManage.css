@@ -40,33 +40,51 @@
 .tableContainer {
     width: 100%;
     overflow: auto;
-    margin-top: 20px;
-}
-
-.tableContainer>table th,
-.modelTableContainer>table th,
-.tableContainer>table td,
-.modelTableContainer>table td {
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
-}
-
-.tableContainer .operation {
-    padding: 0 15px;
-}
-
-.tableContainer .operation>a {
-    min-width: 60px;
-    display: inline-block;
-    text-align: center;
-    padding: 9px 0;
-    cursor: pointer;
+    margin-top: 10px;
 }
 
 
-/* 寮规鏍峰紡 */
+/* 弹框样式 */
 
-.model {
+.storeTreeBox {
+    display: none;
     padding: 15px 20px;
+}
+
+.storeLocate {
+    display: none;
+    text-align: center;
+    /* line-height 的值与JS中弹框的area参数有关 */
+    line-height: 148px;
+}
+
+.storeInfo {
+    display: none;
+}
+
+.storeInfo input {
+    width: 100%;
+    border: none;
+    padding-left: 0;
+}
+
+.storeInfo tr>td {
+    line-height: 39px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.storeInfo tr>td:last-child {
+    text-align: left;
+}
+
+.storeInfo #edit {
+    display: none;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1,
+.layui-layer-btn2 {
+    background-color: #2e8ded !important;
+    color: #fff !important;
 }
