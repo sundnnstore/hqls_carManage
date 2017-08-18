@@ -6,18 +6,18 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">订单状态</label>
 		<div class="layui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">待支付</option>
-				<option value="1">代发货</option>
-				<option value="2">待收货</option>
-				<option value="3">已完成</option>
+			<select name="order_status" lay-filter="aihao" class="layui-select">
+				<option value="1">待支付</option>
+				<option value="2">待发货</option>
+				<option value="3">待收货</option>
+				<option value="4">已完成</option>
 			</select>
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label">门店</label>
 		<div class="layui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
+			<select name="store_id" lay-filter="aihao" class="layui-select">
 				<option value="0">门店</option>
 
 			</select>
@@ -26,13 +26,13 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">联系人</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" name="contact" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label">联系电话</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" name="mobile" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
 		</div>
 	</div>
 	<div class="layui-inline">
@@ -327,3 +327,4 @@
 	</div>
 </div>
 <script src="order/orderManage/orderManage.js" type="text/javascript" charset="utf-8"></script>
+<script src="order/orderManage/purchaseOrder.js" type="text/javascript" charset="utf-8"></script>

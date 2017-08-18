@@ -62,7 +62,7 @@ public interface StoreMapper {
 	public int insert(HqlsStore store);
 	
 	
-	@Select("select store_id,store_name from hqls_store")
+	@Select("select store_id as `key`,store_name as `value` from hqls_store")
 	public List<CommonDto> findAllStore();
 	
 	

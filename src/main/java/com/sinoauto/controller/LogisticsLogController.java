@@ -18,7 +18,7 @@ public class LogisticsLogController {
 	@Autowired
 	private LogisticsLogService logisticsLogService;
 	
-	@GetMapping("testhtml")
+	@GetMapping("findlogisticslog")
 	@ApiOperation(value = "物流信息跟踪", notes = "liud")
 	public ResponseEntity<RestModel<List<HqlsLogisticsLog>>> findLogisticsLogs(Integer purchaseOrderId){
 		return logisticsLogService.findLogisticsLogs(purchaseOrderId);
