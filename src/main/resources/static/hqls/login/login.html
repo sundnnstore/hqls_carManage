@@ -54,6 +54,14 @@
 				$("#login_button").on('click',login)
 				//登录方法
 				function login(){
+					if($("#logname").val()==null || $("#logname").val() == ''){
+						layer.msg("用户名不能为空");
+						return ;
+					}
+					if($("#logpass").val() == null || $("#logpass").val() == ''){
+						layer.msg("密码不能为空");
+						return ;
+					}
 					$.ajax({
 						url:"http://localhost:8881/login",
 						type:"post",
@@ -74,6 +82,13 @@
 						}
 					});
 				}
+				
+			      document.onkeydown=function(event){
+			            var e = event || window.event || arguments.callee.caller.arguments[0];
+			             if(e && e.keyCode==13){ // enter 键
+			            	 login();
+			            }
+			        }; 
 				//登录失败调用提示信息
 				//layui.msg('错误信息')
 			})
