@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="common/layui/css/layui.css">
     <link rel="stylesheet" type="text/css" href="common/style.css" />
 	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="js/city.js"></script>
 </head>
 
 <script type="text/javascript">
@@ -111,7 +112,6 @@ if(token == null || token == ''){
 				  "Authorization":token
 				 },
 			success:function(data){
-				console.log(data)
 				var map = data.result;
 				var menu_ul = $("#hq_menu");
 				var li_html="";
@@ -146,7 +146,9 @@ if(token == null || token == ''){
     <!-- 自己的代码 -->
     <script type="text/javascript" src="common/index.js">
     </script>
-
+	<script type="text/javascript">
+	findChildrenByPid(320100);
+	</script>
 </body>
 
 </html>
