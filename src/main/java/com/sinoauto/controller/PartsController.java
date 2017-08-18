@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
@@ -44,9 +45,9 @@ public class PartsController {
 	 * 	@param partsDto
 	 * 	@return
 	 */
-	@ApiOperation(value="",notes="liud")
+	@ApiOperation(value="按条件查询配件管理",notes="liud")
 	@GetMapping(value="findparts")
-	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@RequestParam PartsDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@RequestBody PartsDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
 		return partsService.findPartsByCondition(partsDto,pageIndex,pageSize);
 	}
 	
