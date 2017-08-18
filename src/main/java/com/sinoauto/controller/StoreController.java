@@ -31,9 +31,9 @@ public class StoreController {
 	
 	
 	@ApiOperation(value="根据当前登陆人查询门店信息/切换门店账号",notes="tangrx")
-	@PostMapping("findstorebyuserid")
+	@GetMapping("findstorebyuserid")
 	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(@RequestHeader(value = "Authorization") String Authorization){
-		return storeService.getStoreInfo(Authorization);
+		return storeService.findStoreInfo(Authorization);
 	}
 	
 	
@@ -113,7 +113,7 @@ public class StoreController {
 	}
 	
 	@ApiOperation(value = "查询所有门店",notes = "tangrx")
-	@PostMapping("findallstore")
+	@GetMapping("findallstore")
 	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
 		return storeService.findAllStore();
 	}
