@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsShipAddress;
+import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
@@ -147,6 +149,12 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<String>> confirmReceipt(@RequestParam(value = "orderId", required = true) Integer orderId) {
 		
 		return purchaseOrderService.confirmReceipt(orderId);
+	}
+	
+	@ApiOperation(value = "查找订单", notes = "liud")
+	@GetMapping("findpurchorder")
+	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(@RequestBody PurchaseOrderDto purchaseOrderDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
+		return purchaseOrderService.findPurchaseOrderByContidion(purchaseOrderDto, pageIndex, pageSize);
 	}
 	
 }
