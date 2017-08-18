@@ -106,11 +106,12 @@ public class StoreService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,String address,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,
+																	String address,Integer provinceId,Integer cityId,Integer countyId,Integer pageIndex,Integer pageSize){
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);// 分页使用
 		}
-		Page<StoreInfoDto> storeList = storeMapper.getStore( storeName, userName, mobile, address);
+		Page<StoreInfoDto> storeList = storeMapper.findStore( storeName, userName, mobile, address,provinceId,cityId,countyId);
 		return RestModel.success(storeList,(int) storeList.getTotal());
 		
 	}
@@ -194,7 +195,8 @@ public class StoreService {
 		store.setStoreName(storeInfoDto.getStoreName());
 		
 		//新增门店信息
-		int storeId = storeMapper.insert(store);
+		 storeMapper.insert(store);
+		 int storeId = store.getStoreId();
 		//注册用户信息
 		RestModel<Integer> registerInfo = authService.register(mobile,password);
 		//查询当前用户在系统中是否存在

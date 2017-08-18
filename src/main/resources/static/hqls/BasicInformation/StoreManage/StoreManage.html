@@ -6,19 +6,19 @@
         <div class="layui-input-inline">
             <label for="first_title" class="layui-form-label">门店地址</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="address" id="address" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">联系人</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="userName" id="userName" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">联系人号码</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="userMobile" id="userMobile" class="layui-input" />
             </div>
         </div>
         <div class="layui-input-inline">
@@ -52,8 +52,8 @@
                 </div>
             </div>
         </div>
-        <button id="searchStore" class="layui-btn">搜索</button>
-        <button id="addStore" class="layui-btn">新增</button>
+        <button id="searchStore" class="layui-btn" onclick="findStore()">搜索</button>
+        <button id="addStore" class="layui-btn" onclick="addStore()">新增</button>
     </div>
     <!-- 门店信息展示 -->
     <div class="content">
@@ -69,8 +69,8 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody id="store_tb">
+                    <!-- <tr>
                         <td>华汽总部</td>
                         <td>江苏省公司</td>
                         <td>南京新街口店</td>
@@ -91,13 +91,67 @@
                         <td class="operation">
                             <a id="view" data-method="view">查看</a>
                             <a id="edit" data-method="edit">编辑</a>
-                            <a id="isEnable" data-method="isEnable">启用</a>
+                            <a id="isEnable" data-method="isEnable" >启用</a>
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
+ <script type="text/javascript">
+	function findStore(){
+		$.ajax({
+    	url : "http://localhost:8881/findstoreinfo",
+		type : "post",
+		data : { /* "address":$("#address").val(),"userName":$("#userName").val(),
+				 "userMobile":$("#userMobile").val(), */
+				"pageIndex":1,"pageSize":12},
+		
+    	success : function(data){
+    		var list = data.result;
+    		var tb_html="";
+    		var store_tb = $("#store_tb");
+    		for(i=0;i<list.length;i++){
+    			var tr_html=list[i];
+    			var status = "启用";
+    			if(tr_html.isUseable){
+    				status = "禁用";
+    			}
+    			tb_html += '<tr><td>'+tr_html.storeName+'</td>'+
+    						'<td>'+tr_html.userName+'</td>'+
+    						'<td>'+tr_html.mobile+'</td>'+
+    						'<td>'+tr_html.address+'</td>'+
+    						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
+    						'<td>'+
+    						'<a data-method="view">查看</a> '+
+    						'<a data-method="edit">编辑</a> '+
+    						'<a data-method="idEnable" onclick="isEnable('+tr_html.storeId+')">'+status+'</a> '+
+    						'</td></tr>'
+    				
+    						
+    			
+    		}
+    		store_tb.html(tb_html);
+    		
+    			
+    		}
+    		
+    }); 
+}
+	
+	
+	function isEnable(storeId){
+		$.ajax({
+	    	url : "http://localhost:8881/storeisuseable",
+			type : "post",
+			data : {"storeId":storeId},
+	    	success : function(data){
+	    		document.location.reload();
+	    			
+	    		}
+	    }); 
+	}
+	
+</script> 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>

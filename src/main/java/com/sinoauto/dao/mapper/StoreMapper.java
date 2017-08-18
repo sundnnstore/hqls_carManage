@@ -34,7 +34,8 @@ public interface StoreMapper {
 	public int changeStoreUrl(@Param("backUrl") String backUrl,@Param("storeId") Integer storeId);
 	
 	
-	public Page<StoreInfoDto> getStore(@Param("storeName") String storeName,@Param("userName") String userName,@Param("mobile") String mobile, @Param("address") String address);
+	public Page<StoreInfoDto> findStore(@Param("storeName") String storeName,@Param("userName") String userName,@Param("mobile") String mobile,
+										 @Param("address") String address,@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,@Param("countyId") Integer countyId);
 	
 	
 	

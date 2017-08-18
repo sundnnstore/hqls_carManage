@@ -73,7 +73,7 @@
 	</select>
 	
 	
-	<select id="getStore" resultType="com.sinoauto.dto.StoreInfoDto">
+	<select id="findStore" resultType="com.sinoauto.dto.StoreInfoDto">
 		select 
 		hqus.user_name as userName,
 		hqus.mobile ,
@@ -81,7 +81,12 @@
 		sto.back_url,
 		sto.is_useable as isUseable,
 		sto.store_name as storeName,
-		sto.store_id as storeId
+		sto.store_id as storeId,
+		sto.longitude,
+		sto.latitude,
+		sto.province_name as provinceName,
+		sto.city_name as cityName,
+		sto.county_id as countyId
 		FROM
 		hqls_store sto
 		LEFT JOIN
@@ -92,12 +97,14 @@
 		hqls_user hqus
 		on
 		hqus.user_id = usto.user_id
-		WHERE hqus.is_useable=1
-		and sto.is_useable=1
+		where 1=1 
 		<if test="storeName !=null"> and sto.store_name=#{storeName}</if>
 		<if test="userName != null"> and hqus.user_name=#{userName}</if>
 		<if test="mobile != null"> and hqus.mobile=#{mobile}</if>
 		<if test="address != null"> and sto.address=#{address}</if>
+		<if test="provinceId != null"> and province_id = #{provinceId}</if>
+		<if test="cityId != null"> and city_id =#{cityId}</if>
+		<if test="countyId != null"> and county_id =#{countyId}</if>
 	</select>
 	
 	
