@@ -6,7 +6,7 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">服务名称</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" name="title" required lay-verify="required" id="service_title" placeholder="请输入标题" autocomplete="off" class="layui-input">
 		</div>
 	</div>
 
@@ -26,27 +26,11 @@
 				<th>操作</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>*****</td>
-				<td>**-----***</td>
-				<td>++++++-----++++</td>
-				<td><button class="layui-btn toView" >查看</button></td>
-				<td>
-					<button class="layui-btn layui-btn-normal uORd" >上架</button>
-				</td>
-			</tr>
-			<tr>
-				<td>*****</td>
-				<td>**-----***</td>
-				<td>++++++-----++++</td>
-				<td><button class="layui-btn">查看</button></td>
-				<td>
-					<button  class="layui-btn  layui-btn-primary uORd">下架</button>
-				</td>
-			</tr>
+		<tbody id="service_tb">
+
 		</tbody>
 	</table>
+	<div id="pages" style="text-align: right;"></div>
 </div>
 <div id="addServicePage" style="display: none;">
 	<div class="layui-form-item mylayui-item ">
@@ -89,3 +73,27 @@
 </div>
 </div>
 <script src="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+/* $(document).ready(function(){
+		getData();
+	});
+
+
+	$("#searchService").click(function(){
+		getData();
+	});
+	
+	function getData(){
+		$.ajax({
+			url : "http://localhost:8881/findservicetypesbytypename",
+			type : "get",
+			async : false,
+			data : {"typeName":$("#service_title").val(),"pageSize":10,"pageIndex":1},
+			success : function(data){
+				comboTable(data.result);
+			}
+		});
+	}
+	 */
+</script>
