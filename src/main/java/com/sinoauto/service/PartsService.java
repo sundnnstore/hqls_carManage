@@ -221,4 +221,24 @@ public class PartsService {
 			}
 		}
 	}
+	
+	/**
+	 * 	查询采购订单对应的配件ID
+	 * 	@User liud
+	 * 	@Date 2017年8月18日下午4:18:39
+	 * 	@param purchOrderId
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<List<HqlsParts>>> findPartsByPurchOrderId(Integer purchOrderId){
+		List<HqlsParts> parts =null;
+		try {
+			parts= partsMapper.findPartsByPurchOrderId(purchOrderId);
+			if(parts==null){
+				parts =new ArrayList<>();
+			}
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询订单对应的配件信息异常");
+		}
+		return RestModel.success(parts);
+	}
 }

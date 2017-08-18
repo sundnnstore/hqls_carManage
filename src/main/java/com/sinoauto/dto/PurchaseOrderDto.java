@@ -1,8 +1,6 @@
 package com.sinoauto.dto;
 
 import java.util.Date;
-import java.util.List;
-import com.sinoauto.dao.bean.HqlsParts;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -13,20 +11,12 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class PurchaseOrderDto {
 	/**
-	 * 查询条件
-	 */
-	@ApiModelProperty("订单状态")
-	private Integer orderStatus;
-	@ApiModelProperty("门店ID")
-	private Integer storeId;
-	
-	/**
 	 * 返回集合属性
 	 */
-	List<HqlsParts> parts;
-	
 	@ApiModelProperty("订单编号")
 	private String orderNo;
+	@ApiModelProperty("采购订单ID")
+	private Integer purchaseOrderId;
 	@ApiModelProperty("订单状态名称")
 	private String orderStatusName;
 	@ApiModelProperty("订单创建时间")
@@ -54,18 +44,7 @@ public class PurchaseOrderDto {
 	private String userName;
 	@ApiModelProperty("联系人电话")
 	private String mobile;
-	public Integer getOrderStatus() {
-		return orderStatus;
-	}
-	public void setOrderStatus(Integer orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-	public Integer getStoreId() {
-		return storeId;
-	}
-	public void setStoreId(Integer storeId) {
-		this.storeId = storeId;
-	}
+	
 	public String getOrderNo() {
 		return orderNo;
 	}
@@ -113,12 +92,6 @@ public class PurchaseOrderDto {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-	public List<HqlsParts> getParts() {
-		return parts;
-	}
-	public void setParts(List<HqlsParts> parts) {
-		this.parts = parts;
 	}
 	public Double getTotalFee() {
 		return totalFee;

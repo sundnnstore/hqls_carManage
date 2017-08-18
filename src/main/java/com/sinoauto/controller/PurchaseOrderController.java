@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -18,6 +19,7 @@ import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
+import com.sinoauto.dto.PurchaseOrderQueryDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -153,8 +155,8 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "查找订单", notes = "liud")
 	@GetMapping("findpurchorder")
-	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(@RequestBody PurchaseOrderDto purchaseOrderDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
+	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(@ModelAttribute PurchaseOrderQueryDto purchaseOrderDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
 		return purchaseOrderService.findPurchaseOrderByContidion(purchaseOrderDto, pageIndex, pageSize);
 	}
-	
+
 }
