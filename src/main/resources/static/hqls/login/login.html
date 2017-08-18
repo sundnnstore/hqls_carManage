@@ -32,7 +32,7 @@
 								<input id="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;" value="" type="password" placeholder="请输入密码">
 							</div>
 							<div class="mb2">
-								<a class="act-but submit" href="javascript:;" onclick="login()" style="color: #FFFFFF">登录</a>
+								<a class="act-but submit" href="javascript:;" id="login_button" style="color: #FFFFFF">登录</a>
 							</div>
 					</div>
 				</div>
@@ -51,7 +51,28 @@
 			layui.use(['jquery','layer','element'],function(){
 				var $=layui.jquery;
 				var layer=layui.layer;
+				$("#login_button").on('click',login)
 				//登录方法
+				function login(){
+					$.ajax({
+						url:"http://localhost:8881/login",
+						type:"post",
+						async:false,
+						data:{"userName":$("#logname").val(),"passWord":$("#logpass").val()},
+						success:function(data){
+							console.log(data);
+							if(data.errcode == 0){
+								localStorage.token="Bearer "+data.result;
+								window.location.href="../index.html";
+							}else{
+								alert(data.errmsg)
+							}
+						},
+						error:function(data){
+							layer.msg(JSON.parse(data.responseText).errmsg);
+						}
+					});
+				}
 				//登录失败调用提示信息
 				//layui.msg('错误信息')
 			})
@@ -59,28 +80,6 @@
 		<div style="text-align:center;">
 
 		</div>
-		<script type="text/javascript">
-			function login(){
-				$.ajax({
-					url:"http://localhost:8881/login",
-					type:"post",
-					async:false,
-					data:{"userName":$("#logname").val(),"passWord":$("#logpass").val()},
-					success:function(data){
-						console.log(data);
-						if(data.errcode == 0){
-							localStorage.token="Bearer "+data.result;
-							window.location.href="../index.html";
-						}else{
-							alert(data.errmsg)
-						}
-					},
-					error:function(data){
-						alert(JSON.parse(data.responseText).errmsg);
-					}
-				});
-			}
-		</script>
 	</body>
 
 </html>
