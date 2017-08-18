@@ -10,10 +10,10 @@
 	</resultMap>
 	
 	<!-- 中天采购订单 -->
-	<resultMap id="purchOrder" type="com.sinoauto.dto.PurchaseOrderDto">
-		<!-- 查询订单的配件集合 -->
+	<!-- <resultMap id="purchOrder" type="com.sinoauto.dto.PurchaseOrderDto">
+		查询订单的配件集合
 		<collection property="parts" column="purchase_order_id"  select="com.sinoauto.dao.mapper.PartsMapper.findPartsByPurchOrderId"></collection>
-	</resultMap>
+	</resultMap> -->
 	
 	
 	<select id="findOrder" parameterType="Integer" resultMap="orderList">
@@ -80,8 +80,8 @@
 	</update>
 	
 	<!-- 查询采购订单信息 -->
-	<select id="findPurchaseOrderByContidion" resultMap="purchOrder">
-		select hpo.order_no,hpo.order_status,
+	<select id="findPurchaseOrderByContidion" resultType="com.sinoauto.dto.PurchaseOrderDto">
+		select hpo.order_no,hpo.purchase_order_id,hpo.order_status,
 			case when hpo.order_status=1 then '待支付' 
 				 when hpo.order_status=2 then '待发货'
 				 when hpo.order_status=3 then '待收货' 
@@ -100,7 +100,7 @@
 		<if test="orderStatus!=null"> and hpo.order_status=#{orderStatus}</if>
 		<if test="storeId!=null"> and hs.store_id=#{storeId}</if>
 		<if test="userName!=null"> and hu.user_name like CONCAT('%',#{userName},'%')</if>
-		<if test="mobile!=null"> and hu.mobile like CONCAT('%',#{mobile},'%')</if>   
+		<if test="mobile!=null"> and hu.mobile like CONCAT('%',#{mobile},'%')</if>
 	</select>
 	
 </mapper>

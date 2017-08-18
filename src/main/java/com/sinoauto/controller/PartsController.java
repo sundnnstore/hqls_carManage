@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
+import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
@@ -58,4 +59,9 @@ public class PartsController {
 		return partsService.getPartsDetail(partsId);
 	}
 	
+	@ApiOperation(value = "查找订单对应的配件", notes = "liud")
+	@GetMapping("findpartsbypurchorderid")
+	public ResponseEntity<RestModel<List<HqlsParts>>> findPartsByPurchOrderId(@RequestParam("purchOrderId")Integer purchOrderId){
+		return partsService.findPartsByPurchOrderId(purchOrderId);
+	}
 }
