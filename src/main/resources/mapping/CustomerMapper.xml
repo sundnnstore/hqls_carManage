@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsCustomer" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.sinoauto.dao.bean.HqlsCustomer" useGeneratedKeys="true" keyProperty="customerId">
 	    INSERT INTO hqls_customer (
 	        customer_name, mobile, landline, avatar_url, gender, province_id, city_id, county_id, address, create_time, dml_time
 	    ) VALUES (
-	        #{customerName}, #{mobile}, #{landline}, #{avatarUrl}, #{gender}, #{provinceId}, #{cityId}, #{countyId}, #{address}, #{createTime}, #{dmlTime}        
+	        #{customerName}, #{mobile}, #{landline}, #{avatarUrl}, #{gender}, #{provinceId}, #{cityId}, #{countyId}, #{address}, now(), now()        
 	    )
 	</insert>
 

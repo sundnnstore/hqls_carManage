@@ -31,6 +31,9 @@ public interface UserMapper {
 	@Update("UPDATE hqls_user set mobile=#{account} where user_id = #{userId}")
 	public String changeAccount(@Param("account") String account, @Param("userId") Integer userId);
 	
+	@Select("select * from hqls_user where user_id = (select user_id from hqls_user_store where store_id = #{1} and is_contact = 1 limit 1)")
+	public HqlsUser getUserByStoreId(Integer storeId);
+	
 	
 	
 

@@ -2,7 +2,7 @@
 <div class="commodity">
     商品管理
     <!-- 商品信息搜索 && 添加商品 -->
-    <div class="head layui-form">
+    <div class="head">
         <div class="layui-input-inline">
             <label for="first_title" class="layui-form-label">配件编码</label>
             <div class="layui-input-block">
@@ -12,7 +12,11 @@
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">配件分类</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <select class="layui-select">
+                    <option value="1">分类 1</option>
+                    <option value="2">分类 2</option>
+                    <option value="3">分类 3</option>
+                </select>
             </div>
         </div>
         <div class="layui-input-inline">
@@ -32,7 +36,7 @@
             </div>
         </div>
         <button id="searchCommodity" class="layui-btn">搜索</button>
-        <button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity" data-type="t">新增</button>
+        <button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity">新增</button>
     </div>
     <!-- 商品分类信息展示 -->
     <div class="content">
@@ -56,9 +60,9 @@
                         <td>旋装世滤清器</td>
                         <td>ddo39dkl3</td>
                         <td>
-                            <button id="addCommodity" class="layui-btn" data-method="addCommodity" data-type="t">查看</button>
-                            <button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity" data-type="t">编辑</button>
-                            <button id="isUse" class="layui-btn layui-btn-normal">上架</button>
+                            <button id="view" data-method="view" class="layui-btn">查看</button>
+                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
+                            <button id="isUse" class="layui-btn layui-btn-primary">上架</button>
                         </td>
                     </tr>
                     <tr>
@@ -68,21 +72,119 @@
                         <td>旋装世滤清器</td>
                         <td>ddo39dkl3</td>
                         <td>
-                            <button id="addCommodity" class="layui-btn" data-method="addCommodity" data-type="t">查看</button>
-                            <button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity" data-type="t">编辑</button>
-                            <button id="isUse" class="layui-btn layui-btn-primary">下架</button>
+                            <button id="view" data-method="view" class="layui-btn">查看</button>
+                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
+                            <button id="isUse" class="layui-btn layui-btn-warm">下架</button>
                         </td>
-                        <!-- <td class="operation">
-                            <a id="view">查看</a>
-                            <a id="edit">编辑</a>
-                            <a id="isUse">下架</a>
-                        </td> -->
                     </tr>
                 </tbody>
             </table>
         </div>
-        <div id="paging" style="text-align: right;"></div>
+        <div id="paging"></div>
     </div>
 </div>
 
+<!-- 弹框一：新增编辑查看 -->
+<div id="commodityBox" class="commodityBox">
+    <form>
+        <!-- 新增商品中的商品信息 -->
+        <div class="head">
+            <div class="layui-input-inline">
+                <label for="first_title" class="layui-form-label">配件编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <label for="" class="layui-form-label">配件分类</label>
+                <div class="layui-input-block">
+                    <select class="layui-select">
+                        <option value="1">分类 1</option>
+                        <option value="2">分类 2</option>
+                        <option value="3">分类 3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="head">
+            <div class="layui-input-inline">
+                <label for="" class="layui-form-label">配件名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="" class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <label for="" class="layui-form-label">类型</label>
+                <div class="layui-input-block">
+                    <!-- 类型中的通用件和易损件的value值需要根据后台字段值设置 -->
+                    <select class="layui-select">
+                        <option value="1" selected>通用件</option>
+                        <option value="2">易损件</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- 新增商品中的商品详情 -->
+        <div class="modelTableContainer">
+            <table class="layui-table">
+                <caption class="caption">
+                    商品详情
+                    <span id="addOption" class="newParam">+</span>
+                </caption>
+                <tbody>
+                    <tr>
+                        <td>规格 *</td>
+                        <td><input type="text" name="" id="spec" class="layui-input" placeholder="请输入规格"></td>
+                        <td>型号 *</td>
+                        <td><input type="text" name="" id="model" class="layui-input" placeholder="请输入型号"></td>
+                        <td>品牌 *</td>
+                        <td><input type="text" name="" id="brand" class="layui-input" placeholder="请输入品牌"></td>
+                    </tr>
+                    <tr class="attrExtra">
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- 新增商品中的商品图片 -->
+        <p class="uploadImgTitle">上传图片</p>
+        <div class="uploadImg layui-form">
+            <!-- 注意： -->
+            <!-- 1。 每个img标签的id都不一样，新出现的图片id要重新给定一个唯一值 -->
+            <!-- 2。 每个inpug标签的id也都不一样，新出现的图片上传框id也要重新给定一个唯一值 -->
+            <!-- 3。 如果img的id和input的id重新定义了，请在js中的layui.upload方法中同步更改 -->
+            <div class="siteUpload">
+                <img id="commodityImgUrl1" src="../../../images/icon1.jpg">
+                <div>
+                    <input type="file" name="image" id="commodityImg1">
+                </div>
+            </div>
+            <div class="siteUpload">
+                <img id="commodityImgUrl2" src="">
+                <div>
+                    <input type="file" name="image" id="commodityImg2" class="layui-upload-file">
+                </div>
+            </div>
+        </div>
+        <!-- 新增商品中的否上架选项 -->
+        <div class="state">
+            <label class="layui-form-label">是否上架</label>
+            <div class="layui-input-block">
+                <input type="radio" name="state" value="yes" checked>是
+                <input type="radio" name="state" value="no">否
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 弹框二：上下架提示 -->
+<div id="commodityState" class="commodityState">
+    是否确认<span id="chooseState"></span>?
+</div>
+<!-- 文件上传 -->
+<script src="js/upload.js"></script>
 <script src="BasicInformation/CommodityManage/CommodityManage.js"></script>

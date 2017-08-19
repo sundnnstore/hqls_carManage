@@ -1,13 +1,11 @@
 package com.sinoauto.service;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
@@ -24,6 +22,8 @@ import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.dto.PartsTreeDto;
+import com.sinoauto.dto.PartsTreeRecursionDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 
@@ -241,4 +241,63 @@ public class PartsService {
 		}
 		return RestModel.success(parts);
 	}
+	
+	/**
+	 *  配件树形菜单,点击查询下一级菜单
+	 * 		1.根据一个pid找到下面的所有子类的id
+	 * 		2.再拿子类的id去pid中找看是否存在子id
+	 * 		3.如果存在子id则再去找
+	 * 	@User liud
+	 * 	@Date 2017年8月19日上午11:06:56
+	 * 	@param pId
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<List<PartsTreeDto>>> partsTree(Integer pid){
+		List<PartsTreeDto> childrenParts = null;
+		try {
+			pid=pid==null?1:pid;
+			childrenParts = partsMapper.partsTree(pid);
+			if(childrenParts==null){
+				childrenParts =new ArrayList<>();
+			}
+			
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"配件树形菜单查询异常");
+		}
+		return RestModel.success(childrenParts);
+	}
+	
+	/**
+	 * 	配件树形菜单查询,根据一级菜单，加载出所有的子集菜单
+	 * 	未完成,等写完页面再写
+	 * 	@User liud
+	 * 	@Date 2017年8月19日下午1:35:56
+	 * 	@param pid
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<List<PartsTreeRecursionDto>>> partsTreeRecursion(Integer pid){
+		List<PartsTreeRecursionDto> childrenParts = null;
+		try {
+			pid=pid==null?1:pid;
+			//查询每一级菜单,第一次进来是第一级
+			childrenParts = partsMapper.partsTreeRecursion(pid);
+			if(childrenParts!=null){
+				//调用
+				for (PartsTreeRecursionDto child : childrenParts) {
+					if(child.getPartsTypeId()!=null){
+						//每一次将
+						partsTreeRecursion(child.getPartsTypeId());
+					}
+					
+				}
+			}else{
+				childrenParts = new ArrayList<>();
+			}
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"配件树形菜单递归查询异常");
+		}
+		
+		return null;
+	}
+		
 }

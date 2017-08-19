@@ -16,11 +16,9 @@ public class PushAction {
 	// 打开的地址链接
 	private String url;
 
-	PushAction() {
 
-	}
-
-	PushAction(String module, Integer badge, Boolean open, String url) {
+	public PushAction(String module, Integer badge, Boolean open, String url) {
+		super();
 		this.module = module;
 		this.badge = badge;
 		this.open = open;

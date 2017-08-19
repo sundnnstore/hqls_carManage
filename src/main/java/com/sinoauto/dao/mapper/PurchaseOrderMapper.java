@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import org.apache.ibatis.annotations.Update;
+
+import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
@@ -23,7 +25,7 @@ public interface PurchaseOrderMapper {
 	 * @return
 	 * @author wuxiao
 	 */
-	@Select("select * from hqls_purchase_order where order_id = #{1}")
+	@Select("select * from hqls_purchase_order where purchase_order_id = #{1}")
 	public HqlsPurchaseOrder getOrderById(Integer orderId);
 	
 	/**
@@ -79,5 +81,8 @@ public interface PurchaseOrderMapper {
 	public int updateOrderStatus(HqlsPurchaseOrder order);
 	
 	public int update(HqlsPurchaseOrder order);
+	
+	public Page<PurchaseOrderDto> findOrderListByContidion(@Param("orderStatus") Integer orderStatus, @Param("storeId") Integer storeId, 
+			@Param("userName") String userName, @Param("mobile") String mobile);
 	
 }
