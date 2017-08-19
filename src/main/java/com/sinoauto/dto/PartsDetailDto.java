@@ -42,7 +42,7 @@ public class PartsDetailDto {
 	@ApiModelProperty("轮播图")
 	private List<HqlsPartsPic> partsPicList;
 	@ApiModelProperty("动态属性")
-	private List<HqlsPartsAttrExtr> partsAttrExtr;
+	private List<HqlsPartsAttrExtr> partsAttrExtrs;
 
 	public Integer getPartsId() {
 		return partsId;
@@ -174,12 +174,12 @@ public class PartsDetailDto {
 		}
 	}
 
-	public List<HqlsPartsAttrExtr> getPartsAttrExtr() {
-		return partsAttrExtr;
+	public List<HqlsPartsAttrExtr> getPartsAttrExtrs() {
+		return partsAttrExtrs;
 	}
 
-	public void setPartsAttrExtr(List<HqlsPartsAttrExtr> partsAttrExtr) {
-		this.partsAttrExtr = partsAttrExtr;
+	public void setPartsAttrExtrs(List<HqlsPartsAttrExtr> partsAttrExtrs) {
+		this.partsAttrExtrs = partsAttrExtrs;
 	}
 
 }

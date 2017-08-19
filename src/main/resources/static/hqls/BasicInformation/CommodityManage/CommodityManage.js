@@ -89,6 +89,21 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 	        });
 	    });
 
+	// 在商品参数项末尾新加一行新的参数框
+    $('#addOption').click(function() {
+        var html = `
+            <tr>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
+                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+            </tr>
+        `;
+        $('.modelTableContainer tbody').append(html);
+    })
+
     //初次进入页面的数据
     
     getData(1);
@@ -240,22 +255,42 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     }
     
     function showDetail(data){
-    	var pics; //图片
-    	var attrExtra; //配件的动态属性
+    	var pics="",piclen=data.partsPicList.length=="undefined"?0:data.partsPicList.length; //图片
+    	var attrExtra="",attrlen=data.partsAttrExtrs.length=="undefined"?0:data.partsAttrExtrs.length; //配件的动态属性
     	//get data
     	$("#partsCode").val(data.partsCode);
     	$("#partsName").val(data.partsName);
     	$("#partsModel").val(data.partsModel);
     	$("#partsSpec").val(data.partsSpec);
     	$("#partsBrandName").val(data.partsBrandName);
+    	
+    	$("#uploadImg").html(""); //清空图片上传div
+    	$(".attrExtra").html("");//清空动态扩展属性的div
     	//显示图片
-    	for (var int = 0; int < data.partsPicList.length; int++) {
-			
+    	for (var int = 0; int < piclen; int++) {
+    		
+    		pics = `
+                <tr>
+                    <td><input type="text" name="${attrlen[int].attrKey}" value="${attrlen[int].attrKey}" class="layui-input attr attrkey${int}" placeholder="请输入参数名称"></td>
+                    <td><input type="text" name="${attrlen[int].attrValue}" value="${attrlen[int].attrValue}" class="layui-input attr attrValue${int} " placeholder="请输入内容"></td>
+                </tr>
+            `;
+    		
 		}
-    	//显示动态属性
-    	for (var int = 0; int < data..length; int++) {
-			
+    	
+    	
+    	for (var int = 0; int < attrlen; int++) {
+			//清空动态属性框,然后拼接显示
+    		pics = `
+                <tr>
+                    <td><input type="text" name="${attrlen[int].attrKey}" value="${attrlen[int].attrKey}" class="layui-input attr attrkey${int}" placeholder="请输入参数名称"></td>
+                    <td><input type="text" name="${attrlen[int].attrValue}" value="${attrlen[int].attrValue}" class="layui-input attr attrValue${int} " placeholder="请输入内容"></td>
+                </tr>
+            `;
 		}
+    	//动态属性追加到指定位置
+    	
+    	//动态图片追加到指定位置
     }
     /**
      * 封装所有图片集合的json
