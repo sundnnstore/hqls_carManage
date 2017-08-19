@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<body>
+	<form id="uploadImgform" enctype=”multipart/form-data”>
+		<input type="file" name="image" id="fileupload" class="file" value="" accept="image/*" multiple />
+	</form>
+	
+	<button onclick="up()" value="提交">提交</button>
+</body>
+<script src="./js/jquery-3.2.1.min.js"></script>
+<script src="./js/upload.js"></script>
+<script type="text/javascript">
+function up(){
+	var formObj =$("#uploadImgform"); //上传 form
+	var imgObj=$("#fileupload")[0]; //上传 图片对象
+	var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
+}
+</script>
+</html>

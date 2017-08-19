@@ -22,7 +22,7 @@
             </div>
         </div>
         <button id="searchCategories" class="layui-btn">搜索</button>
-        <button id="addCategories" class="layui-btn">新增</button>
+        <button id="addCategories" data-method="addCategories" class="layui-btn layui-btn-normal">新增</button>
     </div>
     <!-- 商品分类信息展示 -->
     <div class="content">
@@ -40,23 +40,61 @@
                     <tr>
                         <td>四滤产品</td>
                         <td>机油滤清器</td>
-                        <td>旋装世滤清器</td>
+                        <td>旋装滤清器</td>
                         <td class="operation">
-                            <a id="view">查看</a>
-                            <a id="edit">编辑</a>
+                            <button id="view" data-method="view" class="layui-btn">查看</button>
+                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
                         </td>
                     </tr>
                     <tr>
                         <td>四滤产品</td>
                         <td>机油滤清器</td>
-                        <td>旋装世滤清器</td>
+                        <td>旋装滤清器</td>
                         <td class="operation">
-                            <a id="view">查看</a>
-                            <a id="edit">编辑</a>
+                            <button id="view" data-method="view" class="layui-btn">查看</button>
+                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <div id="paging"></div>
     </div>
 </div>
+<!-- 弹框一：商品分类树状结构 -->
+<div id="categoriesTreeBox" class="categoriesTreeBox">
+    <ul id="storeTree"></ul>
+</div>
+<div id="categoriesTreeView" class="categoriesTreeBox">
+    <ul id="storeItemTree"></ul>
+</div>
+<!-- 弹框二：询问商品分类添加位置 -->
+<div id="categoriesLocate" class="categoriesLocate">
+    您当前选中的分类是：<span id="categoriesName"></span>
+</div>
+<!-- 弹框三：商品分类信息添加与编辑的结果提示 -->
+<div id="categoriesInfoEdit" class="categoriesInfo">
+    <form>
+        <div class="layui-input-inline">
+            <label for="first_title" class="layui-form-label">分类名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="" id="" class="layui-input" placeholder="请输入分类名称" />
+            </div>
+        </div>
+    </form>
+</div>
+<!-- 弹框四：商品分类信息添加与编辑的结果提示 -->
+<div id="categoriesDelete" class="categoriesLocate">
+    是否确认删除数据？
+</div>
+<!-- 弹框五：商品分类信息添加与编辑的结果提示 -->
+<div id="categoriesNotDel" class="categoriesLocate">
+    <p>该数据下存在关联数据，不可删除！</p>
+    <p>关联数据可能为下属分类，也可能是该分类下有产品信息</p>
+</div>
+<!-- 弹框六：商品分类信息添加与编辑的结果提示 -->
+<div id="categoriesAdd" class="categoriesLocate">
+    添加数据已存在，请重新查看确认!
+</div>
+
+<script src="BasicInformation/Categories/Categories.js"></script>

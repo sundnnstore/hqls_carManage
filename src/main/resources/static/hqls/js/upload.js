@@ -26,24 +26,26 @@ function uploadImg(formObj,imgObj){
 	}  
 	
 	if(imgObj instanceof jQuery){
-		if(imgObj.length>1){
-			formdata.append("images",imgObj[0]);
+		if(imgObj.files.length>1){
+			formdata.append("images",imgObj[0].files);
 			url = imgurls;
 		}else{
-			formdata.append("image",imgObj[0]);
+			formdata.append("image",imgObj.files[0]);
 			url = imgurl;
 		}
 		
 	}else{  
-		if(imgObj.length>1){
+		if(imgObj.files.length>1){
 			formdata.append("images",imgObj);
 			url = imgurls;
 		}else{
-			formdata.append("image",imgObj);
+			formdata.append("image",imgObj.files[0]);
 			url = imgurl;
 		}
 		
 	}  
+	//第一 我需要把 上传文件的流打印出来
+	console.log(imgObj.files[0]);
 	
 	$.ajax({
 		type : "post",
@@ -56,9 +58,10 @@ function uploadImg(formObj,imgObj){
 		},
 		url : url,
 		success : function(data) {
-			alert("返回数据:"+JSON.stringify(data));
-			var response = JSON.stringify(data)
-			//displayImg(imgObj,imgUrl); //显示图片
+			var response = JSON.stringify(data);
+			var url =data.result.fileUrl;
+			displayImg(imgObj,url); //显示图片
+			return url;
 		},
 		error : function(e) {
 			alert(JSON.stringify(e));
@@ -73,4 +76,20 @@ function uploadImg(formObj,imgObj){
  */
 function displayImg(imgObj,imgurl){
 	$(imgObj).css("background-image","url("+imgurl+")"); 
+}
+
+/**
+ * 
+ * @param elementd
+ * @returns
+ */
+function layuiUpload(elementd){
+	layui.upload({
+        url: imgurl, //上传接口
+        elem: '#'+elementd, //指定第一个图片上传框
+        method: 'POST', //上传接口的http类型            
+        success: function(res) { //上传成功后的回调
+            commodityImg1.src = res.result.fileUrl; // 将上传成功的图片展示到页面第一个图片上传框上
+        }
+    });
 }
