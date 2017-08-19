@@ -48,7 +48,7 @@ public class HqlsStore implements Serializable {
 	@ApiModelProperty("背景图片URL")
 	private String backUrl;
 	@ApiModelProperty("是否启用")
-	private Integer isUseable;
+	private Boolean isUseable;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
 	@ApiModelProperty("操作时间")
@@ -226,14 +226,14 @@ public class HqlsStore implements Serializable {
 	 * 设置是否启用
 	 * @param isUseable 是否启用
 	 */
-	public void setIsUseable(Integer isUseable) {
+	public void setIsUseable(Boolean isUseable) {
 		this.isUseable = isUseable;
 	}
 	/**
 	 * 获取是否启用
 	 * @return 是否启用
 	 */
-	public Integer getIsUseable() {
+	public Boolean getIsUseable() {
 		return this.isUseable;
 	}
 	/**
