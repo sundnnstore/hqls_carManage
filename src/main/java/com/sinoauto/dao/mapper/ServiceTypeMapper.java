@@ -24,5 +24,8 @@ public interface ServiceTypeMapper {
 			"END "+
 			"WHERE service_type_id = #{1}")
 	public Integer updateServiceTypeStatus(Integer serviceTypeId);
+	
+	@Select("select * from hqls_service_type where where service_type_name=#{1} and is_usable = 1")
+	public HqlsServiceType getServiceTypesByServiceTypeName(String typeName);
 
 }

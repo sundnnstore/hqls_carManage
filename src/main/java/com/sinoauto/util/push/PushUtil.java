@@ -26,7 +26,7 @@ public class PushUtil {
 	public static Logger LOG = LoggerFactory.getLogger(PushUtil.class);
 	
 	
-	 public static PushResult testSendWithSMS(PushParms parms) {
+	 public static PushResult push2Andriod(PushParms parms) {
 	        JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY);
 	        try {
 	            SMS sms = SMS.content(new Gson().toJson(parms.getMessage()), 10);
@@ -47,7 +47,7 @@ public class PushUtil {
 
 	public static PushResult push2IOSByAPNS(PushParms parms) {
 		JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY, null, ClientConfig.getInstance());
-		PushPayload payload = push2IOS(parms);
+		PushPayload payload = getPushPayload(parms);
 		try {
 			PushResult result = jpushClient.sendPush(payload);
 			LOG.info("Got result - " , result);
@@ -69,7 +69,7 @@ public class PushUtil {
 	 * @param parms
 	 * @return
 	 */
-	public static PushPayload push2IOS(PushParms parms) {
+	public static PushPayload getPushPayload(PushParms parms) {
 		return PushPayload.newBuilder()
 						.setPlatform(Platform.ios())
 						.setAudience(Audience.alias(parms.getAccount()))

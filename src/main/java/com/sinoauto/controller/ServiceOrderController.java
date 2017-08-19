@@ -98,7 +98,25 @@ public class ServiceOrderController {
 	@ApiOperation(value = "创建服务订单接口", notes = "tangwt")
 	@PostMapping("createorder")
 	public ResponseEntity<RestModel<String>> createOrder(@RequestBody ServiceOrderDto order){
-		return null;
+		if(StringUtils.isEmpty(order.getCustomerName())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户姓名不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCustomerMobile())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户手机号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getServiceType())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务项目不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getStoreCode())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"门店编码不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCarNo())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车牌号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCarModel())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车型不能为空！");
+		}
+		return serviceOrderService.createOrder(order);
 	}
 	
 
