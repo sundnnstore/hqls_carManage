@@ -10,9 +10,9 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsUserStore" useGeneratedKeys="true" keyProperty="userStoreId">
 	    INSERT INTO hqls_user_store (
-	        user_id, store_id
+	        user_id, store_id,is_contact
 	    ) VALUES (
-	        #{userId}, #{storeId}        
+	        #{userId}, #{storeId},#{isContact}        
 	    )
 	</insert>
 
@@ -23,6 +23,13 @@
 		   store_id = #{storeId}
 	   WHERE 
 		   user_store_id = #{userStoreId}
+	</update>
+	
+	
+	<update id="updateUserStore" parameterType="int">
+		update hqls_user_store set
+			is_contact=0
+		where store_id=#{storeId}
 	</update>
 	
 </mapper>

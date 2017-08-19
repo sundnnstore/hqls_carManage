@@ -111,9 +111,8 @@
 		update hqls_store
 		set
 		<if test="storeName != null and storeName != '' ">store_name = #{storeName},</if>
-		<if test="mobile != null and mobile != '' ">mobile = #{mobile},</if>
 		<if test="address != null and address != '' ">address = #{address},</if>
-		<if test="backUrl != null and backUrl != '' ">backUrl = #{backUrl},</if>
+		<if test="backUrl != null and backUrl != '' ">back_url = #{backUrl},</if>
 		<if test="provinceId != null and provinceId != '' ">province_id = #{provinceId},</if>
 		<if test="cityId != null and cityId != '' ">city_id =#{cityId},</if>
 		<if test="countyId != null and countyId != '' ">county_id =#{countyId},</if>

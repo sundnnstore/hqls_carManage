@@ -40,6 +40,7 @@ public class StoreInfoDto {
 	private String backUrl;
 	@ApiModelProperty("是否启用")
 	private Boolean isUseable;
+	
 
 	public String getStoreName() {
 		return storeName;

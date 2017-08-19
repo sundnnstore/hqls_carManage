@@ -153,7 +153,7 @@
                     <input type="radio" name="isEnable" value="0" >否
                 </td>
             </tr> -->
-        </tbody>
+   
     </table>
 </div>
 <div id="storeInfoView" class="storeInfo">
@@ -237,7 +237,36 @@
  	 $("#county").html(ci);
  }
 	
-	
+ for(i=0;i<pros.length;i++){
+	 p= pros[i];
+	 provinces += '<option value="'+p.id+'">'+p.name+'</option>';
+ }
+ $("#provinceIds").html(provinces);
+ 
+
+ function getCityIds(obj){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择市</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		 var  c = citys[i];
+ 		 ci += '<option value="'+c.id+'">'+c.name+'</option>';
+ 	 }
+ 	 $("#cityIds").html(ci);
+ }
+
+ function getCountyIds(obj){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择县</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		var cs = citys[i];
+ 		 ci += '<option value="'+cs.id+'">'+cs.name+'</option>';
+ 	 }
+ 	 $("#countyIds").html(ci);
+ }
  
  
  
@@ -326,15 +355,15 @@
 	    		var tb_html="";
 	    		var editStore = $("#editStore");
 	    		var status = result.isUseable?"是":"否";
-	    			tb_html= '<tr><td>门店名称</td><td><input value="'+result.storeName+'"></input></td></tr>'+
-	    						'<tr><td>门店联系人</td><td><input value="'+result.userName+'"></input></td></tr>'+
-	    						'<tr><td>联系人电话</td><td><input value="'+result.mobile+'"></input></td></tr>'+
+	    			tb_html= '<tr><td>门店名称</td><td><input type="hidden" value="'+storeId+'" id="storeId"><input value="'+result.storeName+'" id="storeName"></input></td></tr>'+
+	    						'<tr><td>门店联系人</td><td><input value="'+result.userName+'" id="userName2"></input></td></tr>'+
+	    						'<tr><td>联系人电话</td><td><input value="'+result.mobile+'" id="mobile"></input></td></tr>'+
 	    						'<tr><td>门店地址</td><td><div class="layui-input-inline"><select name="prov" id="provinceId" onchange="getCity(this,'+result.cityId+')" class="layui-select"></select></div>'+
 	    						'<div class="layui-input-inline"><select name="city" id="cityId" onchange="getCounty(this,'+result.countyId+')" class="layui-select"><option value="">请选择市</option></select></div>'+
 	    						' <div class="layui-input-inline"><select name="area" id="countyId" class="layui-select"><option value="">请选择县/区</option></select></div>'+
-                 				'<input type="text" name="" class="layui-input" placeholder="请输入门店地址"></td></tr>'+
+                 				'<input type="text" name="" class="layui-input" placeholder="请输入门店地址"><input id="address" value="'+result.address+'"></input></td></tr>'+
 	    						'<tr><td>门店位置</td><td><input value="('+result.longitude+','+result.latitude+')"></input></td></tr>'+
-	    						'<tr><td>图片上传</td><td><input type="file" name="" id="storeImg" class="layui-input"></td></tr>'+
+	    						'<tr><td>图片上传</td><td><input type="file" name="" id="storeImg" class="layui-input"><input id="backUrl" value="'+result.backUrl+'"></input></td></tr>'+
 	    						'<tr><td>是否启用</td>'+
 	    						'<td>'+status+'</td></tr>'
 	    						editStore.html(tb_html);
@@ -351,12 +380,36 @@
 	    			 $("#provinceId").val(result.provinceId);
 	    			 getCity($("#provinceId"), result.cityId);
 	    			 getCounty($("#cityId"),result.countyId);
-	    						
 	    		}
 	    }); 
 	}
 	
-	function updateStore(storeId){
+	function updateStore(){
+		var dd = $("#userName2").val();
+		debugger;
+		$.ajax({
+			url : "http://localhost:8881/changestorebystoreid",
+			type : "post",
+			async:false,
+			headers:{
+				  "Authorization":localStorage.token
+				 },
+				
+			data : {"storeId":$("#storeId").val(),"storeName":$("#storeName").val(),
+				    "address":$("#address").val(),"provinceId":$("#provinceId").val(),
+				    "cityId":$("#cityId").val(),"countyId":$("#countyId").val(),
+				    "mobile":$("#mobile").val(),"backUrl":$("#backUrl").val(),
+				    "userName":$("#userName2").val()},
+	    	success : function(data){
+	    		if(0 == data.errcode){
+	    			alert("编辑成功！");
+	    			$("#storeName").val("");
+	    		}
+	    		
+	    	}
+			
+			
+		});
 		
 	}
 	  

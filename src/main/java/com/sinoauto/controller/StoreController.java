@@ -3,7 +3,6 @@ package com.sinoauto.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -132,9 +131,10 @@ public class StoreController {
 	
 	@ApiOperation(value = "根据storeId编辑当条信息",notes = "tangrx")
 	@PostMapping("changestorebystoreid")
-	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(@RequestParam(value="storeId") Integer storeId,@RequestParam(value = "storeName") String storeName,
-			@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="mobile") String mobile,@Param(value="address") String address,@RequestParam(value="provinceId") Integer provinceId,@RequestParam(value="cityId") Integer cityId,@RequestParam(value="countyId") Integer countyId){
-		return storeService.changeStoreByStoreId(storeId,storeName,backUrl,mobile,address,provinceId,cityId,countyId);
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(@RequestHeader(value = "Authorization") String Authorization,@RequestParam(value="storeId") Integer storeId,@RequestParam(value = "storeName") String storeName,
+			@RequestParam(value="backUrl") String backUrl,@RequestParam(value="mobile") String mobile,@RequestParam(value="address") String address,
+			@RequestParam(value="provinceId") Integer provinceId,@RequestParam(value="cityId") Integer cityId,@RequestParam(value="countyId") Integer countyId,@RequestParam(value="userName") String userName){
+		return storeService.changeStoreByStoreId(Authorization,storeId,storeName,backUrl,mobile,address,provinceId,cityId,countyId,userName);
 	}
 	
 	

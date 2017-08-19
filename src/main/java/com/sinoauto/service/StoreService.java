@@ -220,6 +220,7 @@ public class StoreService {
 			HqlsUserStore userStore = new HqlsUserStore();
 			userStore.setStoreId(stoId);
 			userStore.setUserId(userId);
+			userStore.setIsContact(true);
 			userStoreMapper.insert(userStore);
 			
 		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
@@ -238,6 +239,7 @@ public class StoreService {
 				HqlsUserStore userStore = new HqlsUserStore();
 				userStore.setStoreId(stoId);
 				userStore.setUserId(userId);
+				userStore.setIsContact(true);
 				userStoreMapper.insert(userStore);
 			} else {
 				logger.info("注册失败.");
@@ -308,8 +310,75 @@ public class StoreService {
 	 * @param address
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(Integer storeId,String storeName,String backUrl,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId){
-		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,mobile,address,provinceId,cityId,countyId);
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(String token,Integer storeId,String storeName,String backUrl,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId,String userName){
+				HqlsUser user = new HqlsUser();
+				String password = "123456";
+				user.setUserName(userName);
+				user.setPassword(password);
+				user.setMobile(mobile);
+				user.setIsUseable(true);
+				user.setCreateTime(new Date());
+				user.setDmlTime(new Date());
+				//注册用户信息
+				RestModel<Integer> registerInfo = authService.register(mobile,password);
+				//查询当前用户在系统中是否存在
+				HqlsUser hquser =	userMapper.getUserInfoByMobile(mobile);
+				Integer globalUserId = null;
+				Integer userId = null;
+				if (registerInfo.getErrcode() == 0) {//注册成功
+					logger.info("注册，新增用户。");
+					globalUserId = registerInfo.getResult(); //用户中心的编号
+					user.setGlobalUserId(globalUserId);
+					if(hquser != null){
+						userId = hquser.getUserId();
+					}else{
+						userMapper.insert(user);
+						userId = user.getUserId();
+					}
+					//新增用户门店信息表
+					HqlsUserStore userStore = new HqlsUserStore();
+					userStore.setStoreId(storeId);
+					userStore.setUserId(userId);
+					userStore.setIsContact(true);
+						
+					userStoreMapper.deleteByStoreIdAndUserId(storeId,userId);
+					userStoreMapper.updateUserStore(storeId);
+					userStoreMapper.insert(userStore);
+					
+					
+					
+				} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+					logger.info("用户已注册，则同步用户信息");
+					RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
+					if(uInfo.getErrcode() == 0){
+						globalUserId = uInfo.getResult().getUserId();
+						user.setGlobalUserId(globalUserId);
+						if(hquser != null){
+							userId = hquser.getUserId();
+						}else{
+							userMapper.insert(user);
+							userId = user.getUserId();
+						}
+						//新增用户门店信息表
+						HqlsUserStore userStore = new HqlsUserStore();
+						userStore.setStoreId(storeId);
+						userStore.setUserId(userId);
+						userStore.setIsContact(true);
+						
+						userStoreMapper.deleteByStoreIdAndUserId(storeId,userId);
+						userStoreMapper.updateUserStore(storeId);
+						userStoreMapper.insert(userStore);
+					} else {
+						logger.info("注册失败.");
+						return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+					}
+				} else {
+					logger.info("注册失败....");
+					return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+					
+				}
+		
+		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,address,provinceId,cityId,countyId);
 		return RestModel.success();
 		
 	}

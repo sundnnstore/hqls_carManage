@@ -55,6 +55,33 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
     });
     // 弹框：门店详细信息
     function store(pid,temp) {
+    	if(temp==""){
+    		var tb_html="";
+    		var editStore = $("#editStore");
+    		tb_html= '<tr><td>门店名称</td><td><input type="hidden" value="" id="storeId"><input value="" id="storeName"></input></td></tr>'+
+			'<tr><td>门店联系人</td><td><input value="" id="userName2"></input></td></tr>'+
+			'<tr><td>联系人电话</td><td><input value="" id="mobile"></input></td></tr>'+
+			'<tr><td>门店地址</td><td><div class="layui-input-inline"><select name="prov" id="provinceId" onchange="getCity(this)" class="layui-select"></select></div>'+
+			'<div class="layui-input-inline"><select name="city" id="cityId" onchange="getCounty(this)" class="layui-select"><option value="">请选择市</option></select></div>'+
+			' <div class="layui-input-inline"><select name="area" id="countyId" class="layui-select"><option value="">请选择县/区</option></select></div>'+
+				'<input type="text" name="" class="layui-input" placeholder="请输入门店地址"><input id="address" value=""></input></td></tr>'+
+			'<tr><td>门店位置</td><td><input value=""></input></td></tr>'+
+			'<tr><td>图片上传</td><td><input type="file" name="" id="storeImg" class="layui-input"><input id="backUrl" value=""></input></td></tr>'+
+			'<tr> <td>是否启用</td>'+
+            '<td class="state"><input type="radio" name="isEnable" value="yes" checked="1">是<input type="radio" name="isEnable" value="no" checked="0">否</td></tr>';
+    		editStore.html(tb_html);
+    			
+			var pros = findAllProvinces();
+				var p = null;
+				var provinces = '<option value="">请选择省</option>';
+				
+			for(i=0;i<pros.length;i++){
+				p= pros[i];
+				provinces += '<option value="'+p.id+'">'+p.name+'</option>';
+			 }
+			 $("#provinceId").html(provinces);
+			
+    	}
     	// nodeType为1 表示storeId为父节点
     	// nodeType为2 表示storeId为兄弟节点
         layer.open({
@@ -67,10 +94,17 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
             btn: temp == 'view' ? '确定' : '提交',
             btnAlign: 'c', // 按钮居中
             yes: function(index, layero) {
+            	if(temp==""){
+            		 addStoreInfo(pid);
+            	}else if(temp=='edit'){
+            		 updateStore();
+            	}
+
             	// 当前层索引参数（index）、当前层的DOM对象（layero）
                 // console.log(layero);
-                addStoreInfo(pid);
+               
                 layer.close(index); //如果设定了yes回调，需进行手工关闭
+                
             }
         });
     }
@@ -206,6 +240,7 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 				 },
 			contentType:"application/json;charset=UTF-8",
 	    	success : function(data){
+	    		
 	    		var result = data.result;
 	    		nodes = result;
 	    	}
@@ -213,7 +248,6 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 		});
 		
 	}
-	
 	
 	
 	
