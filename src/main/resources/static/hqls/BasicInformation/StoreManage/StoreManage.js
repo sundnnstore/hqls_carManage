@@ -64,9 +64,9 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 			'<tr><td>门店地址</td><td><div class="layui-input-inline"><select name="prov" id="provinceId" onchange="getCity(this)" class="layui-select"></select></div>'+
 			'<div class="layui-input-inline"><select name="city" id="cityId" onchange="getCounty(this)" class="layui-select"><option value="">请选择市</option></select></div>'+
 			' <div class="layui-input-inline"><select name="area" id="countyId" class="layui-select"><option value="">请选择县/区</option></select></div>'+
-				'<input type="text" name="" class="layui-input" placeholder="请输入门店地址"><input id="address" value=""></input></td></tr>'+
+				'<input type="text" name="" id="address" class="layui-input" placeholder="请输入门店地址"></td></tr>'+
 			'<tr><td>门店位置</td><td><input value=""></input></td></tr>'+
-			'<tr><td>图片上传</td><td><input type="file" name="" id="storeImg" class="layui-input"><input id="backUrl" value=""></input></td></tr>'+
+			'<tr><td>图片上传</td><td><form id="store_form"><input type="file" name="file" id="storeImg" onchange="uploadStoreImg()" class="layui-input"><input type="hidden" id="backUrl" ></form></td></tr>'+
 			'<tr> <td>是否启用</td>'+
             '<td class="state"><input type="radio" name="isEnable" value="yes" checked="1">是<input type="radio" name="isEnable" value="no" checked="0">否</td></tr>';
     		editStore.html(tb_html);
@@ -248,8 +248,12 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 		});
 		
 	}
-	
-	
-	
-	
 });
+
+function uploadStoreImg(){
+	var formObj =$("#store_form"); //上传 form
+	var imgObj=$("#storeImg")[0]; //上传 图片对象
+	var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
+	$("#backUrl").val(getImgUrl);
+	alert($("#backUrl").val());
+}
