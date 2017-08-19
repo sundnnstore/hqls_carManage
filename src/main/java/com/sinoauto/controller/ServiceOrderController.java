@@ -1,5 +1,8 @@
 package com.sinoauto.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +118,18 @@ public class ServiceOrderController {
 		}
 		if(StringUtils.isEmpty(order.getCarModel())){
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车型不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getArriveTime())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"到店时间不能为空！");
+		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+			try {
+				Date arriveTime = sdf.parse(order.getArriveTime());
+				order.setExpectArriveTime(arriveTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"时间格式有误！");
+			}
 		}
 		return serviceOrderService.createOrder(order);
 	}

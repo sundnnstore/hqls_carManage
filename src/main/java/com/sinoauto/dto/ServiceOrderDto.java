@@ -26,6 +26,8 @@ public class ServiceOrderDto {
 	private Double orderAmount;
 	@ApiModelProperty("预计到店时间")
 	private Date expectArriveTime;
+	@ApiModelProperty("预计到店时间String")
+	private String arriveTime;
 	@ApiModelProperty("门店编码")
 	private String storeCode;
 	@ApiModelProperty("客户ID")
@@ -174,7 +176,15 @@ public class ServiceOrderDto {
 			this.storeId = storeId;
 		}
 	}
-	
-	
+
+	public String getArriveTime() {
+		return arriveTime;
+	}
+
+	public void setArriveTime(String arriveTime) {
+		if (arriveTime != null) {
+			this.arriveTime = arriveTime;
+		}
+	}
 
 }
