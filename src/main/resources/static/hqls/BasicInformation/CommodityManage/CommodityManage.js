@@ -235,8 +235,20 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
      * 编辑商品
      */
     function edidPart(){
-    	//先查看 商品类型 ,封装一个查看方法
+    	//查看商品
+    	Detailview();
+    	//编辑商品
+    	
     }
+    
+    /**
+     * 上下价格
+     * @returns
+     */
+    function isUnable(){
+    	
+    }
+    
     
     /**
      * 查看明细
@@ -270,18 +282,19 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     	for (var int = 0; int < piclen; int++) {
     		
     		pics = `
-                <tr>
-                    <td><input type="text" name="${attrlen[int].attrKey}" value="${attrlen[int].attrKey}" class="layui-input attr attrkey${int}" placeholder="请输入参数名称"></td>
-                    <td><input type="text" name="${attrlen[int].attrValue}" value="${attrlen[int].attrValue}" class="layui-input attr attrValue${int} " placeholder="请输入内容"></td>
-                </tr>
+               <div class="siteUpload">
+	                <img id="commodityImgUrl${int}" src="../../../images/icon1.jpg">
+	                <div>
+	                    <input type="file" name="image" id="commodityImg${int}">
+	                </div>
+    			</div>
             `;
     		
 		}
-    	
-    	
+
     	for (var int = 0; int < attrlen; int++) {
 			//清空动态属性框,然后拼接显示
-    		pics = `
+    		attrExtra = `
                 <tr>
                     <td><input type="text" name="${attrlen[int].attrKey}" value="${attrlen[int].attrKey}" class="layui-input attr attrkey${int}" placeholder="请输入参数名称"></td>
                     <td><input type="text" name="${attrlen[int].attrValue}" value="${attrlen[int].attrValue}" class="layui-input attr attrValue${int} " placeholder="请输入内容"></td>
@@ -289,8 +302,8 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
             `;
 		}
     	//动态属性追加到指定位置
-    	
-    	//动态图片追加到指定位置
+    	$("#uploadImg").html(pics);
+    	$(".attrExtra").html(attrExtra);
     }
     /**
      * 封装所有图片集合的json
