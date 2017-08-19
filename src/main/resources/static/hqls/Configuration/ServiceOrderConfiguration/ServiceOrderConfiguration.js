@@ -42,6 +42,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 		});
 	});
 	
+	
 	$('body').on('click','.toView', function() {
 		layer.open({
 			type: 1, // 添加一个模板
@@ -147,4 +148,11 @@ layui.use(['jquery', 'layer','laypage'], function() {
 	}
 	
 })
+
+function upload(){
+	var formObj =$("#hq_form"); //上传 form
+	var imgObj=$("#service_order_file")[0]; //上传 图片对象
+	var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
+	console.log(getImgUrl);
+}
 

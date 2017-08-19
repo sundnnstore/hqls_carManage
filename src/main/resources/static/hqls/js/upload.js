@@ -46,7 +46,7 @@ function uploadImg(formObj,imgObj){
 	}  
 	//第一 我需要把 上传文件的流打印出来
 	console.log(imgObj.files[0]);
-	
+	var returnUrl = "";
 	$.ajax({
 		type : "post",
 		async : false,
@@ -59,15 +59,15 @@ function uploadImg(formObj,imgObj){
 		url : url,
 		success : function(data) {
 			var response = JSON.stringify(data);
-			var url =data.result.fileUrl;
+			returnUrl =data.result.fileUrl;
 			displayImg(imgObj,url); //显示图片
-			return url;
 		},
 		error : function(e) {
 			alert(JSON.stringify(e));
 			console.log(JSON.stringify(e));
 		}
 	}); 
+	return returnUrl;
 }
 
 /**
