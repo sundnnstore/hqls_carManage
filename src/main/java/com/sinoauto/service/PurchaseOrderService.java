@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
+import com.sinoauto.dao.bean.HqlsLogisticsCompany;
+import com.sinoauto.dao.bean.HqlsLogisticsLog;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsOrderDetail;
@@ -21,11 +23,14 @@ import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
+import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
+import com.sinoauto.dao.mapper.LogisticsLogMapper;
 import com.sinoauto.dao.mapper.OrderDetailMapper;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dao.mapper.ShipAddressMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.UserMapper;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
@@ -35,6 +40,9 @@ import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
+import com.sinoauto.util.KdniaoTrackQueryAPI;
+
+import cn.jiguang.common.utils.StringUtils;
 
 
 @Service
@@ -56,6 +64,10 @@ public class PurchaseOrderService {
 	private FinanceFlowMapper financeFlowMapper;
 	@Autowired
 	private StoreFinanceMapper storeFinanceMapper;
+	@Autowired
+	private LogisticsCompanyMapper logisticsCompanyMapper;
+	@Autowired
+	private LogisticsLogMapper logisticsLogMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -309,13 +321,13 @@ public class PurchaseOrderService {
 		BigDecimal result = new BigDecimal(0.00);
 		for (PartsDesListDto p: parts) {
 			HqlsParts hqpart = partsMapper.getPartsById(p.getPartsId());
-			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPartsName()));
+			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
 			result.add(eachOrderPrice);
 		}
 		result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
-
+ 
 	/**
 	 * 	查询采购订单列表
 	 * 	@User liud
@@ -352,5 +364,73 @@ public class PurchaseOrderService {
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"确认发货异常");
 		}
 		return RestModel.success();
+	}
+	
+	/**
+	 * 查询所有物流公司
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllLogisticsCompany() {
+		
+		return RestModel.success(logisticsCompanyMapper.findAll());
+	}
+	
+	/**
+	 * 发货操作
+	 * @param orderId
+	 * @param logisticsId
+	 * @param logisticsNo
+	 * @return
+	 * @author wuxiao
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> shipOperation(Integer orderId, Integer logisticsId, String logisticsNo, String remark) {
+		try {
+			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+			if (logisticsId == null && StringUtils.isEmpty(logisticsNo)) {
+				// 没有选择物流公司的情况下，将备注记入物流日志
+				HqlsLogisticsLog log = new HqlsLogisticsLog();
+				log.setPurchaseOrderId(orderId);
+				log.setRemark(remark);
+				logisticsLogMapper.insert(log);
+				
+				// 更改订单状态
+				order.setOrderStatus(3);
+				purchaseOrderMapper.updateOrderStatus(order);
+			} else {
+				//更新订单
+				order.setLogisticsId(logisticsId);
+				order.setLogisticsNo(logisticsNo);
+				order.setOrderStatus(3);
+				purchaseOrderMapper.update(order);
+			}
+			return RestModel.success("发货完成");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "发货操作异常");
+	}
+	
+	public ResponseEntity<RestModel<Object>> getLogisticsInfo(Integer orderId) {
+		HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+		if (null == order) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单Id不存在");
+		}
+		try {
+			Integer logisticsId = order.getLogisticsId();
+			String logisticsNo = order.getLogisticsNo();
+			// 没有走物流的情况
+			if (null == logisticsId && StringUtils.isEmpty(logisticsNo)) {
+				return RestModel.success(logisticsLogMapper.findLogisticsLogs(orderId));
+			}
+			HqlsLogisticsCompany company = logisticsCompanyMapper.getById(logisticsId);
+			KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
+			String result = api.getOrderTracesByJson(company.getCompanyNo(), logisticsNo);
+			return RestModel.success(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "查询物流异常");
 	}
 }

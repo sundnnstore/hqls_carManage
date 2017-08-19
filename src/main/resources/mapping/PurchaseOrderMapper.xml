@@ -70,8 +70,7 @@
 		   total_fee = #{totalFee}, 
 		   pay_no = #{payNo}, 
 		   remark = #{remark}, 
-		   create_time = #{createTime}, 
-		   dml_time = #{dmlTime}, 
+		   dml_time = now(), 
 		   discount_fee = #{discountFee}, 
 		   pay_fee = #{payFee}, 
 		   store_id = #{storeId}

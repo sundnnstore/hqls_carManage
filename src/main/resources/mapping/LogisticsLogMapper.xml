@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsLogisticsLog" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsLogisticsLog" useGeneratedKeys="true" keyProperty="logId">
 	    INSERT INTO hqls_logistics_log (
 	        remark, purchase_order_id
 	    ) VALUES (
