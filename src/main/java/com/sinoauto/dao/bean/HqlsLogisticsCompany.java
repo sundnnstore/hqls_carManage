@@ -20,6 +20,8 @@ public class HqlsLogisticsCompany implements Serializable {
 	private Integer logisticsId;
 	@ApiModelProperty("公司名称")
 	private String logisticsName;
+	@ApiModelProperty("公司编码")
+	private String companyNo;
 	@ApiModelProperty("公司电话")
 	private String mobile;
 	@ApiModelProperty("公司地址")
@@ -80,6 +82,15 @@ public class HqlsLogisticsCompany implements Serializable {
 	 */
 	public String getAddress() {
 		return this.address;
+	}
+	public String getCompanyNo() {
+		return companyNo;
+	}
+	public void setCompanyNo(String companyNo) {
+		if(companyNo != null) {
+			this.companyNo = companyNo;
+		}
+		
 	}
 
 }

@@ -12,7 +12,7 @@ public interface OrderDetailMapper {
 
 	public int insert(HqlsOrderDetail detail);
 	
-	@Select("select * from hqls_order_detail where order_id = #{1}")
+	@Select("select * from hqls_order_detail where purchase_order_id = #{1}")
 	public List<HqlsOrderDetail> getDetailByOrderId(Integer orderId);
 	
 }
