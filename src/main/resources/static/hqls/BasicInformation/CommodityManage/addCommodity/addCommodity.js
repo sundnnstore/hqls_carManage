@@ -63,4 +63,9 @@ layui.use(['form', 'upload'], function() {
         `;
         $('.layui-table tbody').append(html);
     })
+    
+    //提交新增数据
+    function add(){
+    	
+    }
 });

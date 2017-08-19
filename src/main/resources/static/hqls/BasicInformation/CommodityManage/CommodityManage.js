@@ -3,7 +3,7 @@ layui.use(['layer', 'form', 'laypage'], function() {
         layer = layui.layer,
         form = layui.form,
         laypage = layui.laypage;
-    	
+		var pageSize = 10;
     // 弹出框
     var title; // 弹出框的标题
     var active = {
@@ -65,15 +65,92 @@ layui.use(['layer', 'form', 'laypage'], function() {
         }
     });
 
-    // 分页条
-    laypage({
-        cont: 'paging',
-        pages: 100, //总页数
-        groups: 5, //连续显示分页数
-        skin: '#1E9FFF', //颜色
-        skip: true, //跳转到某页
-        jump: function(obj, first) { //触发分页后的回调: obj(object)包括了分页的所有配置信息,first(Boolean)检测页面是否初始加载,可避免无限刷新。
-            var curr = obj.curr; //得到了当前页，用于向服务端请求对应数据
-        }
-    });
+    //初次进入页面的数据
+    
+    getData(1);
+	$("#searchCommodity").click(function(){
+		getData(1);
+	});
+	
+    /**
+     * 初始化分页 
+     * @param totalCount 总页数
+     * @param pageIndex  页面索引
+     * @returns
+     */
+    function initPage(totalCount,pageIndex){
+		//page
+		laypage({
+			cont: 'pages',
+			pages: Math.ceil(totalCount/pageSize), // 总的分页数
+			groups: 5, // 展示的页数
+			first: 1,
+			last: Math.ceil(totalCount/pageSize),
+			skip: true,
+			curr:pageIndex,
+			jump: function(obj, first) {
+				if(!first) {
+					getData(obj.curr);
+				}
+			}
+		})
+		
+	}
+    
+    
+    /**
+     * 获取分页数据
+     * @param pageIndex
+     * @returns
+     */
+    function getData(pageIndex){
+    	$.ajax({
+			url : "http://localhost:8881/findparts",
+			type : "get",
+			async : false,
+			data : {
+				"partsCode":$("#searchCommodity").val(),
+				"partsTypeId":$("#searchCommodity").val(),
+				"partsTopTypeId":$("#searchCommodity").val(),
+				"partsName":$("#searchCommodity").val(),
+				"pageSize":pageSize,
+				"pageIndex":pageIndex
+				},
+			success : function(data){
+				(data,pageIndex);
+			}
+		});
+	}
+    
+    /**
+     * 
+     * @param res 返回的数据 
+     * @param pageIndex 显示的页面索引
+     * @returns
+     */
+    function comboTable(res,pageIndex){
+    	var data = res.result;
+		var trs = "";
+		for(i=0;i<data.length;i++){
+			var tr = data[i];
+			trs += '<tr>'+
+					'<td>'+tr.partsName+'</td>'+
+					'<td>'+tr.partsTopType+'</td>'+
+					'<td>'+tr.pName+'</td>'+
+					'<td>'+tr.partsName+'</td>'+
+					'<td>'+tr.partsCode+'</td>'+
+					'<td><button id="addCommodity" class="layui-btn" data-method="addCommodity" data-type="t">查看</button></td>'+
+					'<td><button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity" data-type="t">编辑</button></td>'+
+					'<td>';
+			if(tr.is_usable){
+				trs += '<button id="isUse" class="layui-btn layui-btn-primary">下架</button>';
+			}else{
+				trs += '<button class="layui-btn layui-btn-normal uORd" >上架</button>';
+			}
+			trs +='</td></tr>'
+		}
+		$("#service_tb").html(trs);
+		initPage(res.totalCount,pageIndex);
+    }
+    
 });

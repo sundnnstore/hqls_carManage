@@ -36,20 +36,20 @@
 	<div class="layui-form-item mylayui-item ">
 		<label class="layui-form-label">服务名称</label>
 		<div class="layui-input-block">
-			<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+			<input type="text" id="service_type_name" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
 		</div>
 	</div>
 	
 	<div class="layui-form-item layui-form-text mylayui-item ">
 		<label class="layui-form-label">服务内容</label>
 		<div class="layui-input-block">
-			<textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+			<textarea placeholder="请输入内容" id="service_type_content" class="layui-textarea"></textarea>
 		</div>
 	</div>
 	<div class="layui-form-item mylayui-item ">
 		<label class="layui-form-label">金额</label>
 		<div class="layui-input-block">
-			<input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+			<input type="text" name="title" id="service_amount" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
 		</div>
 	</div>
 	<div class="layui-form-item mylayui-item ">
@@ -61,7 +61,7 @@
 		</div>
 		<div class="layui-box layui-upload-button">
 			<form id="hq_form">
-				<input type="file" name="file" id="file" class="layui-upload-file">
+				<input type="file" name="file" id="file"  class="layui-upload-file">
 			</form>
 			<span class="layui-upload-icon">
 				<i class="layui-icon"></i>上传图片
@@ -69,32 +69,8 @@
 		</div>
 	</div>
 	<div class="layui-form-item layui-form-text shipbox">
-		<button class="layui-btn">确认添加</button>
+		<button class="layui-btn" id="okadd">确认添加</button>
 	</div>
 </div>
 </div>
 <script src="Configuration/ServiceOrderConfiguration/ServiceOrderConfiguration.js" type="text/javascript" charset="utf-8"></script>
-
-<script>
-/* $(document).ready(function(){
-		getData();
-	});
-
-
-	$("#searchService").click(function(){
-		getData();
-	});
-	
-	function getData(){
-		$.ajax({
-			url : "http://localhost:8881/findservicetypesbytypename",
-			type : "get",
-			async : false,
-			data : {"typeName":$("#service_title").val(),"pageSize":10,"pageIndex":1},
-			success : function(data){
-				comboTable(data.result);
-			}
-		});
-	}
-	 */
-</script>
