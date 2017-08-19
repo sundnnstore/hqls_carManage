@@ -60,7 +60,7 @@ function uploadImg(formObj,imgObj){
 		success : function(data) {
 			var response = JSON.stringify(data);
 			returnUrl =data.result.fileUrl;
-			displayImg(imgObj,url); //显示图片
+			displayImg(imgObj,returnUrl); //显示图片
 		},
 		error : function(e) {
 			alert(JSON.stringify(e));
