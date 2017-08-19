@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sinoauto.dao.bean.HqlsServiceOrder;
 import com.sinoauto.dao.bean.HqlsServiceType;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -93,5 +95,12 @@ public class ServiceOrderController {
 	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("serviceOrderId")Integer serviceOrderId){
 		return serviceOrderService.finishOrder(Authorization,serviceOrderId);
 	}
+	
+	@ApiOperation(value = "创建服务订单接口", notes = "tangwt")
+	@PostMapping("createorder")
+	public ResponseEntity<RestModel<String>> createOrder(@RequestBody HqlsServiceOrder order){
+		return null;
+	}
+	
 
 }
