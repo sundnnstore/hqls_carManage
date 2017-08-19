@@ -103,7 +103,7 @@
 <div id="storeInfoEdit" class="storeInfo">
     <table class="layui-table layui-form">
         <!-- input框的name值请根据需要自行设置 -->
-        <tbody>
+        <tbody id="addStore">
             <tr>
                 <td>门店名称</td>
                 <td><input type="text" name="" class="layui-input" placeholder="请输入门店名称" id ="storeName"></td>
@@ -247,7 +247,6 @@
 	    		var store_view = $("#store_view");
 	    		var status = result.isUseable?"是":"否";
 	    		
-	    		
 	    			tb_html= '<tr><td>门店名称</td><td>'+result.storeName+'</td></tr>'+
 	    						'<tr><td>门店联系人</td><td>'+result.userName+'</td></tr>'+
 	    						'<tr><td>联系人电话</td><td>'+result.mobile+'</td></tr>'+
@@ -261,6 +260,21 @@
 	    						
 	    		}
 	    }); 
+		
+	}
+	
+	function changeStore(storeId){
+		$.ajax({
+			url : "http://localhost:8881/changestorebystoreid",
+			type : "post",
+			data:{"storeId":storeId},
+	    	success : function(data){
+	    		var result = data.result;
+	    		nodes = result;
+	    	}
+			
+			
+		});
 		
 	}
 	

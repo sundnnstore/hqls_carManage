@@ -212,21 +212,8 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 		
 	}
 	
-	function changeStore(storeId){
-		getStoreInfo(storeId);
-		$.ajax({
-			url : "http://localhost:8881/changestorebystoreid",
-			type : "post",
-			data:{"storeId":storeId},
-	    	success : function(data){
-	    		var result = data.result;
-	    		nodes = result;
-	    	}
-			
-			
-		});
-		
-	}
+	
+	
 	
 	
 });
