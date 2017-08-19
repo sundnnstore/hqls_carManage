@@ -1,11 +1,9 @@
 package com.sinoauto.dao.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dto.CommonDto;
@@ -13,6 +11,8 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.dto.PartsTreeDto;
+import com.sinoauto.dto.PartsTreeRecursionDto;
 
 @Mapper
 public interface PartsMapper {
@@ -111,4 +111,24 @@ public interface PartsMapper {
 			+ "inner join hqls_parts hp on hod.parts_id=hp.parts_id "
 			+ "where hod.purchase_order_id=#{purchaseOrderId}")
 	public List<HqlsParts> findPartsByPurchOrderId(@Param("purchaseOrderId") Integer purchaseOrderId);
+	
+	/**
+	 *  普通查询商品树
+	 * 	@User liud
+	 * 	@Date 2017年8月19日下午12:57:07
+	 * 	@param pid
+	 * 	@return
+	 */
+	@Select("select * from hqls_parts_type where pid=#{pid}")
+	public List<PartsTreeDto> partsTree(@Param("pid")Integer pid);
+	
+	/**
+	 *  递归查询商品树
+	 * 	@User liud
+	 * 	@Date 2017年8月19日下午12:57:07
+	 * 	@param pid
+	 * 	@return
+	 */
+	@Select("select * from hqls_parts_type where pid=#{pid}")
+	public List<PartsTreeRecursionDto> partsTreeRecursion(@Param("pid")Integer pid);
 }

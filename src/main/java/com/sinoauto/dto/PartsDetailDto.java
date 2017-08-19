@@ -2,6 +2,7 @@ package com.sinoauto.dto;
 
 import java.util.List;
 
+import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dao.bean.HqlsPartsPic;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -40,6 +41,8 @@ public class PartsDetailDto {
 	private Double curPrice;
 	@ApiModelProperty("轮播图")
 	private List<HqlsPartsPic> partsPicList;
+	@ApiModelProperty("动态属性")
+	private List<HqlsPartsAttrExtr> partsAttrExtrs;
 
 	public Integer getPartsId() {
 		return partsId;
@@ -169,6 +172,14 @@ public class PartsDetailDto {
 		if (partsPicList != null) {
 			this.partsPicList = partsPicList;
 		}
+	}
+
+	public List<HqlsPartsAttrExtr> getPartsAttrExtrs() {
+		return partsAttrExtrs;
+	}
+
+	public void setPartsAttrExtrs(List<HqlsPartsAttrExtr> partsAttrExtrs) {
+		this.partsAttrExtrs = partsAttrExtrs;
 	}
 
 }

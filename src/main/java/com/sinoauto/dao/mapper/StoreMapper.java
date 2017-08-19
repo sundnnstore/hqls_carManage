@@ -74,7 +74,8 @@ public interface StoreMapper {
 	
 	public int updateStoreByStoreId(@Param("storeId") Integer storeId,@Param("storeName") String storeName,@Param("backUrl") String backUrl,@Param("mobile") String mobile,@Param("address") String address);
 	
-	
+	@Select("select * from hqls_store where store_code=#{1}")
+	public HqlsStore getStoreByStoreCode(String storeCode);
 	
 	
 	

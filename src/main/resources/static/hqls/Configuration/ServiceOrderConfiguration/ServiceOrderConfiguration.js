@@ -22,7 +22,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 			serviceType.serviceTypeName = $("#service_type_name").val();
 			serviceType.serviceTypeContent=$("#service_type_content").val();
 			serviceType.serviceAmount=$("#service_amount").val();
-			serviceType.url="ceshi";
+			serviceType.url=$("#service_order_url").val();
 			//TODO上传功能
 			serviceType.isUsable=true;
 		$.ajax({
@@ -41,6 +41,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 			}
 		});
 	});
+	
 	
 	$('body').on('click','.toView', function() {
 		layer.open({
@@ -147,4 +148,11 @@ layui.use(['jquery', 'layer','laypage'], function() {
 	}
 	
 })
+
+function upload(){
+	var formObj =$("#hq_form"); //上传 form
+	var imgObj=$("#service_order_file")[0]; //上传 图片对象
+	var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
+	$("#service_order_url").val(getImgUrl);
+}
 

@@ -1,5 +1,8 @@
 package com.sinoauto.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.sinoauto.dao.bean.HqlsServiceType;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -93,5 +97,42 @@ public class ServiceOrderController {
 	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("serviceOrderId")Integer serviceOrderId){
 		return serviceOrderService.finishOrder(Authorization,serviceOrderId);
 	}
+	
+	@ApiOperation(value = "创建服务订单接口", notes = "tangwt")
+	@PostMapping("createorder")
+	public ResponseEntity<RestModel<String>> createOrder(@RequestBody ServiceOrderDto order){
+		if(StringUtils.isEmpty(order.getCustomerName())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户姓名不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCustomerMobile())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户手机号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getServiceType())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务项目不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getStoreCode())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"门店编码不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCarNo())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车牌号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCarModel())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车型不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getArriveTime())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"到店时间不能为空！");
+		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+			try {
+				Date arriveTime = sdf.parse(order.getArriveTime());
+				order.setExpectArriveTime(arriveTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"时间格式有误！");
+			}
+		}
+		return serviceOrderService.createOrder(order);
+	}
+	
 
 }

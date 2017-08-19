@@ -1,5 +1,5 @@
 .commodity,
-.addCommodity {
+.commodityBox {
     -moz-user-select: none;
     -webkit-user-select: none;
     user-select: none;
@@ -9,13 +9,15 @@
     margin: 5px 20px 0 0;
 }
 
-.head>div>label {
-    width: inherit;
+.head>div>label,
+.state>label {
+    width: initial;
     padding: 9px 0;
     text-align: left;
 }
 
-.head>div>div {
+.head>div>div,
+.state>div {
     margin-left: 68px;
 }
 
@@ -30,28 +32,29 @@
 .tableContainer {
     width: 100%;
     overflow: auto;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 
 /* 新增商品信息的样式 */
 
-.addCommodity {
+.commodityBox {
+    display: none;
     padding: 15px 20px;
 }
 
-.addCommodity .head {
+.commodityBox .head {
     display: flex;
     justify-content: space-between;
 }
 
-.addCommodity .head>div {
-    padding-right: 40px;
+.commodityBox .head>div {
+    width: 45%;
+    margin: 5px 0;
 }
 
-.addCommodity .head input,
-.addCommodity .head select {
-    width: 210px;
+.commodityBox .head select {
+    width: 100%;
 }
 
 .modelTableContainer table {
@@ -64,14 +67,13 @@
 }
 
 .modelTableContainer td {
-    width: 25%;
-    padding: 9px 10px;
+    padding: 5px;
 }
 
 .modelTableContainer td input {
     width: 100%;
     border: none;
-    background: transparent;
+    padding-left: 0;
 }
 
 .modelTableContainer .newParam {
@@ -93,13 +95,13 @@
 }
 
 .uploadImg .siteUpload {
-    width: 120px;
-    height: 120px;
-    line-height: 120px;
+    width: 140px;
+    height: 140px;
+    line-height: 140px;
     text-align: center;
     display: inline-block;
     position: relative;
-    margin-right: 8px;
+    margin-right: 11px;
 }
 
 .uploadImg .siteUpload:last-child {
@@ -115,7 +117,46 @@
 }
 
 .uploadImg .siteUpload .layui-box {
-    width: 118px;
-    height: 120px;
-    line-height: 120px;
+    width: 138px;
+    height: 140px;
+    line-height: 140px;
+}
+
+.state {
+    margin-top: 15px;
+}
+
+.state>div {
+    line-height: 36px;
+}
+
+.state>div>input {
+    margin: 0 5px 0 10px;
+    position: relative;
+    top: 2px;
+}
+
+.commodityState {
+    display: none;
+    text-align: center;
+    /* line-height 的值与JS中弹框的area参数有关 */
+    line-height: 142px;
+}
+
+.layui-layer-content {
+    max-height: 609px;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1 {
+    width: 93px!important;
+    background-color: #2e8ded !important;
+    color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
 }
