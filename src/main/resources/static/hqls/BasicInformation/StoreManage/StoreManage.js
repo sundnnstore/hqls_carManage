@@ -12,33 +12,33 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
             layer.open({
                 type: 1,
                 title: '新增', // 标题
-                skin: 'layui-layer-lan', //弹框主题
+                skin: 'layui-layer-lan', // 弹框主题
                 shade: 0,
                 area: '450px', // 宽高
                 content: $('#storeTreeBox') // 内容
             });
         } else if(method != null){
-            store(method); // 门店详细信息
+            store(null, method); // 门店详细信息
         }
     });
 
     // 构建门店节点树
     layui.tree({
-        elem: '#storeTree', //指定元素            
-        click: function(item) { //点击节点回调
+        elem: '#storeTree', // 指定元素
+        click: function(item) { // 点击节点回调
             layer.closeAll();
             $('#choosedName').text(item.name);
             layer.open({ // 弹框询问门店添加位置
                 type: 1,
                 title: '提示',
-                skin: 'layui-layer-lan', //弹框主题
+                skin: 'layui-layer-lan', // 弹框主题
                 shade: 0,
-                area: ['420px', '240px'], //宽高
+                area: ['420px', '240px'], // 宽高
                 content: $('#storeLocate'),
                 btn: ['添加子节点', '上方添加节点', '下方添加节点'],
                 yes: function(index, layero) { // 选中在上方添加节点的回调
                     layer.close(index);
-                	//alert(item.storeId);
+                	// alert(item.storeId);
                     store(item.storeId,""); // 调用store方法
                 },
                 btn2: function(index, layero) { // 选中在下方添加节点的回调
@@ -55,21 +55,22 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
     });
     // 弹框：门店详细信息
     function store(pid,temp) {
-    	//nodeType为1 表示storeId为父节点
-    	//nodeType为2 表示storeId为兄弟节点
+    	// nodeType为1 表示storeId为父节点
+    	// nodeType为2 表示storeId为兄弟节点
         layer.open({
             type: 1,
             title: temp == 'view' ? '查看' : temp == 'edit' ? '编辑' : '新增',
-            skin: 'layui-layer-lan', //弹框主题
+            skin: 'layui-layer-lan', // 弹框主题
             shade: 0,
-            area: '500px', //宽高
+            area: '500px', // 宽高
             content: temp == 'view' ? $('#storeInfoView') : $('#storeInfoEdit'),
             btn: temp == 'view' ? '确定' : '提交',
-            btnAlign: 'c', //按钮居中
-            yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+            btnAlign: 'c', // 按钮居中
+            yes: function(index, layero) {
+            	// 当前层索引参数（index）、当前层的DOM对象（layero）
                 // console.log(layero);
                 addStoreInfo(pid);
-                //layer.close(index); //如果设定了yes回调，需进行手工关闭
+                layer.close(index); //如果设定了yes回调，需进行手工关闭
             }
         });
     }
@@ -81,7 +82,7 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
             title: false,
             closeBtn: 0,
             shade: [1, 'transparent'],
-            skin: 'layui-layer-nobg', //没有背景色
+            skin: 'layui-layer-nobg', // 没有背景色
             shadeClose: true,
             content: $('#storeImage')
         });
@@ -118,7 +119,7 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 }
 	
 	function initPage(totalCount,pageIndex){
-		//		page
+		// page
 		laypage({
 			cont: 'pages',
 			pages: Math.ceil(totalCount/pageSize), // 总的分页数
@@ -152,7 +153,7 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
 						'<td>'+
 						'<button data-method="view" class="layui-btn" onclick="getStoreInfo('+tr_html.storeId+')">查看</button> '+
-						'<button data-method="edit" class="layui-btn layui-btn-normal" onclick="changeStore('+tr_html.storeId+')">编辑</button> '+
+						'<button data-method="edit" class="layui-btn " onclick="changeStore('+tr_html.storeId+')">编辑</button> '+
 						'<button  onclick="isEnable('+tr_html.storeId+')" class="layui-btn layui-btn-normal">'+status+'</button> '+
 						'</td></tr>'
 				
@@ -186,9 +187,10 @@ layui.use(['form', 'layer','laypage', 'tree'], function() {
 			storeInfoDto.userName = $("#userName").val();
 			storeInfoDto.mobile = $("#mobile").val();
 			storeInfoDto.address = $("#address").val();
-			/*storeInfoDto.longitude = longitude;
-			storeInfoDto.latitude = latitude;
-			storeInfoDto.backUrl = backUrl;*/
+			/*
+			 * storeInfoDto.longitude = longitude; storeInfoDto.latitude =
+			 * latitude; storeInfoDto.backUrl = backUrl;
+			 */
 			if(isUseable == 1){
 				storeInfoDto.isUseable =true;
 			}else{

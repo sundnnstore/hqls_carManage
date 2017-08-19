@@ -55,11 +55,12 @@
     display: none;
     text-align: center;
     /* line-height 的值与JS中弹框的area参数有关 */
-    line-height: 148px;
+    line-height: 142px;
 }
 
 .storeInfo {
     display: none;
+    padding: 15px 20px;
 }
 
 .storeInfo input {
@@ -68,23 +69,38 @@
     padding-left: 0;
 }
 
+.storeInfo .state input {
+    width: initial;
+    margin-right: 8px;
+    position: relative;
+    top: 2px;
+}
+
+.storeInfo .state input:last-child {
+    margin-left: 20px;
+}
+
 .storeInfo tr>td {
     line-height: 39px;
     padding-top: 0;
     padding-bottom: 0;
 }
 
-.storeInfo tr>td:last-child {
-    text-align: left;
+.layui-layer-btn {
+    text-align: center !important;
 }
 
-.storeInfo #edit {
-    display: none;
+.storeInfo tr>td:last-child {
+    text-align: left;
 }
 
 .layui-layer-btn0,
 .layui-layer-btn1,
 .layui-layer-btn2 {
+    width: 93px!important;
     background-color: #2e8ded !important;
     color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
 }

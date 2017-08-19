@@ -26,7 +26,6 @@
             <div class="layui-input-block">
                 <div class="layui-input-inline">
                     <select name="prov" id="province" onchange="getCitys(this)" class="layui-select">
-                        
                     </select>
                 </div>
                 <div class="layui-input-inline">
@@ -101,10 +100,10 @@
 </div>
 <!-- 弹框三：门店信息添加与编辑 -->
 <div id="storeInfoEdit" class="storeInfo">
-    <table class="layui-table layui-form">
+    <table class="layui-table ">
         <!-- input框的name值请根据需要自行设置 -->
-        <tbody id="addStore">
-            <tr>
+        <tbody id="editStore">
+          <!--   <tr>
                 <td>门店名称</td>
                 <td><input type="text" name="" class="layui-input" placeholder="请输入门店名称" id ="storeName"></td>
             </tr>
@@ -117,12 +116,28 @@
                 <td><input type="text" name="" class="layui-input" placeholder="请输入联系人电话" id="mobile"></td>
             </tr>
             <tr>
-                <td>门店地址</td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入门店地址" onchange="areaChange()" id="address"></td>
-            </tr>
+                    <td>门店地址</td>
+                    <td>
+                        <div class="layui-input-inline">
+                            <select name="prov" id="provinceId" onchange="getCity(this)" class="layui-select">
+                            </select>
+                        </div>
+                        <div class="layui-input-inline">
+                            <select name="city" id="cityId" onchange="getCounty(this)" class="layui-select">
+                       		 <option value="">请选择市</option>
+                    </select>
+                        </div>
+                        <div class="layui-input-inline">
+                           <select name="area" id="countyId" class="layui-select">
+                        	<option value="">请选择县/区</option>
+                   		 </select>
+                        </div>
+                        <input type="text" name="" class="layui-input" placeholder="请输入门店地址">
+                    </td>
+                </tr>
             <tr>
                 <td>门店位置</td>
-                <td id="storeUrl"><input type="text" name="" class="layui-input" placeholder="请输入位置"/></td>
+                    <td id="storeUrl">23:393:94</td>
             </tr>
             <tr>
                 <td>图片上传</td>
@@ -131,13 +146,13 @@
                 </td>
             </tr>
             <tr>
-                <td>是否启用</td>
-                <td>
-                    <!-- 单选框的value的值请根据需要重新设置 -->
-                    <input type="radio" name="isEnable" value="1" title="是">
-                    <input type="radio" name="isEnable" value="0" title="否">
+               <td>是否启用</td>
+               <td class="state">
+                    单选框的value的值请根据需要重新设置
+                    <input type="radio" name="isEnable" value="1" >是
+                    <input type="radio" name="isEnable" value="0" >否
                 </td>
-            </tr>
+            </tr> -->
         </tbody>
     </table>
 </div>
@@ -223,6 +238,45 @@
  }
 	
 	
+ 
+ 
+ 
+
+ function getCity(obj,isCheckedId){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择市</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		 var  c = citys[i];
+ 		 if(isCheckedId == c.id){ 
+ 			 ci += '<option value="'+c.id+'" selected="selected">'+c.name+'</option>';
+ 		 }else{
+ 			 ci += '<option value="'+c.id+'">'+c.name+'</option>';
+ 		 }
+ 		
+ 	 }
+ 	 $("#cityId").html(ci);
+ 	 getCounty($("#cityId"));
+ }
+
+ function getCounty(obj,isCheckedId){
+ 	var p = $(obj);
+ 	var pid = p.val();
+ 	var citys = findChildrenByPid(pid);
+ 	var ci = '<option value="">请选择县</option>';
+ 	 for(i=0;i<citys.length;i++){
+ 		var cs = citys[i];
+ 		if(isCheckedId == cs.id){
+ 			ci += '<option value="'+cs.id+'" selected="selected">'+cs.name+'</option>';
+ 		}else{
+ 		 ci += '<option value="'+cs.id+'">'+cs.name+'</option>';
+ 			
+ 		}
+ 	 }
+ 	 $("#countyId").html(ci);
+ } 
+ 
 	
 	function isEnable(storeId){
 		$.ajax({
@@ -246,7 +300,6 @@
 	    		var tb_html="";
 	    		var store_view = $("#store_view");
 	    		var status = result.isUseable?"是":"否";
-	    		
 	    			tb_html= '<tr><td>门店名称</td><td>'+result.storeName+'</td></tr>'+
 	    						'<tr><td>门店联系人</td><td>'+result.userName+'</td></tr>'+
 	    						'<tr><td>联系人电话</td><td>'+result.mobile+'</td></tr>'+
@@ -265,19 +318,48 @@
 	
 	function changeStore(storeId){
 		$.ajax({
-			url : "http://localhost:8881/changestorebystoreid",
-			type : "post",
-			data:{"storeId":storeId},
+	    	url : "http://localhost:8881/getstorebystoreid",
+			type : "get",
+			data : {"storeId":storeId},
 	    	success : function(data){
 	    		var result = data.result;
-	    		nodes = result;
-	    	}
-			
-			
-		});
-		
+	    		var tb_html="";
+	    		var editStore = $("#editStore");
+	    		var status = result.isUseable?"是":"否";
+	    			tb_html= '<tr><td>门店名称</td><td><input value="'+result.storeName+'"></input></td></tr>'+
+	    						'<tr><td>门店联系人</td><td><input value="'+result.userName+'"></input></td></tr>'+
+	    						'<tr><td>联系人电话</td><td><input value="'+result.mobile+'"></input></td></tr>'+
+	    						'<tr><td>门店地址</td><td><div class="layui-input-inline"><select name="prov" id="provinceId" onchange="getCity(this,'+result.cityId+')" class="layui-select"></select></div>'+
+	    						'<div class="layui-input-inline"><select name="city" id="cityId" onchange="getCounty(this,'+result.countyId+')" class="layui-select"><option value="">请选择市</option></select></div>'+
+	    						' <div class="layui-input-inline"><select name="area" id="countyId" class="layui-select"><option value="">请选择县/区</option></select></div>'+
+                 				'<input type="text" name="" class="layui-input" placeholder="请输入门店地址"></td></tr>'+
+	    						'<tr><td>门店位置</td><td><input value="('+result.longitude+','+result.latitude+')"></input></td></tr>'+
+	    						'<tr><td>图片上传</td><td><input type="file" name="" id="storeImg" class="layui-input"></td></tr>'+
+	    						'<tr><td>是否启用</td>'+
+	    						'<td>'+status+'</td></tr>'
+	    						editStore.html(tb_html);
+	    						
+ 					var pros = findAllProvinces();
+ 					var p = null;
+ 					var provinces = '<option value="">请选择省</option>';
+ 					
+	    			for(i=0;i<pros.length;i++){
+	    				p= pros[i];
+	    				provinces += '<option value="'+p.id+'">'+p.name+'</option>';
+	    			 }
+	    			 $("#provinceId").html(provinces);
+	    			 $("#provinceId").val(result.provinceId);
+	    			 getCity($("#provinceId"), result.cityId);
+	    			 getCounty($("#cityId"),result.countyId);
+	    						
+	    		}
+	    }); 
 	}
 	
+	function updateStore(storeId){
+		
+	}
+	  
 	
 	
 	

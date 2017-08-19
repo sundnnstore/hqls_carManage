@@ -308,8 +308,8 @@ public class StoreService {
 	 * @param address
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(Integer storeId,String storeName,String backUrl,String mobile,String address){
-		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,mobile,address);
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(Integer storeId,String storeName,String backUrl,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId){
+		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,mobile,address,provinceId,cityId,countyId);
 		return RestModel.success();
 		
 	}

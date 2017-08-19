@@ -97,7 +97,7 @@
 		hqls_user hqus
 		on
 		hqus.user_id = usto.user_id
-		where 1=1 
+		where usto.is_contact=1 
 		<if test="storeName !=null and storeName != '' "> and sto.store_name like concat('%',#{storeName},'%')</if>
 		<if test="userName != null and userName != '' "> and hqus.user_name like concat('%',#{userName},'%')</if>
 		<if test="mobile != null and mobile != '' "> and hqus.mobile like concat('%',#{mobile},'%')</if>
@@ -114,6 +114,9 @@
 		<if test="mobile != null and mobile != '' ">mobile = #{mobile},</if>
 		<if test="address != null and address != '' ">address = #{address},</if>
 		<if test="backUrl != null and backUrl != '' ">backUrl = #{backUrl},</if>
+		<if test="provinceId != null and provinceId != '' ">province_id = #{provinceId},</if>
+		<if test="cityId != null and cityId != '' ">city_id =#{cityId},</if>
+		<if test="countyId != null and countyId != '' ">county_id =#{countyId},</if>
 		create_time = NOW()
 		where store_id=#{storeId}
 	</update>

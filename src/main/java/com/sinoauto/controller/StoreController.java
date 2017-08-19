@@ -133,8 +133,8 @@ public class StoreController {
 	@ApiOperation(value = "根据storeId编辑当条信息",notes = "tangrx")
 	@PostMapping("changestorebystoreid")
 	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(@RequestParam(value="storeId") Integer storeId,@RequestParam(value = "storeName") String storeName,
-			@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="mobile") String mobile,@Param(value="address") String address){
-		return storeService.changeStoreByStoreId(storeId,storeName,backUrl,mobile,address);
+			@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="mobile") String mobile,@Param(value="address") String address,@RequestParam(value="provinceId") Integer provinceId,@RequestParam(value="cityId") Integer cityId,@RequestParam(value="countyId") Integer countyId){
+		return storeService.changeStoreByStoreId(storeId,storeName,backUrl,mobile,address,provinceId,cityId,countyId);
 	}
 	
 	

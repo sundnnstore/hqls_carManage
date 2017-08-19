@@ -67,14 +67,13 @@ public interface StoreMapper {
 	
 	
 	@Select("select us.user_name as userName,sto.store_name as storeName,sto.address,us.mobile,sto.back_url as backUrl,sto.is_useable as isUseable,"
-			+ " sto.longitude,sto.latitude   from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
+			+ " sto.longitude,sto.latitude,sto.province_id as provinceId,sto.province_name as provinceName,sto.city_id as cityId,sto.city_name as cityName,sto.county_id as countyId,sto.county_name as countyName  from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
 			+ " where sto.store_id = #{storeId}")
 	public StoreInfoDto getStoreInfoByStoreId(@Param("storeId") Integer storeId);
 	
 	
-	public int updateStoreByStoreId(@Param("storeId") Integer storeId,@Param("storeName") String storeName,@Param("backUrl") String backUrl,@Param("mobile") String mobile,@Param("address") String address);
-	
-	
+	public int updateStoreByStoreId(@Param("storeId") Integer storeId,@Param("storeName") String storeName,@Param("backUrl") String backUrl,@Param("mobile") String mobile,@Param("address") String address,
+									@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,@Param("countyId") Integer countyId);
 	
 	
 	
