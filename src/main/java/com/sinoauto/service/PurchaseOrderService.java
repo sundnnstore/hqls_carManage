@@ -22,6 +22,7 @@ import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.DictMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
 import com.sinoauto.dao.mapper.LogisticsLogMapper;
@@ -68,6 +69,8 @@ public class PurchaseOrderService {
 	private LogisticsCompanyMapper logisticsCompanyMapper;
 	@Autowired
 	private LogisticsLogMapper logisticsLogMapper;
+	@Autowired
+	private DictMapper dictMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -131,8 +134,10 @@ public class PurchaseOrderService {
 			order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
 			order.setDiscountFee(0.00);
 			order.setOrderStatus(1);
+			order.setShipAddressId(orderParamDto.getShipAddressId());
+			order.setStoreId(orderParamDto.getStoreId());
 			order.setOtherFee(orderParamDto.getOtherFee());
-			order.setPayFee(calculationAmount(parts));
+			order.setTotalFee(calculationAmount(parts));
 			order.setRemark(orderParamDto.getRemark());
 			purchaseOrderMapper.insert(order);
 			
@@ -322,7 +327,7 @@ public class PurchaseOrderService {
 		for (PartsDesListDto p: parts) {
 			HqlsParts hqpart = partsMapper.getPartsById(p.getPartsId());
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
-			result.add(eachOrderPrice);
+			result = result.add(eachOrderPrice);
 		}
 		result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
@@ -425,12 +430,46 @@ public class PurchaseOrderService {
 				return RestModel.success(logisticsLogMapper.findLogisticsLogs(orderId));
 			}
 			HqlsLogisticsCompany company = logisticsCompanyMapper.getById(logisticsId);
+			HqlsShipAddress address = shipAddressMapper.getShipAddressById(order.getShipAddressId());
+			//查询快递鸟
 			KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
-			String result = api.getOrderTracesByJson(company.getCompanyNo(), logisticsNo);
+			String add = address.getProvinceName() + address.getCityName() + address.getCountyName() + address.getAddress();
+			String result = api.getOrderTracesByJson(company.getCompanyNo(), logisticsNo, company.getLogisticsName(), add);
 			return RestModel.success(result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "查询物流异常");
+	}
+	
+	public ResponseEntity<RestModel<List<PurchaseOrderDto>>> findOrderListByContidion(Integer orderStatus, Integer storeId, 
+			String userName, String mobile, Integer pageIndex, Integer pageSize){
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);
+		}
+		if (userName != null) {
+			userName = userName.trim();
+		}
+		if (mobile != null) {
+			mobile = mobile.trim();
+		}
+		List<PurchaseOrderDto> orderList = purchaseOrderMapper.findOrderListByContidion(orderStatus, storeId, userName, mobile);
+		if (!orderList.isEmpty()) {
+			orderList.get(0).setOrderStatusName(dictMapper.getDescByKeyAndValue("order_status", orderStatus.intValue() + ""));
+		}
+		
+		return RestModel.success(orderList);
+	}
+	
+	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByOrderId(Integer orderId) {
+		List<HqlsOrderDetail> detail = orderDetailMapper.getDetailByOrderId(orderId);
+		List<PartsDesListDto> partsList = new ArrayList<>();
+		for (HqlsOrderDetail od: detail) {
+			PartsDesListDto des = partsMapper.checkShopCart(od.getPartsId());
+			des.setBuyPrice(od.getBuyPrice());
+			des.setPurchaseNum(od.getBuyCount());
+			partsList.add(des);
+		}
+		return RestModel.success(partsList);
 	}
 }

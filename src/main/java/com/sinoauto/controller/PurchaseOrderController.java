@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
@@ -180,6 +181,24 @@ public class PurchaseOrderController {
 	@GetMapping("getlogisticsinfo")
 	public ResponseEntity<RestModel<Object>> getLogisticsInfo(@RequestParam(value = "orderId", required = true) Integer orderId) {
 		return purchaseOrderService.getLogisticsInfo(orderId);
+	}
+	
+	@ApiOperation(value = "条件查询订单", notes = "liud")
+	@GetMapping("findorderlistbycondition")
+	public ResponseEntity<RestModel<List<PurchaseOrderDto>>> findOrderListByContidion(
+			@RequestParam(value = "orderStatus", required = true) Integer orderStatus,
+			@RequestParam(value = "storeId", required = true) Integer storeId,
+			@RequestParam(value = "userName", required = false) String userName,
+			@RequestParam(value = "mobile", required = false) String mobile,
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize){
+		return purchaseOrderService.findOrderListByContidion(orderStatus, storeId, userName, mobile, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "查看订单详情", notes = "wuxiao")
+	@GetMapping("getpartsbyorderid")
+	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByOrderId(@RequestParam(value = "orderId", required = true) Integer orderId) {
+		return purchaseOrderService.getPartsByOrderId(orderId);
 	}
 
 }

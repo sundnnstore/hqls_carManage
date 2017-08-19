@@ -59,6 +59,13 @@ public interface PartsMapper {
 	public PartsDetailDto getPartsDetail(@Param("partsId") Integer partsId);
 	
 	/**
+	 * 根据订单Id查询所有商品
+	 * @param orderId
+	 * @return
+	 */
+	public List<PartsDesListDto> findPartsListByOrderId(@Param("orderId") Integer orderId);
+	
+	/**
 	 * 根据配件Id查询数据库最新信息
 	 * @param partsIds
 	 * @return
