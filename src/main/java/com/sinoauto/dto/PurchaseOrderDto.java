@@ -99,4 +99,13 @@ public class PurchaseOrderDto {
 	public void setTotalFee(Double totalFee) {
 		this.totalFee = totalFee;
 	}
+	public Integer getPurchaseOrderId() {
+		return purchaseOrderId;
+	}
+	public void setPurchaseOrderId(Integer purchaseOrderId) {
+		if (purchaseOrderId != null) {
+			this.purchaseOrderId = purchaseOrderId;
+		}
+	}
+	
 }

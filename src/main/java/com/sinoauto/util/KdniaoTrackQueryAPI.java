@@ -35,8 +35,10 @@ public class KdniaoTrackQueryAPI {
 		/**
 	     * Json方式 查询订单物流轨迹
 		 * @throws Exception 
+		 * @param companyName 物流公司名称
+		 * @param shipAddress 收货地址
 	     */
-		public String getOrderTracesByJson(String expCode, String expNo) throws Exception{
+		public String getOrderTracesByJson(String expCode, String expNo, String companyName, String shipAddress) throws Exception{
 			String requestData= "{'OrderCode':'','ShipperCode':'" + expCode + "','LogisticCode':'" + expNo + "'}";
 			
 			Map<String, String> params = new HashMap<String, String>();
@@ -47,7 +49,7 @@ public class KdniaoTrackQueryAPI {
 			params.put("DataSign", urlEncoder(dataSign, "UTF-8"));
 			params.put("DataType", "2");
 			
-			String result=sendPost(ReqURL, params);	
+			String result=sendPost(ReqURL, params, companyName, shipAddress);	
 			
 			//根据公司业务处理返回的信息......
 			
@@ -114,7 +116,7 @@ public class KdniaoTrackQueryAPI {
 	     * @param params 请求的参数集合     
 	     * @return 远程资源的响应结果
 	     */
-		private String sendPost(String url, Map<String, String> params) {
+		private String sendPost(String url, Map<String, String> params, String companyName, String shipAddress) {
 	        OutputStreamWriter out = null;
 	        BufferedReader in = null;        
 	        StringBuilder result = new StringBuilder(); 
@@ -176,7 +178,11 @@ public class KdniaoTrackQueryAPI {
 	                ex.printStackTrace();
 	            }
 	        }
-	        return result.toString();
+	        String res = result.toString();
+	        res = res.substring(0, res.lastIndexOf("}"));
+	        res += ",\"company\":\"" + companyName + "\", \"shipAddress\":\"" + shipAddress + "\"}";
+	        
+	        return res;
 	    }
 		
 		
