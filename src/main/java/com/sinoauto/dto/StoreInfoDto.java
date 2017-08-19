@@ -39,8 +39,7 @@ public class StoreInfoDto {
 	@ApiModelProperty("背景图片URL")
 	private String backUrl;
 	@ApiModelProperty("是否启用")
-	private Integer isUseable;
-	
+	private Boolean isUseable;
 
 	public String getStoreName() {
 		return storeName;
@@ -178,13 +177,14 @@ public class StoreInfoDto {
 		this.backUrl = backUrl;
 	}
 
-	public Integer getIsUseable() {
+	public Boolean getIsUseable() {
 		return isUseable;
 	}
 
-	public void setIsUseable(Integer isUseable) {
+	public void setIsUseable(Boolean isUseable) {
 		this.isUseable = isUseable;
 	}
+
 
 
 	

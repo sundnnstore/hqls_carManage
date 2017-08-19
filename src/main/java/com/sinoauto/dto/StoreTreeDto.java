@@ -6,8 +6,8 @@ public class StoreTreeDto {
 
 	private Integer storeId;
 	private Integer pid;
-	private String storeName;
-	private List<StoreTreeDto> storeTreeList;
+	private String name;
+	private List<StoreTreeDto> children;
 
 	public Integer getStoreId() {
 		return storeId;
@@ -25,20 +25,20 @@ public class StoreTreeDto {
 		this.pid = pid;
 	}
 
-	public String getStoreName() {
-		return storeName;
+	public String getName() {
+		return name;
 	}
 
-	public void setStoreName(String storeName) {
-		this.storeName = storeName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public List<StoreTreeDto> getStoreTreeList() {
-		return storeTreeList;
+	public List<StoreTreeDto> getChildren() {
+		return children;
 	}
 
-	public void setStoreTreeList(List<StoreTreeDto> storeTreeList) {
-		this.storeTreeList = storeTreeList;
+	public void setChildren(List<StoreTreeDto> children) {
+		this.children = children;
 	}
 
 }

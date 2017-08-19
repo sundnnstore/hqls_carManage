@@ -9,14 +9,14 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsServiceOrder"
-		useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.sinoauto.dto.ServiceOrderDto"
+		useGeneratedKeys="true" keyProperty="serviceOrderId">
 		INSERT INTO hqls_service_order (
 		order_no, customer_id, service_type_id, store_id, order_status, car_no,
-		car_model, order_amount, create_time, dml_time
+		car_model, order_amount,expect_arrive_time, create_time, dml_time
 		) VALUES (
-		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, #{orderStatus},
-		#{carNo}, #{carModel}, #{orderAmount}, #{createTime}, #{dmlTime}
+		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, 1,
+		#{carNo}, #{carModel}, #{orderAmount},#{expectArriveTime}, now(), now()
 		)
 	</insert>
 

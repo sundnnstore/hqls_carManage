@@ -1,7 +1,9 @@
 package com.sinoauto.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -92,15 +94,18 @@ public class StoreController {
 	
 	@ApiOperation(value = "查询级别门店",notes = "tangrx")
 	@PostMapping("findstore")
-	public ResponseEntity<RestModel<StoreTreeDto>> findStore(){
+	public ResponseEntity<RestModel<List<StoreTreeDto>>> findStore(){
 			int storeId =1;
-		return RestModel.success(storeService.findStoreIsUseable(storeId));
+			List<StoreTreeDto> result = new ArrayList<>();
+			result.add(storeService.findStoreIsUseable(storeId));
+			return RestModel.success(result);
 		
 	}
 	
 	@ApiOperation(value = "新增门店信息",notes = "tangrx")
 	@PostMapping("insertstore")
-	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
+	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto
+														  ){
 		return storeService.insertStore(Authorization,storeInfoDto);
 		
 	}
@@ -117,5 +122,20 @@ public class StoreController {
 	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
 		return storeService.findAllStore();
 	}
+	
+	@ApiOperation(value = "根据storedId查询当前门店信息",notes = "tangrx")
+	@GetMapping("getstorebystoreid")
+	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(@RequestParam(value="storeId") Integer storeId){
+		return storeService.getStoreByStoreId(storeId);
+		
+	}
+	
+	@ApiOperation(value = "根据storeId编辑当条信息",notes = "tangrx")
+	@PostMapping("changestorebystoreid")
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(@RequestParam(value="storeId") Integer storeId,@RequestParam(value = "storeName") String storeName,
+			@RequestParam(value = "backUrl") String backUrl,@RequestParam(value="mobile") String mobile,@Param(value="address") String address){
+		return storeService.changeStoreByStoreId(storeId,storeName,backUrl,mobile,address);
+	}
+	
 	
 }

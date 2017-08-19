@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsShipAddress;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
@@ -157,6 +158,28 @@ public class PurchaseOrderController {
 	@GetMapping("findpurchorder")
 	public ResponseEntity<RestModel<Page<PurchaseOrderDto>>> findPurchaseOrderByContidion(@ModelAttribute PurchaseOrderQueryDto purchaseOrderDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
 		return purchaseOrderService.findPurchaseOrderByContidion(purchaseOrderDto, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "查找所有物流公司", notes = "wuxiao")
+	@GetMapping("findalllogisticscompany")
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllLogisticsCompany() {
+		return purchaseOrderService.findAllLogisticsCompany();
+	}
+	
+	@ApiOperation(value = "发货操作", notes = "wuxiao")
+	@GetMapping("shipoperation")
+	public ResponseEntity<RestModel<String>> shipOperation(
+			@RequestParam(value = "orderId", required = true) Integer orderId,
+			@RequestParam(value = "logisticsId", required = false) Integer logisticsId,
+			@RequestParam(value = "logisticsNo", required = false) String logisticsNo,
+			@RequestParam(value = "remark", required = false) String remark) {
+		return purchaseOrderService.shipOperation(orderId, logisticsId, logisticsNo, remark);
+	}
+	
+	@ApiOperation(value = "查看物流信息", notes = "wuxiao")
+	@GetMapping("getlogisticsinfo")
+	public ResponseEntity<RestModel<Object>> getLogisticsInfo(@RequestParam(value = "orderId", required = true) Integer orderId) {
+		return purchaseOrderService.getLogisticsInfo(orderId);
 	}
 
 }

@@ -151,10 +151,10 @@ public class StoreService {
 		// 查询二级门店
 		List<StoreTreeDto> storeList = storeMapper.findSecondStore(store.getStoreId());
 		if (storeList != null && !storeList.isEmpty()) {
-			store.setStoreTreeList(new ArrayList<>());
+			store.setChildren(new ArrayList<>());
 			for (StoreTreeDto st : storeList) {
 				StoreTreeDto t = findStoreIsUseable(st.getStoreId());// 递归查询
-				store.getStoreTreeList().add(t);
+				store.getChildren().add(t);
 			}
 		}
 		return store;
@@ -168,6 +168,7 @@ public class StoreService {
 	 */
 	@Transactional
 	public ResponseEntity<RestModel<Integer>> insertStore(String token,StoreInfoDto storeInfoDto){
+		
 		HqlsUser user = new HqlsUser();
 		String mobile = storeInfoDto.getMobile();
 		String userName = storeInfoDto.getUserName();
@@ -185,19 +186,20 @@ public class StoreService {
 		store.setCityName(storeInfoDto.getCityName());
 		store.setCountyId(storeInfoDto.getCountyId());
 		store.setCountyName(storeInfoDto.getCountyName());
-		store.setIsUseable(1);
+		store.setIsUseable(storeInfoDto.getIsUseable());
 		store.setLatitude(storeInfoDto.getLatitude());
 		store.setLongitude(storeInfoDto.getLongitude());
-		store.setMobile(storeInfoDto.getStoreMobile());
+		store.setMobile(storeInfoDto.getMobile());
 		store.setPid(storeInfoDto.getPid());
 		store.setProvinceId(storeInfoDto.getProvinceId());
 		store.setProvinceName(storeInfoDto.getProvinceName());
-		store.setStoreCode(storeInfoDto.getStoreId().toString());
+		
+		store.setStoreCode("store---");
 		store.setStoreName(storeInfoDto.getStoreName());
 		
 		//新增门店信息
 		 storeMapper.insert(store);
-		 int storeId = store.getStoreId();
+		 int stoId = store.getStoreId();
 		//注册用户信息
 		RestModel<Integer> registerInfo = authService.register(mobile,password);
 		//查询当前用户在系统中是否存在
@@ -216,7 +218,7 @@ public class StoreService {
 			}
 			//新增用户门店信息表
 			HqlsUserStore userStore = new HqlsUserStore();
-			userStore.setStoreId(storeId);
+			userStore.setStoreId(stoId);
 			userStore.setUserId(userId);
 			userStoreMapper.insert(userStore);
 			
@@ -234,7 +236,7 @@ public class StoreService {
 				}
 				//新增用户门店信息表
 				HqlsUserStore userStore = new HqlsUserStore();
-				userStore.setStoreId(storeId);
+				userStore.setStoreId(stoId);
 				userStore.setUserId(userId);
 				userStoreMapper.insert(userStore);
 			} else {
@@ -275,9 +277,40 @@ public class StoreService {
 	}
 	
 	
+	/**
+	 * 查询所有门店
+	 * @return
+	 */
 	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
 		
 		List<CommonDto> store = storeMapper.findAllStore();
 		return RestModel.success(store);
+	}
+	
+	
+	/**根据storeid查询当前门店信息
+	 * @param storeId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(Integer storeId){
+		StoreInfoDto store = storeMapper.getStoreInfoByStoreId(storeId);
+		return RestModel.success(store);
+		
+	}
+	
+	
+	/**
+	 * 根据storeid修改当条门店信息
+	 * @param storeId
+	 * @param storeName
+	 * @param backUrl
+	 * @param mobile
+	 * @param address
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(Integer storeId,String storeName,String backUrl,String mobile,String address){
+		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,mobile,address);
+		return RestModel.success();
+		
 	}
 }

@@ -26,6 +26,16 @@ public class ServiceOrderDto {
 	private Double orderAmount;
 	@ApiModelProperty("预计到店时间")
 	private Date expectArriveTime;
+	@ApiModelProperty("预计到店时间String")
+	private String arriveTime;
+	@ApiModelProperty("门店编码")
+	private String storeCode;
+	@ApiModelProperty("客户ID")
+	private Integer customerId;
+	@ApiModelProperty("服务项目ID")
+	private Integer serviceTypeId;
+	@ApiModelProperty("门店ID")
+	private Integer storeId;
 
 	public Integer getServiceOrderId() {
 		return serviceOrderId;
@@ -124,6 +134,56 @@ public class ServiceOrderDto {
 	public void setExpectArriveTime(Date expectArriveTime) {
 		if (expectArriveTime != null) {
 			this.expectArriveTime = expectArriveTime;
+		}
+	}
+
+	public String getStoreCode() {
+		return storeCode;
+	}
+
+	public void setStoreCode(String storeCode) {
+		if (storeCode != null) {
+			this.storeCode = storeCode;
+		}
+	}
+
+	public Integer getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Integer customerId) {
+		if (customerId != null) {
+			this.customerId = customerId;
+		}
+	}
+
+	public Integer getServiceTypeId() {
+		return serviceTypeId;
+	}
+
+	public void setServiceTypeId(Integer serviceTypeId) {
+		if (serviceTypeId != null) {
+			this.serviceTypeId = serviceTypeId;
+		}
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		if (storeId != null) {
+			this.storeId = storeId;
+		}
+	}
+
+	public String getArriveTime() {
+		return arriveTime;
+	}
+
+	public void setArriveTime(String arriveTime) {
+		if (arriveTime != null) {
+			this.arriveTime = arriveTime;
 		}
 	}
 
