@@ -11,6 +11,7 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
 
@@ -79,7 +80,7 @@ public interface PartsMapper {
 	 * 	@param partsDto
 	 * 	@return
 	 */
-	public List<PartsDto> findPartsByCondition(PartsDto partsDto);
+	public List<PartsDto> findPartsByCondition(PartsQueryDto partsDto);
 	
 	/**
 	 * 	中台新增配件

@@ -22,6 +22,7 @@ import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -76,7 +77,7 @@ public class PartsService {
 	 * @param partsDto
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(PartsDto partsDto,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(PartsQueryDto partsDto,Integer pageIndex,Integer pageSize){
 		PageHelper.startPage(pageIndex, pageSize);
 		List<PartsDto> partsDtos = null;//返回集合
 		Page<PartsDto> partsDtoPage=null;//返回页面
@@ -137,6 +138,7 @@ public class PartsService {
 			}
 			return RestModel.success();
 		} catch (Exception e) {
+			System.out.println(e);
 			//事物处理
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
@@ -269,35 +271,29 @@ public class PartsService {
 	
 	/**
 	 * 	配件树形菜单查询,根据一级菜单，加载出所有的子集菜单
-	 * 	未完成,等写完页面再写
 	 * 	@User liud
 	 * 	@Date 2017年8月19日下午1:35:56
-	 * 	@param pid
+	 * 	@param pid  第一级的菜单id
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<List<PartsTreeRecursionDto>>> partsTreeRecursion(Integer pid){
-		List<PartsTreeRecursionDto> childrenParts = null;
-		try {
-			pid=pid==null?1:pid;
-			//查询每一级菜单,第一次进来是第一级
-			childrenParts = partsMapper.partsTreeRecursion(pid);
-			if(childrenParts!=null){
-				//调用
-				for (PartsTreeRecursionDto child : childrenParts) {
-					if(child.getPartsTypeId()!=null){
-						//每一次将
-						partsTreeRecursion(child.getPartsTypeId());
-					}
-					
+	public List<PartsTreeRecursionDto> partsTreeRecursion(Integer pid){
+		List<PartsTreeRecursionDto> partsTree = null;
+		List<PartsTreeRecursionDto> addChild=null;
+		pid=pid==null?1:pid;
+		partsTree = partsMapper.partsTreeRecursion(pid);
+		if(partsTree!=null){
+			for (PartsTreeRecursionDto child : partsTree) {
+				//寻找菜单下面是否存在子集
+				addChild =partsTreeRecursion(child.getPartsTypeId());
+				//如果存在就添加
+				if(addChild!=null){
+					partsTree.add(child);
 				}
-			}else{
-				childrenParts = new ArrayList<>();
 			}
-		} catch (Exception e) {
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"配件树形菜单递归查询异常");
+		}else{
+			partsTree = new ArrayList<>();
 		}
-		
-		return null;
+		return partsTree;
 	}
 		
 }

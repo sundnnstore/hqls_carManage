@@ -53,7 +53,7 @@
 	</sql>
 	
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsParts" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsParts" useGeneratedKeys="true" keyProperty="partsId">
 	    INSERT INTO hqls_parts (
 	        parts_code, parts_name, parts_model, parts_unit, parts_spec, parts_brand_id, parts_factory, origin, shelf_life, price, discount, cur_price, remark, is_usable, parts_type_id, create_time, dml_time
 	    ) VALUES (
