@@ -10,4 +10,7 @@ public interface DictMapper {
 	@Select("select description from hqls_dict where dict_key = #{dictKey} and dict_value = #{dictValue}")
 	public String getDescByKeyAndValue(@Param("dictKey") String dictKey, @Param("dictValue")  String dictValue);
 	
+	@Select("select description from hqls_dict where dict_key = 'order_status' and dict_value = #{1}")
+	public String getOrderStatusDesc(Integer orderStatus);
+	
 }

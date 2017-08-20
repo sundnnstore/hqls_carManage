@@ -102,16 +102,27 @@
 		<if test="mobile!=null"> and hu.mobile like CONCAT('%',#{mobile},'%')</if>
 	</select>
 	
-	<select id="findOrderListByContidion" resultType="com.sinoauto.dto.PurchaseOrderDto">
-		select hpo.purchase_order_id, hpo.order_no, hpo.create_time, hpo.total_fee,
+	<resultMap type="com.sinoauto.dto.PurchaseOrderDto" id="purchaseOrder">
+		<id column="purchase_order_id" property="purchaseOrderId"/>
+		<result column="order_status" property="orderStatus"/>
+		<association column="order_status" property="orderStatusName" select="com.sinoauto.dao.mapper.DictMapper.getOrderStatusDesc"></association>
+	</resultMap>
+	
+	<select id="findOrderListByContidion" resultMap="purchaseOrder">
+		select hpo.purchase_order_id, hpo.order_no, hpo.create_time, hpo.total_fee, hpo.order_status,
 				store.store_name,
 				CONCAT(ship.province_name, ship.city_name, ship.county_name, ship.address) as address,
 				ship.recipient as userName, ship.mobile
 		from hqls_purchase_order as hpo
 		left join hqls_store as store on hpo.store_id = store.store_id
 		left join hqls_ship_address as ship on hpo.ship_address_id = ship.ship_address_id
-		where hpo.order_status = #{orderStatus}
-		and store.store_id = #{storeId}
+		where 1=1
+		<if test="orderStatus != null">
+			and hpo.order_status = #{orderStatus}
+		</if>
+		<if test="storeId != null">
+			and hpo.store_id = #{storeId}
+		</if>
 		<if test="userName != null and userName != ''">
 			and ship.recipient like CONCAT('%', #{userName}, '%') 
 		</if>

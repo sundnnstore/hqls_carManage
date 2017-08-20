@@ -17,6 +17,8 @@ public class PurchaseOrderDto {
 	private String orderNo;
 	@ApiModelProperty("采购订单ID")
 	private Integer purchaseOrderId;
+	@ApiModelProperty("订单状态")
+	private Integer orderStatus;
 	@ApiModelProperty("订单状态名称")
 	private String orderStatusName;
 	@ApiModelProperty("订单创建时间")
@@ -106,6 +108,12 @@ public class PurchaseOrderDto {
 		if (purchaseOrderId != null) {
 			this.purchaseOrderId = purchaseOrderId;
 		}
+	}
+	public Integer getOrderStatus() {
+		return orderStatus;
+	}
+	public void setOrderStatus(Integer orderStatus) {
+		this.orderStatus = orderStatus;
 	}
 	
 }
