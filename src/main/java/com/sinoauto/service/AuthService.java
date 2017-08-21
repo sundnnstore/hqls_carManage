@@ -120,6 +120,28 @@ public class AuthService {
 	}
 
 	/**
+	 * 修改当前用户手机号
+	 * @return
+	 */
+	public RestModel<String> updateUserMobile(String token, String projectName, String newMobile, String validCode) {
+		Map<String, Object> headers = new HashMap<>();
+		headers.put("Authorization", token);
+		Map<String, Object> params = new HashMap<>();
+		params.put("newMobile", newMobile);
+		params.put("validCode", validCode);
+		params.put("projectName", projectName);
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		RespEntity respEntity = HttpUtil.request("PUT", String.format("%s%s", AUTH_SERVICE_URL, "user/update/mobile"), headers, params, null);
+		if (!respEntity.isSuccess()) {
+			return new RestModel<>(ErrorStatus.SYSTEM_EXCEPTION);
+		}
+		RestModel<String> model = gson.fromJson(respEntity.getResult(), new TypeToken<RestModel<String>>() {
+			private static final long serialVersionUID = -2333446726270999600L;
+		}.getType());
+		return model;
+	}
+	
+	/**
 	 * 用户注册
 	 * @param userName
 	 * @param password
@@ -220,7 +242,7 @@ public class AuthService {
 		}.getType());
 		return model;
 	}
-	
+
 	/**
 	 * 删除token
 	 * @param token
@@ -240,14 +262,14 @@ public class AuthService {
 		}.getType());
 		return model;
 	}
-	
+
 	/**
 	 * GET /admin 根据用户名获取用户信息
 	 * @param token
 	 * @param userName
 	 * @return
 	 */
-	public RestModel<AuthUser> getUserInfoByUserName(String token, String userName) { 
+	public RestModel<AuthUser> getUserInfoByUserName(String token, String userName) {
 		Map<String, Object> headers = new HashMap<>();
 		headers.put("Authorization", token);
 		Map<String, Object> params = new HashMap<>();
@@ -261,6 +283,6 @@ public class AuthService {
 			private static final long serialVersionUID = -8596419997122191936L;
 		}.getType());
 		return model;
-	
+
 	}
 }
