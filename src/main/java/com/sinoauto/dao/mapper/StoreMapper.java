@@ -79,6 +79,8 @@ public interface StoreMapper {
 	@Select("select * from hqls_store where store_code=#{1}")
 	public HqlsStore getStoreByStoreCode(String storeCode);
 	
+	public int updateStoreInfo(StoreInfoDto storeInfoDto);
+	
 	
 	
 
