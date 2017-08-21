@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dao.bean.HqlsAuthority;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -76,6 +77,12 @@ public class UserController {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "用户ID为空！");
 		}
 		return userService.updateUserStatus(userId);
+	}
+	
+	@ApiOperation(value = "查询所有角色", notes = "wuxiao")
+	@GetMapping("findallrole")
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllRole() {
+		return userService.findAllRole();
 	}
 
 }
