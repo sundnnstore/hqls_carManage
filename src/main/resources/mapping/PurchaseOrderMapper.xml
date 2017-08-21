@@ -129,6 +129,7 @@
 		<if test="mobile != null and mobile != ''">
 			and ship.mobile like CONCAT('%', #{mobile}, '%') 
 		</if>
+		order by hpo.order_status
 	</select>
 	
 </mapper>

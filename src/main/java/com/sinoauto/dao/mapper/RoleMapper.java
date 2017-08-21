@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dto.RoleDto;
+import com.sinoauto.dto.CommonDto;
 
 @Mapper
 public interface RoleMapper {
@@ -34,4 +35,7 @@ public interface RoleMapper {
 	@Insert("insert into hqls_role_authority (role_id,authority_id) values (#{roleId},#{authorityId})")
 	public int insertRoleAuthority(@Param("roleId")Integer roleId,@Param("authorityId")Integer authorityId);
 
+	@Select("select role_id as `key`, role_name as `value` from hqls_role")
+	public List<CommonDto> findAll();
+	
 }

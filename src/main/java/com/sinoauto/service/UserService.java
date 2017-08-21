@@ -21,8 +21,10 @@ import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
+import com.sinoauto.dao.mapper.RoleMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.AuthUser;
@@ -42,6 +44,8 @@ public class UserService {
 	private AuthorityMapper authorityMapper;
 	@Autowired
 	private UserRoleMapper userRoleMapper;
+	@Autowired
+	private RoleMapper roleMapper;
 
 	/**
 	 * 登录
@@ -185,6 +189,11 @@ public class UserService {
 			return RestModel.success("编辑成功");
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "编辑失败");
+	}
+	
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllRole() {
+		
+		return RestModel.success(roleMapper.findAll()); 
 	}
 
 }

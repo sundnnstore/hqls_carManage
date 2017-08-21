@@ -109,7 +109,7 @@ public class PartsService {
 				HqlsPartsType hqlsPartsType = new HqlsPartsType();
 				hqlsPartsType.setPartsType(partsOperDto.getPartsType());
 				hqlsPartsType.setPid(partsOperDto.getPid());
-				hqlsPartsType.setTypeName(partsOperDto.getTypeName());
+				hqlsPartsType.setTypeName(partsOperDto.getPartsName()); //
 				partsTypeMapper.insert(hqlsPartsType);
 				
 				//插入配件属性基础表
@@ -126,7 +126,7 @@ public class PartsService {
 				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
 				hqlsParts.setPartsName(partsOperDto.getPartsName());
 				hqlsParts.setPartsSpec(partsOperDto.getPartsSpec());
-				hqlsParts.setPartsTypeId(partsOperDto.getPartsTypeId());//配件类型id,配件父类
+				hqlsParts.setPartsTypeId(hqlsPartsType.getPartsTypeId());//配件类型id
 				hqlsParts.setPartsUnit(partsOperDto.getPartsUnit());
 				hqlsParts.setPrice(partsOperDto.getPrice());
 				hqlsParts.setRemark(partsOperDto.getRemark());
@@ -206,7 +206,7 @@ public class PartsService {
 				hqlsPartsAttrExtr.setAttrKey(partsAttrExtrs.getAttrKey());
 				hqlsPartsAttrExtr.setAttrValue(partsAttrExtrs.getAttrValue());
 				hqlsPartsAttrExtr.setPartsId(partsId);
-				partsAttrExtrMapper.insert(partsAttrExtrs);
+				partsAttrExtrMapper.insert(hqlsPartsAttrExtr);
 			}
 		}
 		//配件图片

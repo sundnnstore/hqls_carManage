@@ -15,15 +15,17 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	        if (method == 'addCommodity') {
 	            title = '新增';
 	            //清空数据
-	            $("#commodityBox input").each(function(){
+	            $("#commodityBox input,#commodityBox select").each(function(){
 	            	$(this).attr("value","");
 	            });
+	            //显示配件品牌
+	        	partsBrand();
 	        } else if (method == 'view') {
 	            title = '查看';
+	            Detailview();
 	            $('#commodityBox input,#commodityBox select').each(function(elem) {
 	                $(this).attr('disabled', 'disabled');
 	            });
-	            Detailview();
 	        } else if (method == 'edit') {
 	            title = '编辑';
 				//编辑方法
@@ -228,19 +230,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      * 新增商品
      */ 
     function addPart(){
-    	var partsAttrExtrs = attrExtra(); //扩展属性
-    	var partsPics = imgs(); //图片集合
-    	var dataJson="{\"partsBrandId\":"+$("#partsBrandId").val()+"," +
-    			"\"partsCode\":\""+$("#partsCode").val()+"\"," +
-    					"\"partsModel\":\""+$("#partsModel").val()+"\"," +
-    							"\"partsName\":\""+$("#partsName").val()+"\"," +
-    									"\"partsPics\":";
-    	dataJson+=partsPics+",";
-    	dataJson+="\"partsPics\":"+partsAttrExtrs+",";
-    	dataJson+="\"typeName\":"+$("#").val();
-		dataJson+="}";
-		dataJson = JSON.parse(dataJson); //解析成json对象
-		var data =JSON.stringify(dataJson);//转换为json字符串
     	$.ajax({
 			url:'http://localhost:8881/addparts',
 			type:'POST',
@@ -248,14 +237,13 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 			beforeSend : function(x) {
 				x.setRequestHeader("Content-Type","application/json; charset=utf-8");
 			},
-			data :data,
+			data :requestData(),
 			success : function(data){
 				alert(data);
 				alert("成功");
 			},
 			error : function(data) {
 				alert("失败");
-				alert(data.errmsg);
 			}
 		});
     }
@@ -269,7 +257,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 			url : "http://localhost:8881/updateparts",
 			type : "POST",
 			async : false,
-			data : {"partsId":$("#partsId").val()},
+			data : requestData(),
 			success : function(data){
 				alert("编辑商品成功");
 			}
@@ -304,7 +292,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 			url : "http://localhost:8881/getpartsdetail",
 			type : "get",
 			async : false,
-			data :{"partsId":1},
+			data :{"partsId":18},
 			success : function(data){
 				displayHtml(data,data.result.partsBrandId);
 			},
@@ -319,16 +307,26 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      * @returns
      */
     function displayHtml(data,partsBrandId){
+    	 //清空数据
+        $("#commodityBox input,#commodityBox select").each(function(){
+        	$(this).attr("value","");
+        });
     	var piclen,attrlen;
     	if(data.result.partsPicList==null){
     		piclen=0;
+    	}else{
+    		piclen=data.result.partsPicList.length;
     	}
     	if(data.result.partsAttrExtrs==null){
     		attrlen=0;
+    		
+    	}else{
+    		attrlen = data.result.partsAttrExtrs.length;
     	}
     	var pics=""; //图片
     	var attrExtra=""; //配件的动态属性
     	//get data
+    	$("#partsId").attr("value",data.result.partsId);
     	$("#partsCode").attr("value",data.result.partsCode);
     	$("#partsName").attr("value",data.result.partsName);
     	$("#partsModel").attr("value",data.result.partsModel);
@@ -357,13 +355,13 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     		
 		}
 
-    	for (var int = 0; int < attrlen; int++) {
+    	for (var i = 0; i < attrlen; i++) {
 			//清空动态属性框,然后拼接显示
-    		attrExtra = `
+    		attrExtra+=`
                 <td colspan="2" class="paramGroup">
-	                    <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+	                    <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrKey}" class="layui-input paramName" placeholder="请输入参数名称">
 	                    <span></span>
-	                    <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+	                    <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrValue}" class="layui-input paramContent" placeholder="请输入内容">
 	            </td>
             `;
 		}
@@ -421,7 +419,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     function displayPartsBrand(data,partsBrandId){
     	//清空
     	$(".partsBrands").html("");
-    	var html=`<select class="layui-select">`;
+    	var html=`<select class="layui-select" id="partsBrandId">`;
     	var brand= data.result==null?0:data.result.length;
     	for (var i = 0; i < brand; i++) {
     		//alert("当前品牌ID"+data.result[i].partsBrandId+"\n配件对应的品牌ID"+partsBrandId);
@@ -461,18 +459,70 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      */
     function attrExtra(){
     	var attrExtra ="[",flag=1;
-    	var len =$(".attrExtra td").length;
-    	$(".attrExtra paramGroup").each(function(i){
-    		if(i==(len-1)){
-    			attrExtra += "{\"attrKey\":\""+$(".paramName").val()+"\",\"paramContent\":\""+$(".attrValue").val()+"\"}";
-    		}else{
-    			attrExtra += "{\"attrKey\":\""+$(".paramName").val()+"\",\"paramContent\":\""+$(".attrValue").val()+"\"},";
+    	var len =$(".attrExtra .paramGroup").length;
+    	$(".attrExtra .paramGroup").each(function(i){
+    		var paramName = $(this).find(".paramName").val();;
+    		var paramContent=$(this).find(".paramContent").val();
+    		
+    		console.log("paramName:"+paramName+"\nparamContent:"+paramContent);
+    		if(paramName!=null&&paramContent!=null){
+	    		if(i==(len-1)){
+	    			attrExtra += "{\"attrKey\":\""+paramName+"\",\"attrValue\":\""+paramContent+"\"}";
+	    		}else{
+	    			attrExtra += "{\"attrKey\":\""+paramName+"\",\"attrValue\":\""+paramContent+"\"},";
+	    		}
     		}
     	});
     	attrExtra+="]";
     	return attrExtra;
     }
     
+    
+    /**
+     * 封装新增和add的请求数据
+     * @returns 返回json 字符串
+     */
+    function requestData(){
+    	var partsAttrExtrs = attrExtra(); //扩展属性
+    	var partsPics = imgs(); //图片集合
+    	var partsBrandId = $("#partsBrandId").val()=="undefined"?-1:$("#partsBrandId").val(),
+    			curPrice=$("#curPrice").val()=="undefined"?-1:$("#curPrice").val(),
+    			discount=$("#discount").val()=="undefined"?-1:$("#discount").val(),
+    			isUsable=$('input[name="state"]:checked').val(),
+    			partsTypeId=$("#partsTypeId").val()=="undefined"?-1:$("#partsTypeId").val(),
+    			partsId=$("#partsId").val()=="undefined"?-1:$("#partsId").val()
+    			pid=$("#pid").val()=="undefined"?-1:$("#pid").val()
+    			; 
+    	alert("isUsable:"+isUsable);
+    	var dataJson="{" +
+    					"\"partsBrandId\":\""+partsBrandId+"\"," +
+    					"\"partsCode\":\""+$("#partsCode").val()+"\"," +
+    					"\"partsModel\":\""+$("#partsModel").val()+"\"," +
+    					"\"curPrice\":\""+curPrice+"\"," +
+    					"\"discount\":\""+discount+"\"," +
+    					"\"isUsable\":\""+0+"\"," +
+    					"\"origin\":\""+$("#origin").val()+"\"," +
+    					"\"partsFactory\":\""+$("#partsFactory").val()+"\"," +
+    					"\"partsSpec\":\""+$("#partsSpec").val()+"\"," +
+    					//"\"typeName\":\""+$("#partsTypeId").find("option:selected").text()+"\"," +
+    					//"\"partsTypeId\":\""+partsTypeId+"\"," +
+    					"\"partsType\":\""+$("#partsType").val()+"\"," +
+    					"\"partsUnit\":\""+$("#partsUnit").val()+"\"," +
+    					"\"pid\":\""+pid+"\"," +
+    					"\"price\":\""+$("#price").val()+"\"," +
+    					"\"shelfLife\":\""+$("#shelfLife").val()+"\"," +
+    					//"\"typeName\":\""+$("#typeName").val()+"\"," +
+    					"\"partsName\":\""+$("#partsName").val()+"\"," +
+    					"\"partsId\":\""+partsId+"\"," +
+    					"\"partsPics\":";
+    	dataJson+=partsPics+",";
+    	dataJson+="\"partsAttrExtrs\":"+partsAttrExtrs;
+		dataJson+="}";
+		console.log(dataJson);
+		dataJson = JSON.parse(dataJson); //解析成json对象
+		var data =JSON.stringify(dataJson);//转换为json字符串
+		return data;
+    }
     
 });
 

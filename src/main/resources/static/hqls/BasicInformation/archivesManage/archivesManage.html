@@ -7,10 +7,7 @@
             <label for="role" class="layui-form-label">角色</label>
             <div class="layui-input-block">
                 <select class="layui-select" id="role">
-                    <option value=""></option>
-                    <option value="1">产品经理</option>
-                    <option value="2">交互设计师</option>
-                    <option value="3">业务调研师</option>
+                    
                 </select>
             </div>
         </div>
@@ -37,38 +34,17 @@
                     <tr>
                         <th>姓名</th>
                         <th>手机号</th>
-                        <th>所属部门</th>
+                        <!-- <th>所属部门</th> -->
                         <th>角色</th>
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>刘雪梅</td>
-                        <td>158****5923</td>
-                        <td>信息部</td>
-                        <td>产品经理</td>
-                        <td class="operation">
-                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-                            <button id="isUse" data-method="isUse" class="layui-btn layui-btn-warm">禁用</button>
-                            <button id="reset" data-method="reset" class="layui-btn layui-btn-danger">重置密码</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>刘雪梅</td>
-                        <td>158****5923</td>
-                        <td>市场部</td>
-                        <td>业务调研师</td>
-                        <td class="operation">
-                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-                            <button id="isUse" data-method="isUse" class="layui-btn layui-btn-primary">启用</button>
-                            <button id="reset" data-method="reset" class="layui-btn layui-btn-danger">重置密码</button>
-                        </td>
-                    </tr>
+                <tbody id="user_list">
+                    
                 </tbody>
             </table>
+            <div id="pages" style="text-align: right;"></div>
         </div>
-        <div id="paging"></div>
     </div>
 </div>
 
@@ -79,10 +55,8 @@
             <tr>
                 <td>角色</td>
                 <td>
-                    <select class="layui-select">
-                        <option value="1" selected>角色1</option>
-                        <option value="2">角色2</option>
-                        <option value="3">角色3</option>
+                    <select class="layui-select" id="add_role">
+                    
                     </select>
                 </td>
             </tr>
