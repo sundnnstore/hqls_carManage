@@ -340,20 +340,24 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	$("#partsUnit").attr("value",data.result.partsUnit);
     	//$("#partsBrandName").val(data.result.partsBrandName);
     	//清空图片和扩展属性
-    	$("#uploadImg").html(""); //清空图片上传div
+    	$(".uploadImg").html(""); //清空图片上传div
     	$(".attrExtra").html("");//清空动态扩展属性的div
     	//显示图片
     	for (var i = 0; i < piclen; i++) {
-    		pics = `
+    		pics += `
                <div class="siteUpload">
 	                <img id="commodityImgUrl${i}" src="${data.result.partsPicList[i].url}">
-	                <div>
-	                    <input type="file" name="image" id="commodityImg${i}" value="">
-	                </div>
+	                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" id="commodityImg${i}" value="" class="layui-upload-file">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+                </div>
     			</div>
             `;
-    		
 		}
+    	//alert(pics+":pics");
+    	//动态属性追加到指定位置
+    	$(".uploadImg").html(pics);
+    	
     	var flag= 0;
     	for (var i = 0; i <=attrlen; i++) {
     			//清空动态属性框,然后拼接显示
@@ -362,25 +366,27 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
         			$(".attrExtra:last").after("<tr class=\"attrExtra\"></tr>");
         			attrExtra="";
         		}
-    			attrExtra+=`
-                    <td colspan="2" class="paramGroup">
-                        <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrKey}" class="layui-input paramName" placeholder="请输入参数名称">
-                        <span></span>
-                        <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrValue}" class="layui-input paramContent" placeholder="请输入内容">
-                	</td>
-    	        `;
+    			if(i<attrlen){
+    				attrExtra+=`
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrKey}" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrValue}" class="layui-input paramContent" placeholder="请输入内容">
+                    	</td>
+        	        `;
+    			}
     			flag++;
-    		
 		}
-    	//动态属性追加到指定位置
-    	$("#uploadImg").html(pics);
-    	console.log(attrExtra);
-    	
     	
     	/**
     	 * 配件品牌显示
     	 */
     	partsBrand(partsBrandId);
+    	
+    	/**
+    	 * 上下架
+    	 */
+    	$('input:radio:last').attr('checked', 'checked');
     }
     
     /**
@@ -531,6 +537,13 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 		var data =JSON.stringify(dataJson);//转换为json字符串
 		return data;
     }
+    
+    /**
+     * 图片新增
+     */
+    $(document).on('change', '#commodityImg1', function(event) {
+    	alert("图片点击事件");
+    });
     
 });
 
