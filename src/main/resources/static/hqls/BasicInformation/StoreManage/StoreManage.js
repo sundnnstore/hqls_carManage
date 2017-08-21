@@ -230,7 +230,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		type : "get",
 		async:false,
 		data : { "storeName":$("#storeName_search").val(),"userName":$("#userName_search").val(),
-				 "userMobile":$("#mobile_search").val(), 
+				 "mobile":$("#mobile_search").val(), 
 				 "provinceId":$("#province_search").val(),
 				 "cityId":$("#city_search").val(),
 				 "countyId":$("#county_search").val(), 
