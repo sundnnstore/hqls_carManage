@@ -87,15 +87,15 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                 content: $('#storeLocate'),
                 btn: ['添加子节点', '上方添加节点', '下方添加节点'],
                 yes: function(index, layero) { // 选中在上方添加节点的回调
-                	store(item.storeId,""); // 调用store方法
+                	store(item.storeId,"addStore"); // 调用store方法
                     layer.close(index);
                 },
                 btn2: function(index, layero) { // 选中在下方添加节点的回调
-                	store(item.pid,""); // 调用store方法
+                	store(item.pid,"addStore"); // 调用store方法
                     layer.close(index);
                 },
                 btn3: function(index, layero) { // 选中在添加子节点的回调
-                	store(item.pid,""); // 调用store方法
+                	store(item.pid,"addStore"); // 调用store方法
                     layer.close(index);
                 },
             });
