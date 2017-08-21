@@ -1,6 +1,7 @@
 package com.sinoauto.dao.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -22,6 +23,8 @@ public class HqlsLogisticsLog implements Serializable {
 	private String remark;
 	@ApiModelProperty("订单主键ID")
 	private Integer purchaseOrderId;
+	@ApiModelProperty("创建时间")
+	private Date createTime;
 	
 	/**
 	 * 设置物流日志ID
@@ -65,6 +68,15 @@ public class HqlsLogisticsLog implements Serializable {
 	public Integer getPurchaseOrderId() {
 		return this.purchaseOrderId;
 	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		if (createTime != null) {
+			this.createTime = createTime;
+		}
+	}
+	
 
 }
 

@@ -6,7 +6,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 
 	//定义搜索参数
 	var OrderParam = {};
-	var pageSize = 10;
+	var pageSize = 1;
 	//订单详情
 	$('body').on('click', '.detail', function() {
 		orderId = $(this).val();
@@ -73,6 +73,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	
 	function comboSelect(data) {
 		var html = "";
+		html += `<option value="0">全部</option>`;
 		for (var i = 0; i < data.length; i++) {
 			html += `<option value="${data[i].key}">${data[i].value}</option>`;
 		}
@@ -153,7 +154,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 					<td>${data[i].totalFee}</td>
 					<td>`;
 			if (data[i].orderStatus == 2) {
-				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn ship">发货</button>`;
+				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal ship">发货</button>`;
 			}
 			else if (data[i].orderStatus == 3) {
 				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal logisticsInfo">物流</button>`;
@@ -171,8 +172,8 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 * @returns
 	 */
 	function generatorParam() {
-		OrderParam.orderStatus = $("select[name=order_status]").val();
-		OrderParam.storeId = $("select[name=store_id]").val();
+		OrderParam.orderStatus = $("select[name=order_status]").val() == 0 ? null : $("select[name=order_status]").val();
+		OrderParam.storeId = $("select[name=store_id]").val() == 0 ? null : $("select[name=store_id]").val();
 		OrderParam.userName = $("input[name=contact]").val();
 		OrderParam.mobile = $("input[name=mobile]").val();
 	}
@@ -227,6 +228,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			success: function (data) {
 				var html = "";
 				var res = data.result;
+				html += `<option value="">请选择</option>`;
 				for (var i = 0; i < res.length; i++) {
 					html += `<option value="${res[i].key}">${res[i].value}</option>`;
 				}
@@ -256,25 +258,70 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 * @returns
 	 */
 	function comboLogisticsInfo(res) {
-		var data = eval('(' + res + ')');
-		console.log(data.Traces);
 		var html = "";
-		html += `<div class="jclogistics"><div><span>运单号码：</span><span>${data.LogisticCode}</span>
+		try {
+			var data = eval('(' + res + ')');
+			console.log(data.Traces);
+			html += `<div class="jclogistics"><div><span>运单号码：</span><span>${data.LogisticCode}</span>
 				<br/><span>物流公司：</span><span>${data.company}</span></div>
 				<div><span>收货地址：</span><span>${data.shipAddress}</span></div></div>
-				<span>---------------------------------------------------------------------</span>`;
-		if (data.Traces.length == 0) {
-			html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
-		} else {
-			traces = data.Traces;
-			html += `<div class="logisList"><div class="logisList-content">`;
-			for (var i = traces.length - 1; i > -1; i--) {
-				html += `<div><span>` +traces[i].AcceptTime+ `</span>`;
-				html += `<span>` +traces[i].AcceptStation+ `</span><div>`;
+				<div style='border:none;border-top:1px dashed #333 ;margin: 10px auto;width: 97%;'></div>`;
+			if (data.Traces.length == 0) {
+				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
+			} else {
+				traces = data.Traces;
+				html += `<div class="logisList"><div class="logisList-content">`;
+				for (var i = traces.length - 1; i > -1; i--) {
+					html += `<div><span>${traces[i].AcceptTime}</span>`;
+					html += `<span>${traces[i].AcceptStation}</span></div>`;
+				}
+				html += `</div></div>`;
 			}
-			html += `</div></div>`;
+		} catch (Exception) {
+			if (res.length == 0) {
+				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
+			} else {
+				html += `<div class="logisList"><div class="logisList-content">`;
+				for (var i = 0; i < res.length; i++) {
+					html += `<div><span>${res[i].createTime}</span>`;
+					html += `<span>${res[i].remark}</span></div>`;
+				}
+				html += `</div></div>`;
+			}
 		}
 		$('#logisticsInfoPage').html(html);
+		
+		
+		
+		/*if (data.Traces) {
+			html += `<div class="jclogistics"><div><span>运单号码：</span><span>${data.LogisticCode}</span>
+				<br/><span>物流公司：</span><span>${data.company}</span></div>
+				<div><span>收货地址：</span><span>${data.shipAddress}</span></div></div>
+				<div style='border:none;border-top:1px dashed #333 ;margin: 10px auto;width: 97%;'></div>`;
+			if (data.Traces.length == 0) {
+				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
+			} else {
+				traces = data.Traces;
+				html += `<div class="logisList"><div class="logisList-content">`;
+				for (var i = traces.length - 1; i > -1; i--) {
+					html += `<div><span>${traces[i].AcceptTime}</span>`;
+					html += `<span>${traces[i].AcceptStation}</span></div>`;
+				}
+				html += `</div></div>`;
+			}
+		} else {
+			if (data.length == 0) {
+				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
+			} else {
+				html += `<div class="logisList"><div class="logisList-content">`;
+				for (var i = 0; i < data.length; i++) {
+					html += `<div><span>${data[i].createTime}</span>`;
+					html += `<span>${data[i].remark}</span></div>`;
+				}
+				html += `</div></div>`;
+			}
+		}*/
+		
 	}
 	
 })
