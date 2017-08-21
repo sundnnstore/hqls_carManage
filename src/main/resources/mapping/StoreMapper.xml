@@ -67,8 +67,6 @@
 		on users.user_id = usto.user_id
 		WHERE
 		users.user_id=#{userId}
-		and users.is_useable=1
-		and sto.is_useable=1
 		order by sto.create_time
 	</select>
 	
