@@ -37,6 +37,8 @@ public class HqlsServiceOrder implements Serializable {
 	private Date expectArriveTime;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
+	@ApiModelProperty("完成时间")
+	private Date finishTime;
 	@ApiModelProperty("操作时间")
 	private Date dmlTime;
 
@@ -224,6 +226,16 @@ public class HqlsServiceOrder implements Serializable {
 	 */
 	public Date getDmlTime() {
 		return this.dmlTime;
+	}
+
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		if (finishTime != null) {
+			this.finishTime = finishTime;
+		}
 	}
 
 }

@@ -36,6 +36,10 @@ public class ServiceOrderDto {
 	private Integer serviceTypeId;
 	@ApiModelProperty("门店ID")
 	private Integer storeId;
+	@ApiModelProperty("客户头像")
+	private String avatarUrl;
+	@ApiModelProperty("完成时间")
+	private Date finishTime;
 
 	public Integer getServiceOrderId() {
 		return serviceOrderId;
@@ -184,6 +188,26 @@ public class ServiceOrderDto {
 	public void setArriveTime(String arriveTime) {
 		if (arriveTime != null) {
 			this.arriveTime = arriveTime;
+		}
+	}
+
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
+
+	public void setAvatarUrl(String avatarUrl) {
+		if (avatarUrl != null) {
+			this.avatarUrl = avatarUrl;
+		}
+	}
+
+	public Date getFinishTime() {
+		return finishTime;
+	}
+
+	public void setFinishTime(Date finishTime) {
+		if (finishTime != null) {
+			this.finishTime = finishTime;
 		}
 	}
 
