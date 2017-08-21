@@ -17,6 +17,8 @@ public class PartsDetailDto {
 
 	@ApiModelProperty("配件ID")
 	private Integer partsId;
+	@ApiModelProperty("配件编码")
+	private String partsCode;
 	@ApiModelProperty("配件名称")
 	private String partsName;
 	@ApiModelProperty("型号")
@@ -27,6 +29,8 @@ public class PartsDetailDto {
 	private String partsSpec;
 	@ApiModelProperty("配件品牌名称")
 	private String partsBrandName;
+	@ApiModelProperty("配件品牌Id")
+	private Integer partsBrandId;
 	@ApiModelProperty("厂家")
 	private String partsFactory;
 	@ApiModelProperty("产地")
@@ -180,6 +184,22 @@ public class PartsDetailDto {
 
 	public void setPartsAttrExtrs(List<HqlsPartsAttrExtr> partsAttrExtrs) {
 		this.partsAttrExtrs = partsAttrExtrs;
+	}
+
+	public String getPartsCode() {
+		return partsCode;
+	}
+
+	public void setPartsCode(String partsCode) {
+		this.partsCode = partsCode;
+	}
+
+	public Integer getPartsBrandId() {
+		return partsBrandId;
+	}
+
+	public void setPartsBrandId(Integer partsBrandId) {
+		this.partsBrandId = partsBrandId;
 	}
 
 }

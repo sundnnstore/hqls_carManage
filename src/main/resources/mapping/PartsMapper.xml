@@ -5,11 +5,12 @@
 	<resultMap type="com.sinoauto.dto.PartsDetailDto" id="detail">
 		<id column="parts_id" property="partsId" />
 		<result column="parts_brand_name" property="partsBrandName" />
-		<collection property="partsPicList" column="parts_id" select="com.sinoauto.dao.mapper.PartsBrandMapper.findPartsBrandListByPartsId" />
+		<collection property="partsAttrExtrs" column="parts_id" select="com.sinoauto.dao.mapper.PartsMapper.findPartsAttrExtrsByPartsId" />
+		<collection property="partsPicList" column="parts_id" select="com.sinoauto.dao.mapper.PartsPicMapper.findPartsPicsByPartsId" />
 	</resultMap>
 	
 	<select id="getPartsDetail" resultMap="detail" parameterType="Integer">
-		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, parts.parts_spec,
+		select parts.parts_id,parts.parts_brand_id, parts.parts_name,parts.parts_code, parts.parts_model, parts.parts_unit, parts.parts_spec,
 				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,
 				brand.parts_brand_name
 		from hqls_parts as parts, hqls_parts_brand as brand
@@ -102,7 +103,7 @@
 			<if test="partsCode!=null"> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
 		 	<if test="partsName!=null"> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
 		 	<if test="partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
-		 	<if test="pid!=null"> and hpt.pid=#{pid}</if>
+		 	<if test="partsTypeId!=null"> and hpt.pid=#{partsTypeId}</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
 	</select>
 	

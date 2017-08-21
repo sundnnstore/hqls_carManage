@@ -9,7 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class PartsQueryDto {
-
+	
+	@ApiModelProperty(name="配件ID")
+	private Integer partsId;
 	@ApiModelProperty(name="配件编码")
 	private String partsCode;
 	@ApiModelProperty(name="配件类型ID")
@@ -41,5 +43,11 @@ public class PartsQueryDto {
 	}
 	public void setPartsTopTypeId(Integer partsTopTypeId) {
 		this.partsTopTypeId = partsTopTypeId;
+	}
+	public Integer getPartsId() {
+		return partsId;
+	}
+	public void setPartsId(Integer partsId) {
+		this.partsId = partsId;
 	}
 }
