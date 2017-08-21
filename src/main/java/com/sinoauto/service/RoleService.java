@@ -1,5 +1,6 @@
 package com.sinoauto.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
+import com.sinoauto.dao.mapper.RoleAuthorityMapper;
 import com.sinoauto.dao.mapper.RoleMapper;
 import com.sinoauto.dto.AuthorityDto;
 import com.sinoauto.dto.RoleDto;
@@ -26,6 +28,9 @@ public class RoleService {
 
 	@Autowired
 	private AuthorityMapper authorityMapper;
+
+	@Autowired
+	private RoleAuthorityMapper roleAuthorityMapper;
 
 	public ResponseEntity<RestModel<List<HqlsRole>>> findRoles(Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
@@ -56,6 +61,44 @@ public class RoleService {
 		}
 		return RestModel.success("success");
 
+	}
+
+	@Transactional
+	public ResponseEntity<RestModel<String>> editAuthority(RoleDto roleDto) {
+		HqlsRole role = roleMapper.checkRoleIsExit(roleDto.getRoleName());
+		if (role != null && (role.getRoleId() != roleDto.getRoleId())) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "角色已存在！");
+		}
+		roleMapper.updateRoleName(roleDto);
+		// 删除之前对应的权限
+		roleAuthorityMapper.deleteByRoleId(roleDto.getRoleId());
+		List<Integer> authoritys = roleDto.getAuthorityIds();
+		for (Integer authorityId : authoritys) {
+			roleMapper.insertRoleAuthority(roleDto.getRoleId(), authorityId);
+		}
+		return RestModel.success("success");
+
+	}
+	
+	@Transactional
+	public ResponseEntity<RestModel<String>> delRole(Integer roleId){
+		roleAuthorityMapper.deleteByRoleId(roleId);
+		roleMapper.delRoleByRoleId(roleId);
+		return RestModel.success();
+	}
+
+	public ResponseEntity<RestModel<List<AuthorityDto>>> findCheckedAuthoritys(Integer roleId) {
+		// 所有菜单
+		List<AuthorityDto> allAuthoritys = authorityMapper.findAllAuthorities();
+		List<AuthorityDto> checkedAuthoritys = authorityMapper.findCheckedAuthoritiesByRoleId(roleId);
+		List<AuthorityDto> res = new ArrayList<>();
+		for (AuthorityDto au : allAuthoritys) {
+			if (checkedAuthoritys.contains(au)) {
+				au.setChecked(true);
+			}
+			res.add(au);
+		}
+		return RestModel.success(res);
 	}
 
 }

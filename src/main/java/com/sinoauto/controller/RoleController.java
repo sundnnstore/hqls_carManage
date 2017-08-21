@@ -55,5 +55,23 @@ public class RoleController {
 		return roleService.addAuthority(roleDto);
 	}
 	
+	@ApiOperation(value = "角色编辑角色", notes = "tangwt")
+	@PostMapping(value = "editrole")
+	public ResponseEntity<RestModel<String>> editAuthority(@RequestBody RoleDto roleDto){
+		return roleService.editAuthority(roleDto);
+	}
+	
+	@ApiOperation(value = "删除角色", notes = "tangwt")
+	@PostMapping(value = "delrole")
+	public ResponseEntity<RestModel<String>> delRole(@RequestParam("roleId")Integer roleId){
+		return roleService.delRole(roleId);
+	}
+	
+	@ApiOperation(value = "查找已选菜单", notes = "tangwt")
+	@PostMapping(value = "findcheckedauthoritys")
+	public ResponseEntity<RestModel<List<AuthorityDto>>> findCheckedAuthoritys(@RequestParam("roleId") Integer roleId){
+		return roleService.findCheckedAuthoritys(roleId);
+	}
+	
 
 }

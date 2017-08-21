@@ -2,11 +2,13 @@ package com.sinoauto.dao.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsRole;
@@ -32,10 +34,16 @@ public interface RoleMapper {
 	@Options(useGeneratedKeys=true ,keyProperty="roleId")
 	public int insertRole(RoleDto role);
 	
+	@Update("update hqls_role set role_name = #{roleName} where role_id = #{roleId}")
+	public int updateRoleName(RoleDto role);
+	
 	@Insert("insert into hqls_role_authority (role_id,authority_id) values (#{roleId},#{authorityId})")
 	public int insertRoleAuthority(@Param("roleId")Integer roleId,@Param("authorityId")Integer authorityId);
 
 	@Select("select role_id as `key`, role_name as `value` from hqls_role")
 	public List<CommonDto> findAll();
+	
+	@Delete("delete from hqls_role where role_id = #{1}")
+	public int delRoleByRoleId(Integer roleId);
 	
 }

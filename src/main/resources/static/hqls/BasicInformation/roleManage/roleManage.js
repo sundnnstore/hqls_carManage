@@ -8,38 +8,51 @@ layui.use(['layer', 'laypage'], function() {
         var method = $(this).data('method');
         // layer.closeAll();
         if (method == 'addRole') {
-            roleInfoModel('新增', '#roleTreeBox');
-        } else if (method == 'edit') { // 如果是编辑操作，需先判断该角色下是否有人员，若有则提示用户是否继续编辑，否则直接进行编辑
-            /*
-                判断该角色下是否有人员
-            */
-            if (true) { // 有人员
-                layer.open({
-                    type: 1,
-                    title: '提示', // 标题
-                    skin: 'layui-layer-lan', //弹框主题
-                    shade: 0,
-                    area: '350px', // 宽高
-                    content: $('#roleEdit'),
-                    btn: ['确认', '取消'],
-                    yes: function(index, layero) {
-                        roleInfoModel('编辑', '#roleTreeBox');
-                        layer.close(index);
-                    },
-                    btn2: function(index, layero) {
-                        layer.close(index);
-                    }
-                });
-            } else {
-                roleInfoModel('编辑', '#roleTreeBox');
-            }
-        } else if (method == 'del') {
-            roleInfoModel('提示', '#roleDelete');
+            roleInfoModel('新增', '#roleTreeBox',0);
+        }else{
+        	var roleId = $(this).attr("name");
+        	var flag = checkRole(roleId);
+        	if(method == 'edit'){
+        		$("#roleName").val(($(this).parent().prev().html()));//赋予角色名称
+        		//显示权限数据
+        		initZtree(roleId);
+        	}
+    	   if (flag) { // 有人员
+               layer.open({
+                   type: 1,
+                   title: '提示', // 标题
+                   skin: 'layui-layer-lan', //弹框主题
+                   shade: 0,
+                   area: '350px', // 宽高
+                   content: $('#roleEdit'),
+                   btn: ['确认', '取消'],
+                   yes: function(index, layero) {
+                	   layer.close(index);
+                	   if(method == 'edit'){
+                		   roleInfoModel('编辑', '#roleTreeBox',roleId);
+                	   }else{
+                		   roleInfoModel('提示', '#roleDelete',roleId);
+                	   }
+                       //layer.close(index);
+                   },
+                   btn2: function(index, layero) {
+                       layer.close(index);
+                   }
+               });
+           }else{
+        	   if(method == 'edit'){
+        		   roleInfoModel('编辑', '#roleTreeBox',roleId);
+        	   }else{
+        		   roleInfoModel('提示', '#roleDelete',roleId);
+        	   }
+        	   
+           }
         }
+        	
     })
 
     // 角色信息弹框
-    function roleInfoModel(title, content) {
+    function roleInfoModel(title, content,roleId) {
         layer.open({
             type: 1,
             title: title, // 标题
@@ -52,8 +65,13 @@ layui.use(['layer', 'laypage'], function() {
                 /*
                     此处回调有三种操作：新增，编辑，删除，可根据title值区分（也可自行寻找方法来处理）
                 */
-            	addRole();
-                layer.close(index);
+            	if(title == '新增'){
+            		addRole(index);
+            	}else if(title == '编辑'){
+            		editRole(index,roleId);
+            	}else{//删除操作
+            		delRole(index,roleId);
+            	}
             },
             btn2: function(index, layero) { // 取消操作
                 layer.close(index);
@@ -63,7 +81,75 @@ layui.use(['layer', 'laypage'], function() {
     
     getData(1);//初始化数据
     
-    function addRole(){
+    function checkRole(roleId){
+    	var flag = false;
+    	$.ajax({
+    		url : "http://localhost:8881/checkrole",
+    		type : 'post',
+    		async : false,
+    		data : {roleId : roleId},
+    		success : function(data){
+    			if(data.result > 0){
+    				flag = true;//角色下面有人员
+    			}
+    		}
+    	});
+    	return flag;
+    }
+    
+    function delRole(index,roleId){
+    	$.ajax({
+    		url : "http://localhost:8881/delrole",
+    		type : "post",
+    		async : false,
+    		data : {roleId:roleId},
+    		success : function(data){
+    			layer.msg('删除成功！');
+    			layer.close(index);
+    			getData(1);
+    		},
+    		error : function(data){
+    			layer.msg(data.responseJSON.errmsg);
+    		}
+    	});
+    }
+    
+    
+    function editRole(index,roleId){
+    	var roleName = $("#roleName").val();
+    	var authorityIds = getAllCheckedNodes();
+    	var role={};
+    		role.roleName = roleName;
+    		role.authorityIds = authorityIds;
+    		role.roleId = roleId;
+    	if(roleName == ''){
+    		layer.msg('角色名不能为空！');
+    		return;
+    	}
+    	if(authorityIds.length == 0){
+    		layer.msg('请勾选菜单！');
+    		return;
+    	}
+    	$.ajax({
+    		url : "http://localhost:8881/editrole",
+    		type : "post",
+    		async : false,
+    		data : JSON.stringify(role),
+    		contentType :'application/json;charset=UTF-8',
+    		success : function(data){
+    			layer.msg('编辑成功！');
+    			layer.close(index);
+    			getData(1);
+    		},
+    		error : function(data){
+    			layer.msg(data.responseJSON.errmsg);
+    		}
+    	});
+    	
+    }
+    
+    
+    function addRole(index){
     	var roleName = $("#roleName").val();
     	var authorityIds = getAllCheckedNodes();
     	var role={};
@@ -85,9 +171,11 @@ layui.use(['layer', 'laypage'], function() {
     		contentType :'application/json;charset=UTF-8',
     		success : function(data){
     			layer.msg('添加成功！');
+    			layer.close(index);
+    			getData(1);
     		},
     		error : function(data){
-    			layer.msg('编辑失败！')
+    			layer.msg(data.responseJSON.errmsg);
     		}
     	});
     }
@@ -112,8 +200,8 @@ layui.use(['layer', 'laypage'], function() {
 			trs += '<tr>'+
                 	'<td>'+tr.roleName+'</td>'+
                 	'<td>'+
-                    '<button data-method="edit" class="layui-btn layui-btn-normal">编辑</button>'+
-                    '<button data-method="del" class="layui-btn layui-btn-danger">删除</button>'+
+                    '<button data-method="edit" name="'+tr.roleId+'"  class="layui-btn layui-btn-normal rolredit">编辑</button>'+
+                    '<button data-method="del" name="'+tr.roleId+'" class="layui-btn layui-btn-danger roledel">删除</button>'+
                 	'</td></tr>'
 		}
 		$("#role_tb").html(trs);
@@ -183,4 +271,18 @@ function getAllCheckedNodes(){
 		}
 	}
 	return ckNodes;
+}
+
+function initZtree(roleId){
+	var nodes;
+	$.ajax({
+		url : "http://localhost:8881/findcheckedauthoritys",
+		type : "post",
+		async : false,
+		data : {roleId : roleId},
+		success : function(data){
+			nodes = data.result;
+		}
+	});
+	$.fn.zTree.init($("#roleTree"), setting, nodes);
 }
