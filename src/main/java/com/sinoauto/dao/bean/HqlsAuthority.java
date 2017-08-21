@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version 1.0, 2017-08-16
  */
 
-public class HqlsAuthority implements Serializable {
+public class HqlsAuthority implements Serializable, Comparable<HqlsAuthority> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -127,6 +127,11 @@ public class HqlsAuthority implements Serializable {
 		if (sorting != null) {
 			this.sorting = sorting;
 		}
+	}
+
+	@Override
+	public int compareTo(HqlsAuthority o) {
+		return this.sorting - o.getSorting();
 	}
 
 }

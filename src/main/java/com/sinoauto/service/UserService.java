@@ -1,10 +1,11 @@
 package com.sinoauto.service;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,10 @@ import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
+import com.sinoauto.dao.mapper.RoleMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
+import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.AuthUser;
@@ -41,6 +44,8 @@ public class UserService {
 	private AuthorityMapper authorityMapper;
 	@Autowired
 	private UserRoleMapper userRoleMapper;
+	@Autowired
+	private RoleMapper roleMapper;
 
 	/**
 	 * 登录
@@ -77,11 +82,11 @@ public class UserService {
 			List<HqlsAuthority> firstAuthority = authorityMapper.findFirstAuthorities(user.getUserId(), isBack);
 			List<HqlsAuthority> secondAuthority = authorityMapper.findSecondAuthorities(user.getUserId(), isBack);
 			// 组合map
-			Map<HqlsAuthority, Set<HqlsAuthority>> menuMap = new HashMap<>();
-			Map<String, Set<HqlsAuthority>> returnMap = new HashMap<>();
+			Map<HqlsAuthority, Set<HqlsAuthority>> menuMap = new TreeMap<>();
+			Map<String, Set<HqlsAuthority>> returnMap = new LinkedHashMap<>();
 			for (HqlsAuthority menu : firstAuthority) {
 				if (!menuMap.containsKey(menu)) {
-					Set<HqlsAuthority> menuSet = new HashSet<>();
+					Set<HqlsAuthority> menuSet = new TreeSet<>();
 					for (HqlsAuthority menu2 : secondAuthority) {
 						if (menu2.getPid() == menu.getAuthorityId()) {
 							menuSet.add(menu2);
@@ -184,6 +189,11 @@ public class UserService {
 			return RestModel.success("编辑成功");
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "编辑失败");
+	}
+	
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllRole() {
+		
+		return RestModel.success(roleMapper.findAll()); 
 	}
 
 }

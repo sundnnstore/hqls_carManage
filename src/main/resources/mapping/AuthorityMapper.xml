@@ -45,6 +45,8 @@
 		LEFT JOIN hqls_role hr
 		ON hur.role_id = hr.role_id
 		WHERE user_id = #{userId} AND hr.role_type = #{isBack}))
+		ORDER BY sorting
+		
 	</select>
 
 	<select id="findSecondAuthorities" resultType="com.sinoauto.dao.bean.HqlsAuthority">
