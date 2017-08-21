@@ -203,10 +203,9 @@ public class UserService {
 		HqlsUser user = userMapper.getUserByGloabUserId(globalId);
 		// 获取当前登录人userId
 		Integer userId = user.getUserId();
-
 		HqlsUser hqlsUser = userMapper.getUserInfoByMobile(newMobile);
 		if (hqlsUser.getMobile().equals(newMobile)) {// 判断新账号在数据库中是否存在
-
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "账号在数据中已存在！");
 		} else {
 			// 根据userId更新用户表的信息
 			userMapper.updateUserByUserId(newMobile, userId);
