@@ -47,10 +47,6 @@ public class PartsOperDto {
 	private String remark;
 	@ApiModelProperty("上下架")
 	private Integer isUsable;
-	@ApiModelProperty("类别ID")
-	private Integer partsTypeId;
-	
-	
 	/**
 	 * 配件类别
 	 */
@@ -164,25 +160,13 @@ public class PartsOperDto {
 	public void setIsUsable(Integer isUsable) {
 		this.isUsable = isUsable;
 	}
-	public Integer getPartsTypeId() {
-		return partsTypeId;
-	}
-	public void setPartsTypeId(Integer partsTypeId) {
-		this.partsTypeId = partsTypeId;
-	}
-
 	public String getTypeName() {
 		return typeName;
 	}
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
-	public Integer getPid() {
-		return pid;
-	}
-	public void setPid(Integer pid) {
-		this.pid = pid;
-	}
+	
 	public Integer getPartsType() {
 		return partsType;
 	}
@@ -201,4 +185,11 @@ public class PartsOperDto {
 	public void setPartsAttrExtrs(List<HqlsPartsAttrExtr> partsAttrExtrs) {
 		this.partsAttrExtrs = partsAttrExtrs;
 	}
+	public Integer getPid() {
+		return pid;
+	}
+	public void setPid(Integer pid) {
+		this.pid = pid;
+	}
+	
 }
