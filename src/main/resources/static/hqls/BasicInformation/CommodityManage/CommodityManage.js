@@ -343,31 +343,39 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	$("#uploadImg").html(""); //清空图片上传div
     	$(".attrExtra").html("");//清空动态扩展属性的div
     	//显示图片
-    	for (var int = 0; int < piclen; int++) {
+    	for (var i = 0; i < piclen; i++) {
     		pics = `
                <div class="siteUpload">
-	                <img id="commodityImgUrl${int}" src="">
+	                <img id="commodityImgUrl${i}" src="${data.result.partsPicList[i].url}">
 	                <div>
-	                    <input type="file" name="image" id="commodityImg${int}" value="">
+	                    <input type="file" name="image" id="commodityImg${i}" value="">
 	                </div>
     			</div>
             `;
     		
 		}
-
-    	for (var i = 0; i < attrlen; i++) {
-			//清空动态属性框,然后拼接显示
-    		attrExtra+=`
-                <td colspan="2" class="paramGroup">
-	                    <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrKey}" class="layui-input paramName" placeholder="请输入参数名称">
-	                    <span></span>
-	                    <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrValue}" class="layui-input paramContent" placeholder="请输入内容">
-	            </td>
-            `;
+    	var flag= 0;
+    	for (var i = 0; i <=attrlen; i++) {
+    			//清空动态属性框,然后拼接显示
+    			if((flag%3==0&&i>0)||(flag==attrlen)){
+        			$(".attrExtra:last").html(attrExtra);
+        			$(".attrExtra:last").after("<tr class=\"attrExtra\"></tr>");
+        			attrExtra="";
+        		}
+    			attrExtra+=`
+                    <td colspan="2" class="paramGroup">
+                        <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrKey}" class="layui-input paramName" placeholder="请输入参数名称">
+                        <span></span>
+                        <input type="text" name="" value="${data.result.partsAttrExtrs[i].attrValue}" class="layui-input paramContent" placeholder="请输入内容">
+                	</td>
+    	        `;
+    			flag++;
+    		
 		}
     	//动态属性追加到指定位置
     	$("#uploadImg").html(pics);
-    	$(".attrExtra").html(attrExtra);
+    	console.log(attrExtra);
+    	
     	
     	/**
     	 * 配件品牌显示
