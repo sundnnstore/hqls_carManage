@@ -48,7 +48,9 @@
 		hso.car_no,
 		hso.car_model,
 		hso.order_amount,
-		hso.expect_arrive_time
+		hso.expect_arrive_time,
+		hso.finish_time,
+		hc.avatar_url
 		FROM hqls_service_order hso
 		LEFT JOIN hqls_customer hc
 		ON hso.customer_id = hc.customer_id

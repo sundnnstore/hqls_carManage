@@ -23,6 +23,8 @@ public class HqlsAuthority implements Serializable {
 	private Integer pid;
 	@ApiModelProperty("备注")
 	private String remark;
+	@ApiModelProperty("排序")
+	private Integer sorting;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
 
@@ -108,13 +110,23 @@ public class HqlsAuthority implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return pid.hashCode()+authorityId.hashCode()+authorityName.hashCode();
+		return pid.hashCode() + authorityId.hashCode() + authorityName.hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		HqlsAuthority au = (HqlsAuthority) obj;
-		return this.pid==au.pid && this.authorityId == au.authorityId && this.authorityName.equals(au.authorityName);
+		return this.pid == au.pid && this.authorityId == au.authorityId && this.authorityName.equals(au.authorityName);
+	}
+
+	public Integer getSorting() {
+		return sorting;
+	}
+
+	public void setSorting(Integer sorting) {
+		if (sorting != null) {
+			this.sorting = sorting;
+		}
 	}
 
 }

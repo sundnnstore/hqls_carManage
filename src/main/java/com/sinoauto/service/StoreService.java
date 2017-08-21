@@ -1,7 +1,9 @@
 package com.sinoauto.service;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,6 @@ import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 
-
 @Service
 public class StoreService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -39,8 +40,7 @@ public class StoreService {
 	private UserMapper userMapper;
 	@Autowired
 	private UserStoreMapper userStoreMapper;
-	
-	
+
 	/**
 	 * 根据当前登陆人查询门店信息
 	 * @param mobile
@@ -50,95 +50,93 @@ public class StoreService {
 	@Transactional
 	public ResponseEntity<RestModel<List<StoreDto>>> findStoreInfo(String token) {
 		// 获取当前用户
-        RestModel<TokenModel> rest = authService.validToken(token);
-        if (rest.getErrcode() != 0) {// 解析token失败
-            return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
-        }
-        Integer userId = rest.getResult().getUserId();// 当前登录人的userid
-        //获取userId
-        HqlsUser user = userMapper.getUserByGloabUserId(userId);
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		// 获取userId
+		HqlsUser user = userMapper.getUserByGloabUserId(userId);
 		List<StoreDto> storeList = storeMapper.findStoreInfo(user.getUserId());
-		return  RestModel.success(storeList);
-		
+		return RestModel.success(storeList);
+
 	}
-	
+
 	/**
 	 * 修改门店名称
 	 * @param storeName
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeStoreName(String storeName,Integer storeId){
-        //修改当前门店名称
-        storeMapper.changeStoreName(storeName,storeId);
-        return RestModel.success();
-		
+	public ResponseEntity<RestModel<String>> changeStoreName(String storeName, Integer storeId) {
+		// 修改当前门店名称
+		storeMapper.changeStoreName(storeName, storeId);
+		return RestModel.success();
+
 	}
-	
-	
+
 	/**
 	 * 修改门店联系方式
 	 * @param storeMobile
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeStoreMobile(String storeMobile,Integer storeId){
-        //修改门店联系方式
-        storeMapper.changeStoreMobile(storeMobile,storeId);
-        return RestModel.success();
-		
+	public ResponseEntity<RestModel<String>> changeStoreMobile(String storeMobile, Integer storeId) {
+		// 修改门店联系方式
+		storeMapper.changeStoreMobile(storeMobile, storeId);
+		return RestModel.success();
+
 	}
-	
-	
+
 	/**
 	 * 修改门店背景图片
 	 * @param storeMobile
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeStoreUrl(String backUrl,Integer storeId){
-        //修改门店背景图片
-        storeMapper.changeStoreUrl(backUrl,storeId);
-        return RestModel.success();
-		
+	public ResponseEntity<RestModel<String>> changeStoreUrl(String backUrl, Integer storeId) {
+		// 修改门店背景图片
+		storeMapper.changeStoreUrl(backUrl, storeId);
+		return RestModel.success();
+
 	}
-	
+
 	/**
 	 * 根据门店名称等查询门店信息
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,
-																	String address,Integer provinceId,Integer cityId,Integer countyId,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName, String userName, String mobile, String address,
+			Integer provinceId, Integer cityId, Integer countyId, Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);// 分页使用
 		}
-		Page<StoreInfoDto> storeList = storeMapper.findStore( storeName, userName, mobile, address,provinceId,cityId,countyId);
-		return RestModel.success(storeList,(int) storeList.getTotal());
-		
+		Page<StoreInfoDto> storeList = storeMapper.findStore(storeName, userName, mobile, address, provinceId, cityId, countyId);
+		return RestModel.success(storeList, (int) storeList.getTotal());
+
 	}
-	
+
 	/**
 	 * 门店禁用与启用
 	 * @param isUseable
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeIsUseable(Integer storeId){
-        storeMapper.changeIsUseable(storeId);
-        return RestModel.success();
-		
+	public ResponseEntity<RestModel<String>> changeIsUseable(Integer storeId) {
+		storeMapper.changeIsUseable(storeId);
+		return RestModel.success();
+
 	}
-	
-	
+
 	/**
 	 * 修改门店地址
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeStoreAddress(Integer provinceId,Integer cityId,Integer countyId,String address,Integer storeId){
-		storeMapper.changeStoreAddress( provinceId,cityId,countyId,address,storeId);
+	public ResponseEntity<RestModel<String>> changeStoreAddress(Integer provinceId, Integer cityId, Integer countyId, String address,
+			Integer storeId) {
+		storeMapper.changeStoreAddress(provinceId, cityId, countyId, address, storeId);
 		return RestModel.success();
 	}
-	
+
 	/**
 	 * 查询门店信息
 	 * @return
@@ -159,20 +157,19 @@ public class StoreService {
 		}
 		return store;
 	}
-	
-	
+
 	/**
 	 * 新增门店信息
 	 * @param storeInfoDto
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<Integer>> insertStore(String token,StoreInfoDto storeInfoDto){
-		
+	public ResponseEntity<RestModel<Integer>> insertStore(String token, StoreInfoDto storeInfoDto) {
+
 		HqlsUser user = new HqlsUser();
 		String mobile = storeInfoDto.getMobile();
 		String userName = storeInfoDto.getUserName();
-		String password ="123456";
+		String password = "123456";
 		user.setMobile(mobile);
 		user.setUserName(userName);
 		user.setPassword(password);
@@ -193,49 +190,49 @@ public class StoreService {
 		store.setPid(storeInfoDto.getPid());
 		store.setProvinceId(storeInfoDto.getProvinceId());
 		store.setProvinceName(storeInfoDto.getProvinceName());
-		
-		store.setStoreCode("store---");
+
+		store.setStoreCode(UUID.randomUUID().toString());
 		store.setStoreName(storeInfoDto.getStoreName());
-		
-		//新增门店信息
-		 storeMapper.insert(store);
-		 int stoId = store.getStoreId();
-		//注册用户信息
-		RestModel<Integer> registerInfo = authService.register(mobile,password);
-		//查询当前用户在系统中是否存在
-		HqlsUser hquser =	userMapper.getUserInfoByMobile(mobile);
+
+		// 新增门店信息
+		storeMapper.insert(store);
+		int stoId = store.getStoreId();
+		// 注册用户信息
+		RestModel<Integer> registerInfo = authService.register(mobile, password);
+		// 查询当前用户在系统中是否存在
+		HqlsUser hquser = userMapper.getUserInfoByMobile(mobile);
 		Integer globalUserId = null;
 		Integer userId = null;
-		if (registerInfo.getErrcode() == 0) {//注册成功
+		if (registerInfo.getErrcode() == 0) {// 注册成功
 			logger.info("注册，新增用户。");
-			globalUserId = registerInfo.getResult(); //用户中心的编号
+			globalUserId = registerInfo.getResult(); // 用户中心的编号
 			user.setGlobalUserId(globalUserId);
-			if(hquser != null){
+			if (hquser != null) {
 				userId = hquser.getUserId();
-			}else{
+			} else {
 				userMapper.insert(user);
 				userId = user.getUserId();
 			}
-			//新增用户门店信息表
+			// 新增用户门店信息表
 			HqlsUserStore userStore = new HqlsUserStore();
 			userStore.setStoreId(stoId);
 			userStore.setUserId(userId);
 			userStore.setIsContact(true);
 			userStoreMapper.insert(userStore);
-			
-		} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+
+		} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
 			logger.info("用户已注册，则同步用户信息");
 			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
-			if(uInfo.getErrcode() == 0){
+			if (uInfo.getErrcode() == 0) {
 				globalUserId = uInfo.getResult().getUserId();
 				user.setGlobalUserId(globalUserId);
-				if(hquser != null){
+				if (hquser != null) {
 					userId = hquser.getUserId();
-				}else{
+				} else {
 					userMapper.insert(user);
 					userId = user.getUserId();
 				}
-				//新增用户门店信息表
+				// 新增用户门店信息表
 				HqlsUserStore userStore = new HqlsUserStore();
 				userStore.setStoreId(stoId);
 				userStore.setUserId(userId);
@@ -248,59 +245,55 @@ public class StoreService {
 		} else {
 			logger.info("注册失败....");
 			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
-			
+
 		}
 		return RestModel.success();
 	}
-	
-	
+
 	/**]
 	 * 修改门店账号
 	 * @param account
 	 * @return
 	 */
-	public ResponseEntity<RestModel<String>> changeAccount(String token,String account){
+	public ResponseEntity<RestModel<String>> changeAccount(String token, String account) {
 		// 获取当前用户
-        RestModel<TokenModel> rest = authService.validToken(token);
-        if (rest.getErrcode() != 0) {// 解析token失败
-            return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
-        }
-        Integer userId = rest.getResult().getUserId();// 当前登录人的userid
-        //获取userId
-        HqlsUser user = userMapper.getUserByGloabUserId(userId);
-        //判断修改后账号在系统中是否存在
-        HqlsUser hquser =	userMapper.getUserInfoByMobile(account);
-        if(hquser == null){
-        //根据userid 更改当前登陆人账号
-        	userMapper.changeAccount(account,user.getUserId());
-        }
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		// 获取userId
+		HqlsUser user = userMapper.getUserByGloabUserId(userId);
+		// 判断修改后账号在系统中是否存在
+		HqlsUser hquser = userMapper.getUserInfoByMobile(account);
+		if (hquser == null) {
+			// 根据userid 更改当前登陆人账号
+			userMapper.changeAccount(account, user.getUserId());
+		}
 		return RestModel.success();
-		
+
 	}
-	
-	
+
 	/**
 	 * 查询所有门店
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore(){
-		
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllStore() {
+
 		List<CommonDto> store = storeMapper.findAllStore();
 		return RestModel.success(store);
 	}
-	
-	
+
 	/**根据storeid查询当前门店信息
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(Integer storeId){
+	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(Integer storeId) {
 		StoreInfoDto store = storeMapper.getStoreInfoByStoreId(storeId);
 		return RestModel.success(store);
-		
+
 	}
-	
-	
+
 	/**
 	 * 根据storeid修改当条门店信息
 	 * @param storeId
@@ -310,76 +303,73 @@ public class StoreService {
 	 * @param address
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(String token,Integer storeId,String storeName,String backUrl,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId,String userName){
-				HqlsUser user = new HqlsUser();
-				String password = "123456";
-				user.setUserName(userName);
-				user.setPassword(password);
-				user.setMobile(mobile);
-				user.setIsUseable(true);
-				user.setCreateTime(new Date());
-				user.setDmlTime(new Date());
-				//注册用户信息
-				RestModel<Integer> registerInfo = authService.register(mobile,password);
-				//查询当前用户在系统中是否存在
-				HqlsUser hquser =	userMapper.getUserInfoByMobile(mobile);
-				Integer globalUserId = null;
-				Integer userId = null;
-				if (registerInfo.getErrcode() == 0) {//注册成功
-					logger.info("注册，新增用户。");
-					globalUserId = registerInfo.getResult(); //用户中心的编号
-					user.setGlobalUserId(globalUserId);
-					if(hquser != null){
-						userId = hquser.getUserId();
-					}else{
-						userMapper.insert(user);
-						userId = user.getUserId();
-					}
-					//新增用户门店信息表
-					HqlsUserStore userStore = new HqlsUserStore();
-					userStore.setStoreId(storeId);
-					userStore.setUserId(userId);
-					userStore.setIsContact(true);
-						
-					userStoreMapper.deleteByStoreIdAndUserId(storeId,userId);
-					userStoreMapper.updateUserStore(storeId);
-					userStoreMapper.insert(userStore);
-					
-					
-					
-				} else if(registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")){ //用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
-					logger.info("用户已注册，则同步用户信息");
-					RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
-					if(uInfo.getErrcode() == 0){
-						globalUserId = uInfo.getResult().getUserId();
-						user.setGlobalUserId(globalUserId);
-						if(hquser != null){
-							userId = hquser.getUserId();
-						}else{
-							userMapper.insert(user);
-							userId = user.getUserId();
-						}
-						//新增用户门店信息表
-						HqlsUserStore userStore = new HqlsUserStore();
-						userStore.setStoreId(storeId);
-						userStore.setUserId(userId);
-						userStore.setIsContact(true);
-						
-						userStoreMapper.deleteByStoreIdAndUserId(storeId,userId);
-						userStoreMapper.updateUserStore(storeId);
-						userStoreMapper.insert(userStore);
-					} else {
-						logger.info("注册失败.");
-						return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
-					}
+	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(String token, StoreInfoDto storeInfoDto) {
+		HqlsUser user = new HqlsUser();
+		String password = "123456";
+		user.setUserName(storeInfoDto.getUserName());
+		user.setPassword(password);
+		user.setMobile(storeInfoDto.getMobile());
+		user.setIsUseable(true);
+		user.setCreateTime(new Date());
+		user.setDmlTime(new Date());
+		// 注册用户信息
+		RestModel<Integer> registerInfo = authService.register(user.getMobile(), password);
+		// 查询当前用户在系统中是否存在
+		HqlsUser hquser = userMapper.getUserInfoByMobile(user.getMobile());
+		Integer globalUserId = null;
+		Integer userId = null;
+		if (registerInfo.getErrcode() == 0) {// 注册成功
+			logger.info("注册，新增用户。");
+			globalUserId = registerInfo.getResult(); // 用户中心的编号
+			user.setGlobalUserId(globalUserId);
+			if (hquser != null) {
+				userId = hquser.getUserId();
+			} else {
+				userMapper.insert(user);
+				userId = user.getUserId();
+			}
+			// 新增用户门店信息表
+			HqlsUserStore userStore = new HqlsUserStore();
+			userStore.setStoreId(storeInfoDto.getStoreId());
+			userStore.setUserId(userId);
+			userStore.setIsContact(true);
+
+			userStoreMapper.deleteByStoreIdAndUserId(storeInfoDto.getStoreId(), userId);
+			userStoreMapper.updateUserStore(storeInfoDto.getStoreId());
+			userStoreMapper.insert(userStore);
+		} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+			logger.info("用户已注册，则同步用户信息");
+			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, storeInfoDto.getMobile());
+			if (uInfo.getErrcode() == 0) {
+				globalUserId = uInfo.getResult().getUserId();
+				user.setGlobalUserId(globalUserId);
+				if (hquser != null) {
+					userId = hquser.getUserId();
 				} else {
-					logger.info("注册失败....");
-					return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
-					
+					userMapper.insert(user);
+					userId = user.getUserId();
 				}
-		
-		storeMapper.updateStoreByStoreId(storeId,storeName,backUrl,address,provinceId,cityId,countyId);
+				// 新增用户门店信息表
+				HqlsUserStore userStore = new HqlsUserStore();
+				userStore.setStoreId(storeInfoDto.getStoreId());
+				userStore.setUserId(userId);
+				userStore.setIsContact(true);
+
+				userStoreMapper.deleteByStoreIdAndUserId(storeInfoDto.getStoreId(), userId);
+				userStoreMapper.updateUserStore(storeInfoDto.getStoreId());
+				userStoreMapper.insert(userStore);
+			} else {
+				logger.info("注册失败.");
+				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+			}
+		} else {
+			logger.info("注册失败....");
+			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+
+		}
+
+		storeMapper.updateStoreInfo(storeInfoDto);
 		return RestModel.success();
-		
+
 	}
 }

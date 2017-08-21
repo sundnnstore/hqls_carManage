@@ -12,7 +12,7 @@
 	    INSERT INTO hqls_store (
 	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
 	    ) VALUES (
-	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable}, #{createTime}, #{dmlTime}        
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable}, now(), now()        
 	    )
 	</insert>
 
@@ -37,6 +37,25 @@
 		   create_time = #{createTime}, 
 		   dml_time = #{dmlTime}
 	   WHERE 
+		   store_id = #{storeId}
+	</update>
+	
+	<update id="updateStoreInfo" parameterType="com.sinoauto.dto.StoreInfoDto">
+		UPDATE hqls_store SET
+		   store_name = #{storeName}, 
+		   longitude = #{longitude}, 
+		   latitude = #{latitude}, 
+		   province_id = #{provinceId}, 
+		   city_id = #{cityId}, 
+		   county_id = #{countyId},
+		   province_name = #{provinceName}, 
+		   city_name = #{cityName}, 
+		   county_name = #{countyName}, 
+		   address = #{address}, 
+		   back_url = #{backUrl}, 
+		   is_useable = #{isUseable}, 
+		   dml_time = now()
+	   		WHERE 
 		   store_id = #{storeId}
 	</update>
 	
@@ -67,8 +86,6 @@
 		on users.user_id = usto.user_id
 		WHERE
 		users.user_id=#{userId}
-		and users.is_useable=1
-		and sto.is_useable=1
 		order by sto.create_time
 	</select>
 	

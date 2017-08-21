@@ -28,6 +28,8 @@ public class StoreDto {
 	private String backUrl;
 	@ApiModelProperty("是否启用")
 	private Integer isUseable;
+	@ApiModelProperty("门店id")
+	private Integer storeId;
 	
 
 	public String getUserMobile() {
@@ -125,6 +127,14 @@ public class StoreDto {
 
 	public void setIsUseable(Integer isUseable) {
 		this.isUseable = isUseable;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
 	
