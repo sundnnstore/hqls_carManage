@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
+import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsService;
 
@@ -50,7 +52,7 @@ public class PartsController {
 	 */
 	@ApiOperation(value="按条件查询配件管理",notes="liud")
 	@GetMapping(value="findparts")
-	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@ModelAttribute PartsDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
+	public ResponseEntity<RestModel<Page<PartsDto>>> findPartsByCondition(@ModelAttribute PartsQueryDto partsDto,@RequestParam("pageIndex")Integer pageIndex,@RequestParam("pageSize")Integer pageSize){
 		return partsService.findPartsByCondition(partsDto,pageIndex,pageSize);
 	}
 	
@@ -68,8 +70,14 @@ public class PartsController {
 	}
 	
 	@ApiOperation(value = "新增配件", notes = "liud")
-	@GetMapping("addparts")
+	@PostMapping("addparts")
 	public ResponseEntity<RestModel<Integer>> addParts(@RequestBody PartsOperDto partsOperDto){
 		return partsService.addParts(partsOperDto);
+	}
+	
+	@ApiOperation(value = "修改配件", notes = "liud")
+	@PostMapping("updateparts")
+	public ResponseEntity<RestModel<Integer>> updateParts(@RequestBody PartsOperDto partsOperDto){
+		return partsService.updateParts(partsOperDto);
 	}
 }

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +28,7 @@ import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
+import com.sinoauto.util.Constant;
 
 @Service
 public class UserService {
@@ -49,7 +49,7 @@ public class UserService {
 	 * @return
 	 */
 	public ResponseEntity<RestModel<UserLoginDto>> login(String userName, String passWord) {
-		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "st", "web", "1.0", UUID.randomUUID().toString());
+		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
 		if (rest.getErrcode() != 0) {// 解析token失败
 			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
 		}

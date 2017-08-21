@@ -22,7 +22,6 @@ import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
-import com.sinoauto.dao.mapper.DictMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
 import com.sinoauto.dao.mapper.LogisticsLogMapper;
@@ -69,8 +68,6 @@ public class PurchaseOrderService {
 	private LogisticsCompanyMapper logisticsCompanyMapper;
 	@Autowired
 	private LogisticsLogMapper logisticsLogMapper;
-	@Autowired
-	private DictMapper dictMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -453,12 +450,9 @@ public class PurchaseOrderService {
 		if (mobile != null) {
 			mobile = mobile.trim();
 		}
-		List<PurchaseOrderDto> orderList = purchaseOrderMapper.findOrderListByContidion(orderStatus, storeId, userName, mobile);
-		if (!orderList.isEmpty()) {
-			orderList.get(0).setOrderStatusName(dictMapper.getDescByKeyAndValue("order_status", orderStatus.intValue() + ""));
-		}
+		Page<PurchaseOrderDto> orderList = purchaseOrderMapper.findOrderListByContidion(orderStatus, storeId, userName, mobile);
 		
-		return RestModel.success(orderList);
+		return RestModel.success(orderList, (int) orderList.getTotal());
 	}
 	
 	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByOrderId(Integer orderId) {

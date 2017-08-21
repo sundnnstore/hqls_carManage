@@ -8,7 +8,7 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsPartsType" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="HqlsPartsType" useGeneratedKeys="true" keyProperty="partsTypeId">
 	    INSERT INTO hqls_parts_type (
 	        type_name, pid, parts_type
 	    ) VALUES (

@@ -1,11 +1,16 @@
 layui.use(['layer', 'jquery', 'laypage'], function() {
 	var $ = layui.jquery;
 	var layer = layui.layer;
-	var laypage=layui.laypage;
+	var  laypage=layui.laypage;
 	var orderId;
+
+	//定义搜索参数
+	var OrderParam = {};
+	var pageSize = 10;
 	//订单详情
-	$('body').on('click', 'tr', function() {
-		comboGoodsTable($(this).find('button').val());
+	$('body').on('click', '.detail', function() {
+		orderId = $(this).val();
+		comboGoodsTable(orderId);
 		AlertDiaog('订单详情',$('#orderdetailPage'),'800px')
 	})
 	//发货点击事件
@@ -43,17 +48,12 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			curr:pageIndex,
 			jump: function(obj, first) {
 				if(!first) {
-					requestOrderList(obj.curr);
+					reqOrderList(obj.curr);
 				}
 			}
 		})
 	}
 	
-	
-	//定义搜索参数
-	var OrderParam = {};
-	var pageSize = 10;
-
 	/**
 	 * 页面初始化加载所有门店
 	 * @returns
@@ -74,7 +74,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	function comboSelect(data) {
 		var html = "";
 		for (var i = 0; i < data.length; i++) {
-			html += `<option value="` + data[i].key + `">` + data[i].value + `</option>`;
+			html += `<option value="${data[i].key}">${data[i].value}</option>`;
 		}
 		return html;
 	}
@@ -84,6 +84,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 * @returns
 	 */
 	function comboGoodsTable(id) {
+		console.log(id);
 		$.ajax({
 			url: 'http://localhost:8881/getpartsbyorderid?orderId=' + id,
 			type: 'GET',
@@ -92,14 +93,14 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 				var html = "";
 				var res = data.result;
 				for (var i = 0; i < res.length; i++) {
-					html += `<tr>`;
-					html += `<td>`+res[i].partsName+`</td>`;
-					html += `<td>`+res[i].partsModel+`</td>`;
-					html += `<td>`+res[i].partsSpec+`</td>`;
-					html += `<td>`+res[i].purchaseNum+`</td>`;
-					html += `<td>`+res[i].buyPrice+`</td>`;
-					html += `<td>`+res[i].curPrice+`</td>`;
-					html += `</tr>`;
+					html += `<tr>
+							<td>${res[i].partsName}</td>
+							<td>${res[i].partsModel}</td>
+							<td>${res[i].partsSpec}</td>
+							<td>${res[i].purchaseNum}</td>
+							<td>${res[i].buyPrice}</td>
+							<td>${res[i].curPrice}</td>
+							</tr>`;
 				}
 				$('.part_detail tbody').html(html);
 			}
@@ -111,10 +112,12 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 */
 	$("#searchOrder").click(function() {
 		generatorParam();
-		requestOrderList(1);
+		reqOrderList(1);
 	});
 	
-	function requestOrderList(pageIndex) {
+	// 初始化页面
+	reqOrderList(1);
+	function reqOrderList(pageIndex) {
 		$.ajax({
 			url: "http://localhost:8881/findorderlistbycondition?pageIndex=" + pageIndex + "&pageSize=" + pageSize,
 			type: "GET",
@@ -124,7 +127,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 				if (data.result.length == 0) {
 					$(".order_list tbody").html("<h4>暂无订单</h4>");
 				} else {
-					comboTable(data, OrderParam.orderStatus, pageIndex);
+					comboTable(data, pageIndex);
 				}
 			},
 			error: function () {
@@ -134,29 +137,32 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		});
 	}
 	
-	function comboTable(res, orderStatus, pageIndex) {
+	function comboTable(res, pageIndex) {
+		console.log(res);
 		var data = res.result;
 		var html = "";
 		for (var i = 0; i < data.length; i++) {
 			html += `<tr>`;
-			html += `<td>订单编号:</td><td>` + data[i].orderNo + `</td>
-					<td>订单状态:</td><td>` + data[0].orderStatusName + `</td>
-					<td>订单时间:</td><td>` + data[i].createTime + `</td>
-					<td>收货地址:</td><td>` + data[i].address + `</td>
-					<td>联系人:</td><td>` + data[i].userName + `</td>
-					<td>联系电话:</td><td>` + data[i].mobile + `</td>
-					<td>门店::</td><td>` + data[i].storeName + `</td>
-					<td>金额总计:</td><td>` + data[i].totalFee + `</td>`;
-			if (orderStatus == 2) {
-				html += `<td><button value="${data[i].purchaseOrderId}" class="layui-btn ship">发货</button></td>`;
+			html += `<td>${data[i].orderNo}</td>
+					<td>${data[0].orderStatusName}</td>
+					<td>${data[i].createTime}</td>
+					<td>${data[i].address}</td>
+					<td>${data[i].userName}</td>
+					<td>${data[i].mobile}</td>
+					<td>${data[i].storeName}</td>
+					<td>${data[i].totalFee}</td>
+					<td>`;
+			if (data[i].orderStatus == 2) {
+				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn ship">发货</button>`;
 			}
-			else if (orderStatus == 3) {
-				html += `<td><button value="`+ data[i].purchaseOrderId +`" class="layui-btn layui-btn-normal logisticsInfo">查看物流</button></td>`;
+			else if (data[i].orderStatus == 3) {
+				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal logisticsInfo">物流</button>`;
 			}
-			html += `</tr>`;
+			html += `<button value="${data[i].purchaseOrderId}" class="layui-btn detail">详情</button>`;
+			html += `</td></tr>`;
 		}
 		
-		$(".order_list tbody").html(html);
+		$("#order_tb").html(html);
 		initPage(res.totalCount, pageIndex);
 	}
 
@@ -190,22 +196,21 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			async: false,
 			success: function(data) {
 				if (data.errcode == 0) {
-					alert("发货完成");
+					layer.msg("发货完成！");
 					layer.closeAll();
-					requestOrderList(1);
+					reqOrderList(1);
 				}
 			},
 			error: function() {
-				alert("发货操作异常");
+				layer.msg("发货操作异常");
 			}
 		});
 	});
 	
 	//查看物流信息
 	$('body').on('click','.logisticsInfo', function() {
-		event.stopPropagation();
+//		event.stopPropagation();
 		orderId = $(this).val();
-		console.log(orderId);
 		queryLogisticsInfo(orderId);
 		AlertDiaog('物流信息',$('#logisticsInfoPage'),['800px','400px'])
 	});
@@ -223,7 +228,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 				var html = "";
 				var res = data.result;
 				for (var i = 0; i < res.length; i++) {
-					html += `<option value="` + res[i].key + `">` + res[i].value + `</option>`;
+					html += `<option value="${res[i].key}">${res[i].value}</option>`;
 				}
 				$('select[name=company]').html(html);
 			}
@@ -254,10 +259,10 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		var data = eval('(' + res + ')');
 		console.log(data.Traces);
 		var html = "";
-		html += `<div class="jclogistics"><div><span>运单号码：</span><span>` +data.LogisticCode+ `</span>`;
-		html += `<br/><span>物流公司：</span><span>` +data.company+ `</span></div>`;
-		html += `<div><span>收货地址：</span><span>` +data.shipAddress+ `</span></div></div>`;
-		html += `<span>---------------------------------------------------------------------</span>`;
+		html += `<div class="jclogistics"><div><span>运单号码：</span><span>${data.LogisticCode}</span>
+				<br/><span>物流公司：</span><span>${data.company}</span></div>
+				<div><span>收货地址：</span><span>${data.shipAddress}</span></div></div>
+				<span>---------------------------------------------------------------------</span>`;
 		if (data.Traces.length == 0) {
 			html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
 		} else {

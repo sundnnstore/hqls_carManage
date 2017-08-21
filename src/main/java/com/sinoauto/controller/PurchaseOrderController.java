@@ -186,12 +186,12 @@ public class PurchaseOrderController {
 	@ApiOperation(value = "条件查询订单", notes = "liud")
 	@GetMapping("findorderlistbycondition")
 	public ResponseEntity<RestModel<List<PurchaseOrderDto>>> findOrderListByContidion(
-			@RequestParam(value = "orderStatus", required = true) Integer orderStatus,
-			@RequestParam(value = "storeId", required = true) Integer storeId,
+			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
+			@RequestParam(value = "storeId", required = false) Integer storeId,
 			@RequestParam(value = "userName", required = false) String userName,
 			@RequestParam(value = "mobile", required = false) String mobile,
-			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize){
+			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = true) Integer pageSize){
 		return purchaseOrderService.findOrderListByContidion(orderStatus, storeId, userName, mobile, pageIndex, pageSize);
 	}
 	
