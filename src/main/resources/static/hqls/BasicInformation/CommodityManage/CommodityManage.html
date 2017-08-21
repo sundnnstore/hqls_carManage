@@ -6,7 +6,7 @@
         <div class="layui-input-inline">
             <label for="first_title" class="layui-form-label">配件编码</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="" id="partsCodeQuery" class="layui-input" value="" />
             </div>
         </div>
         <div class="layui-input-inline">
@@ -22,7 +22,7 @@
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">配件名称</label>
             <div class="layui-input-block">
-                <input type="text" name="" id="" class="layui-input" />
+                <input type="text" name="" id="partsNameQuery" class="layui-input" value="" />
             </div>
         </div>
         <div class="layui-input-inline lastchild">
@@ -52,7 +52,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="parts_info">
                     <tr>
                         <td>过滤器</td>
                         <td>四滤产品</td>
@@ -80,7 +80,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="paging"></div>
+       <div id="pages" style="text-align: right;"></div>
     </div>
 </div>
 
@@ -92,7 +92,7 @@
             <div class="layui-input-inline">
                 <label for="first_title" class="layui-form-label">配件编码</label>
                 <div class="layui-input-block">
-                    <input type="text" name="partsCode" id="partsCode" class="layui-input" />
+                    <input type="text" name="partsCode" id="partsCode" class="layui-input" value=""/>
                 </div>
             </div>
             <div class="layui-input-inline">
@@ -110,7 +110,7 @@
             <div class="layui-input-inline">
                 <label for="" class="layui-form-label">配件名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="" id="partsName" class="layui-input" />
+                    <input type="text" name="" id="partsName" class="layui-input" value=""/>
                 </div>
             </div>
             <div class="layui-input-inline">
@@ -133,47 +133,80 @@
                 </caption>
                 <tbody>
                     <tr>
-                        <td>规格 *</td>
-                        <td><input type="text" name="" id="partsSpec" class="layui-input" placeholder="请输入规格"></td>
-                        <td>型号 *</td>
-                        <td><input type="text" name="" id="partsModel" class="layui-input" placeholder="请输入型号"></td>
-                        <td>品牌 *</td>
-                      	<td>
-                      		<!-- <input type="text" name="" id="brand" class="layui-input" placeholder="请输入品牌"> -->
-                      		<select class="layui-select" id="partsBrandId">
-								<option value="1" selected>品牌1</option>
-								<option value="2">品牌2</option>
-							</select>
-						</td>
+                        <td class="common">规格 *</td>
+                        <td class="common"><input type="text" name="" id="partsSpec" class="layui-input" placeholder="请输入规格" value=""></td>
+                        <td class="common">型号 *</td>
+                        <td class="common"><input type="text" name="" id="partsModel" class="layui-input" placeholder="请输入型号" value=""></td>
+                        <td class="common">品牌 *</td>
+                        <td class="common partsBrands">
+                            <select class="layui-select">
+                                        <option value="1" selected>品牌1</option>
+                                        <option value="2">品牌2</option>
+                                    </select>
+                        </td>
+                    </tr>
+                    <tr class="common">
+                        <td class="common">价格</td>
+                        <td class="common"><input type="text" name="" id="price" class="layui-input" placeholder="请输入价格" value=""></td>
+                        <td class="common">折扣</td>
+                        <td class="common"><input type="text" name="" id="discount" class="layui-input" placeholder="请输入折扣" value=""></td>
+                        <td class="common">现价</td>
+                        <td class="common"><input type="text" name="" id="curPrice" class="layui-input" placeholder="请输入现价" value=""></td>
+                    </tr>
+                    <tr class="common">
+                        <td class="common">产地</td>
+                        <td class="common"><input type="text" name="" id="origin" class="layui-input" placeholder="请输入产地" value=""></td>
+                        <td class="common">厂家</td>
+                        <td class="common"><input type="text" name="" id="partsFactory" class="layui-input" placeholder="请输入厂家" value=""></td>
+                        <td class="common">保质期</td>
+                        <td class="common"><input type="text" name="" id="shelfLife" class="layui-input" placeholder="请输入保质期" value=""></td>
                     </tr>
                     <tr class="attrExtra">
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                        <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
+                        <td class="common">单位</td>
+                        <td class="common"><input type="text" name="" id="partsUnit" class="layui-input" placeholder="请输入单位" value=""></td>
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+                        </td>
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+                        </td>
+                    </tr>
+                    <tr class="attrExtra">
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+                        </td>
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+                        </td>
+                        <td colspan="2" class="paramGroup">
+                            <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+                            <span></span>
+                            <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <!-- 新增商品中的商品图片 -->
         <p class="uploadImgTitle">上传图片</p>
-        <div class="uploadImg layui-form">
+        <div class="uploadImg">
             <!-- 注意： -->
             <!-- 1。 每个img标签的id都不一样，新出现的图片id要重新给定一个唯一值 -->
             <!-- 2。 每个inpug标签的id也都不一样，新出现的图片上传框id也要重新给定一个唯一值 -->
             <!-- 3。 如果img的id和input的id重新定义了，请在js中的layui.upload方法中同步更改 -->
             <div class="siteUpload">
                 <img id="commodityImgUrl1" src="">
-                <div>
+                <div class="layui-box layui-upload-button">
                     <input type="file" name="image" id="commodityImg1" class="layui-upload-file">
-                </div>
-            </div>
-            <div class="siteUpload">
-                <img id="commodityImgUrl2" src="">
-                <div>
-                    <input type="file" name="image" id="commodityImg2" class="layui-upload-file">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
                 </div>
             </div>
         </div>

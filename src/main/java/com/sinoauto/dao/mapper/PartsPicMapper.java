@@ -1,5 +1,7 @@
 package com.sinoauto.dao.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Param;
@@ -11,6 +13,16 @@ public interface PartsPicMapper {
 
 	@Select("select url from hqls_parts_pic where parts_id = #{1} order by sorting limit 0,1")
 	public String getFirstUrlByPartsId(Integer partsId);
+	
+	/**
+	 *  查询配件对应的图片
+	 * 	@User liud
+	 * 	@Date 2017年8月21日下午2:27:57
+	 * 	@param partsId
+	 * 	@return
+	 */
+	@Select("select * from hqls_parts_pic where parts_id = #{1} order by sorting")
+	public List<HqlsPartsPic> findPartsPicsByPartsId(Integer partsId);
 	
 	/**
 	 *  新增商品图片

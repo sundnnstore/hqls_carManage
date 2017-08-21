@@ -76,6 +76,34 @@
     padding-left: 0;
 }
 
+.modelTableContainer .common {
+    width: calc(100% / 6);
+}
+
+.modelTableContainer .paramGroup {
+    position: relative;
+}
+
+.modelTableContainer .paramGroup input {
+    width: calc(50% - 6px);
+}
+
+.modelTableContainer .paramGroup input:first-child {
+    float: left;
+}
+
+.modelTableContainer .paramGroup input:last-child {
+    float: right;
+}
+
+.modelTableContainer .paramGroup span {
+    height: 49px;
+    border-left: 1px solid #e2e2e2;
+    position: absolute;
+    left: 50%;
+    top: 0px;
+}
+
 .modelTableContainer .newParam {
     display: block;
     width: 20px;
