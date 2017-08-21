@@ -24,13 +24,19 @@
 }
 
 .All-order-list {
-	border: 1px solid #e2e2e2;
+	/* border: 1px solid #e2e2e2; */
 	/*width: -webkit-fit-content;*/
 	min-width: 780px;
-	background-color: #f1f1f1;
+	/* background-color: #f1f1f1; */
 	margin: 10px 0px;
 }
 
+.All-order-list tr th{
+	border: 1px solid #e2e2e2;
+}
+.All-order-list tr td{
+	border: 1px solid #e2e2e2;
+}
 
 
 .mylayui-item {
@@ -48,6 +54,7 @@
 .jclogistics span ,.logisList span{
 	font-size: 20px;
 	padding: 2px 5px;
+
 }
 .logisList{
 	position: relative;
@@ -62,3 +69,13 @@
 	display: inline-block;
 	/* margin-left: 200px; */
 }
+.logisList-content div span:last-child{
+	    word-wrap: break-word;
+    display: inline-block;
+    width: 570px;
+}
+.logisList-content div span:first-child{
+	    vertical-align: top;
+    margin-top: 5px;
+    display: inline-block
+} 
