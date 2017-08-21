@@ -28,11 +28,15 @@ public interface UserMapper {
 	@Update("UPDATE hqls_user SET is_useable= " + " CASE is_useable " + " WHEN 0 THEN 1 " + " WHEN 1 THEN 0 " + "END " + "WHERE user_id = #{1}")
 	public int updateUserStatus(Integer userId);
 
-	@Update("UPDATE hqls_user set mobile=#{account} where user_id = #{userId}")
-	public String changeAccount(@Param("account") String account, @Param("userId") Integer userId);
-	
 	@Select("select * from hqls_user where user_id = (select user_id from hqls_user_store where store_id = #{1} and is_contact = 1 limit 1)")
 	public HqlsUser getUserByStoreId(Integer storeId);
+	
+	@Select("select mobile from hqls_user where user_id = #{userId}")
+	public String getUserByUserId(@Param("userId") Integer userId);
+	
+	@Update("UPDATE hqls_user set mobile=#{newMobile} where user_id = #{userId}")
+	public int updateUserByUserId(@Param("newMobile") String newMobile,@Param("userId") Integer userId);
+	
 	
 	
 	

@@ -236,7 +236,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 				 "countyId":$("#county_search").val(), 
 				 "pageIndex":pageIndex,
 				 "pageSize":pageSize},
-    	success : function(data){
+    	success : function(data){                                                                                                                                                                                                                          
     		comboTable(data,pageIndex);
     		}
     }); 

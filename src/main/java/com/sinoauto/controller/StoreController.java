@@ -18,6 +18,7 @@ import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.StoreService;
+import com.sinoauto.service.UserService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 public class StoreController {
 	@Autowired
 	private StoreService storeService;
+	@Autowired
+	private UserService userService;
 	
 	
 	@ApiOperation(value="根据当前登陆人查询门店信息/切换门店账号",notes="tangrx")
@@ -111,8 +114,9 @@ public class StoreController {
 	
 	@ApiOperation(value = "修改账号",notes = "tangrx")
 	@PostMapping("changeaccount")
-	public ResponseEntity<RestModel<String>> changeAccount(@RequestHeader(value = "Authorization") String Authorization,@RequestParam(value="account") String account){
-		return storeService.changeAccount(Authorization,account);
+	public ResponseEntity<RestModel<String>> changeAccount(@RequestHeader(value = "Authorization") String Authorization,
+															@RequestParam(value="newMobile") String newMobile){
+		return userService.updateUserAccount(Authorization, newMobile);
 		
 	}
 	
@@ -134,6 +138,7 @@ public class StoreController {
 	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
 		return storeService.changeStoreByStoreId(Authorization,storeInfoDto);
 	}
+	
 	
 	
 }
