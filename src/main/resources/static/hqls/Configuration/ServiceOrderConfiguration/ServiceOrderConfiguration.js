@@ -133,6 +133,23 @@ layui.use(['jquery', 'layer','laypage'], function() {
 		initPage(res.totalCount,pageIndex);
 	}
 	
+	$("#service_order_file").on('change',function(){
+		upload();
+	});
+	function upload(){
+		var formObj =$("#hq_form"); //上传 form
+		var imgObj=$("#service_order_file")[0]; //上传 图片对象
+		var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
+		if(getImgUrl != null && getImgUrl != ''){
+			$("#service_order_url").val(getImgUrl);
+			layer.msg("上传成功！");
+			$($(".mylayui-img")[0]).attr("src",getImgUrl);
+			$($(".mylayui-img")[0]).css("display","block");
+		}else{
+			layer.msg("上传失败！");
+		}
+	}
+	
 	function changeStatus(serviceTypeId){
 		let flag = 0;
 		$.ajax({
@@ -149,10 +166,4 @@ layui.use(['jquery', 'layer','laypage'], function() {
 	
 })
 
-function upload(){
-	var formObj =$("#hq_form"); //上传 form
-	var imgObj=$("#service_order_file")[0]; //上传 图片对象
-	var getImgUrl = uploadImg(formObj,imgObj); //可以加上图片的显示位置
-	$("#service_order_url").val(getImgUrl);
-}
 
