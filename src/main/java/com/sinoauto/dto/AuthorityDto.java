@@ -47,4 +47,17 @@ public class AuthorityDto {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return this.pId.hashCode()+this.id.hashCode()+this.name.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		AuthorityDto o = (AuthorityDto) obj;
+		return o.pId == this.pId && o.id == this.id && o.name.equals(this.name);
+	}
+	
+	
+
 }
