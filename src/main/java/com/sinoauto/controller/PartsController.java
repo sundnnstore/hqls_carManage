@@ -11,12 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
+import com.sinoauto.dao.bean.HqlsPartsBrand;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.service.PartsBrandService;
 import com.sinoauto.service.PartsService;
 
 import io.swagger.annotations.Api;
@@ -28,6 +30,9 @@ public class PartsController {
 
 	@Autowired
 	private PartsService partsService;
+	
+	@Autowired
+	private PartsBrandService partsBrandService;
 	
 	@ApiOperation(value = "按配件类型查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbytype")
@@ -79,5 +84,11 @@ public class PartsController {
 	@PostMapping("updateparts")
 	public ResponseEntity<RestModel<Integer>> updateParts(@RequestBody PartsOperDto partsOperDto){
 		return partsService.updateParts(partsOperDto);
+	}
+	
+	@ApiOperation(value = "查询配件所有品牌", notes = "liud")
+	@GetMapping("findpartsbrands")
+	public ResponseEntity<RestModel<List<HqlsPartsBrand>>> findPartsBrands(){
+		return partsBrandService.findPartsBrands();
 	}
 }
