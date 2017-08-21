@@ -169,7 +169,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	    	success : function(data){
 	    		if(0 == data.errcode){
 	    			layer.msg("编辑成功！");
-	    			window.location.reload;
+	    			window.location.reload();
 	    		}
 	    		
 	    	},
@@ -239,7 +239,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	success : function(data){
     		comboTable(data,pageIndex);
     		}
-    		
     }); 
 }
 	
