@@ -10,9 +10,9 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsLogisticsLog" useGeneratedKeys="true" keyProperty="logId">
 	    INSERT INTO hqls_logistics_log (
-	        remark, purchase_order_id
+	        remark, purchase_order_id, create_time
 	    ) VALUES (
-	        #{remark}, #{purchaseOrderId}        
+	        #{remark}, #{purchaseOrderId}, now()        
 	    )
 	</insert>
 
