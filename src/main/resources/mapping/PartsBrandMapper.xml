@@ -26,4 +26,9 @@
 		   parts_brand_id = #{partsBrandId}
 	</update>
 	
+	<!-- 查询所有品牌信息 -->
+	<!-- <select id="findPartsBrands" resultType="com.sinoauto.dao.bean.HqlsPartsBrand">
+		
+	</select> -->
+	
 </mapper>

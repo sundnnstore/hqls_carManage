@@ -140,6 +140,7 @@ public class ServiceOrderService {
 			if (customer == null) {
 				customer = new HqlsCustomer();
 				customer.setCustomerName(order.getCustomerName());
+				customer.setAvatarUrl(order.getAvatarUrl());
 				customer.setMobile(order.getCustomerMobile());
 				customerMapper.insert(customer);
 			}

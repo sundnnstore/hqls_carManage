@@ -88,12 +88,11 @@ public class PartsService {
 				
 			}
 			partsDtoPage =(Page<PartsDto>)partsDtos;
-			return RestModel.success(partsDtoPage,(int)partsDtoPage.getTotal());
 		} catch (Exception e) {
-			//事物处理
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e);
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询信息异常");
 		}
-		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询信息异常");
+		return RestModel.success(partsDtoPage,(int)partsDtoPage.getTotal());
 	}
 	
 	/**

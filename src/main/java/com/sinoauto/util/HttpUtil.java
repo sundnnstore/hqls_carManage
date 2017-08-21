@@ -65,7 +65,7 @@ public class HttpUtil {
 			result = post(url, headers, params, jsonData);
 			break;
 		case "PUT":
-			result = put(url, headers, jsonData);
+			result = put(url, headers, params, jsonData);
 			break;
 		case "PATCH":
 			result = patch(url, headers, jsonData);
@@ -127,17 +127,42 @@ public class HttpUtil {
 		return getResult(httpPost);
 	}
 
-	private static RespEntity put(String url, Map<String, Object> headers, String data) {
+	private static RespEntity put(String url, Map<String, Object> headers, Map<String, Object> params, String data) {
 		HttpPut httpPost = new HttpPut(url);
-		for (Map.Entry<String, Object> param : headers.entrySet()) {
-			httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
+		if (null != headers) {
+			for (Map.Entry<String, Object> header : headers.entrySet()) {
+				httpPost.addHeader(header.getKey(), String.valueOf(header.getValue()));
+			}
 		}
-		StringEntity entity = new StringEntity(data, "UTF-8");
-		entity.setContentType("application/json");
-		entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, TRANSTYPE_JSON));
-		httpPost.setEntity(entity);
+		if (null != params) {
+			ArrayList<NameValuePair> pairs = covertParams2NVPS(params);
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				return RespEntity.failure(e.getMessage());
+			}
+		}
+		if (null != data) {
+			StringEntity entity = new StringEntity(data, "UTF-8");
+			entity.setContentType("application/json");
+			entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, TRANSTYPE_JSON));
+			httpPost.setEntity(entity);
+		}
 		return getResult(httpPost);
 	}
+
+	// private static RespEntity put(String url, Map<String, Object> headers, String data) {
+	// HttpPut httpPost = new HttpPut(url);
+	// for (Map.Entry<String, Object> param : headers.entrySet()) {
+	// httpPost.addHeader(param.getKey(), String.valueOf(param.getValue()));
+	// }
+	// StringEntity entity = new StringEntity(data, "UTF-8");
+	// entity.setContentType("application/json");
+	// entity.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, TRANSTYPE_JSON));
+	// httpPost.setEntity(entity);
+	// return getResult(httpPost);
+	// }
 
 	private static RespEntity patch(String url, Map<String, Object> headers, String data) {
 		HttpPatch httpPost = new HttpPatch(url);
@@ -150,7 +175,7 @@ public class HttpUtil {
 		httpPost.setEntity(entity);
 		return getResult(httpPost);
 	}
-	
+
 	private static RespEntity delete(String url, Map<String, Object> headers, String data) {
 		HttpDelete httpPost = new HttpDelete(url);
 		for (Map.Entry<String, Object> param : headers.entrySet()) {

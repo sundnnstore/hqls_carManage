@@ -1,4 +1,4 @@
-layui.use(['layer', 'form', 'laypage', 'upload'], function() {
+layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     var $ = layui.jquery,
         layer = layui.layer,
         form = layui.form,
@@ -14,17 +14,24 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 	        var method = $(this).data('method');
 	        if (method == 'addCommodity') {
 	            title = '新增';
+	            //清空数据
+	            $("#commodityBox input").each(function(){
+	            	$(this).attr("value","");
+	            });
 	        } else if (method == 'view') {
 	            title = '查看';
 	            $('#commodityBox input,#commodityBox select').each(function(elem) {
 	                $(this).attr('disabled', 'disabled');
-	            })
+	            });
+	            Detailview();
 	        } else if (method == 'edit') {
 	            title = '编辑';
+				//编辑方法
+	            Detailview();
 	        }
 	        method && layer.open({
 	            type: 1,
-	            title: '新增', // 标题
+	            title: title, // 标题
 	            skin: 'layui-layer-lan', //弹框主题
 	            shade: 0,
 	            area: '800px', // 宽高
@@ -32,25 +39,31 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 	            btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
 	            btnAlign: 'c', //按钮居中
 	            yes: function(index, layero) {
+	            	switch(title){
+	            		case "新增":
+	            			addPart();
+	            			break;
+	            		case "编辑":
+	            			editPart();
+	            			break;
+	            		case "查看":
+	            			break;
+	            		default:
+	            			alert("未知标题");
+	            			break;	
+	            	}
 	                // 校验规格、型号、品牌必填
 	                var titleInfo; // 校验提示信息
-	                if (!$('#partsSpec').val()) {
+	                if (!$('#spec').val()) {
 	                    titleInfo = '请输入规格参数，该项必填！';
-	                } else if (!$('#partsModel').val()) {
+	                } else if (!$('#model').val()) {
 	                    titleInfo = '请输入型号参数，该项必填！';
-	                } else if (!$('#partsBrandId').val()) {
+	                } else if (!$('#brand').val()) {
 	                    titleInfo = '请输入品牌参数，该项必填！';
 	                }
 	                titleInfo && layer.msg(titleInfo);
 
 	                !titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
-	                
-	                // 新增商品
-	                // addPart();
-	                // 编辑商品
-	                alert("编辑显示");
-	                edidPart();
-	               
 	            },
 	            btn2: function(index, layero) {
 	                // console.log(layero);
@@ -96,23 +109,33 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 	        });
 	    });
 
-	// 在商品参数项末尾新加一行新的参数框
-    $('#addOption').click(function() {
-        var html = `
-            <tr>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入参数名称"></td>
-                <td><input type="text" name="" class="layui-input" placeholder="请输入内容"></td>
-            </tr>
-        `;
-        $('.modelTableContainer tbody').append(html);
-    })
+	    // 在商品参数项末尾新加一行新的参数框
+	    $('#addOption').click(function() {
+	        var html = `
+	            <tr class="attrExtra">
+	                <td colspan="2" class="paramGroup">
+	                    <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+	                    <span></span>
+	                    <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+	                </td>
+	                <td colspan="2" class="paramGroup">
+	                    <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+	                    <span></span>
+	                    <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+	                </td>
+	                <td colspan="2" class="paramGroup">
+	                    <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+	                    <span></span>
+	                    <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+	                </td>
+	            </tr>
+	        `;
+	        $('.modelTableContainer tbody').append(html);
+	    })
 
-    //初次进入页面的数据
-    
+    /**
+     * 页面加载默认显示
+     */
     getData(1);
 	$("#searchCommodity").click(function(){
 		getData(1);
@@ -125,21 +148,23 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
      * @returns
      */
     function initPage(totalCount,pageIndex){
-		//page
+    	if(totalCount<=pageSize) totalCount=pageSize+1;
+    	//page
 		laypage({
 			cont: 'pages',
-			pages: Math.ceil(totalCount/pageSize), // 总的分页数
+			pages:Math.ceil(totalCount/pageSize), // 总的分页数
 			groups: 5, // 展示的页数
 			first: 1,
 			last: Math.ceil(totalCount/pageSize),
 			skip: true,
 			curr:pageIndex,
 			jump: function(obj, first) {
+				//alert("初始化成功"+obj.curr);
 				if(!first) {
 					getData(obj.curr);
 				}
 			}
-		})
+		});
 		
 	}
     
@@ -163,7 +188,7 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 				"pageIndex":pageIndex
 				},
 			success : function(data){
-				(data,pageIndex);
+				comboTable(data,pageIndex);
 			}
 		});
 	}
@@ -185,18 +210,18 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
 					'<td>'+tr.pName+'</td>'+
 					'<td>'+tr.partsName+'</td>'+
 					'<td>'+tr.partsCode+'</td>'+
-					'<td><button id="addCommodity" class="layui-btn" data-method="addCommodity" data-type="t">查看</button></td>'+
-					'<td><button id="addCommodity" class="layui-btn layui-btn-normal" data-method="addCommodity" data-type="t">编辑</button></td>'+
-					'<td>';
+					'<td><button id="view" data-method="view" class="layui-btn">查看</button>'+
+					'<button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>'+
+					'';
 			if(tr.is_usable){
-				trs += '<button id="isUse" class="layui-btn layui-btn-primary">下架</button>';
+				trs += '<button id="isUse" class="layui-btn layui-btn-warm">下架</button>';
 			}else{
-				trs += '<button class="layui-btn layui-btn-normal uORd" >上架</button>';
+				trs += ' <button id="isUse" class="layui-btn layui-btn-primary">上架</button>';
 			}
 			trs +='</td></tr>'
 		}
-		$("#service_tb").html(trs);
-		initPage(res.totalCount,pageIndex);
+		$(".parts_info").html(trs);
+		initPage(res.totalCount,pageIndex); 
     }
     
     /**
@@ -205,31 +230,6 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     function addPart(){
     	var partsAttrExtrs = attrExtra(); //扩展属性
     	var partsPics = imgs(); //图片集合
-//    	var dataJson ={
-// 				  //"curPrice": $("").val(),
-// 				  //"discount": $("").val(),
-// 				  //"isUsable": $("").val(),
-// 				  //"origin": $("").val(),
-// 				  //"partsAttrExtrs":partsAttrExtrs,
-//    			  //"partsFactory": $("").val(),
-//				  //"partsId": $("").val(),
-// 				  "partsBrandId":$("#partsBrandId").val(),  
-// 				  "partsCode":$("#partsCode").val(),
-// 				  "partsModel":$("#partsModel").val(),
-// 				  "partsName":$("#partsName").val(),
-// 				  "partsPics":partsPics,
-// 				  "partsSpec":$("#partsSpec").val()
-// 				  //"partsType": $("").val(),
-// 				  //"partsTypeId": $("").val(),
-// 				  //"partsUnit": $("").val(),
-// 				  //"pid": $("").val(),
-// 				  //"price": $("").val(),
-// 				  //"remark": $("").val(),
-// 				  //"shelfLife": $("").val(),
-// 				  //"typeName": $("").val()
-// 			
-//    	};
-    	
     	var dataJson="{\"partsBrandId\":"+$("#partsBrandId").val()+"," +
     			"\"partsCode\":\""+$("#partsCode").val()+"\"," +
     					"\"partsModel\":\""+$("#partsModel").val()+"\"," +
@@ -263,11 +263,7 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     /**
      * 编辑商品
      */
-    function edidPart(){
-    	alert("编辑页面");
-    	//查看商品
-    	Detailview();
-    	
+    function editPart(){
     	//编辑商品
     	$.ajax({
 			url : "http://localhost:8881/updateparts",
@@ -302,40 +298,59 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
      * @returns
      */
     function Detailview(){
-    	alert("查看明细页面");
+    	//var data = {"partsId":1};//$("#partsId").val()
+    	//data=JSON.stringify(data);
     	$.ajax({
 			url : "http://localhost:8881/getpartsdetail",
 			type : "get",
 			async : false,
-			data : {"partsId":$("#partsId").val()
-			},
+			data :{"partsId":1},
 			success : function(data){
-				alert(data);
-				displayHtml(data);
+				displayHtml(data,data.result.partsBrandId);
+			},
+			error:function(data){
+				alert("查看明细失败返回值"+data.errmsg);
 			}
 		});
     }
-    
-    function showDetail(data){
-    	var pics="",piclen=data.partsPicList.length=="undefined"?0:data.partsPicList.length; //图片
-    	var attrExtra="",attrlen=data.partsAttrExtrs.length=="undefined"?0:data.partsAttrExtrs.length; //配件的动态属性
+    /**
+     * 显示配件明细数据
+     * @param data
+     * @returns
+     */
+    function displayHtml(data,partsBrandId){
+    	var piclen,attrlen;
+    	if(data.result.partsPicList==null){
+    		piclen=0;
+    	}
+    	if(data.result.partsAttrExtrs==null){
+    		attrlen=0;
+    	}
+    	var pics=""; //图片
+    	var attrExtra=""; //配件的动态属性
     	//get data
-    	$("#partsCode").val(data.partsCode);
-    	$("#partsName").val(data.partsName);
-    	$("#partsModel").val(data.partsModel);
-    	$("#partsSpec").val(data.partsSpec);
-    	$("#partsBrandName").val(data.partsBrandName);
-    	//显示父类行
-    	
+    	$("#partsCode").attr("value",data.result.partsCode);
+    	$("#partsName").attr("value",data.result.partsName);
+    	$("#partsModel").attr("value",data.result.partsModel);
+    	$("#partsSpec").attr("value",data.result.partsSpec);
+    	$("#price").attr("value",data.result.price);
+    	$("#discount").attr("value",data.result.discount);
+    	$("#curPrice").attr("value",data.result.curPrice);
+    	$("#origin").attr("value",data.result.origin);
+    	$("#partsFactory").attr("value",data.result.partsFactory);
+    	$("#shelfLife").attr("value",data.result.shelfLife);
+    	$("#partsUnit").attr("value",data.result.partsUnit);
+    	//$("#partsBrandName").val(data.result.partsBrandName);
+    	//清空图片和扩展属性
     	$("#uploadImg").html(""); //清空图片上传div
     	$(".attrExtra").html("");//清空动态扩展属性的div
     	//显示图片
     	for (var int = 0; int < piclen; int++) {
     		pics = `
                <div class="siteUpload">
-	                <img id="commodityImgUrl${int}" src="../../../images/icon1.jpg">
+	                <img id="commodityImgUrl${int}" src="">
 	                <div>
-	                    <input type="file" name="image" id="commodityImg${int}">
+	                    <input type="file" name="image" id="commodityImg${int}" value="">
 	                </div>
     			</div>
             `;
@@ -345,15 +360,21 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     	for (var int = 0; int < attrlen; int++) {
 			//清空动态属性框,然后拼接显示
     		attrExtra = `
-                <tr>
-                    <td><input type="text" name="${attrlen[int].attrKey}" value="${attrlen[int].attrKey}" class="layui-input attrkey attrkey${int}" placeholder="请输入参数名称"></td>
-                    <td><input type="text" name="${attrlen[int].attrValue}" value="${attrlen[int].attrValue}" class="layui-input attrvalue attrvalue${int} " placeholder="请输入内容"></td>
-                </tr>
+                <td colspan="2" class="paramGroup">
+	                    <input type="text" name="" class="layui-input paramName" placeholder="请输入参数名称">
+	                    <span></span>
+	                    <input type="text" name="" class="layui-input paramContent" placeholder="请输入内容">
+	            </td>
             `;
 		}
     	//动态属性追加到指定位置
     	$("#uploadImg").html(pics);
     	$(".attrExtra").html(attrExtra);
+    	
+    	/**
+    	 * 配件品牌显示
+    	 */
+    	partsBrand(partsBrandId);
     }
     
     /**
@@ -365,21 +386,64 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     }
     
     /**
-     * 父类查询
+     * 菜单树
      * @returns
      */
     function partsParentType(){
     	
     }
     
+	/**
+	 * 查询配件的品牌
+	 * @param partsBranId  配件对应的ID
+	 * @returns
+	 */
+	function partsBrand(partsBranId){
+    	$.ajax({
+			url : "http://localhost:8881/findpartsbrands",
+			type : "get",
+			async : false,
+			success : function(data){
+				if(partsBranId===undefined){
+					displayPartsBrand(data);
+				}else{
+					displayPartsBrand(data,partsBranId);
+				}
+				
+			}
+		});
+    }
+	
     /**
-     * 封装所有图片集合的json
+     * 显示配件品牌
+     * @returns
+     */
+    function displayPartsBrand(data,partsBrandId){
+    	//清空
+    	$(".partsBrands").html("");
+    	var html=`<select class="layui-select">`;
+    	var brand= data.result==null?0:data.result.length;
+    	for (var i = 0; i < brand; i++) {
+    		//alert("当前品牌ID"+data.result[i].partsBrandId+"\n配件对应的品牌ID"+partsBrandId);
+    		if(partsBrandId==data.result[i].partsBrandId){
+    			html+=`<option value="${data.result[i].partsBrandId}" selected>${data.result[i].partsBrandName}</option>`;
+    		}else{
+    			html+=`<option value="${data.result[i].partsBrandId}">${data.result[i].partsBrandName}</option>`;
+    		}
+		}
+    	html+=`</select>`;
+    	$(".partsBrands").html(html);
+    }
+    
+    /**
+     * 封装
+     * 	新增,或者编辑图片集合的json
      * @returns
      */
     function imgs(){
     	var imgs = "[",flag=1;
     	var len = $(".uploadImg img").length;
-    	$(".uploadImg img").each(function(i){
+    	$(".uploadImg input").each(function(i){
     		if(i==(len-1)){
     			imgs+="{\"sorting\":"+flag+",\"url\":\""+$(this).attr("url")+"\"}";
     		}else{
@@ -398,11 +462,11 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     function attrExtra(){
     	var attrExtra ="[",flag=1;
     	var len =$(".attrExtra td").length;
-    	$(".attrExtra td").each(function(i){
+    	$(".attrExtra paramGroup").each(function(i){
     		if(i==(len-1)){
-    			attrExtra += "{\"attrKey\":\""+$(".attrkey").val()+"\",\"attrValue\":\""+$(".attrValue").val()+"\"}";
+    			attrExtra += "{\"attrKey\":\""+$(".paramName").val()+"\",\"paramContent\":\""+$(".attrValue").val()+"\"}";
     		}else{
-    			attrExtra += "{\"attrKey\":\""+$(".attrkey").val()+"\",\"attrValue\":\""+$(".attrValue").val()+"\"},";
+    			attrExtra += "{\"attrKey\":\""+$(".paramName").val()+"\",\"paramContent\":\""+$(".attrValue").val()+"\"},";
     		}
     	});
     	attrExtra+="]";
@@ -410,21 +474,29 @@ layui.use(['layer', 'form', 'laypage', 'upload'], function() {
     }
     
     
-    /**
-     * 封装ajax请求
-     * @param {}
-     * @returns
-     */
-    function ajax(obj){
-    	console.log(obj.url);
-    	$.ajax({
-			url : obj.url,
-			type : obj.method,
-			async : false,
-			data : obj.data,
-			success : function(data){
-				return data;
-			}
-		});
-    }
 });
+
+//var dataJson ={
+// //"curPrice": $("").val(),
+// //"discount": $("").val(),
+// //"isUsable": $("").val(),
+// //"origin": $("").val(),
+// //"partsAttrExtrs":partsAttrExtrs,
+////"partsFactory": $("").val(),
+////"partsId": $("").val(),
+// "partsBrandId":$("#partsBrandId").val(),  
+// "partsCode":$("#partsCode").val(),
+// "partsModel":$("#partsModel").val(),
+// "partsName":$("#partsName").val(),
+// "partsPics":partsPics,
+// "partsSpec":$("#partsSpec").val()
+// //"partsType": $("").val(),
+// //"partsTypeId": $("").val(),
+// //"partsUnit": $("").val(),
+// //"pid": $("").val(),
+// //"price": $("").val(),
+// //"remark": $("").val(),
+// //"shelfLife": $("").val(),
+// //"typeName": $("").val()
+//
+//};

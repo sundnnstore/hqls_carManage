@@ -1,10 +1,11 @@
 package com.sinoauto.service;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,11 +82,11 @@ public class UserService {
 			List<HqlsAuthority> firstAuthority = authorityMapper.findFirstAuthorities(user.getUserId(), isBack);
 			List<HqlsAuthority> secondAuthority = authorityMapper.findSecondAuthorities(user.getUserId(), isBack);
 			// 组合map
-			Map<HqlsAuthority, Set<HqlsAuthority>> menuMap = new HashMap<>();
-			Map<String, Set<HqlsAuthority>> returnMap = new HashMap<>();
+			Map<HqlsAuthority, Set<HqlsAuthority>> menuMap = new TreeMap<>();
+			Map<String, Set<HqlsAuthority>> returnMap = new LinkedHashMap<>();
 			for (HqlsAuthority menu : firstAuthority) {
 				if (!menuMap.containsKey(menu)) {
-					Set<HqlsAuthority> menuSet = new HashSet<>();
+					Set<HqlsAuthority> menuSet = new TreeSet<>();
 					for (HqlsAuthority menu2 : secondAuthority) {
 						if (menu2.getPid() == menu.getAuthorityId()) {
 							menuSet.add(menu2);

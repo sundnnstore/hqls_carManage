@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
+import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
@@ -132,4 +133,14 @@ public interface PartsMapper {
 	 */
 	@Select("select * from hqls_parts_type where pid=#{pid}")
 	public List<PartsTreeRecursionDto> partsTreeRecursion(@Param("pid")Integer pid);
+	
+	/**
+	 * 根据配件ID查询配件的扩展属性集合
+	 * 	@User liud
+	 * 	@Date 2017年8月21日下午2:33:46
+	 * 	@param partId
+	 * 	@return
+	 */
+	@Select("select * from hqls_parts_attr_extr where parts_id=#{partId}")
+	public List<HqlsPartsAttrExtr> findPartsAttrExtrsByPartsId(@Param("partId")Integer partId);
 }
