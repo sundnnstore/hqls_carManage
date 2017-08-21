@@ -113,11 +113,13 @@
                             </select>
                         </div>
                         <input type="text" name="" id="address" class="layui-input" placeholder="请输入门店地址">
+                        <input type="button"  id="dw" value="定位" class="layui-btn">
+                     
                     </td>
                 </tr>
                 <tr>
                     <td>门店位置</td>
-                    <td  ><span id="jwd"></span></td>
+                    <td  ><span id="jwd"></span><input type="hidden" id="slat"><input type="hidden" id="slng"></td>
                 </tr>
                 <tr>
                     <td>图片上传</td>
@@ -195,26 +197,5 @@
 </div>
 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>
-<script type="text/javascript" async>
-function getlocation(adder){
-	AMap.plugin('AMap.Geocoder',function() {
-		var geocoder = new AMap.Geocoder({
-			city: "全国", //城市，默认：“全国”
-			radius:500
-		});
-	geocoder.getLocation(adder, function(status, result) {
-		if(status == 'complete' && result.geocodes.length) {
-			//marker.setPosition(result.geocodes[0].location);
-			/* map.setCenter(marker.getPosition())
-			document.getElementById('message').innerHTML = ''; */
-			return result;
-		} else {
-		return "fail";
-		}
-	})
 
-	});
-	
-}
-console.log(getlocation("南京"));
-</script>
+
