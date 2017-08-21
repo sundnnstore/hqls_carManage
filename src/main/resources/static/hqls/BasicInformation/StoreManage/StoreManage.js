@@ -115,7 +115,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btnAlign: 'c', // 按钮居中
             yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
                 // console.log(layero);
-            		if(temp == 'addstore'){// 添加门店
+            		if(temp == 'addStore'){// 添加门店
             			addStore(pid);
             		}else if(temp == 'edit'){// 门店编辑
             			editStore();
