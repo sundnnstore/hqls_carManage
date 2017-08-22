@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "用户操作")
 @RestController
 public class UserController {
+	
+	public static Logger LOG = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
 	private UserService userService;
@@ -39,6 +43,7 @@ public class UserController {
 	@PostMapping("login")
 	public ResponseEntity<RestModel<UserLoginDto>> login(@RequestParam(value = "userName", required = true) String userName,
 			@RequestParam(value = "passWord", required = true) String passWord) {
+		LOG.info("进入登录------"+userName+"=="+passWord);
 		return userService.login(userName, passWord);
 	}
 
