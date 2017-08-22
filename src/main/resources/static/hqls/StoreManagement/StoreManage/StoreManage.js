@@ -117,7 +117,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                 // console.log(layero);
             		if(temp == 'addStore'){// 添加门店
             			addStore(pid,index);
-            			window.location.reload();
             		}else if(temp == 'edit'){
             			editStore(index);// 门店编辑
             		}
@@ -337,7 +336,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 				 "countyId":$("#county_search").val(), 
 				 "pageIndex":pageIndex,
 				 "pageSize":pageSize},
-    	success : function(data){                                                                                                                                                                                                                          
+    	success : function(data){ 
     		comboTable(data,pageIndex);
     		}
     }); 
