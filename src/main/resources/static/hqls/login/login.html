@@ -32,8 +32,7 @@
 								<input id="logpass" class="text" style="color: #FFFFFF !important; position:absolute; z-index:100;" value="" type="password" placeholder="请输入密码">
 							</div>
 							<div class="mb2">
-								<!-- <a class="act-but submit" href="#" id="login_button" style="color: #FFFFFF">登录</a> -->
-								<button class="act-but submit"  id="login_button" style="color: #FFFFFF">登录</button>
+								<a class="act-but submit" href="#" id="login_button" style="color: #FFFFFF">登录</a>
 							</div>
 					</div>
 				</div>
@@ -64,7 +63,7 @@
 						return ;
 					}
 					$.ajax({
-						url:"http://localhost:8881/login",
+						url:"http://42.159.202.20:8881/login",
 						type:"post",
 						async:false,
 						data:{"userName":$("#logname").val(),"passWord":$("#logpass").val()},
