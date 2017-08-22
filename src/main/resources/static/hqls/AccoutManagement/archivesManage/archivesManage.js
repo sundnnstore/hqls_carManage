@@ -5,12 +5,11 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
 
     var pageSize = 10;
     // 新增/编辑档案信息弹框
-    $('#myContent').on('click', 'button', function() {
+    $('.archives').on('click', 'button', function() {
         var othis = $(this), // 当前按钮元素
             method = othis.data('method'),
             title = '',
             content = '';
-        //layer.closeAll();
         if (method == 'addArchives') {
             title = '新增';
             content = '#archivesBox';
