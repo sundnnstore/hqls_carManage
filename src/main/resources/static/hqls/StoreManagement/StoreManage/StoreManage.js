@@ -25,7 +25,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	comboChlidren('city','county');
     });
     
-    findStore(1);// 初始化加载门店信息
+   
     
     // 门店节点弹框触发事件
     $('#myContent').on('click', 'button', function() {
@@ -320,6 +320,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         $('#storeForm')[0].reset();
     }
     
+    findStore(1);// 初始化加载门店信息
     $("#searchStore").on('click',function(){
     	findStore(1);
     });
@@ -479,8 +480,14 @@ $("body").on('click','.sea',function(){
     });
 });
 
-
+/**
+ * 初始化分页 
+ * @param totalCount 总页数
+ * @param pageIndex  页面索引
+ * @returns
+ */
 function initPage(totalCount,pageIndex){
+	if(totalCount<=pageSize) totalCount=pageSize+1;
 	// page
 	laypage({
 		cont: 'pages',
