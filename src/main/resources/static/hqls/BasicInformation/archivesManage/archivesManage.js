@@ -90,7 +90,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
      */
     function initRole() {
     	$.ajax({
-    		url: '/findallrole',
+    		url: 'http://localhost:8881/findallrole',
     		type: 'GET',
     		async: false,
     		success: function(data) {
@@ -120,7 +120,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     	var roleId = $('#role').val(),
     		userName = $('#name').val(),
     		mobile = $('#mobile').val();
-    	var	url = '/findusers';
+    	var	url = 'http://localhost:8881/findusers';
     	url += `?pageIndex=${pageIndex}&pageSize=${pageSize}&roleId=${roleId}&userName=${userName}&mobile=${mobile}`;
     	$.ajax({
     		url: url,
@@ -161,27 +161,35 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
      * 新增
      */
     $('body').on('click', '.layui-layer-btn0', function() {
-    	var roleIds = $('#roleName').val();
-    	console.log(roleIds);
-    		Param = {};
-    	Param.mobile = $('#mobile').val();
-    	Param.userName = $('#name').val();
-    	if (!roleIds) {
+    	var zTree = $.fn.zTree.getZTreeObj("roleTree"),
+    	nodes = zTree.getSelectedNodes(),
+    	roles = [];
+    	nodes.sort(function compare(a, b) { return a.id - b.id; });
+    	for (var i = 0, l = nodes.length; i < l; i++) {
+    		var role = {roleId: nodes[i].id};
+    		roles.push(role);
+    	}
+    	console.log(roles);
+    	var	userDto = {};
+    	userDto.mobile = $('input[name=add_mobile]').val();
+    	userDto.userName = $('input[name=add_name]').val();
+    	if (!roles || roles.length == 0) {
     		layer.msg('请添加角色');
     		return;
     	}
-    	roleIds.forEach(function(id, index, roleIds) {
-    		Param.roles = {roleId: id};
-    	});
+    	userDto.roles = roles;
+    	var data = JSON.stringify(userDto);
     	$.ajax({
-    		url: '/adduser',
-    		header: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm8iOiJscyIsImNsdCI6IndlYiIsIm9zIjoiMS4wIiwiZGlkIjoiMzQ4YzAzZTMtY2NhMC00MTJkLWJlMGEtZTg1MmU4MDU2NGUzIiwiaWQiOiI4NSJ9.Vh7iLY4yh66X3UlHlNWHkTZV_PTRuc6rLmQodcKuH2I',
+    		url: 'http://localhost:8881/adduser',
+    		headers: {'Authorization': localStorage.token},
     		type: 'POST',
-    		data: Param,
+    		contentType: "application/json; charset=UTF-8",
+    		data: data,
     		async: false,
     		success: function(data) {
     			if (data.errmsg == 'success') {
     				layer.msg('添加成功');
+    				search(1);
     			} else {
     				layer.msg('添加失败');
     			}
