@@ -4,7 +4,7 @@
     <!-- 门店信息搜索 && 添加门店 -->
     <div class="head">
         <div class="layui-input-inline">
-            <label for="first_title" class="layui-form-label">门店地址</label>
+            <label for="first_title" class="layui-form-label">门店名称</label>
             <div class="layui-input-block">
                 <input type="text" id="storeName_search" class="layui-input" />
             </div>
@@ -77,7 +77,6 @@
 </div>
 <!-- 弹框三：门店信息添加与编辑 -->
 <div id="storeInfoEdit" class="storeInfo">
-    <form id="storeForm">
     	<input type="hidden" id="storeId">
         <table class="layui-table">
             <!-- input框的name值请根据需要自行设置 -->
@@ -96,25 +95,19 @@
                 </tr>
                 <tr>
                     <td>门店地址</td>
-                    <td>
+                    <td class="addressBox">
                         <div class="layui-input-inline">
                             <select name="prov" class="layui-select" id="province" >
-                                
-                            </select>
-                        </div>
-                        <div class="layui-input-inline">
+                            </select>                        
                             <select name="city" class="layui-select" id="city" >
                                 <option value="">请选择市</option>
                             </select>
-                        </div>
-                        <div class="layui-input-inline">
                             <select name="area" class="layui-select" id="county">
                                 <option value="">请选择县</option>
                             </select>
                         </div>
                         <input type="text" name="" id="address" class="layui-input" placeholder="请输入门店地址">
-                        <input type="button"  id="dw" value="定位" class="layui-btn">
-                     
+                     	<input id="dw" class="layui-btn normal" value="定位" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -145,7 +138,6 @@
                 </tr>
             </tbody>
         </table>
-    </form>
 </div>
 <div id="storeInfoView" class="storeInfo">
     <form id="storeForm">
@@ -197,5 +189,4 @@
 </div>
 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>
-
 

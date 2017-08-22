@@ -13,6 +13,10 @@ public class CommonDto {
 
 	// 数据值
 	private String value;
+	
+	// 档案管理页面zTree用数据结构
+	private Integer id;
+	private String name;
 
 	public Integer getKey() {
 		return key;
@@ -28,5 +32,27 @@ public class CommonDto {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		if(id != null) {
+			this.id = id;
+		}
+		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		if(name != null) {
+			this.name = name;
+		}
+		
 	}
 }

@@ -40,7 +40,7 @@ public interface RoleMapper {
 	@Insert("insert into hqls_role_authority (role_id,authority_id) values (#{roleId},#{authorityId})")
 	public int insertRoleAuthority(@Param("roleId")Integer roleId,@Param("authorityId")Integer authorityId);
 
-	@Select("select role_id as `key`, role_name as `value` from hqls_role")
+	@Select("select role_id as `id`, role_name as `name` from hqls_role")
 	public List<CommonDto> findAll();
 	
 	@Delete("delete from hqls_role where role_id = #{1}")

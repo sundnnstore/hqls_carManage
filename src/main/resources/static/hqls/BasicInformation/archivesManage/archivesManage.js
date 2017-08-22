@@ -10,7 +10,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
             method = othis.data('method'),
             title = '',
             content = '';
-        layer.closeAll();
+        //layer.closeAll();
         if (method == 'addArchives') {
             title = '新增';
             content = '#archivesBox';
@@ -30,7 +30,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
             title: title, // 标题
             skin: 'layui-layer-lan', //弹框主题
             shade: 0,
-            area: '350px', // 宽高
+            area: '380px', // 宽高
             content: $(content),
             btn: title == '提示' ? ['确认', '取消'] : ['提交', '取消'],
             yes: function(index, layero) { // 提交或确认操作, othis代表当前点击的按钮元素
@@ -59,6 +59,9 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
             },
             btn2: function(index, layero) { // 取消操作
                 layer.close(index);
+            },
+            end: function() {
+            	$(content).css('display', 'none');
             }
         });
     });
@@ -87,7 +90,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
      */
     function initRole() {
     	$.ajax({
-    		url: 'http://localhost:8881/findallrole',
+    		url: '/findallrole',
     		type: 'GET',
     		async: false,
     		success: function(data) {
@@ -95,15 +98,15 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     			html += `<option value="">全部</option>`;
     			html += generatorRole(data.result);
     			$('#role').html(html);
-    			$('#add_role').html(`<option value=""></option>` + generatorRole(data.result));
+    			zNodes = data.result;
     		}
     	});
     }
     function generatorRole(res) {
     	var html = "";
-    	for (var role in res) {
-			html += `<option value="${role.key}">${role.value}</option>`;
-		}
+    	res.forEach(function(role, index, res) {
+			html += `<option value="${role.id}">${role.name}</option>`;
+		});
     	return html;
     }
     initRole();
@@ -117,12 +120,8 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     	var roleId = $('#role').val(),
     		userName = $('#name').val(),
     		mobile = $('#mobile').val();
-    	var	url = 'http://localhost:8881/findusers';
-    	url += `?pageIndex=${pageIndex}
-    			&pageSize=${pageSize}
-    			&roleId=${roleId}
-    			&userName=${userName}
-    			&mobile=${mobile}`;
+    	var	url = '/findusers';
+    	url += `?pageIndex=${pageIndex}&pageSize=${pageSize}&roleId=${roleId}&userName=${userName}&mobile=${mobile}`;
     	$.ajax({
     		url: url,
     		type: 'GET',
@@ -136,22 +135,24 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     
     function comboTable(obj, pageIndex) {
     	var html = "";
-    	for (var user in obj.result) {
+    	var data = obj.result;
+    	data.forEach(function(user, index, data) {
     		html += `<tr>
     				<td>${user.userName}</td>
     				<td>${user.mobile}</td>
     				<td>`;
-    		for (var role in user.roles) {
+    		var roles = user.roles;
+    		roles.forEach(function(role, index, roles) {
     			html += `${role.roleName}，`;
-    		}
+    		});
     		html = html.substring(0, html.length-1);
-    		html += `</td>
+    		html += `  </td>
     				 <td class="operation" data-id=${user.userId}>
                         <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
                         <button id="isUse" data-method="isUse" class="layui-btn layui-btn-warm">禁用</button>
                         <button id="reset" data-method="reset" class="layui-btn layui-btn-danger">重置密码</button>
                      </td></tr>`;
-    	}
+    	});
     	$('#user_list').html(html);
     	initPage(obj.totalCount, pageIndex);
     }
@@ -160,7 +161,8 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
      * 新增
      */
     $('body').on('click', '.layui-layer-btn0', function() {
-    	var roleIds = $('#add_role').val();
+    	var roleIds = $('#roleName').val();
+    	console.log(roleIds);
     		Param = {};
     	Param.mobile = $('#mobile').val();
     	Param.userName = $('#name').val();
@@ -168,11 +170,11 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     		layer.msg('请添加角色');
     		return;
     	}
-    	for (var id in roleIds) {
+    	roleIds.forEach(function(id, index, roleIds) {
     		Param.roles = {roleId: id};
-    	}
+    	});
     	$.ajax({
-    		url: 'http://localhost:8881/adduser',
+    		url: '/adduser',
     		header: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm8iOiJscyIsImNsdCI6IndlYiIsIm9zIjoiMS4wIiwiZGlkIjoiMzQ4YzAzZTMtY2NhMC00MTJkLWJlMGEtZTg1MmU4MDU2NGUzIiwiaWQiOiI4NSJ9.Vh7iLY4yh66X3UlHlNWHkTZV_PTRuc6rLmQodcKuH2I',
     		type: 'POST',
     		data: Param,
@@ -187,6 +189,55 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     	});
     });
     
-    
-    
 });
+
+// 在角色树中选中角色后写入input中
+function onClick(e, treeId, treeNode) {
+	var zTree = $.fn.zTree.getZTreeObj("roleTree"),
+	nodes = zTree.getSelectedNodes(),
+	v = "";
+	nodes.sort(function compare(a, b) { return a.id - b.id; });
+	for (var i = 0, l = nodes.length; i < l; i++) {
+		v += nodes[i].name + ",";
+	}
+	if (v.length > 0) v = v.substring(0, v.length - 1);
+	$("#roleName").attr('value', v);
+}
+
+// 角色树展示与收缩
+function showMenu() {
+	$("#menuContent").css({ left: "123px", top: "63px" }).slideDown("fast");
+	$("body").bind("mousedown", onBodyDown);
+}
+
+function hideMenu() {
+	$("#menuContent").fadeOut("fast");
+	$("body").unbind("mousedown", onBodyDown);
+}
+
+function onBodyDown(event) {
+	if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
+		hideMenu();
+	}
+}
+
+// 角色树初始化
+$(document).ready(function() {
+	$.fn.zTree.init($("#roleTree"), setting, zNodes);
+});
+// 角色树设置
+var setting = {
+		view: {
+			dblClickExpand: false
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			onClick: onClick
+		}
+};
+// 角色树数据源
+var zNodes = [];
