@@ -160,7 +160,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	var uname = $("#userName").attr("name");
     	var mob = $("#mobile").attr("name");
     	if((storeInfoDto.mobile == mob) && storeInfoDto.userName != uname){
-    		layer.msg("未修改手机号，不可修改用户姓名");
+    		layer.msg("未修改联系人电话，不可修改门店联系人！");
     		return;
     	}
     	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
