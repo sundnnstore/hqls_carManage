@@ -116,11 +116,12 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
                 // console.log(layero);
             		if(temp == 'addStore'){// 添加门店
-            			addStore(pid);
-            		}else if(temp == 'edit'){// 门店编辑
-            			editStore();
+            			addStore(pid,index);
+            			window.location.reload();
+            		}else if(temp == 'edit'){
+            			editStore(index);// 门店编辑
             		}
-                layer.close(index); // 如果设定了yes回调，需进行手工关闭
+                //layer.close(index); // 如果设定了yes回调，需进行手工关闭
                 inputReset(); // 清空表单
             }
         });
@@ -152,10 +153,16 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     }
     
     //编辑用户
-    function editStore(){
+    function editStore(index){
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
     	storeInfoDto.storeId = storeId;
+    	var uname = $("#userName").attr("name");
+    	var mob = $("#mobile").attr("name");
+    	if((storeInfoDto.mobile == mob) && storeInfoDto.userName != uname){
+    		layer.msg("未修改手机号，不可修改用户姓名");
+    		return;
+    	}
     	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
     		layer.msg('城市不能为空！');
     		return;
@@ -192,6 +199,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('门店联系人不能为空！');
     		return;
     	}
+    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
+    		layer.msg('图片不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.isUseable ==''  || storeInfoDto.isUseable == null){
+    		layer.msg('是否启用不能为空！');
+    		return;
+    	}
     	
 		$.ajax({
 			url : "/changestorebystoreid",
@@ -206,19 +221,21 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	    	success : function(data){
 	    		if(0 == data.errcode){
 	    			layer.msg("编辑成功！");
+	    			layer.close(index);
 	    			window.location.reload();
 	    		}
 	    		
 	    	},
 	    	error:function(data){
 	    		layer.msg('编辑失败！');
+	    		
 	    	}
 			
 			
 		});
     }
     
-    function addStore(pid){
+    function addStore(pid,index){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
     	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
@@ -257,6 +274,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('门店联系人不能为空！');
     		return;
     	}
+    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
+    		layer.msg('图片不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.isUseable ==''  || storeInfoDto.isUseable == null){
+    		layer.msg('是否启用不能为空！');
+    		return;
+    	}
 		$.ajax({
 			url : "/insertstore",
 			type : "post",
@@ -268,6 +293,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			contentType:"application/json;charset=UTF-8",
 	    	success : function(data){
 	    		layer.msg("添加成功!");
+	    		layer.close(index);
+	    		window.location.reload();
 	    	},
 	    	error : function(data){
 	    		layer.msg("添加失败！");
@@ -367,7 +394,9 @@ $("body").on('click','.sedit',function(){
     		var result = data.result;
     		$("#storeName").val(result.storeName);
     		$("#userName").val(result.userName);
+    		$("#userName").attr("name",result.userName);
     		$("#mobile").val(result.mobile);
+    		$("#mobile").attr("name",result.mobile);
     		$("#province").val(result.provinceId);
     		comboChlidren('province','city');
     		$("#city").val(result.cityId);
@@ -376,6 +405,8 @@ $("body").on('click','.sedit',function(){
     		$("#address").val(result.address);
     		$("#jwd").html("("+result.latitude+","+result.longitude+")");
     		$("#storeImgUrl").attr("src",result.backUrl);
+    		$("#slat").val(result.latitude);
+    		$("#slng").val(result.longitude);
     		var h = "";
     		
     		if(result.isUseable){
