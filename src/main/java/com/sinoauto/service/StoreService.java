@@ -250,29 +250,6 @@ public class StoreService {
 		return RestModel.success();
 	}
 
-	/**]
-	 * 修改门店账号
-	 * @param account
-	 * @return
-	 */
-	public ResponseEntity<RestModel<String>> changeAccount(String token, String account) {
-		// 获取当前用户
-		RestModel<TokenModel> rest = authService.validToken(token);
-		if (rest.getErrcode() != 0) {// 解析token失败
-			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
-		}
-		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
-		// 获取userId
-		HqlsUser user = userMapper.getUserByGloabUserId(userId);
-		// 判断修改后账号在系统中是否存在
-		HqlsUser hquser = userMapper.getUserInfoByMobile(account);
-		if (hquser == null) {
-			// 根据userid 更改当前登陆人账号
-			userMapper.changeAccount(account, user.getUserId());
-		}
-		return RestModel.success();
-
-	}
 
 	/**
 	 * 查询所有门店

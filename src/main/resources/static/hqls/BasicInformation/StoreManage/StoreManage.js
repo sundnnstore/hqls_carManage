@@ -39,6 +39,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			$("#userName").val("");
 			$("#mobile").val("");
 			$("#address").val("");
+			
             layer.open({
                 type: 1,
                 title: '新增', // 标题
@@ -141,8 +142,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		storeInfoDto.countyId=$("#county").find("option:selected").val();
 		storeInfoDto.countyName=$("#county").find("option:selected").text();
 		storeInfoDto.backUrl = $("#storeImgUrl").attr("src");
-		storeInfoDto.longitude = "30.12"; 
-		storeInfoDto.latitude ="180.302"; 
+		storeInfoDto.longitude = $("#slng").val(); 
+		storeInfoDto.latitude =$("#slat").val(); 
 		if(isUseable == 1){
 			storeInfoDto.isUseable =true;
 		}else{
@@ -236,7 +237,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 				 "countyId":$("#county_search").val(), 
 				 "pageIndex":pageIndex,
 				 "pageSize":pageSize},
-    	success : function(data){
+    	success : function(data){                                                                                                                                                                                                                          
     		comboTable(data,pageIndex);
     		}
     }); 
@@ -285,6 +286,7 @@ function comboTable(res,pageIndex){
 // 编辑接口
 $("body").on('click','.sedit',function(){
 	$("#storeId").val($(this).attr("name"));
+	var newAddress = "";
 	$.ajax({
     	url : "http://localhost:8881/getstorebystoreid",
 		type : "get",
@@ -300,9 +302,11 @@ $("body").on('click','.sedit',function(){
     		comboChlidren('city','county');
     		$("#county").val(result.countyId);
     		$("#address").val(result.address);
-    		$("#jwd").html("("+result.longitude+","+result.latitude+")");
+    		//newAddress= result.provinceName+result.cityName+result.countyName+result.address;
+    		$("#jwd").html("("+result.latitude+","+result.longitude+")");
     		$("#storeImgUrl").attr("src",result.backUrl);
     		var h = "";
+    		
     		if(result.isUseable){
     			h ='<input type="radio" name="isEnable" value="1" checked="checked">是'+
                     '<input type="radio" name="isEnable" value="0" >否';
@@ -311,8 +315,12 @@ $("body").on('click','.sedit',function(){
                 '<input type="radio" name="isEnable" value="0" checked="checked" >否';
     		}
     		$("#state_s").html(h);
+    		
     		}
+		
     }); 
+	
+
 });
 
 // 查看接口
@@ -334,7 +342,7 @@ $("body").on('click','.sshow',function(){
 			 */
     		console.log(result);
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
-    		$("#jwd_show").html("("+result.longitude+","+result.latitude+")");
+    		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);
     		if(result.isUseable){
     			$("#isuse_show").html("是")
@@ -404,4 +412,38 @@ function getNodes(){
 	return nodes;
 	
 }
+
+function getlocation(adder,obj){
+	AMap.plugin('AMap.Geocoder',function() {
+		var geocoder = new AMap.Geocoder({
+			city: "全国", //城市，默认：“全国”
+			radius:500
+		});
+		
+	geocoder.getLocation(adder, function(status, result) {
+		if(status == 'complete' && result.geocodes.length) {
+			var lo = (result.geocodes)[0].location;
+			obj.html("("+lo.lat+","+lo.lng+")");
+			$("#slat").val(lo.lat);
+			$("#slng").val(lo.lng);
+		} else {
+				
+		}
+	})
+
+});
+	
+}
+
+
+$("#dw").on('click',function(){
+	var provinceName=$("#province").find("option:selected").text();
+	var cityName=$("#city").find("option:selected").text();
+	var countyName=$("#county").find("option:selected").text();
+	var address = $("#address").val();
+	var obj = $("#jwd");
+	var dw = provinceName+cityName+countyName+address;
+	getlocation(dw,obj);
+});
+
 });

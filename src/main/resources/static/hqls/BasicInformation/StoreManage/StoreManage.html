@@ -113,11 +113,13 @@
                             </select>
                         </div>
                         <input type="text" name="" id="address" class="layui-input" placeholder="请输入门店地址">
+                        <input type="button"  id="dw" value="定位" class="layui-btn">
+                     
                     </td>
                 </tr>
                 <tr>
                     <td>门店位置</td>
-                    <td  ><span id="jwd"></span></td>
+                    <td  ><span id="jwd"></span><input type="hidden" id="slat"><input type="hidden" id="slng"></td>
                 </tr>
                 <tr>
                     <td>图片上传</td>
@@ -195,3 +197,5 @@
 </div>
 
 <script src="BasicInformation/StoreManage/StoreManage.js"></script>
+
+

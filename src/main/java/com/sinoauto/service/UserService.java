@@ -196,4 +196,30 @@ public class UserService {
 		return RestModel.success(roleMapper.findAll()); 
 	}
 
+	
+	/**
+	 * 修改用户账号信息
+	 * 
+	 * @return
+	 */
+	public ResponseEntity<RestModel<String>> updateUserAccount(String token, String newMobile) {
+		// 获取当前用户
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_TOKEN);
+		}
+		Integer globalId = rest.getResult().getUserId();
+		HqlsUser user = userMapper.getUserByGloabUserId(globalId);
+		// 获取当前登录人userId
+		Integer userId = user.getUserId();
+		HqlsUser hqlsUser = userMapper.getUserInfoByMobile(newMobile);
+		if (hqlsUser.getMobile().equals(newMobile)) {// 判断新账号在数据库中是否存在
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "账号在数据中已存在！");
+		} else {
+			// 根据userId更新用户表的信息
+			userMapper.updateUserByUserId(newMobile, userId);
+		}
+		return RestModel.success();
+	}
+
 }
