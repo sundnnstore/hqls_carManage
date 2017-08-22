@@ -4,7 +4,7 @@ layui.use(['layer', 'laypage'], function() {
         $ = layui.jquery;
     pageSize = 10;
     // 新增和编辑角色信息的弹框
-    $('#myContent').on('click', 'button', function() {
+    $('.RoleManage').on('click', 'button', function() {
         var method = $(this).data('method');
         // layer.closeAll();
         if (method == 'addRole') {
