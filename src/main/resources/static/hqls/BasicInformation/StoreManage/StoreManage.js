@@ -302,7 +302,6 @@ $("body").on('click','.sedit',function(){
     		comboChlidren('city','county');
     		$("#county").val(result.countyId);
     		$("#address").val(result.address);
-    		//newAddress= result.provinceName+result.cityName+result.countyName+result.address;
     		$("#jwd").html("("+result.latitude+","+result.longitude+")");
     		$("#storeImgUrl").attr("src",result.backUrl);
     		var h = "";
@@ -427,7 +426,7 @@ function getlocation(adder,obj){
 			$("#slat").val(lo.lat);
 			$("#slng").val(lo.lng);
 		} else {
-				
+				layer.msg("解析失败");
 		}
 	})
 
