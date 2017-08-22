@@ -34,7 +34,7 @@ layui.use(['layer', 'laypage'], function() {
                    shade: 0,
                    area: '350px', // 宽高
                    content: $('#roleEdit'),
-                   btn: ['确认', '取消'],
+                   btn:method == 'del' ? '确认':['确认', '取消'],
                    yes: function(index, layero) {
                 	   layer.close(index);
                 	   if(method == 'edit'){
