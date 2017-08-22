@@ -17,6 +17,7 @@ import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
+import com.sinoauto.dto.PartsTreeRecursionDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsBrandService;
 import com.sinoauto.service.PartsService;
@@ -90,5 +91,11 @@ public class PartsController {
 	@GetMapping("findpartsbrands")
 	public ResponseEntity<RestModel<List<HqlsPartsBrand>>> findPartsBrands(){
 		return partsBrandService.findPartsBrands();
+	}
+	
+	@ApiOperation(value = "查询配件树形菜单", notes = "liud")
+	@GetMapping("findpartstree")
+	public PartsTreeRecursionDto partsTreeRecursion(@RequestParam("pid") Integer pid){
+		return partsService.partsTreeRecursion(pid);
 	}
 }
