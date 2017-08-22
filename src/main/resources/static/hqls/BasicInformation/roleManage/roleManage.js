@@ -84,7 +84,7 @@ layui.use(['layer', 'laypage'], function() {
     function checkRole(roleId){
     	var flag = false;
     	$.ajax({
-    		url : "http://localhost:8881/checkrole",
+    		url : "/checkrole",
     		type : 'post',
     		async : false,
     		data : {roleId : roleId},
@@ -99,7 +99,7 @@ layui.use(['layer', 'laypage'], function() {
     
     function delRole(index,roleId){
     	$.ajax({
-    		url : "http://localhost:8881/delrole",
+    		url : "/delrole",
     		type : "post",
     		async : false,
     		data : {roleId:roleId},
@@ -131,7 +131,7 @@ layui.use(['layer', 'laypage'], function() {
     		return;
     	}
     	$.ajax({
-    		url : "http://localhost:8881/editrole",
+    		url : "/editrole",
     		type : "post",
     		async : false,
     		data : JSON.stringify(role),
@@ -164,7 +164,7 @@ layui.use(['layer', 'laypage'], function() {
     		return;
     	}
     	$.ajax({
-    		url : "http://localhost:8881/addrole",
+    		url : "/addrole",
     		type : "post",
     		async : false,
     		data : JSON.stringify(role),
@@ -182,7 +182,7 @@ layui.use(['layer', 'laypage'], function() {
     
 	function getData(pageIndex){
 		$.ajax({
-			url : "http://localhost:8881/findroles",
+			url : "/findroles",
 			type : "get",
 			async : false,
 			data : {"pageSize":pageSize,"pageIndex":pageIndex},
@@ -251,7 +251,7 @@ var zNodes = getallauths();
 function getallauths(){
 	var res;
 	$.ajax({
-		url : "http://localhost:8881/findallauthoritys",
+		url : "/findallauthoritys",
 		type : "get",
 		async : false,
 		success : function(data){
@@ -276,7 +276,7 @@ function getAllCheckedNodes(){
 function initZtree(roleId){
 	var nodes;
 	$.ajax({
-		url : "http://localhost:8881/findcheckedauthoritys",
+		url : "/findcheckedauthoritys",
 		type : "post",
 		async : false,
 		data : {roleId : roleId},

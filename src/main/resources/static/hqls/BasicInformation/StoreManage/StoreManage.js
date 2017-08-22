@@ -157,8 +157,28 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
     	storeInfoDto.storeId = storeId;
+    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
+    		layer.msg('城市不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
+    		layer.msg('省份不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
+    		layer.msg('区县不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
+    		layer.msg('详细地址不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
+    		layer.msg('请点击定位按钮');
+    		return;
+    	}
 		$.ajax({
-			url : "http://localhost:8881/changestorebystoreid",
+			url : "/changestorebystoreid",
 			type : "post",
 			async:false,
 			headers:{
@@ -185,8 +205,28 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addStore(pid){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
+    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
+    		layer.msg('城市不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
+    		layer.msg('省份不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
+    		layer.msg('区县不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
+    		layer.msg('详细地址不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
+    		layer.msg('请点击定位按钮');
+    		return;
+    	}
 		$.ajax({
-			url : "http://localhost:8881/insertstore",
+			url : "/insertstore",
 			type : "post",
 			async:false,
 			data : JSON.stringify(storeInfoDto),
@@ -227,7 +267,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     
 	function findStore(pageIndex){
 		$.ajax({
-    	url : "http://localhost:8881/findstoreinfo",
+    	url : "/findstoreinfo",
 		type : "get",
 		async:false,
 		data : { "storeName":$("#storeName_search").val(),"userName":$("#userName_search").val(),
@@ -288,7 +328,7 @@ $("body").on('click','.sedit',function(){
 	$("#storeId").val($(this).attr("name"));
 	var newAddress = "";
 	$.ajax({
-    	url : "http://localhost:8881/getstorebystoreid",
+    	url : "/getstorebystoreid",
 		type : "get",
 		data : {"storeId":$(this).attr("name")},
     	success : function(data){
@@ -302,7 +342,6 @@ $("body").on('click','.sedit',function(){
     		comboChlidren('city','county');
     		$("#county").val(result.countyId);
     		$("#address").val(result.address);
-    		//newAddress= result.provinceName+result.cityName+result.countyName+result.address;
     		$("#jwd").html("("+result.latitude+","+result.longitude+")");
     		$("#storeImgUrl").attr("src",result.backUrl);
     		var h = "";
@@ -326,7 +365,7 @@ $("body").on('click','.sedit',function(){
 // 查看接口
 $("body").on('click','.sshow',function(){
 	$.ajax({
-    	url : "http://localhost:8881/getstorebystoreid",
+    	url : "/getstorebystoreid",
 		type : "get",
 		data : {"storeId":$(this).attr("name")},
     	success : function(data){
@@ -357,7 +396,7 @@ $("body").on('click','.sshow',function(){
 $("body").on('click','.sea',function(){
 	var obj = $(this);
 	$.ajax({
-    	url : "http://localhost:8881/storeisuseable",
+    	url : "/storeisuseable",
 		type : "post",
 		data : {"storeId":obj.attr("name")},
     	success : function(data){
@@ -399,7 +438,7 @@ function initPage(totalCount,pageIndex){
 function getNodes(){
 	var nodes =[];
 	$.ajax({
-		url : "http://localhost:8881/findstore",
+		url : "/findstore",
 		type : "post",
 		async : false,
 		data : {},
@@ -427,7 +466,7 @@ function getlocation(adder,obj){
 			$("#slat").val(lo.lat);
 			$("#slng").val(lo.lng);
 		} else {
-				
+				layer.msg("解析失败");
 		}
 	})
 
