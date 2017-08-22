@@ -161,19 +161,19 @@ public class PartsService {
 				if(partsId!=null){
 					//修改配件的基本属性
 					partsMapper.update(partsOperDto);
-					Integer partsPicsSize =partsOperDto.getPartsPics().size();
-					Integer partsAttrExtrsSize=partsOperDto.getPartsAttrExtrs().size();
-					if(partsPicsSize>0){
+					List<HqlsPartsPic> partsPics =partsOperDto.getPartsPics();
+					List<HqlsPartsAttrExtr> partsAttrExtrs=partsOperDto.getPartsAttrExtrs();
+					if(partsPics!=null&&!partsPics.isEmpty()){
 						//删除配件id对应的所有图片
 						partsPicMapper.delete(partsId);
 					}
-					if(partsAttrExtrsSize>0){
+					if(partsAttrExtrs!=null&&!partsAttrExtrs.isEmpty()){
 						//删除配件的动态属性
 						partsAttrExtrMapper.delete(partsId);
 					}
 					
 					//插入配件图片,和配件动态属性
-					if(partsPicsSize>0||partsAttrExtrsSize>0){
+					if(partsAttrExtrs!=null||partsPics!=null){
 						insertPartsPicAndAttrExr(partsOperDto,partsId);
 					}
 				}
