@@ -37,6 +37,9 @@ layui.use(['layer', 'laypage'], function() {
                    },
                    btn2: function(index, layero) {
                        layer.close(index);
+                   },
+                   end:function(){
+                	   $('#roleEdit').css("display","none");
                    }
                });
            }else{
