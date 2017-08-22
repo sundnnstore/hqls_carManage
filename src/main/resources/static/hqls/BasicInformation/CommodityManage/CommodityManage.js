@@ -178,7 +178,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      */
     function getData(pageIndex){
     	$.ajax({
-			url : "http://localhost:8881/findparts",
+			url : "/findparts",
 			type : "get",
 			async : false,
 			data : {
@@ -231,7 +231,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      */ 
     function addPart(){
     	$.ajax({
-			url:'http://localhost:8881/addparts',
+			url:'/addparts',
 			type:'POST',
 			async:false,
 			beforeSend : function(x) {
@@ -254,7 +254,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     function editPart(){
     	//编辑商品
     	$.ajax({
-			url : "http://localhost:8881/updateparts",
+			url : "/updateparts",
 			type : "POST",
 			async : false,
 			data : requestData(),
@@ -271,7 +271,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      */
     function isUnable(){
     	$.ajax({
-			url : "http://localhost:8881/updateparts",
+			url : "/updateparts",
 			type : "POST",
 			async : false,
 			data : {"partsId":$("#partsId").val()},
@@ -289,7 +289,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	//var data = {"partsId":1};//$("#partsId").val()
     	//data=JSON.stringify(data);
     	$.ajax({
-			url : "http://localhost:8881/getpartsdetail",
+			url : "/getpartsdetail",
 			type : "get",
 			async : false,
 			data :{"partsId":18},
@@ -412,7 +412,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	 */
 	function partsBrand(partsBranId){
     	$.ajax({
-			url : "http://localhost:8881/findpartsbrands",
+			url : "/findpartsbrands",
 			type : "get",
 			async : false,
 			success : function(data){
