@@ -1,0 +1,43 @@
+.RoleManage,
+.roleTreeBox {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.addRoleBtn {
+    margin: 15px 0;
+}
+
+
+/* 弹框内容样式 */
+
+.roleTreeBox {
+    display: none;
+    padding: 15px 20px;
+}
+
+.roleTreeBox>ul {
+    margin-top: 15px;
+}
+
+.roleDelete {
+    display: none;
+    text-align: center;
+    /* line-height 的值与JS中弹框的area参数有关 */
+    line-height: 142px;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1 {
+    width: 93px!important;
+    background-color: #2e8ded !important;
+    color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
+}
