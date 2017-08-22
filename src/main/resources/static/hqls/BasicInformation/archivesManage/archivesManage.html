@@ -1,4 +1,7 @@
 <link rel="stylesheet" type="text/css" href="BasicInformation/ArchivesManage/ArchivesManage.css" />
+<link rel="stylesheet" href="common/zTree/css/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="common/zTree/js/jquery.ztree.core.js"></script>
 <div class="archives">
     档案管理
     <!-- 人员档案搜索 && 添加人员档案 -->
@@ -55,9 +58,12 @@
             <tr>
                 <td>角色</td>
                 <td>
-                    <select class="layui-select" id="add_role">
-                    
-                    </select>
+                    <ul title="选择角色时，按下 Ctrl 或 Cmd 键可以进行多选">
+                        <li class="title">
+                            <input type="text" id="roleName" class="layui-input" readonly/>
+                            <a id="menuBtn" href="#" onclick="showMenu()">选择</a>
+                        </li>
+                    </ul>
                 </td>
             </tr>
             <tr>
@@ -70,6 +76,9 @@
             </tr>
         </tbody>
     </table>
+    <div id="menuContent" class="menuContent">
+        <ul id="roleTree" class="ztree" style="margin-top:0; width:160px;"></ul>
+    </div>
 </div>
 <!-- 弹框二：启用禁用提示 -->
 <div id="archivesState" class="archivesState">

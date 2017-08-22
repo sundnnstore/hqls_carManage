@@ -60,7 +60,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 */
 	function initStore() {
 		$.ajax({
-			url: "http://127.0.0.1:8881/findallstore",
+			url: "/findallstore",
 			type: "GET",
 			async : false,
 			success: function (data) {
@@ -87,7 +87,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	function comboGoodsTable(id) {
 		console.log(id);
 		$.ajax({
-			url: 'http://localhost:8881/getpartsbyorderid?orderId=' + id,
+			url: '/getpartsbyorderid?orderId=' + id,
 			type: 'GET',
 			async: false,
 			success: function (data) {
@@ -120,7 +120,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	reqOrderList(1);
 	function reqOrderList(pageIndex) {
 		$.ajax({
-			url: "http://localhost:8881/findorderlistbycondition?pageIndex=" + pageIndex + "&pageSize=" + pageSize,
+			url: "/findorderlistbycondition?pageIndex=" + pageIndex + "&pageSize=" + pageSize,
 			type: "GET",
 			async : false,
 			data: OrderParam,
@@ -184,7 +184,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 * 发货操作
 	 */
 	$('.confirm_ship').click(function() {
-		var url = "http://localhost:8881/shipoperation?orderId=" + orderId;
+		var url = "/shipoperation?orderId=" + orderId;
 		var logisticsId = $('select[name=company]').val();
 		var logisticsNo = $('input[name=logistics_no]').val();
 		var remark = $('#remark').val();
@@ -222,7 +222,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 */
 	function allLogisticsCompany() {
 		$.ajax({
-			url: "http://127.0.0.1:8881/findalllogisticscompany",
+			url: "/findalllogisticscompany",
 			type: "GET",
 			async : false,
 			success: function (data) {
@@ -243,7 +243,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	 */
 	function queryLogisticsInfo(orderId) {
 		$.ajax({
-			url: 'http://localhost:8881/getlogisticsinfo?orderId=' + orderId,
+			url: '/getlogisticsinfo?orderId=' + orderId,
 			type: 'GET',
 			async: false,
 			success: function (data) {
@@ -290,37 +290,6 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			}
 		}
 		$('#logisticsInfoPage').html(html);
-		
-		
-		
-		/*if (data.Traces) {
-			html += `<div class="jclogistics"><div><span>运单号码：</span><span>${data.LogisticCode}</span>
-				<br/><span>物流公司：</span><span>${data.company}</span></div>
-				<div><span>收货地址：</span><span>${data.shipAddress}</span></div></div>
-				<div style='border:none;border-top:1px dashed #333 ;margin: 10px auto;width: 97%;'></div>`;
-			if (data.Traces.length == 0) {
-				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
-			} else {
-				traces = data.Traces;
-				html += `<div class="logisList"><div class="logisList-content">`;
-				for (var i = traces.length - 1; i > -1; i--) {
-					html += `<div><span>${traces[i].AcceptTime}</span>`;
-					html += `<span>${traces[i].AcceptStation}</span></div>`;
-				}
-				html += `</div></div>`;
-			}
-		} else {
-			if (data.length == 0) {
-				html += `<div class="logisList"><div class="logisList-header"><span>暂无物流信息</span></div></div>`;
-			} else {
-				html += `<div class="logisList"><div class="logisList-content">`;
-				for (var i = 0; i < data.length; i++) {
-					html += `<div><span>${data[i].createTime}</span>`;
-					html += `<span>${data[i].remark}</span></div>`;
-				}
-				html += `</div></div>`;
-			}
-		}*/
 		
 	}
 	
