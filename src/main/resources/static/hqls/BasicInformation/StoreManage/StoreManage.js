@@ -157,6 +157,26 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
     	storeInfoDto.storeId = storeId;
+    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
+    		layer.msg('城市不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
+    		layer.msg('省份不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
+    		layer.msg('区县不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
+    		layer.msg('详细地址不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
+    		layer.msg('请点击定位按钮');
+    		return;
+    	}
 		$.ajax({
 			url : "/changestorebystoreid",
 			type : "post",
@@ -185,6 +205,26 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addStore(pid){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
+    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
+    		layer.msg('城市不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
+    		layer.msg('省份不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
+    		layer.msg('区县不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
+    		layer.msg('详细地址不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
+    		layer.msg('请点击定位按钮');
+    		return;
+    	}
 		$.ajax({
 			url : "/insertstore",
 			type : "post",
