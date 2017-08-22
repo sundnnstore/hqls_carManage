@@ -26,7 +26,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 			//TODO上传功能
 			serviceType.isUsable=true;
 		$.ajax({
-			url : "http://localhost:8881/addservicetype",
+			url : "/addservicetype",
 			type : "post",
 			data:JSON.stringify(serviceType),
 			contentType: 'application/json;charset=utf-8',
@@ -82,7 +82,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 	
 	function getData(pageIndex){
 		$.ajax({
-			url : "http://localhost:8881/findservicetypesbytypename",
+			url : "/findservicetypesbytypename",
 			type : "get",
 			async : false,
 			data : {"typeName":$("#service_title").val(),"pageSize":pageSize,"pageIndex":pageIndex},
@@ -153,7 +153,7 @@ layui.use(['jquery', 'layer','laypage'], function() {
 	function changeStatus(serviceTypeId){
 		let flag = 0;
 		$.ajax({
-			url : "http://localhost:8881/updateservicetypestatus",
+			url : "/updateservicetypestatus",
 			type : "post",
 			async : false,
 			data : {"serviceTypeId":serviceTypeId},
