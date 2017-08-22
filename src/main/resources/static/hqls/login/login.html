@@ -65,7 +65,7 @@
 					$.ajax({
 						url:"http://localhost:8881/login",
 						type:"post",
-						async:false,
+						async:true,
 						data:{"userName":$("#logname").val(),"passWord":$("#logpass").val()},
 						success:function(data){
 							console.log(data);
