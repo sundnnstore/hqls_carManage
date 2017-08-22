@@ -27,7 +27,6 @@ import com.sinoauto.dao.mapper.UserRoleMapper;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
-import com.sinoauto.entity.AuthUser;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
@@ -148,7 +147,7 @@ public class UserService {
 					userMapper.updateGlobalUserId(globalUserId, user.getUserId());
 				}
 			} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息,
-				RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, userDto.getMobile());
+				/*RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, userDto.getMobile());
 				if (uInfo.getErrcode() == 0) {
 					globalUserId = uInfo.getResult().getUserId();
 					user.setGlobalUserId(globalUserId);
@@ -159,7 +158,8 @@ public class UserService {
 					}
 				} else {
 					return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
-				}
+				}*/
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "用户已注册！");
 			} else {
 				return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
 
@@ -222,5 +222,49 @@ public class UserService {
 		}
 		return RestModel.success();
 	}
+	
+	/**
+	 * 修改用户信息（用户名，用户角色）
+	 * @param userDto
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> updateUser(UserDto userDto) {
+		HqlsUser user = userMapper.getUserById(userDto.getUserId());
+		if (user == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "用户不存在！");
+		}
+		try {
+			// 修改用户名
+			user.setUserName(userDto.getUserName());
+			userMapper.updateUser(user);
+			// 删除该用户的所有角色
+			userRoleMapper.deleteUserRolesByUserId(user.getUserId());
+			// 插入用户角色信息
+			List<HqlsRole> roles = userDto.getRoles();
+			if (roles != null && roles.size() > 0) {
+				for (HqlsRole role : roles) {
+					HqlsUserRole userRole = new HqlsUserRole();
+					userRole.setRoleId(role.getRoleId());
+					userRole.setUserId(user.getUserId());
+					userRoleMapper.insert(userRole);
+				}
+			}
+			return RestModel.success("修改成功");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "修改用户异常");
+	}
 
+	/**
+	 * 根据用户Id查询用户信息
+	 * @param userId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<UserDto>> getUser(Integer userId) {
+		return RestModel.success(userMapper.getUserDtoByUserId(userId));
+	}
+	
 }
