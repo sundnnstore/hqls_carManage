@@ -79,7 +79,7 @@
 		   <if test="curPrice!=null"> cur_price = #{curPrice}, </if>
 		   <if test="remark!=null"> remark = #{remark}, </if>
 		   <if test="isUsable!=null"> is_usable = #{isUsable}, </if>
-		   <if test="partsTypeId!=null"> parts_type_id = #{partsTypeId},</if> 
+<!-- 		   <if test="partsTypeId!=null"> parts_type_id = #{partsTypeId},</if>  -->
 		   dml_time = now()
 	   WHERE 
 		   parts_id = #{partsId}

@@ -31,7 +31,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     $('#myContent').on('click', 'button', function() {
         var othis = $(this),
             method = othis.data('method');
-        layer.closeAll();
         if (method === 'addStore') {
         	$("#storeImgUrl").attr("src","");
 			$("#jwd").html("");

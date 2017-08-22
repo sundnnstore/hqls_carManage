@@ -1,0 +1,110 @@
+<link rel="stylesheet" type="text/css" href="order/orderManage/orderManage.css" />
+<div>
+	订单管理
+</div>
+<div>
+	<div class="layui-inline">
+		<label class="layui-form-label">订单状态</label>
+		<div class="layui-input-block">
+			<select name="order_status" lay-filter="aihao" class="layui-select">
+				<option value="0">全部</option>
+				<option value="1">待支付</option>
+				<option value="2">待发货</option>
+				<option value="3">待收货</option>
+				<option value="4">已完成</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">门店</label>
+		<div class="layui-input-block">
+			<select name="store_id" lay-filter="aihao" class="layui-select">
+
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">联系人</label>
+		<div class="layui-input-inline">
+			<input type="text" name="contact" required lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">联系电话</label>
+		<div class="layui-input-inline">
+			<input type="text" name="mobile" required lay-verify="required" placeholder="请输入电话" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<button class="layui-btn" value="2" id='searchOrder'>搜索</button>
+	</div>
+</div>
+<div class="All-order-list">
+	<table class="layui-table mylayui-table order_list">
+		<thead>
+			<tr>
+				<th>订单编号</th>
+				<th>订单状态</th>
+				<th>订单时间</th>
+				<th>收货地址</th>
+				<th>联系人</th>
+				<th>联系电话</th>
+				<th>门店</th>
+				<th>金额总计</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody id="order_tb">
+		
+		</tbody>
+	</table>
+	<div id="pages" style="text-align: right;"></div>
+</div>
+
+<div id='orderdetailPage' style="display: none;">
+	<table class="layui-table part_detail">
+		<thead>
+			<tr>
+				<th>商品名称</th>
+				<th>型号</th>
+				<th>规格</th>
+				<th>购买数量</th>
+				<th>购买单价</th>
+				<th>当前单价</th>
+			</tr>
+		</thead>
+		<tbody>
+
+		</tbody>
+	</table>
+</div>
+<div id="shipPage" style="display: none;">
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">快递公司</label>
+		<div class="layui-input-block">
+			<select name="company" lay-filter="aihao" class="layui-select">
+				
+			</select>
+		</div>
+	</div>
+
+	<div class="layui-form-item mylayui-item ">
+		<label class="layui-form-label">快递单号</label>
+		<div class="layui-input-block">
+			<input type="text" name="logistics_no" lay-verify="title" autocomplete="off" placeholder="请输入单号" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text mylayui-item ">
+		<label class="layui-form-label">备注</label>
+		<div class="layui-input-block">
+			<textarea placeholder="请输入" id="remark" class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text shipbox">
+		<button class="layui-btn confirm_ship">确认发货</button>
+	</div>
+</div>
+<div id="logisticsInfoPage" style="display: none;">
+	
+</div>
+<script src="order/orderManage/orderManage.js" type="text/javascript" charset="utf-8"></script>

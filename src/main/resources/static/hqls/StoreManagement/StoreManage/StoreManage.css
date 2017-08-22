@@ -1,0 +1,166 @@
+.store,
+.model {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.head>div {
+    margin: 5px 20px 0 0;
+}
+
+.head>div>label {
+    width: inherit;
+    padding: 9px 0;
+    text-align: left;
+}
+
+.head>div>div {
+    margin-left: 68px;
+}
+
+.head>div:nth-child(2)>div {
+    margin-left: 54px;
+}
+
+.head>div:nth-child(3)>div {
+    margin-left: 82px;
+}
+
+.head>div:nth-child(4)>div {
+    margin-left: 40px;
+}
+
+.head>button {
+    width: 90px;
+    border-radius: 4px;
+    margin: 5px 5px 0 5px !important;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 10px;
+}
+
+
+/* 寮规鏍峰紡 */
+
+.storeTreeBox {
+    display: none;
+    padding: 15px 20px;
+}
+
+.storeLocate {
+    display: none;
+    text-align: center;
+    /* line-height 鐨勫�间笌JS涓脊妗嗙殑area鍙傛暟鏈夊叧 */
+    line-height: 142px;
+}
+
+.storeInfo {
+    display: none;
+    padding: 15px 20px;
+}
+
+.storeInfo input {
+    width: 100%;
+    border: none;
+    padding-left: 0;
+}
+
+.storeInfo .state input {
+    width: initial;
+    margin-right: 8px;
+    position: relative;
+    top: 2px;
+}
+
+.storeInfo .state input:last-child {
+    margin-left: 20px;
+}
+
+.storeInfo tr>td {
+    line-height: 39px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.storeInfo tr>td:first-child{
+	width:75px;
+}
+.storeInfo .addressBox{
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+.storeInfo .addressBox>div{
+	display:flex;
+	justify-content: space-between;
+}
+.storeInfo .addressBox>div>select{
+	width: calc(100% /3 - 5px);
+}
+.storeInfo .addressBox>input,
+.storeInfo .addressBox>button{
+	margin-top: 5px;
+}
+.storeInfo .addressBox>input{
+	border: 1px solid #e6e6e6;
+}
+.storeInfo .addressBox>button{
+	float:right;
+}
+.storeInfo .seePic {
+    padding: 5px 10px;
+}
+
+.storeInfo .siteUpload {
+    padding-top: 9px;
+    padding-bottom: 9px;
+}
+
+.storeInfo .siteUpload>div {
+    width: 140px;
+    height: 140px;
+    line-height: 140px;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    margin-right: 11px;
+}
+
+.storeInfo .siteUpload>div:last-child {
+    margin-right: 0;
+}
+
+.storeInfo .siteUpload>div img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.storeInfo .siteUpload>div .layui-box {
+    width: 138px;
+    height: 140px;
+    line-height: 140px;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
+}
+
+.storeInfo tr>td:last-child {
+    text-align: left;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1,
+.layui-layer-btn2 {
+    width: 93px!important;
+    background-color: #2e8ded !important;
+    color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
+}

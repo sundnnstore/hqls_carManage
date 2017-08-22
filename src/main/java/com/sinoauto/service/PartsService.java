@@ -180,6 +180,7 @@ public class PartsService {
 			}
 			return RestModel.success();
 		} catch (Exception e) {
+			System.out.println(e);
 			//事物处理
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
