@@ -13,6 +13,9 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
         if (method == 'addArchives') {
             title = '新增';
             content = '#archivesBox';
+            $('input[name=add_name]').val('');
+			$('input[name=add_mobile]').val('');
+			$('#roleName').attr('value', '');
         } else if (method == 'edit') {
             title = '编辑';
             content = '#archivesBox';
@@ -38,21 +41,78 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
                 */
                 //  根据启/禁用操作后的结果来决定是否切换按钮以及提示
                 if (title == '提示') {
-                    if (othis.text() === '启用') {
-                        if (true) { //启用成功
-                            othis.removeClass('layui-btn-primary').addClass('layui-btn-warm');
-                            othis.text('禁用');
-                        } else { //启用失败
-                            layer.msg('启用失败');
-                        }
-                    } else {
-                        if (true) { //禁用成功
-                            othis.removeClass('layui-btn-warm').addClass('layui-btn-primary');
-                            othis.text('启用');
-                        } else { //禁用失败
-                            layer.msg('禁用失败');
-                        }
-                    }
+	                /**   
+				     * 启用/禁用操作
+				     * @returns
+				     */
+			    	$.ajax({
+			    		url: '/updateuserstatus?userId=' + othis.val(),
+			    		type: 'GET',
+			    		async: false,
+			    		success: function(data) {
+			    			if (data.errmsg == 'success') {
+			    				if (othis.text() === '启用') {
+			    					othis.removeClass('layui-btn-primary').addClass('layui-btn-warm');
+			    					othis.text('禁用');
+								} else {
+									othis.removeClass('layui-btn-warm').addClass('layui-btn-primary');
+									othis.text('启用');
+								}
+							} else {
+								layer.msg('操作失败');
+							}
+			    		}
+			    	});
+                } else if (title == '新增' || title == '编辑') {
+                	var zTree = $.fn.zTree.getZTreeObj("roleTree"),
+                	nodes = zTree.getSelectedNodes(),
+                	roles = [];
+                	nodes.sort(function compare(a, b) { return a.id - b.id; });
+                	// 组装角色Id
+                	for (var i = 0, l = nodes.length; i < l; i++) {
+                		var role = {roleId: nodes[i].id};
+                		roles.push(role);
+                	}
+                	var	Param = {};
+                	Param.mobile = $('input[name=add_mobile]').val();
+                	Param.userName = $('input[name=add_name]').val();
+                	Param.roles = roles;
+                	var url = "";
+                	if (title == '编辑') {
+                		Param.userId = userId;
+                		console.log(Param.userId);
+                		url = "/updateuser";
+                	} else {
+                		url = '/adduser';
+                	}
+                	var userDto = JSON.stringify(Param);
+                	$.ajax({
+                		url: url,
+                		headers: {"Authorization": localStorage.token},
+                		type: 'POST',
+                		contentType: "application/json; charset=utf-8",
+                		data: userDto,
+                		async: false,
+                		success: function(data) {
+                			if (data.errmsg == 'success') {
+                				layer.msg(data.result);
+                			} else {
+                				layer.msg('添加失败');
+                			}
+                			search(1);
+                			$('input[name=add_mobile]').attr('readonly', false);// 修改完成将input的只读状态改回可编辑
+                		}
+                	});
+                } else if (title == '重置密码') {
+                	$.ajax({
+                		url: 'http://42.159.202.20:11111/admin/resetpwd/'+ othis.val() +'?projectName=ls',
+                		headers: {'Authorization': localStorage.token},
+                		type: 'PUT',
+                		contentType: "application/json; charset=utf-8",
+                		success: function(data) {
+                			layer.msg('密码将以短信形式发送至手机');
+                		}
+                	});
                 }
                 layer.close(index);
             },
@@ -110,6 +170,10 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     }
     initRole();
     
+    $('#searchArchives').click(function () {
+    	search(1);
+    });
+    
     /**
      * 查询档案
      * @param pageIndex
@@ -146,44 +210,46 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
     		});
     		html = html.substring(0, html.length-1);
     		html += `  </td>
-    				 <td class="operation" data-id=${user.userId}>
-                        <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-                        <button id="isUse" data-method="isUse" class="layui-btn layui-btn-warm">禁用</button>
-                        <button id="reset" data-method="reset" class="layui-btn layui-btn-danger">重置密码</button>
+    				 <td class="operation">
+                        <button data-method="edit" value="${user.userId}" class="layui-btn layui-btn-normal edit">编辑</button>
+                        <button data-method="isUse" value="${user.userId}" class="layui-btn isUse`;
+    		if (user.isUseable) {
+    			html += ` layui-btn-warm">禁用`;
+    		}
+    		else {
+    			html += ` layui-btn-primary">启用`;
+    		}
+            html += 	`</button>
+                        <button data-method="reset" value="${user.globalUserId}" class="layui-btn layui-btn-danger reset">重置密码</button>
                      </td></tr>`;
     	});
     	$('#user_list').html(html);
     	initPage(obj.totalCount, pageIndex);
     }
     
+    
+    
     /**
-     * 新增
+     * 编辑
      */
-    $('body').on('click', '.layui-layer-btn0', function() {
-    	var roleIds = $('#roleName').val();
-    	console.log(roleIds);
-    		Param = {};
-    	Param.mobile = $('#mobile').val();
-    	Param.userName = $('#name').val();
-    	if (!roleIds) {
-    		layer.msg('请添加角色');
-    		return;
-    	}
-    	roleIds.forEach(function(id, index, roleIds) {
-    		Param.roles = {roleId: id};
-    	});
+    var userId;
+    $('body').on('click', '.edit', function () {
+    	$('input[name=add_mobile]').attr('readonly',true);// 编辑的时候设置手机号码不可修改
+    	userId = $(this).val();
     	$.ajax({
-    		url: '/adduser',
-    		header: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwcm8iOiJscyIsImNsdCI6IndlYiIsIm9zIjoiMS4wIiwiZGlkIjoiMzQ4YzAzZTMtY2NhMC00MTJkLWJlMGEtZTg1MmU4MDU2NGUzIiwiaWQiOiI4NSJ9.Vh7iLY4yh66X3UlHlNWHkTZV_PTRuc6rLmQodcKuH2I',
-    		type: 'POST',
-    		data: Param,
+    		url: '/getuserbyuserid?userId=' + userId,
+    		type: 'GET',
     		async: false,
     		success: function(data) {
-    			if (data.errmsg == 'success') {
-    				layer.msg('添加成功');
-    			} else {
-    				layer.msg('添加失败');
-    			}
+    			$('input[name=add_name]').val(data.result.userName);
+    			$('input[name=add_mobile]').val(data.result.mobile);
+    			var roles = data.result.roles;
+    			var html = "";
+    			roles.forEach(function(val, index, roles) {
+    				html += `${val.roleName}，`;
+    			});
+    			html = html.substring(0, html.length-1);
+    			$('#roleName').attr('value', html);
     		}
     	});
     });
