@@ -1,0 +1,190 @@
+.commodity,
+.commodityBox {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.head>div {
+    margin: 5px 20px 0 0;
+}
+
+.head>div>label,
+.state>label {
+    width: initial;
+    padding: 9px 0;
+    text-align: left;
+}
+
+.head>div>div,
+.state>div {
+    margin-left: 68px;
+}
+
+.head>.lastchild>div {
+    margin-left: 40px;
+}
+
+.head>button {
+    margin: 5px 5px 0 5px !important;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 10px;
+}
+
+
+/* 新增商品信息的样式 */
+
+.commodityBox {
+    display: none;
+    padding: 15px 20px;
+}
+
+.commodityBox .head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.commodityBox .head>div {
+    width: 45%;
+    margin: 5px 0;
+}
+
+.commodityBox .head select {
+    width: 100%;
+}
+
+.modelTableContainer table {
+    padding-right: 40px;
+}
+
+.modelTableContainer .caption {
+    text-align: left;
+    padding: 10px 0 8px 0;
+}
+
+.modelTableContainer td {
+    padding: 5px;
+}
+
+.modelTableContainer td input {
+    width: 100%;
+    border: none;
+    padding-left: 0;
+}
+
+.modelTableContainer .common {
+    width: calc(100% / 6);
+}
+
+.modelTableContainer .paramGroup {
+    position: relative;
+}
+
+.modelTableContainer .paramGroup input {
+    width: calc(50% - 6px);
+}
+
+.modelTableContainer .paramGroup input:first-child {
+    float: left;
+}
+
+.modelTableContainer .paramGroup input:last-child {
+    float: right;
+}
+
+.modelTableContainer .paramGroup span {
+    height: 49px;
+    border-left: 1px solid #e2e2e2;
+    position: absolute;
+    left: 50%;
+    top: 0px;
+}
+
+.modelTableContainer .newParam {
+    display: block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: #fff;
+    font-size: 20px;
+    background: cornflowerblue;
+    border-radius: 50%;
+    text-align: center;
+    float: right;
+    cursor: pointer;
+}
+
+.uploadImgTitle {
+    margin: 20px 0 8px 0px;
+}
+
+.uploadImg .siteUpload {
+    width: 140px;
+    height: 140px;
+    line-height: 140px;
+    text-align: center;
+    display: inline-block;
+    position: relative;
+    margin-right: 11px;
+}
+
+.uploadImg .siteUpload:last-child {
+    margin-right: 0;
+}
+
+.uploadImg .siteUpload img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 10;
+}
+
+.uploadImg .siteUpload .layui-box {
+    width: 138px;
+    height: 140px;
+    line-height: 140px;
+}
+
+.state {
+    margin-top: 15px;
+}
+
+.state>div {
+    line-height: 36px;
+}
+
+.state>div>input {
+    margin: 0 5px 0 10px;
+    position: relative;
+    top: 2px;
+}
+
+.commodityState {
+    display: none;
+    text-align: center;
+    /* line-height 的值与JS中弹框的area参数有关 */
+    line-height: 142px;
+}
+
+.layui-layer-content {
+    max-height: 609px;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1 {
+    width: 93px!important;
+    background-color: #2e8ded !important;
+    color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
+}

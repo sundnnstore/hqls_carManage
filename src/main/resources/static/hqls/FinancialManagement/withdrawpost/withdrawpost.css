@@ -1,0 +1,34 @@
+.mylayui-table,
+.layui-table {
+	width: auto;
+	background-color: transparent;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.mylayui-table td,
+.mylayui-table th,
+.layui-table td {
+	border: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.All-order-list {
+	border: 1px solid #e2e2e2;
+	/*width: -webkit-fit-content;*/
+	min-width: 780px;
+	background-color: #f1f1f1;
+	margin: 10px 0px;
+}
+td.operating{
+	width: 150px;
+}
+.shipbox {
+	text-align: center;
+}
+
+.shipbox button {
+	width: 200px;
+}

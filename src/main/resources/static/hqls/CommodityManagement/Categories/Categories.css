@@ -1,0 +1,73 @@
+.categories {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.head>div {
+    margin: 5px 20px 0 0;
+}
+
+.head>div>label {
+    width: inherit;
+    padding: 9px 0;
+    text-align: left;
+}
+
+.head>div>div {
+    margin-left: 40px;
+}
+
+.head>button {
+    margin: 5px 5px 0 5px !important;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 15px;
+}
+
+
+/* 弹框样式 */
+
+.categoriesTreeBox {
+    display: none;
+    padding: 15px 20px;
+}
+
+.categoriesLocate {
+    display: none;
+    text-align: center;
+    /* line-height 的值与JS中弹框的area参数有关 */
+    padding: 45px 0;
+}
+
+.categoriesLocate>p {
+    line-height: 40px;
+}
+
+.categoriesInfo {
+    display: none;
+    padding: 40px 20px;
+}
+
+.categoriesInfo .layui-input-inline {
+    display: block;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
+}
+
+.layui-layer-btn0,
+.layui-layer-btn1,
+.layui-layer-btn2,
+.layui-layer-btn3 {
+    width: 93px!important;
+    background-color: #2e8ded !important;
+    color: #fff !important;
+    text-align: center;
+    margin: 3px 5px!important;
+    padding: 3px 10px !important;
+}
