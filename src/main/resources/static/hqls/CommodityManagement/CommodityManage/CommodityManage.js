@@ -10,7 +10,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 
 	    };
 	    // 触发弹框事件
-	    $('#myContent').on('click', 'button', function() {
+	    $('.commodity').on('click', 'button', function() {
 	        var method = $(this).data('method');
 	        if (method == 'addCommodity') {
 	            title = '新增';
@@ -22,7 +22,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	        	partsBrand();
 	        } else if (method == 'view') {
 	            title = '查看';
-	            //alert("$(this):---->"+);
 	            Detailview($(this).parent().find("#partsId").val());
 	            $('#commodityBox input,#commodityBox select').each(function(elem) {
 	                $(this).attr('disabled', 'disabled');
@@ -93,19 +92,8 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	            yes: function(index, layero) {
 	                if (othis.text() === '上架') { //上架操作
 	                	isUnable(partsId,0,othis);
-//	                    if (true) { //上架成功：切换成下架按钮
-//	                        //上架修改状态
-//	                        
-//	                    } else { //上架失败：不切换按钮，同时提示用户上架失败
-//	                        layer.msg('上架失败');
-//	                    }
 	                } else { //下架操作
-	                    if (true) { //下架成功切换成下架按钮
-	                        othis.removeClass('layui-btn-warm').addClass('layui-btn-primary');
-	                        othis.text('上架')
-	                    } else { //下架失败：不切换按钮，同时提示用户上架失败
-	                        layer.msg('下架失败');
-	                    }
+	                	isUnable(partsId,0,othis);
 	                }
 	                layer.close(index); //如果设定了yes回调，需进行手工关闭
 	            },
@@ -288,8 +276,13 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 			async : false,
 			data : Jsonstr,
 			success : function(data){
-				elem.removeClass('layui-btn-primary').addClass('layui-btn-warm');
-				elem.text('下架');
+				if (elem.text() === '上架') { //上架操作
+					elem.removeClass('layui-btn-primary').addClass('layui-btn-warm');
+					elem.text('下架');
+                } else { //下架操作
+                	elem.removeClass('layui-btn-warm').addClass('layui-btn-primary');
+                	elem.text('上架');
+                }
 				alert("操作成功");
 			},
 			error:function(data){
@@ -303,9 +296,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      * @returns
      */
     function Detailview(partsId){
-    	//var data = {"partsId":1};//$("#partsId").val()
-    	//data=JSON.stringify(data);
-    	//alert(partsId);
     	$.ajax({
 			url : "/getpartsdetail",
 			type : "get",
@@ -454,7 +444,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	var html=`<select class="layui-select" id="partsBrandId">`;
     	var brand= data.result==null?0:data.result.length;
     	for (var i = 0; i < brand; i++) {
-    		//alert("当前品牌ID"+data.result[i].partsBrandId+"\n配件对应的品牌ID"+partsBrandId);
     		if(partsBrandId==data.result[i].partsBrandId){
     			html+=`<option value="${data.result[i].partsBrandId}" selected>${data.result[i].partsBrandName}</option>`;
     		}else{
@@ -556,36 +545,40 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 		return data;
     }
     
+    
+    /**
+     * 图片上传
+     */
+    function uploadImg(obj){
+    	alert("你好");
+////    	alert($(obj));
+//    	//判断,最后一个图片 ,上传追加,前提是 最后一个图片的不大于最大的上传限
+//    	var abc = $(obj).parent().parent();
+//    	appendImg(abc);
+////    	alert(abc.html());
+//    	alert($(abc).html());
+    }
+    
+    /**
+     * 追加图片
+     * @returns
+     */
+    function appendImg(obj){
+    	    var index = $(".siteUpload").index(obj);
+    	    alert(index);
+    	   
+//    	    $("ul li").click(function () {
+//    	        var index = $("ul li").index(this);
+//    	        alert(index);
+//    	     });
+    }
+    
     /**
      * 图片新增
      */
-    $(document).on('change', '#commodityImg1', function(event) {
+    $(".uploadImg").on('change', '.commodityImg', function(obj) {
+    	alert($(obj).html());
     	alert("图片点击事件");
     });
     
 });
-
-//var dataJson ={
-// //"curPrice": $("").val(),
-// //"discount": $("").val(),
-// //"isUsable": $("").val(),
-// //"origin": $("").val(),
-// //"partsAttrExtrs":partsAttrExtrs,
-////"partsFactory": $("").val(),
-////"partsId": $("").val(),
-// "partsBrandId":$("#partsBrandId").val(),  
-// "partsCode":$("#partsCode").val(),
-// "partsModel":$("#partsModel").val(),
-// "partsName":$("#partsName").val(),
-// "partsPics":partsPics,
-// "partsSpec":$("#partsSpec").val()
-// //"partsType": $("").val(),
-// //"partsTypeId": $("").val(),
-// //"partsUnit": $("").val(),
-// //"pid": $("").val(),
-// //"price": $("").val(),
-// //"remark": $("").val(),
-// //"shelfLife": $("").val(),
-// //"typeName": $("").val()
-//
-//};
