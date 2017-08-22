@@ -177,6 +177,23 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('请点击定位按钮');
     		return;
     	}
+    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
+            layer.msg('联系人电话有误，请重填');
+            return;
+    	}
+    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
+    		layer.msg('联系人电话不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
+    		layer.msg('门店名称不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
+    		layer.msg('门店联系人不能为空！');
+    		return;
+    	}
+    	
 		$.ajax({
 			url : "/changestorebystoreid",
 			type : "post",
@@ -223,6 +240,22 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	}
     	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
     		layer.msg('请点击定位按钮');
+    		return;
+    	}
+    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
+            layer.msg('联系人电话有误，请重填');
+            return;
+    	}
+    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
+    		layer.msg('联系人电话不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
+    		layer.msg('门店名称不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
+    		layer.msg('门店联系人不能为空！');
     		return;
     	}
 		$.ajax({
