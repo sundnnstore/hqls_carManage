@@ -563,28 +563,21 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 		return data;
     }
     
-    
-    /**
-     * 图片上传
-     */
-    function uploadImg(obj){
-    	alert("你好");
-////    	alert($(obj));
-//    	//判断,最后一个图片 ,上传追加,前提是 最后一个图片的不大于最大的上传限
-//    	var abc = $(obj).parent().parent();
-//    	appendImg(abc);
-////    	alert(abc.html());
-//    	alert($(abc).html());
-    }
-    
     /**
      * 追加图片
      * @returns
      */
-    function appendImg(obj){
-    	    var index = $(".siteUpload").index(obj);
-    	    alert(index);
-    	   
+    function appendImg(){
+    		var picHtml=`
+    			<div class="siteUpload">
+                <img id="commodityImgUrl" src="">
+                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" value="0">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+                </div>
+            </div>	
+    		`;
+    		$(".siteUpload:last").append(picHtml);
 //    	    $("ul li").click(function () {
 //    	        var index = $("ul li").index(this);
 //    	        alert(index);
@@ -592,11 +585,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     }
     
     /**
-     * 图片新增
+     * 图片上传追加
      */
-    $(".uploadImg").on('change', '.commodityImg', function(obj) {
-    	alert($(obj).html());
-    	alert("图片点击事件");
-    });
+//    $(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
+//    	//默认为
+//    	var flag = $(this).attr("value");
+//    });
     
 });
