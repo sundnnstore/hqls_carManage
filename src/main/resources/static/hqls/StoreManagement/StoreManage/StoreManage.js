@@ -119,6 +119,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             			addStore(pid,index);
             		}else if(temp == 'edit'){
             			editStore(index);// 门店编辑
+            		}else if(temp == 'view'){
+            			layer.close(index);
             		}
                 //layer.close(index); // 如果设定了yes回调，需进行手工关闭
                 inputReset(); // 清空表单
