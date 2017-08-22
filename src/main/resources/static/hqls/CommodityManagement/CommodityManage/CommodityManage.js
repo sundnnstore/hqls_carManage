@@ -10,7 +10,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 
 	    };
 	    // 触发弹框事件
-	    $('#myContent').on('click', 'button', function() {
+	    $('.commodity').on('click', 'button', function() {
 	        var method = $(this).data('method');
 	        if (method == 'addCommodity') {
 	            title = '新增';

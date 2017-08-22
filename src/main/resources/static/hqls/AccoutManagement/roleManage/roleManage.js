@@ -4,10 +4,13 @@ layui.use(['layer', 'laypage'], function() {
         $ = layui.jquery;
     pageSize = 10;
     // 新增和编辑角色信息的弹框
-    $('#myContent').on('click', 'button', function() {
+    $('.RoleManage').on('click', 'button', function() {
         var method = $(this).data('method');
         // layer.closeAll();
         if (method == 'addRole') {
+        	var nodes = getallauths();
+        	$.fn.zTree.init($("#roleTree"), setting, nodes);
+        	$("#roleName").val("");
             roleInfoModel('新增', '#roleTreeBox',0);
         }else{
         	var roleId = $(this).attr("name");
@@ -17,7 +20,13 @@ layui.use(['layer', 'laypage'], function() {
         		//显示权限数据
         		initZtree(roleId);
         	}
-    	   if (flag) { // 有人员
+    	   if (flag) {
+    		   // 有人员
+    		   if(method == 'del'){
+    			   $("#role_msg").html("不可删除！");
+    		   }else{
+    			   $("#role_msg").html("是否确认修改？");
+    		   }
                layer.open({
                    type: 1,
                    title: '提示', // 标题
@@ -30,13 +39,13 @@ layui.use(['layer', 'laypage'], function() {
                 	   layer.close(index);
                 	   if(method == 'edit'){
                 		   roleInfoModel('编辑', '#roleTreeBox',roleId);
-                	   }else{
-                		   roleInfoModel('提示', '#roleDelete',roleId);
                 	   }
-                       //layer.close(index);
                    },
                    btn2: function(index, layero) {
                        layer.close(index);
+                   },
+                   end:function(){
+                	   $('#roleEdit').css("display","none");
                    }
                });
            }else{

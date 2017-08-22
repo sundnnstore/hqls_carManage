@@ -7,7 +7,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         second_title = '';
 
     // 商品分类节点弹框触发事件
-    $('#myContent').on('click', 'button', function() {
+    $('.categories').on('click', 'button', function() {
         var othis = $(this),
             method = othis.data('method');
         first_title = second_title = '';
