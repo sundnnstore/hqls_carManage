@@ -43,6 +43,8 @@ public class PartsDetailDto {
 	private Double discount;
 	@ApiModelProperty("现价")
 	private Double curPrice;
+	@ApiModelProperty("是否上架")
+	private Integer isUsable;
 	@ApiModelProperty("轮播图")
 	private List<HqlsPartsPic> partsPicList;
 	@ApiModelProperty("动态属性")
@@ -200,6 +202,14 @@ public class PartsDetailDto {
 
 	public void setPartsBrandId(Integer partsBrandId) {
 		this.partsBrandId = partsBrandId;
+	}
+
+	public Integer getIsUsable() {
+		return isUsable;
+	}
+
+	public void setIsUsable(Integer isUsable) {
+		this.isUsable = isUsable;
 	}
 
 }

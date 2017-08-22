@@ -121,7 +121,7 @@ public class PartsService {
 				hqlsParts.setIsUsable(partsOperDto.getIsUsable());
 				hqlsParts.setOrigin(partsOperDto.getOrigin());
 				hqlsParts.setPartsBrandId(partsOperDto.getPartsBrandId());
-				hqlsParts.setPartsCode(partsOperDto.getPartsCode());
+				hqlsParts.setPartsCode("HQ"+System.currentTimeMillis());
 				hqlsParts.setPartsFactory(partsOperDto.getPartsFactory());
 				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
 				hqlsParts.setPartsName(partsOperDto.getPartsName());

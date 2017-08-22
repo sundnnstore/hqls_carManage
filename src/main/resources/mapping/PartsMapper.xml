@@ -11,7 +11,7 @@
 	
 	<select id="getPartsDetail" resultMap="detail" parameterType="Integer">
 		select parts.parts_id,parts.parts_brand_id, parts.parts_name,parts.parts_code, parts.parts_model, parts.parts_unit, parts.parts_spec,
-				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,
+				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,parts.is_usable,
 				brand.parts_brand_name
 		from hqls_parts as parts, hqls_parts_brand as brand
 		where parts.parts_brand_id = brand.parts_brand_id
@@ -102,7 +102,7 @@
 		where 1=1
 			<if test="partsCode!=null"> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
 		 	<if test="partsName!=null"> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
-		 	<if test="partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
+		 	<if test="partsTopTypeId!=-1"> and hpt.parts_type=#{partsTopTypeId}</if>
 		 	<if test="partsTypeId!=null"> and hpt.pid=#{partsTypeId}</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
 	</select>
