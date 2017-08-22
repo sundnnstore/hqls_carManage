@@ -545,10 +545,39 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 		return data;
     }
     
+    
+    /**
+     * 图片上传
+     */
+    function uploadImg(obj){
+    	alert("你好");
+////    	alert($(obj));
+//    	//判断,最后一个图片 ,上传追加,前提是 最后一个图片的不大于最大的上传限
+//    	var abc = $(obj).parent().parent();
+//    	appendImg(abc);
+////    	alert(abc.html());
+//    	alert($(abc).html());
+    }
+    
+    /**
+     * 追加图片
+     * @returns
+     */
+    function appendImg(obj){
+    	    var index = $(".siteUpload").index(obj);
+    	    alert(index);
+    	   
+//    	    $("ul li").click(function () {
+//    	        var index = $("ul li").index(this);
+//    	        alert(index);
+//    	     });
+    }
+    
     /**
      * 图片新增
      */
-    $(".uploadImg").on('click', '#commodityImg1', function() {
+    $(".uploadImg").on('change', '.commodityImg', function(obj) {
+    	alert($(obj).html());
     	alert("图片点击事件");
     });
     

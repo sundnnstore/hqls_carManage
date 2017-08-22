@@ -202,11 +202,26 @@
             <!-- 1。 每个img标签的id都不一样，新出现的图片id要重新给定一个唯一值 -->
             <!-- 2。 每个inpug标签的id也都不一样，新出现的图片上传框id也要重新给定一个唯一值 -->
             <!-- 3。 如果img的id和input的id重新定义了，请在js中的layui.upload方法中同步更改 -->
-            <div class="siteUpload">
-                <img id="commodityImgUrl1" src="">
+            <!-- <div class="siteUpload">
+                <img id="commodityImgUrl" src="">
                 <div class="layui-box layui-upload-button">
-                    <input type="file" name="image" id="commodityImg1" class="layui-upload-file">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*">
                     <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+                </div>
+            </div> -->
+            <div class="siteUpload">
+                <img id="commodityImgUrl" src="">
+                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" onchange="uploadImg(this)">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+                </div>
+            </div>
+            
+            <div class="siteUpload">
+                <img id="commodityImgUrl" src="">
+                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" onchange="uploadImg(this)">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>最后一个上传图片</span>
                 </div>
             </div>
         </div>
