@@ -284,6 +284,7 @@ function getAllCheckedNodes(){
 
 function initZtree(roleId){
 	var nodes;
+	var nocheck="";
 	$.ajax({
 		url : "/findcheckedauthoritys",
 		type : "post",
@@ -291,6 +292,22 @@ function initZtree(roleId){
 		data : {roleId : roleId},
 		success : function(data){
 			nodes = data.result;
+			for(i=0;i<nodes.length;i++){
+				var node = nodes[i];
+				if(node.pId != null && node.pId != 0){
+					if(!(node.checked)){
+						nocheck += node.pId+",";
+					}
+				}
+			}
+			for(j=0;j<nodes.length;j++){
+				var node = nodes[j];
+				if(node.pId ==0 || node.pId == null){
+					if(nocheck.indexOf(node.id) == -1){
+						node.checked = true;
+					}
+				}
+			}
 		}
 	});
 	$.fn.zTree.init($("#roleTree"), setting, nodes);
