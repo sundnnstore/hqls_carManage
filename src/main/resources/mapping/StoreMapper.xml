@@ -89,7 +89,7 @@
 		and sto.is_useable=1
 		and users.is_useable=1
 		order by sto.create_time
-	</select>
+	</select> 
 	
 	
 	<select id="findStore" resultType="com.sinoauto.dto.StoreInfoDto">
