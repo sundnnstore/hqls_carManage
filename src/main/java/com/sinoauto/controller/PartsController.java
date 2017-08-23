@@ -17,10 +17,11 @@ import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
-import com.sinoauto.dto.PartsTreeRecursionDto;
+import com.sinoauto.dto.PartsTypeDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsBrandService;
 import com.sinoauto.service.PartsService;
+import com.sinoauto.service.PartsTypeService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,10 @@ public class PartsController {
 	
 	@Autowired
 	private PartsBrandService partsBrandService;
+	
+	@Autowired
+	private PartsTypeService partsTypeService;
+	
 	
 	@ApiOperation(value = "按配件类型查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbytype")
@@ -93,9 +98,11 @@ public class PartsController {
 		return partsBrandService.findPartsBrands();
 	}
 	
-	@ApiOperation(value = "查询配件树形菜单", notes = "liud")
-	@GetMapping("findpartstree")
-	public PartsTreeRecursionDto partsTreeRecursion(@RequestParam("pid") Integer pid){
-		return partsService.partsTreeRecursion(pid);
+	@ApiOperation(value = "查询配件类型集合", notes = "liud")
+	@GetMapping("findpartstype")
+	public List<PartsTypeDto> partsTreeRecursion(){
+		return partsTypeService.partsTypes();
 	}
+	
+	
 }

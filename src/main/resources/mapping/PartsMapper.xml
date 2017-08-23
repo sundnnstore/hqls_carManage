@@ -100,10 +100,10 @@
 		from hqls_parts pa
 		inner join hqls_parts_type hpt on hpt.parts_type_id=pa.parts_type_id
 		where 1=1
-			<if test="partsCode!=null"> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
-		 	<if test="partsName!=null"> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
-		 	<if test="partsTopTypeId!=-1"> and hpt.parts_type=#{partsTopTypeId}</if>
-		 	<if test="partsTypeId!=null"> and hpt.pid=#{partsTypeId}</if>
+			<if test="partsCode!=null and partsCode!='' "> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
+		 	<if test="partsName!=null and partsName!='' "> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
+		 	<if test="partsTopTypeId!=-1 and partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
+		 	<if test="partsTypeId!=null and partsTypeId!=-1"> and hpt.pid=#{partsTypeId}</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
 	</select>
 	
