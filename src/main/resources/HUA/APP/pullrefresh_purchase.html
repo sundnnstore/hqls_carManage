@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="../css/mui.min.css">
+	</head>
+
+	<body>
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+
+				<div style="padding: 10px 10px;">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a class="mui-control-item mui-active" href="#item1">易损件</a>
+						<a class="mui-control-item" href="#item2">车型件</a>
+					</div>
+				</div>
+				<div id="item1" class="mui-control-content mui-active">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">油品</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">滤清器</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">蓄电池</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">制动系</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">点火系</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">皮带涨紧轮</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">雨刮片</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">照明</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">养护用品</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">季节性产品</a>
+						</li>
+					</ul>
+				</div>
+
+				<div id="item2" class="mui-control-content">
+					<ul class="mui-table-view">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">油品</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">滤清器</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">蓄电池</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">制动系</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a name="qweqweqweqw" class="mui-navigate-right">点火系</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">皮带涨紧轮</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">雨刮片</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">照明</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">养护用品</a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">季节性产品</a>
+						</li>
+					</ul>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						<a href="" class="mui-navigate-right">Item 1</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="" class="mui-navigate-right">Item 2</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="" class="mui-navigate-right">Item 3</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="" class="mui-navigate-right">Item 4</a>
+					</li>
+					<li class="mui-table-view-cell">
+						<a href="" class="mui-navigate-right">Item 5</a>
+					</li>
+				</ul>
+			</div>
+		</div>-->
+		<script src="../js/mui.min.js"></script>
+		<script>
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				setTimeout(function() {
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					for (var i = cells.length, len = i + 3; i < len; i++) {
+						var li = document.createElement('li');
+						li.className = 'mui-table-view-cell';
+						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
+						//下拉刷新，新纪录插到最前面；
+						table.insertBefore(li, table.firstChild);
+					}
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				}, 1500);
+			}
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+					var table = document.body.querySelector('.mui-table-view');
+					var cells = document.body.querySelectorAll('.mui-table-view-cell');
+					for (var i = cells.length, len = i + 5; i < len; i++) {
+						var li = document.createElement('li');
+						li.className = 'mui-table-view-cell';
+						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
+						table.appendChild(li);
+					}
+				}, 1500);
+			}
+			var plusReady = function(callback) {
+				if(window.plus) {
+					callback();
+				} else {
+					document.addEventListener('plusready', callback);
+				}
+			};
+			plusReady(function() {
+				//监听list点击事件
+				mui(".mui-table-view").on('tap', '.mui-table-view-cell >a', function(e) {
+					//获取id
+					var name = this.getAttribute('id');
+					var title = e.target.innerHTML;
+
+					//打开详情页面          
+					var purchase_detailloding = plus.nativeUI.showWaiting('加载中...');
+					var wv = null;
+					wv = plus.webview.create('purchase_detail.html', 'purchase_detail', {
+						titleNView: {
+							titleText: '采购列表',
+							autoBackButton: 'true',
+							backgroundColor: '#2F2C2F',
+							titlecolor: "#ffffff",
+						}
+					}, {
+						name: name,
+						title: title
+					});
+					wv.addEventListener('loaded', function() {
+						wv.show('slide-in-right'); // 显示窗口
+						purchase_detailloding.close();
+						purchase_detailloding = null;
+					}, false);
+				})
+			});
+//			if (mui.os.plus) {
+//				mui.plusReady(function() {
+//					setTimeout(function() {
+//						mui('#pullrefresh').pullRefresh().pullupLoading();
+//					}, 10);
+//
+//				});
+//			} else {
+//				mui.ready(function() {
+//					mui('#pullrefresh').pullRefresh().pullupLoading();
+//				});
+//			}
+		</script>
+	</body>
+
+</html>

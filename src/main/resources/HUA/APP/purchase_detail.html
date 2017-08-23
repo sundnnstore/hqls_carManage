@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<style type="text/css">
+			
+			#breadcrumb>a {
+				display: inline-block;
+				padding: 8px;
+			}
+			
+			#breadcrumb>a>span {
+				color: #000;
+				margin-left: 5px;
+				;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">采购</h1>
+		</header>-->
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<div class="mui-scroll">
+					<div id="breadcrumb">
+						<!--<a href="#">采购<span >></span></a>-->
+					</div>
+				</div>
+			</div>
+			<!--列表展示-->
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">全部油品</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">汽机油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">柴油机</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">变速箱油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">手动变速箱油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">刹车油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">助力转向油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">齿轮油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">液压油</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right">季变速箱放油螺丝</a>
+				</li>
+			</ul>
+
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.0.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				//				window.addEventListener('AddNew', function() {
+				////					plus.webview.getWebviewById('purchase_detail').reload();
+				//				})
+				var selfwv = plus.webview.currentWebview();
+				if(selfwv.title) {
+					$("#breadcrumb").empty();
+					$("#breadcrumb").append('<a  name="">' + selfwv.title + '<span >></span></a>');
+				}
+
+				//监听item点击事件
+				mui('.mui-table-view').on('tap', '.mui-table-view-cell > a', function(e) {
+					var title = e.target.innerText;
+					var html = '<a  name="purchase">' + title + '<span >></span></a>';
+					//					console.log(html);
+					//添加title文字
+					$("#breadcrumb").append('<a name="purchase">' + title + '<span >></span></a>');
+					//ajax请求
+					//更换list
+					opengoods();
+				});
+
+				//跳转至商品详情
+				function opengoods() {
+					var goodsloding = plus.nativeUI.showWaiting('加载中...');
+					var wv = null;
+					wv = plus.webview.create('goods.html', 'goods', {
+						titleNView: {
+							titleText: '商品',
+							autoBackButton: 'true',
+							backgroundColor: '#2F2C2F',
+							titlecolor: "#ffffff",
+							buttons: [{
+								text: '图',
+								float: 'right',
+								onclick: openCart
+							}]
+						}
+					});
+					wv.addEventListener('loaded', function() {
+						wv.show('slide-in-right'); // 显示窗口
+						goodsloding.close();
+						goodsloding = null;
+					}, false);
+				}
+
+				function openCart() {
+					//					var goods = plus.webview.getWebviewById('goods');
+					//					goods.evalJS('mxltest()')
+					var shop_cartloding = plus.nativeUI.showWaiting('加载中...');
+					var wv = null;
+					wv = plus.webview.create('shop_cart.html', 'shop_cart', {
+						titleNView: {
+							titleText: '购物车',
+							autoBackButton: 'true',
+							backgroundColor: '#2F2C2F',
+							titlecolor: "#ffffff",
+							buttons: [{
+								color: '#fff',
+								fontSize: '16px',
+								text: '编辑',
+								float: 'right',
+								//								onclick: clickButton
+							}]
+						}
+					});
+					wv.addEventListener('loaded', function() {
+						wv.show('slide-in-right'); // 显示窗口
+						shop_cartloding.close();
+						shop_cartloding = null;
+					}, false);
+				}
+
+			})
+			function rmoveItem() {
+				console.log()
+				$("#breadcrumb a:first").nextAll().remove();
+			}
+		</script>
+	</body>
+
+</html>

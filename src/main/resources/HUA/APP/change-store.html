@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+	</head>
+
+	<body>
+		<!-- 主界面不动、菜单移动 -->
+		<!-- 侧滑导航根容器 -->
+		<div class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<div class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!-- 主界面具体展示内容 -->
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell store-content">
+								<a class="mui-navigate-right">
+									<span class="">华汽连锁·南京凤凰西街店</span>
+								</a>
+							</li>
+							<li class="mui-table-view-cell store-content">
+								<a class="mui-navigate-right">
+									<span class="">华汽连锁·南京花生唐店</span>
+								</a>
+							</li>
+							<li class="mui-table-view-cell store-content">
+								<a class="mui-navigate-right">
+									<span class="">华汽连锁·南京珠江路店</span>
+								</a>
+							</li>
+							<li class="mui-table-view-cell store-content">
+								<a class="mui-navigate-right">
+									<span class="">华汽连锁·武汉人民广场店</span>
+								</a>
+							</li>
+							<li class="mui-table-view-cell store-content">
+								<a class="mui-navigate-right">
+									<span class="">华汽连锁·南京新街口店</span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="mui-off-canvas-backdrop"></div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({ swipeBack:true }); //启用右滑关闭功能 
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			
+			//切换门店并返回
+			mui('body').on('tap', '.store-content', function() {
+				mui.toast('true');
+				mui.currentWebview.close(); //销毁当前视图
+				mui.back();
+			});
+		</script>
+	</body>
+
+</html>
