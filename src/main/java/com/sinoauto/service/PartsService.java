@@ -288,24 +288,39 @@ public class PartsService {
 	 * 	@param pid  第一级的菜单id
 	 * 	@return
 	 */
-	public List<PartsTreeRecursionDto> partsTreeRecursion(Integer pid){
-		List<PartsTreeRecursionDto> partsTree = null;
-		List<PartsTreeRecursionDto> addChild=null;
-		pid=pid==null?1:pid;
-		partsTree = partsMapper.partsTreeRecursion(pid);
-		if(partsTree!=null){
-			for (PartsTreeRecursionDto child : partsTree) {
-				//寻找菜单下面是否存在子集
-				addChild =partsTreeRecursion(child.getPartsTypeId());
-				//如果存在就添加
-				if(addChild!=null){
-					partsTree.add(child);
-				}
+	public PartsTreeRecursionDto partsTreeRecursion(Integer pid){
+		//父级菜单自己
+		PartsTreeRecursionDto partsParent = partsMapper.partsParent(pid);
+		if(partsParent==null){partsParent=new PartsTreeRecursionDto();};
+		//查询出子集的集合
+		List<PartsTreeRecursionDto> childTree = null; 
+		childTree = partsMapper.partsChildTreeByPid(pid);
+		//判断是否存在子菜单
+		if(childTree!=null){
+			//创建存储子菜单集合
+			partsParent.setChildren(new ArrayList<>());
+			//存储子节点树；
+			for (PartsTreeRecursionDto child : childTree) {
+				//查询子菜单下是否存在子菜单
+				PartsTreeRecursionDto part = partsTreeRecursion(child.getId());
+				partsParent.getChildren().add(part);
 			}
 		}else{
-			partsTree = new ArrayList<>();
+			childTree = new ArrayList<>();
 		}
-		return partsTree;
+		return partsParent;
 	}
-		
+	
+	/**
+	 *  根据配件等级查询配件信息
+	 * 	@User liud
+	 * 	@Date 2017年8月23日下午4:02:08
+	 * 	@param onelevel 第一个等级,可以查询所有子集
+	 * 	@param twolevel 第二个等级,查询上一个等级,和下一个等级
+	 * 	@param threelevel 查询所有父级
+	 * 	@return
+	 */
+	public PartsTreeRecursionDto findPartsByLevel(Integer onelevel,Integer twolevel,Integer threelevel){
+		return null;
+	}
 }

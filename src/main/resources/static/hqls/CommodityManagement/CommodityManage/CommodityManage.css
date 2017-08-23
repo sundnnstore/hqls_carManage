@@ -29,6 +29,19 @@
     margin: 5px 5px 0 5px !important;
 }
 
+.head .menuContent {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    z-index: 10;
+}
+
+.head .menuContent ul {
+    margin-top: 0;
+    width: 160px;
+}
+
 .tableContainer {
     width: 100%;
     overflow: auto;
@@ -36,7 +49,7 @@
 }
 
 
-/* 新增商品信息的样式 */
+/* 鏂板鍟嗗搧淇℃伅鐨勬牱寮� */
 
 .commodityBox {
     display: none;
@@ -53,7 +66,7 @@
     margin: 5px 0;
 }
 
-.commodityBox .head select {
+.commodityBox select {
     width: 100%;
 }
 
@@ -167,7 +180,7 @@
 .commodityState {
     display: none;
     text-align: center;
-    /* line-height 的值与JS中弹框的area参数有关 */
+    /* line-height 鐨勫�间笌JS涓脊妗嗙殑area鍙傛暟鏈夊叧 */
     line-height: 142px;
 }
 

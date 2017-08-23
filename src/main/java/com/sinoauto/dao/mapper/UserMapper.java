@@ -44,5 +44,11 @@ public interface UserMapper {
 	public int updateUser(HqlsUser user);
 	
 	public UserDto getUserDtoByUserId(@Param("userId") Integer userId);
+	
+	@Select("SELECT hs.store_id FROM hqls_user_store  hus LEFT JOIN hqls_store hs "+
+			"ON hus.store_id = hs.store_id "+
+			"WHERE hus.user_id =( SELECT user_id FROM hqls_user WHERE global_user_id = #{1} AND is_useable =1) "+ 
+			"AND hs.is_useable = 1 LIMIT 1")
+	public Integer checkUser(Integer globalUserId);
 
 }
