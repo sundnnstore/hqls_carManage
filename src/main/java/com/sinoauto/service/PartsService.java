@@ -44,17 +44,29 @@ public class PartsService {
 	@Autowired
 	private PartsTypeMapper partsTypeMapper;
 	
-	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType) {
-		return RestModel.success(partsMapper.findPartsTypeListByType(partsType));
+	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		Page<CommonDto> page = partsMapper.findPartsTypeListByType(partsType);
+		return RestModel.success(page, (int) page.getTotal());
 	}
 	
-	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId) {
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllParts(Integer pageIndex, Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		Page<CommonDto> page1 = partsMapper.findPartsTypeListByType(1);
+		PageHelper.startPage(pageIndex, pageSize);
+		Page<CommonDto> page2 = partsMapper.findPartsTypeListByType(2);
+		page1.addAll(page2);
+		return RestModel.success(page1);
+	} 
+	
+	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
 		//查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
 		Object objList;
 		//此类别下还有子类
 		if (count > 0) {
-			objList = partsMapper.findPartsTypeListByType(partsTypeId);
+			PageHelper.startPage(pageIndex, pageSize);
+			objList = partsMapper.findPartsTypeListByPid(partsTypeId);
 		}
 		//此类别下没有子类，展示商品列表
 		else {

@@ -33,15 +33,18 @@ public interface PartsMapper {
 	 * @param partsType（1，易损件；2通用件）
 	 * @return
 	 */
-	@Select("select parts_type_id, type_name from hqls_parts_type where parts_type = #{1} and pid = 0")
+	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where parts_type = #{1} and pid = 0")
 	public Page<CommonDto> findPartsTypeListByType(Integer partsType);
+	
+	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where pid = 0")
+	public Page<CommonDto> findAllParts();
 	
 	/**
 	 * 按父级Id查询配件类型
 	 * @param pid
 	 * @return
 	 */
-	@Select("select parts_type_id, type_name from hqls_parts_type where pid = #{1}")
+	@Select("select parts_type_id as `key`, type_name as `value` from hqls_parts_type where pid = #{1}")
 	public Page<CommonDto> findPartsTypeListByPid(Integer pid);
 	
 	/**
