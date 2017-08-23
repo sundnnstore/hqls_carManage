@@ -305,11 +305,11 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     }
     // 门店图片弹框
     $('#seePic').click(function() {
-        event.stopPropagation();
         layer.open({
             type: 1,
             title: false,
             closeBtn: 0,
+            area:'500px',
             shade: [1, 'transparent'],
             skin: 'layui-layer-nobg', // 没有背景色
             shadeClose: true,
