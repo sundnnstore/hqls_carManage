@@ -624,18 +624,39 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     }
 });
 
-/**
- * 图片上传追加
- */
-$(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
-	//默认为
-	alert("你好");
-	var flag = $(this).attr("value");
-});
+
+
+///**
+// * 图片上传追加
+// */
+//$(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
+//	//默认为
+//	alert("你好");
+//	var flag = $(this).attr("value");
+//});
 
 function change(obj){
-	alert("你好");
+	var form =$("#form");
+	var imgUrl = uploadImg(form,obj);
+	$(obj).parent().parent().find("img").attr("src",imgUrl);
+//	alert($(obj).html());
+//	alert("你好");
+	appendImg(obj);
 } 
+
+//追加图片
+function appendImg(obj){
+	var addFlag =parseInt($(obj).val())+1;
+	var img=`
+			<div class="siteUpload">
+                <img id="commodityImgUrl" src="">
+                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" value="${addFlag}">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+                </div>
+            </div>`;
+	$(obj).parent().parent().parent().append(img);
+}
 
 
 //在配件树中选中配件后写入input中

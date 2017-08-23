@@ -95,7 +95,7 @@
 
 <!-- 弹框一：新增编辑查看 -->
 <div id="commodityBox" class="commodityBox">
-    <form>
+    <form id="form">
         <!-- 新增商品中的商品信息 -->
         <div class="head">
             <div class="layui-input-inline">
@@ -211,10 +211,11 @@
             <div class="siteUpload">
                 <img id="commodityImgUrl" src="">
                 <div class="layui-box layui-upload-button">
-                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change()" accept="image/*">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" value="1">
                     <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
                 </div>
             </div>
+            
         </div>
         <!-- 新增商品中的否上架选项 -->
         <div class="state">
