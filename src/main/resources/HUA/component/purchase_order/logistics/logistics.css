@@ -1,0 +1,103 @@
+.logistics .mui-table-view .mui-table-view-cell{
+	border:none;
+	position: relative;
+	color: #000000;
+	border: 1px solid #000;
+	margin-top: 10px;
+	border-radius: 4px;
+}
+.mui-table-view .mui-table-view-cell {
+    padding: 5px 8px;
+    border-bottom: 1px solid #000000;
+}
+.logistics .mui-media-body p{
+	color: #000000;
+}
+.logistics .mui-table-view .falg{
+	color: red;
+	font-size: 14px!important;
+}
+.logistics .l-number{
+	width: 130px;
+	position: absolute;
+	bottom: 5px;
+	left: 8px;
+	height: 20px;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+	color: #FFFFFF;
+}
+.remak{
+	padding: 10px 0px;
+	font-size: 14px;
+	color: #000000;
+	border-bottom: 1px solid #ccc;
+}
+.mui-content{
+	background: #fff;
+	padding: 0px 5px;
+}
+.mui-content .wuinfo{
+	background: #FFFFFF;
+}
+/*.wuinfo ul {
+	padding: 0px;
+	margin: 0px;
+	margin-left: 20px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #CCCCCC;
+}
+*/
+.wuinfo ul li{
+	list-style: none;
+	
+}
+
+.wuinfo .wudate{
+	width: 20%;
+	padding: 0px;
+	margin: 0px;
+	
+	
+}
+.wuinfo .wudate li{
+	height: 65px;
+	text-align: center;
+	position: relative;
+}
+.wuinfo .wudate li .mui-yuan{
+	display: block;
+	width: 6px;
+	height: 6px;
+	border-radius: 100%;
+	background: #ccc;
+	position: absolute;
+	top: 7px;
+	right: 4px;
+}
+.wuinfo .wlinfo{
+	width: 80%;
+	padding: 0px;
+	margin: 0px;
+}
+.wuinfo .wlinfo li{
+	height: 65px;
+}
+.wuinfo .wlinfo li p{
+	margin-bottom: 0px;
+}
+.wuinfo p{
+	color: #000000;
+}
+.wuinfo .Prompt{
+	text-align: center;
+	margin: 0px;
+	font-size: 12px;
+}
+.mui-table-view .mui-media img {
+    display: block;
+    max-width: 130px;
+    height: 90px;
+    margin-right: 10px;
+}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<style type="text/css">
+			.content-detail {
+				text-align: center;
+				padding: 10px;
+				background: #FFFFFF;
+			}
+			
+			.content-detail p:nth-child(1) {
+				height: 40px;
+				color: #000000;
+				font-size: 18px;
+			}
+			
+			/*交易金额样式*/
+			.content-detail p:nth-child(1) span {
+				color: #EC971F;
+				font-size: 35px;
+				line-height: 40px;
+				vertical-align: middle;
+			}
+			
+			/*交易结果样式*/
+			.content-detail p:nth-child(2) {
+				padding-top: 10px;
+				font-size: 25px;
+				color: #000000;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- 主界面不动、菜单移动 -->
+		<!-- 侧滑导航根容器 -->
+		<div class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<!--<header class="mui-bar mui-bar-nav">
+					<a href="" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color:#000;"></a>
+					<h1 class="mui-title">账单详情</h1>
+				</header>-->
+				<div class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!-- 主界面具体展示内容 -->
+						<div class="content-detail">
+							<p><span class="mui-icon mui-icon-extra mui-icon-extra-express"></span>采购</p>
+							<p>-2000.00</p>
+							<p>交易成功</p>
+						</div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a class="mui-pull-left">
+									付款方式：
+								</a>
+								<a class="mui-pull-right">
+									余额
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-pull-left">
+									商品说明：
+								</a>
+								<a class="mui-pull-right">
+									华汽华东仓
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-pull-left">
+									商品订单号：
+								</a>
+								<a class="mui-pull-right">
+									17874849394948494747487
+								</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a class="mui-pull-left">
+									支付宝订单号：
+								</a>
+								<a class="mui-pull-right">
+									873947838723370894392
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true
+			}); //启用右滑关闭功能
+		</script>
+	</body>
+
+</html>

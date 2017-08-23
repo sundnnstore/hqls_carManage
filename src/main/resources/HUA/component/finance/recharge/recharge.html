@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="recharge.css"/>
+	</head>
+
+	<body>
+		<!-- 主界面不动、菜单移动 -->
+		<!-- 侧滑导航根容器 -->
+		<div class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+			
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<header class="mui-bar mui-bar-nav">
+					<a href="" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color:#000;"></a>
+					<h1 class="mui-title">充值返现</h1>
+				</header>
+				<div class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!-- 主界面具体展示内容 -->
+						<p class="rule">华汽维修连锁，重置立获返现，返现金额可提现到指定账户
+							<a href="#">查看更多返现规则</a>
+						</p>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<label>充值</label>
+								<input class="input-cont" maxlength="10" type="text" name="" value="" placeholder="请输入充值金额" />
+								<span>元</span>
+							</div>
+							<div class="mui-input-row">
+								<label>返现</label>
+								<input class="input-cont" maxlength="10" type="text" name="" value="" />
+								<span>元</span>
+							</div>
+						</form>
+						<h5 class="title-pay">支付方式</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row input-pay">
+								<input type="radio" name="pay-choose" id="" value="" />
+								<div class="pay-type">
+									<img class="img-QQ" src="images/qq.png" />
+									<span>QQ支付</span>
+								</div>
+							</div>
+							<div class="mui-input-row input-pay">
+								<input type="radio" name="pay-choose" id="" value="" />
+								<div class="pay-type">
+									<img class="img-WEIXIN" src="images/weixin.png" />
+									<span>微信支付</span>
+								</div>
+							</div>
+						</form>
+						<div class="btn-submit">
+							<button>确定</button>
+							<p>
+								<input type="radio" name="" id="" value="" /> 我已阅读并同意
+								<a href="#">《华汽维修连锁充值返现协议》</a>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="mui-off-canvas-backdrop"></div>
+			</div>
+		</div>
+		<script src="../../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script>
+	</body>
+
+</html>

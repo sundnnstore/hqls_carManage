@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+		<style type="text/css">
+			/*当前额度部分*/
+			.quote {
+				width: 70%;
+				margin: 20px auto;
+			}
+			
+			/*当前额度a标签*/
+			.quote a {
+				margin-left: 25px;
+			}
+			
+			/*小标题：银行卡信息*/
+			.title-pay {
+				margin: 30px 0 10px 10px;
+			}
+			
+			/*确认申请部分*/
+			.btn-submit {
+				width: 70%;
+				margin: 0 auto;
+				margin-top: 30px;
+				text-align: center;
+			}
+			
+			/*确定申请按钮*/
+			.btn-submit button {
+				margin-bottom: 15px;
+			}
+			
+			.mui-input-row {
+				line-height: 40px;
+			}
+			
+			.input-withdrawals {
+				padding-right: 16px;
+			}
+			
+			/*提现右侧部分*/
+			.input-withdrawals label {
+				float: left;
+				width: 40%;
+			}
+			
+			/*提现input*/
+			.mui-input-row .withdrawals {
+				float: left;
+				width: 50%;
+				text-align: right;
+			}
+			
+			/*所有input*/
+			.input-content {
+				text-align: right;
+			}
+			
+			.mui-input-row span {
+				float: right;
+			}
+			
+			/*短信验证码*/
+			.mui-input-row .send-msg {
+				float: left;
+				width: 35%;
+				text-align: left;
+			}
+			
+			.input-send-msg {
+				padding-right: 16px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- 主界面不动、菜单移动 -->
+		<!-- 侧滑导航根容器 -->
+		<div class="mui-off-canvas-wrap mui-draggable mui-slide-in">
+
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<!--<header class="mui-bar mui-bar-nav">
+					<a href="" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color:#000;"></a>
+					<h1 class="mui-title">申请提现</h1>
+				</header>-->
+				<div class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!-- 主界面具体展示内容 -->
+						<p class="quote">您当前的提现额度为:
+							<a href="#">90000.00</a>&nbsp;&nbsp;&nbsp;元</p>
+						<form class="mui-input-group">
+							<div class="mui-input-row input-withdrawals">
+								<label>提现：</label>
+								<input class="withdrawals" maxlength="10" type="text" name="" value="" placeholder="请输入提现金额" />
+								<span>元</span>
+							</div>
+
+						</form>
+						<h5 class="title-pay">银行卡信息</h5>
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<label>户名:</label>
+								<input class="input-content" maxlength="10" type="text" name="" value="" placeholder="请输入收款人户名" />
+							</div>
+							<div class="mui-input-row">
+								<label>账号:</label>
+								<input class="input-content" maxlength="10" type="text" name="" value="" placeholder="请输入收款人账号" />
+							</div>
+							<div class="mui-input-row">
+								<label>银行:</label>
+								<input class="input-content" maxlength="10" type="text" name="" value="" placeholder="请输入收款人银行" />
+							</div>
+							<div class="mui-input-row">
+								<label>开户行:</label>
+								<input class="input-content" maxlength="10" type="text" name="" value="" placeholder="请输入收款人开户行" />
+							</div>
+							<div class="mui-input-row input-send-msg">
+								<label>验证码:</label>
+								<input class="input-content send-msg" oninput="if(value.length>6)value=value.slice(0,6)" type="number" name="" value="" placeholder="请输入验证码" />
+								<a class="mui-pull-right" href="#">发送验证码</a>
+							</div>
+						</form>
+						<div class="btn-submit">
+							<button type="button" class="mui-btn mui-btn-primary">确认申请</button>
+							<p>申请提交后，我们将在1-3个工作日完成审核并将提现款转入指定账户</p>
+						</div>
+					</div>
+				</div>
+				<div class="mui-off-canvas-backdrop"></div>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({ swipeBack:true }); //启用右滑关闭功能 
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+		</script>
+	</body>
+
+</html>

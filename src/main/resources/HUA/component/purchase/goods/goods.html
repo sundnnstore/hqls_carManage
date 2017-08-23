@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../../css/icons-extra.css">
+		<style type="text/css">
+			#list .mui-media-object {
+				max-width:100px;
+				height: 100px;
+			}
+			.mui-numbox{
+				width: 97px;
+				padding: 0 30px;
+			}
+			.mui-numbox .mui-numbox-btn-minus{
+				width: 30px;
+			}
+			.mui-numbox .mui-numbox-btn-plus{
+				width: 30px;
+			}
+			.mui-table-view-cell{
+				padding-right: 40px !important;
+			}
+			.mui-navigate-right{
+				margin-right: -40px !important;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<div class="mui-title">
+				<input id="search" type="text" placeholder="请输入您要搜索的内容" />
+			</div>
+			<a class="mui-icon mui-icon-extra mui-icon-extra-cart mui-pull-right"></a>
+		</header>
+		<div class="mui-content">
+			<ul id="list" class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							防水无重力高级轮胎
+							<p class="mui-ellipsis">
+								型号：ATF4-536373
+							</p>
+							<p class="mui-ellipsis">
+								规格：1件*1个
+							</p>
+							<p class="mui-ellipsis">
+								<span style="color: #ff6702;">
+									￥356.00
+								</span>
+							</p>
+							<p class="mui-ellipsis">
+								<div class="mui-row">
+
+										<div class="mui-numbox mui-pull-left" data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+
+									<div class="mui-pull-right">
+										<button type="button" class="mui-btn mui-btn-outlined">立即购买</button>
+									</div>
+								</div>
+							</p>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							防水无重力高级轮胎
+							<p class="mui-ellipsis">
+								型号：ATF4-536373
+							</p>
+							<p class="mui-ellipsis">
+								规格：1件*1个
+							</p>
+							<p class="mui-ellipsis">
+								<span style="color: #ff6702;">
+									￥356.00
+								</span>
+							</p>
+							<p class="mui-ellipsis">
+								<div class="mui-row">
+
+										<div class="mui-numbox mui-pull-left" data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+
+									<div class="mui-pull-right">
+										<button type="button" class="mui-btn mui-btn-outlined">立即购买</button>
+									</div>
+								</div>
+							</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script src="../../../js/mui.min.js "></script>
+	<script src="../../../js/mui.lazyload.js"></script>
+	<script src="../../../js/mui.lazyload.img.js"></script>
+	<script type="text/javascript" src="../../../js/jquery-2.1.0.js"></script>
+	<script>
+		mui.init();
+		//		var createFragment = function(count) {
+		//			var fragment = document.createDocumentFragment();
+		//			var li;
+		//			for (var i = 0; i < count; i++) {
+		//				li = document.createElement('li');
+		//				li.className = 'mui-table-view-cell mui-media';
+		//				li.innerHTML = '<a class="mui-navigate-right"><img class="mui-media-object mui-pull-left" data-lazyload="http://placehold.it/60X60"><div class="mui-media-body">主标题<p class="mui-ellipsis">列表二级标题</p></div></a>';
+		//				fragment.appendChild(li);
+		//			}
+		//			return fragment;
+		//		};
+		//		(function($) {
+		//			var list = document.getElementById("list");
+		//			list.appendChild(createFragment(23));
+		//			$(document).imageLazyload({
+		//				placeholder: '../images/60x60.gif'
+		//			});
+		//		})(mui);
+	</script>
+
+</html>
