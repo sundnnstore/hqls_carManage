@@ -1,10 +1,17 @@
 package com.sinoauto.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class UserLoginDto {
 
+	@ApiModelProperty("用户名")
 	private String userName;
+	@ApiModelProperty("token")
 	private String token;
+	@ApiModelProperty("手机号")
 	private String mobile;
+	@ApiModelProperty("门店ID")
+	private Integer storeId;
 
 	public String getUserName() {
 		return userName;
@@ -33,6 +40,16 @@ public class UserLoginDto {
 	public void setMobile(String mobile) {
 		if (mobile != null) {
 			this.mobile = mobile;
+		}
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		if (storeId != null) {
+			this.storeId = storeId;
 		}
 	}
 

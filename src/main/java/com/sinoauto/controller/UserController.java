@@ -46,6 +46,14 @@ public class UserController {
 		LOG.info("进入登录------"+userName+"=="+passWord);
 		return userService.login(userName, passWord);
 	}
+	
+	@ApiOperation(value = "登录获取token", notes = "tangwt")
+	@PostMapping("store/login")
+	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(@RequestParam(value = "userName", required = true) String userName,
+			@RequestParam(value = "passWord", required = true) String passWord) {
+		LOG.info("进入登录------"+userName+"=="+passWord);
+		return userService.storeLogin(userName, passWord);
+	}
 
 	@ApiOperation(value = "获取权限集合", notes = "tangwt")
 	@PostMapping("authorities")
@@ -104,6 +112,12 @@ public class UserController {
 	public ResponseEntity<RestModel<UserDto>> getUserByUserId(@RequestParam(value = "userId", required = true) Integer userId) {
 		
 		return userService.getUser(userId);
+	}
+	
+	@ApiOperation(value = "获取权限集合", notes = "tangwt")
+	@PostMapping("checkauth")
+	public ResponseEntity<RestModel<Boolean>> checkAuthorization(@RequestHeader String Authorization) {
+		return userService.checkAuthorization(Authorization);
 	}
 
 }

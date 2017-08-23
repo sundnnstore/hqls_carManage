@@ -305,16 +305,17 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     }
     // 门店图片弹框
     $('#seePic').click(function() {
-        event.stopPropagation();
-        layer.open({
-            type: 1,
-            title: false,
-            closeBtn: 0,
-            shade: [1, 'transparent'],
-            skin: 'layui-layer-nobg', // 没有背景色
-            shadeClose: true,
-            content: $('#storeImage')
-        });
+    	layer.open({
+    		type: 1,
+    		title: false, // 标题
+    		shade: 0,
+    		id:'pic',
+    		skin: 'layui-layer-nobg', //没有背景色
+    		content: $('#storeImage'),
+    		success: function(layero, index) {
+    		$(layero).find('.layui-layer-content').css('max-height', '500px').css('max-width', '700px');
+    		}
+    		});
     });
     // 清空表单
     function inputReset() {
