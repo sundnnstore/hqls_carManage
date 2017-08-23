@@ -132,8 +132,17 @@ public interface PartsMapper {
 	 * 	@return
 	 */
 	@Select("select * from hqls_parts_type where pid=#{pid}")
-	public List<PartsTreeRecursionDto> partsTreeRecursion(@Param("pid")Integer pid);
+	public List<PartsTreeRecursionDto> partsChildTreeByPid(@Param("pid")Integer pid);
 	
+	/**
+	 *  自己的菜单属性
+	 * 	@User liud
+	 * 	@Date 2017年8月22日下午4:56:12
+	 * 	@param partsTypeId
+	 * 	@return
+	 */
+	@Select("select * from hqls_parts_type where parts_type_id=#{partsTypeId}")
+	public PartsTreeRecursionDto partsParent(@Param("partsTypeId")Integer partsTypeId);
 	/**
 	 * 根据配件ID查询配件的扩展属性集合
 	 * 	@User liud

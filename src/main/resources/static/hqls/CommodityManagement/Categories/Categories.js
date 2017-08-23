@@ -227,13 +227,98 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     }
 
     // 分页条
-    laypage({
-        cont: 'paging',
-        pages: 100, //总页数
-        groups: 5, //连续显示分页数
-        skip: true, //跳转到某页
-        jump: function(obj, first) { //触发分页后的回调: obj(object)包括了分页的所有配置信息,first(Boolean)检测页面是否初始加载,可避免无限刷新。
-            var curr = obj.curr; //得到了当前页，用于向服务端请求对应数据
-        }
-    });
+    /**
+     * 页面加载默认显示
+     */
+    getData(1);
+	$("#searchCategories").click(function(){
+		getData(1);
+	});
+	
+    /**
+     * 初始化分页 
+     * @param totalCount 总页数
+     * @param pageIndex  页面索引
+     * @returns
+     */
+    function initPage(totalCount,pageIndex){
+    	if(totalCount<=pageSize) totalCount=pageSize+1;
+    	//page
+		laypage({
+			cont: 'pages',
+			pages:Math.ceil(totalCount/pageSize), // 总的分页数
+			groups: 5, // 展示的页数
+			first: 1,
+			last: Math.ceil(totalCount/pageSize),
+			skip: true,
+			curr:pageIndex,
+			jump: function(obj, first) {
+				//alert("初始化成功"+obj.curr);
+				if(!first) {
+					getData(obj.curr);
+				}
+			}
+		});
+		
+	}
+    
+    
+    /**
+     * 获取分页数据
+     * @param pageIndex
+     * @returns
+     */
+    function getData(pageIndex){
+    	$.ajax({
+			url : "/findpartstree",
+			type : "get",
+			async : false,
+			data : {
+				"pid":0,
+				"pageSize":pageSize,
+				"pageIndex":pageIndex
+				},
+			success : function(data){
+				comboTable(data,pageIndex);
+			}
+		});
+	}
+    
+    /**
+     * 
+     * @param res 返回的数据 
+     * @param pageIndex 显示的页面索引
+     * @returns
+     */
+    function comboTable(res,pageIndex){
+    	var data = res.result;
+		var trs = "";
+		var onlevel=`<select >`,twolevel=``,threelevel=``;
+		//循环菜单树
+		if(data.partsTrees!=null){
+			for (var int = 0; int < data.partsTrees.length; int++) { //一级菜单
+				onlevel+=``;
+				if(data.partsTrees[i].partsTrees!=null){
+					for (var int = 0; int < data.partsTrees[i].partsTrees.length; int++) { //二级菜单
+						twolevel+=``;
+						if(data.partsTrees[i].partsTrees[i].partsTrees!=null){
+							for (var int = 0; int <data.partsTrees[i].partsTrees[i].partsTrees.length; int++) {//三级菜单
+								threelevel+=``;
+							}
+							//第三级拼接
+						}
+					}
+					//第二级别的拼接
+				}
+				
+			}
+			//第一级拼接
+		}
+		
+		/**
+		 * 拼接  一级  二级  三级  菜单
+		 */
+		
+		initPage(res.totalCount,pageIndex); 
+    }
 });

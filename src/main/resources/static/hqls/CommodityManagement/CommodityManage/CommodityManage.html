@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="common/zTree/css/zTreeStyle.css" type="text/css">
 <link rel="stylesheet" href="CommodityManagement/CommodityManage/CommodityManage.css">
+<link href="common/zTree/css/zTreeStyle.css"></link>
 
 <div class="commodity">
     商品管理
@@ -16,7 +17,7 @@
             <div class="layui-input-block">
                 <ul>
                     <li class="title">
-                        <input type="text" id="commodityName" class="layui-input"  readonly/><!-- onclick="showMenu('main')" -->
+                        <input type="text" id="commodityName" placeholder="请选择分类" class="layui-input" onclick="showMenu('main')" readonly/>
                     </li>
                 </ul>
             </div>
@@ -106,7 +107,7 @@
                 <div class="layui-input-block">
                     <ul>
                         <li class="title">
-                            <input type="text" id="cName" class="layui-input" onclick="showMenu('model')" readonly/>
+                            <input type="text" id="cName" class="layui-input" onclick="showMenu('model')" placeholder="请选择分类" readonly/>
                         </li>
                     </ul>
                 </div>
@@ -207,7 +208,7 @@
             <div class="siteUpload">
                 <img id="commodityImgUrl" src="">
                 <div class="layui-box layui-upload-button">
-                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change()" accept="image/*">
                     <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
                 </div>
             </div>
@@ -228,4 +229,6 @@
 </div>
 <!-- 文件上传 -->
 <script src="js/upload.js"></script>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="common/zTree/js/jquery.ztree.core.js"></script>
 <script src="CommodityManagement/CommodityManage/CommodityManage.js"></script>
