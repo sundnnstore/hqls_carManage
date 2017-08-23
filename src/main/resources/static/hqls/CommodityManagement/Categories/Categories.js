@@ -3,6 +3,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         form = layui.form(),
         laypage = layui.laypage,
         $ = layui.jquery,
+        pageSize=10,
         first_title,
         second_title = '';
 
@@ -14,10 +15,18 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
+            /**
+             * 1 是节点等级
+             * 0 是新增  1 编辑的
+             */
+            loadNodes(1,0);//加载节点树
         } else if (method == 'view') {
             first_title = '查看';
         } else if (method == 'edit') {
             first_title = '编辑';
+            //传入一级菜单id
+            $(this).parent().parent().val();//节点树等级
+            loadNodes(1,1);//加载节点树
         }
         first_title && layer.open({
             type: 1,
@@ -30,76 +39,70 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         });
     });
 
-    // 构建商品分类节点树
-    layui.tree({
-        elem: '#categoriesTreeBox', //指定元素
-        click: function(item) { //点击节点回调
-            first_title != '查看' && categoriesEdit(item);
-        },
-        nodes: [{ //节点数据        // nodes: createTree(),
-            name: '我的邮箱',
-            id: 2,
-            spread: true, // 是否展开，true展开，false收起, 默认false
-            children: [{
-                name: 'QQ邮箱',
-                id: 21,
-                spread: true,
-                children: [{
-                    name: '收件箱',
-                    id: 211,
-                    children: [{
-                        name: '所有未读',
-                        id: 2111
-                    }, {
-                        name: '置顶邮件',
-                        id: 2112
-                    }, {
-                        name: '标签邮件',
-                        id: 2113
-                    }]
-                }, {
-                    name: '已发出的邮件',
-                    id: 212
-                }, {
-                    name: '垃圾邮件',
-                    id: 213
-                }]
-            }, {
-                name: '阿里云邮',
-                id: 22,
-                spread: true,
-                children: [{
-                    name: '收件箱',
-                    id: 221
-                }, {
-                    name: '已发出的邮件',
-                    id: 222
-                }, {
-                    name: '垃圾邮件',
-                    id: 223
-                }]
-            }, {
-                name: '收藏夹',
-                id: 3,
-                spread: true,
-                children: [{
-                    name: '爱情动作片',
-                    id: 31,
-                    alias: 'love'
-                }, {
-                    name: '技术栈',
-                    id: 12,
-                    children: [{
-                        name: '前端',
-                        id: 121
-                    }, {
-                        name: '全端',
-                        id: 122
-                    }]
-                }]
-            }]
-        }]
-    });
+    /**
+     * 
+     * @param level
+     * @param flag 0:新增  1:编辑
+     * @returns
+     */
+    function loadNodes(level,flag){
+    	$.ajax({
+			url : "/findpartstree",
+			type : "get",
+			async : false,
+			data : {"pid":level},
+			success : function(res){
+				//data=JSON.stringify(res);
+//				res=JSON.parse(res);
+				alert("操作标记:"+flag);
+				
+				if(!flag){
+					addTree(res);
+				}else{
+					editTree(res);
+				}						
+			},
+			error :function(res){
+				alert('查询树形菜单失败');
+			}
+		});
+    }
+    
+    
+    /**
+     * 显示页面
+     * @param data
+     * @returns
+     */
+    function addTree(data){
+    	console.log(data);
+    	 // 构建商品分类节点树
+        layui.tree({
+            elem: '#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+            click: function(item) { //点击节点回调
+                first_title != '查看' && categoriesEdit(item);
+            },
+            nodes: data
+        });
+    }
+    function editTree(data){
+    	console.log(data);
+    	 layui.tree({
+             elem: '#storeItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+             click: function(item) { //点击节点回调
+                 first_title != '查看' && categoriesEdit(item);
+             },
+             nodes: data
+         });
+    }
+//    layui.tree({
+//        elem: '#categoriesTreeView', //指定元素
+//        click: function(item) {
+//            first_title != '查看' && categoriesEdit(item);
+//        },
+//        nodes: createTree()
+//    });
+   
     var createTree = function(node, start) {
         node = node || function() {
             var arr = [];
@@ -122,13 +125,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         });
         return node;
     };
-    layui.tree({
-        elem: '#categoriesTreeView', //指定元素
-        click: function(item) {
-            first_title != '查看' && categoriesEdit(item);
-        },
-        nodes: createTree()
-    });
+    
     // 弹框：以何种方式添加商品分类及删除提示
     function categoriesEdit(item) {
         $('#categoriesName').text(item.name);
@@ -230,9 +227,9 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     /**
      * 页面加载默认显示
      */
-    getData(1);
+    getdata(1);
 	$("#searchCategories").click(function(){
-		getData(1);
+		getdata(1);
 	});
 	
     /**
@@ -255,7 +252,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			jump: function(obj, first) {
 				//alert("初始化成功"+obj.curr);
 				if(!first) {
-					getData(obj.curr);
+					getdata(obj.curr);
 				}
 			}
 		});
@@ -268,9 +265,9 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @param pageIndex
      * @returns
      */
-    function getData(pageIndex){
+    function getdata(pageIndex){
     	$.ajax({
-			url : "/findpartstree",
+			url : "/findpartslevel",
 			type : "get",
 			async : false,
 			data : {
@@ -278,8 +275,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 				"pageSize":pageSize,
 				"pageIndex":pageIndex
 				},
-			success : function(data){
-				comboTable(data,pageIndex);
+			success : function(res){
+				comboTable(res,pageIndex);
 			}
 		});
 	}
@@ -291,34 +288,50 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function comboTable(res,pageIndex){
-    	var data = res.result;
-		var trs = "";
-		var onlevel=`<select >`,twolevel=``,threelevel=``;
+		var onlevel=``,twolevel=``,threelevel=``;
+		var trs=``,one=``,two=``,three=``;
 		//循环菜单树
-		if(data.partsTrees!=null){
-			for (var int = 0; int < data.partsTrees.length; int++) { //一级菜单
-				onlevel+=``;
-				if(data.partsTrees[i].partsTrees!=null){
-					for (var int = 0; int < data.partsTrees[i].partsTrees.length; int++) { //二级菜单
-						twolevel+=``;
-						if(data.partsTrees[i].partsTrees[i].partsTrees!=null){
-							for (var int = 0; int <data.partsTrees[i].partsTrees[i].partsTrees.length; int++) {//三级菜单
-								threelevel+=``;
+		if(res.children!=null){
+			for (var i = 0; i < res.children.length; i++) { //一级菜单
+				onlevel+=`<option value="${res.children[i].id}">${res.children[i].name}</option>`;
+				if(res.children[i].children!=null){
+					for (var j = 0; j < res.children[i].children.length; j++) { //二级菜单
+						twolevel+=`<option value="${res.children[i].children[j].id}">${res.children[i].children[j].name}</option>`;
+//						one=`<tr><td>${res.children[i].name}</td>`;
+//						trs+=one;
+//						two=`<td>${res.children[i].children[j].name}</td>`;
+//						trs+=two;
+						if(res.children[i].children[i].children!=null){
+							for (var q = 0; q <res.children[i].children[j].children.length; q++) {//三级菜单
+								threelevel+=`<option value="${res.children[i].children[j].children[q].id}">${res.children[i].children[j].children[q].name}</option>`;
+//								three=`<td>${res.children[i].children[j].children[q].name}</td>`;
+//								trs+=three;
+								continue;
 							}
 							//第三级拼接
+							$("#threeleveltype").html(threelevel);
 						}
+						continue;
 					}
 					//第二级别的拼接
+					$("#twoleveltype").html(twolevel);
 				}
-				
+//				trs+=`
+//					<td class="operation">
+//	                <button id="view" data-method="view" class="layui-btn">查看</button>
+//	                <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
+//	                </td>`;
+//				trs+=`</tr>`;
+//				$("#partsTypeInfo").append(trs);
+				continue;
+				 
 			}
-			//第一级拼接
+			$("#oneleveltype").html(onlevel);
 		}
 		
 		/**
 		 * 拼接  一级  二级  三级  菜单
 		 */
-		
 		initPage(res.totalCount,pageIndex); 
     }
 });

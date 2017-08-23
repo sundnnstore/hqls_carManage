@@ -6,7 +6,7 @@
         <div class="layui-input-inline">
             <label for="first_title" class="layui-form-label">一级</label>
             <div class="layui-input-block">
-                <select class="layui-select">
+                <select class="layui-select" id="oneleveltype">
                     <option value="">请选择一级分类</option>
                 </select>
             </div>
@@ -14,7 +14,7 @@
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">二级</label>
             <div class="layui-input-block">
-                <select class="layui-select">
+                <select class="layui-select" id="twoleveltype">
                     <option value="">请选择二级分类</option>
                 </select>
             </div>
@@ -22,7 +22,7 @@
         <div class="layui-input-inline">
             <label for="" class="layui-form-label">三级</label>
             <div class="layui-input-block">
-                <select class="layui-select">
+                <select class="layui-select" id="threeleveltype">
                     <option value="">请选择三级分类</option>
                 </select>
             </div>
@@ -42,7 +42,7 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="partsTypeInfo">
                     <tr>
                         <td>四滤产品</td>
                         <td>机油滤清器</td>
@@ -64,7 +64,7 @@
                 </tbody>
             </table>
         </div>
-        <div id="paging"></div>
+        <div id="pages"></div>
     </div>
 </div>
 <!-- 弹框一：商品分类树状结构 -->

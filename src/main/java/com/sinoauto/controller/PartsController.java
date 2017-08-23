@@ -1,5 +1,6 @@
 package com.sinoauto.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
+import com.sinoauto.dto.PartsTreeRecursionDto;
 import com.sinoauto.dto.PartsTypeDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsBrandService;
@@ -100,9 +102,28 @@ public class PartsController {
 	
 	@ApiOperation(value = "查询配件类型集合", notes = "liud")
 	@GetMapping("findpartstype")
-	public List<PartsTypeDto> partsTreeRecursion(){
+	public List<PartsTypeDto> partsTypes(){
 		return partsTypeService.partsTypes();
 	}
 	
+	@ApiOperation(value = "查询配件树", notes = "liud")
+	@GetMapping("findpartstree")
+	public List<PartsTreeRecursionDto> partsTreeRecursion(@RequestParam("pid") Integer pid){
+		List<PartsTreeRecursionDto> trees = new ArrayList<>();
+		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(pid);
+		if(partsTree!=null){trees.add(partsTree);};
+		return trees;
+	}
 	
+	@ApiOperation(value = "查询配件树", notes = "liud")
+	@GetMapping("findpartslevel")
+	public PartsTreeRecursionDto partsTreelevel(@RequestParam("pid") Integer pid){
+		return  partsService.partsTreeRecursion(pid);
+	}
+	
+	@ApiOperation(value = "根据配件等级查询配件id", notes = "liud")
+	@GetMapping("findpartlevel")
+	public PartsTreeRecursionDto findPartsByLevel(@RequestParam("onelevel") Integer onelevel ,@RequestParam("twolevel") Integer twolevel,@RequestParam("threelevel") Integer threelevel  ){
+		return null;
+	}
 }

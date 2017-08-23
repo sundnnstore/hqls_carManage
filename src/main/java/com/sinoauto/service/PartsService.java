@@ -299,4 +299,16 @@ public class PartsService {
 		return partsParent;
 	}
 	
+	/**
+	 *  根据配件等级查询配件信息
+	 * 	@User liud
+	 * 	@Date 2017年8月23日下午4:02:08
+	 * 	@param onelevel 第一个等级,可以查询所有子集
+	 * 	@param twolevel 第二个等级,查询上一个等级,和下一个等级
+	 * 	@param threelevel 查询所有父级
+	 * 	@return
+	 */
+	public PartsTreeRecursionDto findPartsByLevel(Integer onelevel,Integer twolevel,Integer threelevel){
+		return null;
+	}
 }

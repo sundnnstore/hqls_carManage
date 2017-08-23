@@ -11,6 +11,7 @@ import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
+import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -154,4 +155,15 @@ public interface PartsMapper {
 	 */
 	@Select("select * from hqls_parts_attr_extr where parts_id=#{partId}")
 	public List<HqlsPartsAttrExtr> findPartsAttrExtrsByPartsId(@Param("partId")Integer partId);
+	
+	/**
+	 * 	
+	 * 	@User liud
+	 * 	@Date 2017年8月23日下午4:12:15
+	 * 	@param onelevel 第一等级
+	 * 	@param twolevel 第二等级
+	 * 	@param threelevel 第三等级
+	 * 	@return
+	 */
+	public List<PartsLevelDto> findPartsLevel(@Param("onelevel") Integer onelevel,@Param("twolevel") Integer twolevel,@Param("threelevel") Integer threelevel);
 }
