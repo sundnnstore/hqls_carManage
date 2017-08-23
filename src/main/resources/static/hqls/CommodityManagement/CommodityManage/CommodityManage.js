@@ -4,6 +4,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
         form = layui.form,
         laypage = layui.laypage;
 		var pageSize = 10;
+		selectTreeId=-1;
 		// 弹出框
 	    var title; // 弹出框的标题
 	    var active = {
@@ -14,10 +15,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	        var method = $(this).data('method');
 	        if (method == 'addCommodity') {
 	            title = '新增';
-	            //清空数据
-	            $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
-	            	$(this).attr("value","");
-	            });
 	            //显示配件品牌
 	        	partsBrand();
 	        } else if (method == 'view') {
@@ -29,6 +26,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            
 	        } else if (method == 'edit') {
 	            title = '编辑';
+//	            clearElementValue();//清空之前数据
 				//编辑方法
 	            Detailview($(this).parent().find("#partsId").val());
 	        }
@@ -71,6 +69,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn2: function(index, layero) {
 	                // console.log(layero);
 	                layer.close(index);
+	                clearElementValue();//清空数据
+	            },
+	            end : function (){
+	            	$('#commodityBox').css("display","none");
 	            }
 	        });
 	    });
@@ -100,6 +102,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn2: function(index, layero) {
 	                // console.log(layero);
 	                layer.close(index);
+	            },
+	            end : function (){
+	            	$('#commodityState').css("display","none");
 	            }
 	        });
 	    });
@@ -170,13 +175,14 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
      * @returns
      */
     function getData(pageIndex){
+//    	alert("selectTreeId--->查询页面:"+selectTreeId);
     	$.ajax({
 			url : "/findparts",
 			type : "get",
 			async : false,
 			data : {
 				"partsCode":$("#partsCodeQuery").val(),
-//				"partsTypeId":$("#searchCommodity").val(), 暂无树形结构
+				"partsTypeId":selectTreeId, //暂无树形结构
 				"partsTopTypeId":$("#partsTypeTop").val(),
 				"partsName":$("#partsNameQuery").val(),
 				"pageSize":pageSize,
@@ -322,6 +328,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).attr("value","");
         });
+        //配件分类
+       // $("#cName").attr('value', data.result.);
+       // $("#modelContent a[title='"+data.result+"']").addClass('curSelectedNode');
     	var piclen,attrlen;
     	if(data.result.partsPicList==null){
     		piclen=0;
@@ -330,7 +339,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	}
     	if(data.result.partsAttrExtrs==null){
     		attrlen=0;
-    		
     	}else{
     		attrlen = data.result.partsAttrExtrs.length;
     	}
@@ -583,13 +591,180 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 //    	        alert(index);
 //    	     });
     }
-    
-    /**
-     * 图片上传追加
-     */
-//    $(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
-//    	//默认为
-//    	var flag = $(this).attr("value");
-//    });
-    
+   
+//    layui.tree({
+//    	  elem: '#commodityName' //传入元素选择器
+//    	  ,nodes: [{ //节点
+//    	    name: '父节点1'
+//    	    ,children: [{
+//    	      name: '子节点11'
+//    	    },{
+//    	      name: '子节点12'
+//    	    }]
+//    	  },{
+//    	    name: '父节点2（可以点左侧箭头，也可以双击标题）'
+//    	    ,children: [{
+//    	      name: '子节点21'
+//    	      ,children: [{
+//    	        name: '子节点211'
+//    	      }]
+//    	    }]
+//    	  }]
+//    	});
+	
+    //清空元素总方法
+    function clearElementValue(){
+        //清空数据
+        $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
+        	$(this).attr("value","");
+        	$(this).attr('disabled', '');
+        });
+        $("#cName").attr('value', '');
+        $("#modelContent a").removeClass('curSelectedNode');
+    }
 });
+
+/**
+ * 图片上传追加
+ */
+$(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
+	//默认为
+	alert("你好");
+	var flag = $(this).attr("value");
+});
+
+function change(obj){
+	alert("你好");
+} 
+
+
+//在配件树中选中配件后写入input中
+function beforeClick(treeId, treeNode) {
+    var check = (treeNode && !treeNode.isParent);
+    if (!check) {
+        layer.msg("该项不可选择！");
+    }
+    return check;
+}
+
+/**
+ * 
+ * @param e 当前元素
+ * @param treeId id="cTree"
+ * @param treeNode  当前节点
+ * @returns
+ */
+function onClick(e, treeId, treeNode) {
+	//console.log("e:",e,"\ntreeId:",treeId,"\ntreeNode:",treeNode);
+	//var nodes = $.fn.zTree.getZTreeObj(treeId).getSelectedNodes();
+	if (treeId == 'commodityTree') {
+		// 保存id
+		selectTreeId = treeNode.id;
+		console.log("onClick--->"+treeNode.id);
+	$("#commodityName").attr('value', treeNode.name);
+	} else {
+		// 保存id
+		selectTreeId = treeNode.id;
+	$("#cName").attr('value', treeNode.name);
+	}
+}
+
+var treeTemp;
+// 配件树展示与收缩
+function showMenu(temp) {
+    treeTemp = temp;
+    if (treeTemp == 'model') {
+        $("#modelContent").css({ left: 0, top: "37px" }).slideDown("fast");
+    } else if (treeTemp == 'main') {
+        $("#menuContent").css({ left: 0, top: "37px" }).slideDown("fast");
+    }
+    $("body").bind("mousedown", onBodyDown);
+}
+
+function hideMenu() {
+    if (treeTemp == 'model') {
+        $("#modelContent").fadeOut("fast");
+    } else if (treeTemp == 'main') {
+        $("#menuContent").fadeOut("fast");
+    }
+    $("body").unbind("mousedown", onBodyDown);
+}
+
+function onBodyDown(event) {
+    if (treeTemp == 'model') {
+        if (!(event.target.id == "menuBtn" || event.target.id == "modelContent" || $(event.target).parents("#modelContent").length > 0)) {
+            hideMenu();
+        }
+    } else if (treeTemp == 'main') {
+        if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
+            hideMenu();
+        }
+    }
+}
+
+/**
+ * 配件树数据源
+ * @returns
+ */
+function zNodes(){
+	var node;
+	$.ajax({
+		url : "/findpartstype",
+		type : "get",
+		async : false,
+		success : function(data){
+			//node =JSON.stringify(data);
+			node =data;
+		},
+		error:function(data){
+			alert("页面查询失败");
+		}
+	});
+	return node;
+}
+var zNodes = zNodes();
+// 配件树初始化
+$(document).ready(function() {
+    $.fn.zTree.init($("#commodityTree"), setting,zNodes);
+    $.fn.zTree.init($("#cTree"),setting,zNodes);
+});
+// 配件树设置
+var setting = {
+    view: {
+        dblClickExpand: false,
+        autoCancelSelected: false
+    },
+    data: {
+        simpleData: {
+            enable: true
+        }
+    },
+    callback: {
+        //beforeClick: beforeClick, //检查
+        onClick: onClick
+    }
+};
+
+
+// 配件树数据源
+//var zNodes = [
+//    { id: 1, pId: 0, name: "北京" },
+//    { id: 2, pId: 0, name: "天津" },
+//    { id: 3, pId: 0, name: "上海" },
+//    { id: 6, pId: 0, name: "重庆" },
+//    { id: 4, pId: 0, name: "河北省", open: true },
+//    { id: 41, pId: 4, name: "石家庄" },
+//    { id: 42, pId: 4, name: "保定" },
+//    { id: 43, pId: 4, name: "邯郸" },
+//    { id: 44, pId: 4, name: "承德" },
+//    { id: 5, pId: 0, name: "广东省", open: true },
+//    { id: 51, pId: 5, name: "广州" },
+//    { id: 52, pId: 5, name: "深圳" },
+//    { id: 53, pId: 5, name: "东莞" },
+//    { id: 54, pId: 5, name: "佛山" },
+//    { id: 6, pId: 0, name: "福建省", open: true },
+//    { id: 61, pId: 6, name: "福州" },
+//    { id: 62, pId: 6, name: "厦门" },
+//    { id: 63, pId: 6, name: "泉州" },
+//    { id: 64, pId: 6, name: "三明" }
+//];
