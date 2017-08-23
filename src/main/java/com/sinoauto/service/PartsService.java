@@ -278,25 +278,25 @@ public class PartsService {
 	 */
 	public PartsTreeRecursionDto partsTreeRecursion(Integer pid){
 		//父级菜单自己
-		PartsTreeRecursionDto partsTree = partsMapper.partsParent(pid);
-		if(partsTree==null){partsTree=new PartsTreeRecursionDto();};
+		PartsTreeRecursionDto partsParent = partsMapper.partsParent(pid);
+		if(partsParent==null){partsParent=new PartsTreeRecursionDto();};
 		//查询出子集的集合
 		List<PartsTreeRecursionDto> childTree = null; 
 		childTree = partsMapper.partsChildTreeByPid(pid);
 		//判断是否存在子菜单
 		if(childTree!=null){
 			//创建存储子菜单集合
-			partsTree.setPartsTrees(new ArrayList<>());
+			partsParent.setChildren(new ArrayList<>());
 			//存储子节点树；
 			for (PartsTreeRecursionDto child : childTree) {
 				//查询子菜单下是否存在子菜单
-				PartsTreeRecursionDto parts = partsTreeRecursion(child.getPartsTypeId());
-				partsTree.getPartsTrees().add(parts);
+				PartsTreeRecursionDto part = partsTreeRecursion(child.getId());
+				partsParent.getChildren().add(part);
 			}
 		}else{
 			childTree = new ArrayList<>();
 		}
-		return partsTree;
+		return partsParent;
 	}
-		
+	
 }
