@@ -3,7 +3,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
         laypage = layui.laypage,
         layer = layui.layer;
 
-    var pageSize = 10;
+    var pageSize = 5;
     // 新增/编辑档案信息弹框
     $('.archives').on('click', 'button', function() {
         var othis = $(this), // 当前按钮元素

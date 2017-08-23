@@ -36,16 +36,31 @@ public class PartsController {
 	
 	@ApiOperation(value = "按配件类型查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbytype")
-	public ResponseEntity<RestModel<List<CommonDto>>> findPartsListByType(@RequestParam(value = "partsType", required = true) Integer partsType) {
+	public ResponseEntity<RestModel<List<CommonDto>>> findPartsListByType(
+			@RequestParam(value = "partsType", required = true) Integer partsType,
+			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
 		
-		return partsService.findListByType(partsType);
+		return partsService.findListByType(partsType, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "查询所有配件列表", notes = "wuxiao")
+	@GetMapping(value = "findallparts")
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllParts(
+			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
+		
+		return partsService.findAllParts(pageIndex, pageSize);
 	}
 	
 	@ApiOperation(value = "按配件Id查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbypid")
-	public ResponseEntity<RestModel<Object>> findPartsListByPid(@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId) {
+	public ResponseEntity<RestModel<Object>> findPartsListByPid(
+			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
+			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
 		
-		return partsService.findListByPid(partsTypeId);
+		return partsService.findListByPid(partsTypeId, pageIndex, pageSize);
 	}
 	
 	/**
