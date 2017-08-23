@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="../js/mui.min.js"></script>
+   
+	<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+    <style type="text/css">
+			html {}
+			
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			
+			.mui-input-group:first-child {
+				margin-top: ;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			.mui-content-padded>button {
+				/*width: 100px;*/
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			.link-area {
+				display: block;
+				margin-top: 10px;
+				text-align: center;
+				height: 40px;
+				line-height: 40px;
+
+			}
+			.link-area >a{
+				display: inline-block;
+				width: 100%;
+				height: 100%;
+
+			}
+		</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title">登录</h1>
+	</header>
+	<div class="mui-content">
+			<form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					<label>账号</label>
+					<input id='account' type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+				</div>
+				<div class="mui-input-row">
+					<label>密码</label>
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+			</form>
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block mui-btn-primary">登录</button>
+				<div class="link-area">
+					<!--<a id='reg'>注册账号</a> <span class="spliter">|-->
+
+					<!--</span>-->
+					<a id='forgetPassword'>忘记密码</a>
+				</div>
+			</div>
+		</div>
+	<script type="text/javascript" charset="utf-8">
+      	(function($, doc) {
+				$.init({
+					swipeBack: true
+				});
+				$.plusReady(function() {
+					plus.screen.lockOrientation("portrait-primary");
+//					var homePage = $.preload({
+//						"id": 'home',
+//						"url": 'component/home/home.html'
+//					});
+//					
+//					var home_loaded_flag = false;
+//					homePage.addEventListener("loaded",function () {
+//						home_loaded_flag = true;
+//					});
+//					var toMain = function() {
+//						//使用定时器的原因：
+//						//可能执行太快，main页面loaded事件尚未触发就执行自定义事件，此时必然会失败
+//						var id = setInterval(function () {
+//							if(home_loaded_flag){
+//								clearInterval(id);
+//								$.fire(homePage, 'show', null);
+//								homePage.show("pop-in");
+//							}
+//						},20);
+//					};
+					var loginButton = doc.getElementById('login');
+					var accountBox = doc.getElementById('account');
+					var passwordBox = doc.getElementById('password');
+					var forgetButton = doc.getElementById('forgetPassword');
+					
+					loginButton.addEventListener('tap', function(event) {
+						console.log(1111111);
+						var loginInfo = {
+							account: accountBox.value,
+							password: passwordBox.value
+						};
+						$.openWindow({
+							url: '../index.html',
+							id: 'index',
+							show: {
+								aniShow: 'pop-in'
+							},
+							
+						});
+					});
+					forgetButton.addEventListener('tap',function(e){
+						$.openWindow({
+							url: './forget_password.html',
+							id: 'forget_password',
+							show: {
+								aniShow: 'pop-in'
+							},
+							
+						});
+					},false)
+					
+					
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+
+				})
+			}(mui, document));
+    </script>
+</body>
+</html>

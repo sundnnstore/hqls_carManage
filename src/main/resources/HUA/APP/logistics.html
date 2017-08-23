@@ -1,0 +1,133 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		
+		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+		<style type="text/css">
+			.mui-media .mui-media-object {
+			    max-width: 130px;
+			    height: 90px;
+			}
+			.falg{
+				color: red;
+				font-size: 14px;
+			}
+			.remak{
+				padding: 10px 0px;
+				font-size: 14px;	
+			}
+			/*物流信息样式 start*/
+			.wuinfo ul li{
+				list-style: none;			
+			}
+			.wuinfo .wudate{
+				width: 20%;
+				padding: 0px;
+				margin: 0px;	
+			}
+			.wuinfo .wudate li{
+				height: 65px;
+				text-align: center;
+				position: relative;
+			}
+			.wuinfo .wudate li .mui-yuan{
+				display: block;
+				width: 6px;
+				height: 6px;
+				border-radius: 100%;
+				background: #ccc;
+				position: absolute;
+				top: 7px;
+				right: 4px;
+			}
+			.wuinfo .wlinfo{
+				width: 80%;
+				padding: 0px;
+				margin: 0px;
+			}
+			.wuinfo .wlinfo li{
+				height: 65px;
+			}
+			.wuinfo .wlinfo li p{
+				margin-bottom: 0px;
+			}
+			/*物流信息样式end*/
+			
+		</style>
+	</head>
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a href="" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" style="color:#000;"></a>
+			<h1 class="mui-title">查看物流</h1>
+		</header>-->
+		<div class="mui-content">
+			<ul class="mui-table-view ">
+				<li class="mui-table-view-cell mui-media">
+					<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+					<div class="mui-media-body">
+						<p class="mui-ellipsis">
+							物流状态：<span class="falg">运输中</span>
+						</p>
+						<p class="mui-ellipsis">
+							承运方：顺丰速递
+						</p>
+						<p class="mui-ellipsis">
+							运单号：123456789
+						</p>
+						<p class="mui-ellipsis">
+							联系电话：15858565658
+						</p>
+						
+					</div>
+				</li>
+				<p class="remak">备注：请于3天后前往江苏省南京市栖霞区尧化门20号取件</p>
+			</ul>
+			
+			<div class="wuinfo mui-clearfix">
+				<ul class="wudate mui-pull-left">
+					<li><span class="mui-yuan"></span>
+						<p>今天</p></li>
+					<li><span class="mui-yuan"></span><p>今天<br />18:30</p></li>
+					<li><span class="mui-yuan"></span><p>昨天<br />15:20</p></li>
+					<li><span class="mui-yuan"></span><p>8月14</p></li>
+					<li><span class="mui-yuan"></span><p>8月13</p></li>
+				</ul>
+				<ul class="wlinfo mui-pull-left">
+					<li>
+						<p>已交给顺丰物流承运</p>
+						<p>承运人:张三</p>
+						<p>联系电话：15856585856</p>
+					</li>
+					<li>
+						<p>商品已发货</p>
+						<p>承运方：顺丰物流</p>
+					</li>
+					<li>
+						<p>商品出库</p>
+						<p>订单处理</p>
+					</li>
+					<li>
+						<p>商品出库</p>
+						<p>订单处理</p>
+					</li>
+					<li>
+						<p>商品出库</p>
+						<p>订单处理</p>
+					</li>
+					
+				</ul>
+				<p class="mui-text-center">由于该物流企业不支持网络信息查询</p>
+				<p class="mui-text-center">以上数据为华器连锁为你提供</p>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			
+		</script>
+	</body>
+
+</html>

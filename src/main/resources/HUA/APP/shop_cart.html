@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<style>
+			.edit {
+				margin: 0 -10px;
+				padding: 14px;
+				position: relative;
+				z-index: 20;
+				line-height: 1;
+				font-size: 16px;
+				font-weight: 400;
+				font-style: normal;
+				line-height: 1;
+				display: inline-block;
+				text-decoration: none;
+				-webkit-font-smoothing: antialiased;
+			}
+			
+			#list .mui-media-object {
+				max-width: 80px;
+				height: 80px;
+			}
+			
+			.mui-numbox {
+				width: 97px;
+				padding: 0 30px;
+			}
+			
+			.mui-numbox .mui-numbox-btn-minus {
+				width: 30px;
+			}
+			
+			.mui-numbox .mui-numbox-btn-plus {
+				width: 30px;
+			}
+			
+			.mui-navigate-right {
+				margin-right: -40px !important;
+			}
+			
+			.lineheight35 {
+				color: #8f8f94;
+				line-height: 35px;
+				font-size: 15px;
+			}
+			
+			.price {
+				color: #c91e1c;
+			}
+			
+			.mui-table-view-cell.mui-checkbox.mui-left,
+			.mui-table-view-cell.mui-radio.mui-left {
+				padding-left: 28px;
+			}
+			
+			.mui-checkbox.mui-left input[type=checkbox],
+			.mui-radio.mui-left input[type=radio] {
+				left: -24px;
+			}
+			
+			.mui-table-view-cell.mui-checkbox input[type=checkbox],
+			.mui-table-view-cell.mui-radio input[type=radio] {
+				top: 40px;
+			}
+			
+			.mui-checkbox input[type=checkbox]:before,
+			.mui-radio input[type=radio]:before {
+				font-size: 20px;
+			}
+			/*.mui-numbox {
+				position: absolute;
+				right: 10px;
+				bottom: 10px;
+				z-index: 1;
+			}*/
+			
+			.mui-slider-handle {
+				padding-left: 13px;
+			}
+			
+			.mui-slider-handle input[name='cartItem'] {
+				position: absolute;
+				top: 35px;
+				left: -13px;
+				right: 20px;
+				display: inline-block;
+				width: 28px;
+				height: 26px;
+				border: 0;
+				outline: 0!important;
+				background-color: transparent;
+				-webkit-appearance: none;
+				/*margin: 30px 2px;*/
+			}
+			
+			.mui-slider-handle input[type=checkbox]:before {
+				content: '\e411';
+				font-size: 20px;
+				font-family: Muiicons;
+				font-size: 20px;
+				font-weight: 400;
+				line-height: 1;
+				text-decoration: none;
+				color: #aaa;
+				border-radius: 0;
+				background: 0 0;
+				-webkit-font-smoothing: antialiased;
+			}
+			
+			.mui-slider-handle input[type=checkbox]:checked:before {
+				content: '\e442';
+				color: #c91e1c;
+			}
+			
+			.mui-tab-item {
+				color: white !important;
+				font-weight: 600;
+				font-size: 16px;
+			}
+			
+			.addcar {
+				color: #000 !important;
+			}
+			
+			.buy {
+				background: -webkit-linear-gradient(left, #EE7F30, #EB5828);
+				/* Safari 5.1 - 6.0 */
+				background: -o-linear-gradient(right, #EE7F30, #EB5828);
+				/* Opera 11.1 - 12.0 */
+				background: -moz-linear-gradient(right, #EE7F30, #EB5828);
+				/* Firefox 3.6 - 15 */
+				background: linear-gradient(to right, #EE7F30, #EB5828);
+			}
+			
+			#checkedAll {
+				display: inline-block;
+				width: 28px;
+				height: 26px;
+				border: 0;
+				outline: 0!important;
+				background-color: transparent;
+				-webkit-appearance: none;
+			}
+			
+			#checkedAll:before {
+				content: '\e411';
+				font-size: 20px;
+				font-family: Muiicons;
+				font-size: 20px;
+				font-weight: 400;
+				/*line-height: 1;*/
+				text-decoration: none;
+				color: #aaa;
+				border-radius: 0;
+				background: 0 0;
+				-webkit-font-smoothing: antialiased;
+			}
+			
+			#checkedAll:checked:before {
+				content: '\e442';
+				color: #c91e1c;
+			}
+			
+			#list {
+				margin-bottom: 50px;
+				/*padding-bottom: 50px;*/
+			}
+		</style>
+	</head>
+
+	<body>
+		<!--<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">购物车</h1>
+			<a class="mui-pull-right edit">编辑</a>
+		</header>-->
+		<div class="mui-content">
+
+			<!--这里放置真实显示的DOM内容-->
+			<ul id="list" class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<input type="checkbox" class="mui-pull-left" name="cartItem" />
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							BMPMIC 机油格
+							<span class="price mui-pull-right">￥99.80</span>
+							<p class='mui-ellipsis'>
+								<s class="oldPrice mui-pull-right">
+											￥199.80
+										</s>
+							</p>
+							<p class='mui-ellipsis'>
+								型号：BACB11-247001
+							</p>
+							<p class='mui-ellipsis'>
+								<div class="mui-row lineheight35">
+									规格：12个*1箱
+									<div class="mui-pull-right">
+										<div class="mui-numbox " data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+									</div>
+								</div>
+							</p>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<input type="checkbox" class="mui-pull-left" name="cartItem" />
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							BMPMIC 机油格
+							<span class="price mui-pull-right">￥99.80</span>
+							<p class='mui-ellipsis'>
+								<s class="oldPrice mui-pull-right">
+											￥199.80
+										</s>
+							</p>
+							<p class='mui-ellipsis'>
+								型号：BACB11-247001
+							</p>
+							<p class='mui-ellipsis'>
+								<div class="mui-row lineheight35">
+									规格：12个*1箱
+									<div class="mui-pull-right">
+										<div class="mui-numbox " data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+									</div>
+								</div>
+							</p>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<input type="checkbox" class="mui-pull-left" name="cartItem" />
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							BMPMIC 机油格
+							<span class="price mui-pull-right">￥99.80</span>
+							<p class='mui-ellipsis'>
+								<s class="oldPrice mui-pull-right">
+											￥199.80
+										</s>
+							</p>
+							<p class='mui-ellipsis'>
+								型号：BACB11-247001
+							</p>
+							<p class='mui-ellipsis'>
+								<div class="mui-row lineheight35">
+									规格：12个*1箱
+									<div class="mui-pull-right">
+										<div class="mui-numbox " data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+									</div>
+								</div>
+							</p>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<input type="checkbox" class="mui-pull-left" name="cartItem" />
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							BMPMIC 机油格
+							<span class="price mui-pull-right">￥99.80</span>
+							<p class='mui-ellipsis'>
+								<s class="oldPrice mui-pull-right">
+											￥199.80
+										</s>
+							</p>
+							<p class='mui-ellipsis'>
+								型号：BACB11-247001
+							</p>
+							<p class='mui-ellipsis'>
+								<div class="mui-row lineheight35">
+									规格：12个*1箱
+									<div class="mui-pull-right">
+										<div class="mui-numbox " data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+									</div>
+								</div>
+							</p>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<input type="checkbox" class="mui-pull-left" name="cartItem" />
+						<img class="mui-media-object mui-pull-left" src="http://placehold.it/240X240">
+						<div class="mui-media-body">
+							BMPMIC 机油格
+							<span class="price mui-pull-right">￥99.80</span>
+							<p class='mui-ellipsis'>
+								<s class="oldPrice mui-pull-right">
+											￥199.80
+										</s>
+							</p>
+							<p class='mui-ellipsis'>
+								型号：BACB11-247001
+							</p>
+							<p class='mui-ellipsis'>
+								<div class="mui-row lineheight35">
+									规格：12个*1箱
+									<div class="mui-pull-right">
+										<div class="mui-numbox " data-numbox-step='1' data-numbox-min='1' data-numbox-max='100'>
+											<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+											<input class="mui-numbox-input" type="number" />
+											<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+										</div>
+									</div>
+								</div>
+							</p>
+						</div>
+					</div>
+				</li>
+
+			</ul>
+			<nav class="mui-bar mui-bar-tab">
+				<div class="mui-tab-item  addcar" href="#">
+					<!--<span class="mui-icon mui-icon-home"></span>-->
+					<span class="mui-tab-label">
+						<label >
+						<input type="checkbox" checked id="checkedAll">
+						全选							
+						</label>
+					</span>
+				</div>
+				<div class="mui-tab-item buy" id="buy" href="#">
+					<!--<span class="mui-icon mui-icon-email"><span class="mui-badge">9</span></span>-->
+					<span class="mui-tab-label">
+						(￥299.40)结算
+					</span>
+				</div>
+			</nav>
+			<div>
+
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.0.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			var btnArray = ['确认', '取消'];
+			mui('#list').on('tap', 'a.mui-btn-red', function(event) {
+				var elem = this;
+				var li = elem.parentNode.parentNode;
+				mui.confirm('确认删除该条记录？', '提示', btnArray, function(e) {
+					if(e.index == 0) {
+						li.parentNode.removeChild(li);
+					} else {
+						setTimeout(function() {
+							$.swipeoutClose(li);
+						}, 0);
+					}
+				});
+			});
+			//复选框事件  
+			$("#checkedAll").click(function() {
+				console.log($(this).prop('checked'));
+				if($(this).prop('checked')) {
+					$("input[name='cartItem']").prop("checked", "true");
+				} else {
+					$("input[name='cartItem']").removeAttr("checked");
+				}
+
+			})
+
+			$('.mui-table-view').find('input[type=checkbox]').prop("checked", true);
+			var input = document.querySelector('input[type=checkbox]');
+			$('.mui-table-view-cell').on('tap', ':not(.mui-numbox)', function(e) {
+				if(e.target.type == 'button' || e.target.type == 'number') {
+					console.log('点到按钮了')
+					return;
+				}
+				console.log(e.target.type);
+				if($(this).find('input[type=checkbox]').is(":checked")) {
+					$(this).find('input[type=checkbox]').prop("checked", false);
+				} else {
+					$(this).find('input[type=checkbox]').prop("checked", true);
+				}
+
+			})
+			document.getElementById('buy').addEventListener('tap', function(e) {
+				var Settlementloding = plus.nativeUI.showWaiting('加载中...');
+				var wv = null;
+				wv = plus.webview.create('Settlement.html', 'Settlement', {
+					titleNView: {
+						titleText: '结算',
+						autoBackButton: 'true',
+						backgroundColor: '#2F2C2F',
+						titlecolor: "#ffffff",
+					}
+				});
+				wv.addEventListener('loaded', function() {
+					wv.show('slide-in-right'); // 显示窗口
+					Settlementloding.close();
+					Settlementloding = null;
+				}, false);
+			})
+
+		</script>
+	</body>
+
+</html>
