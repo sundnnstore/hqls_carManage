@@ -71,6 +71,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn2: function(index, layero) {
 	                // console.log(layero);
 	                layer.close(index);
+	            },
+	            end : function (){
+	            	$('#commodityBox').css("display","none");
 	            }
 	        });
 	    });
@@ -100,6 +103,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn2: function(index, layero) {
 	                // console.log(layero);
 	                layer.close(index);
+	            },
+	            end : function (){
+	            	$('#commodityState').css("display","none");
 	            }
 	        });
 	    });
@@ -584,12 +590,137 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 //    	     });
     }
     
-    /**
-     * 图片上传追加
-     */
-//    $(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
-//    	//默认为
-//    	var flag = $(this).attr("value");
-//    });
-    
 });
+/**
+ * 图片上传追加
+ */
+$(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
+	//默认为
+	alert("你好");
+	var flag = $(this).attr("value");
+});
+
+function change(obj){
+	alert("你好");
+} 
+
+//在角色树中选中角色后写入input中
+function beforeClick(treeId, treeNode) {
+    var check = (treeNode && !treeNode.isParent);
+    if (!check) {
+        layer.msg("该项不可选择！");
+    }
+    return check;
+}
+
+function onClick(e, treeId, treeNode) {
+    var zTree = $.fn.zTree.getZTreeObj(treeId),
+        nodes = zTree.getSelectedNodes(),
+        v = "";
+    nodes.sort(function compare(a, b) { return a.id - b.id; });
+    for (var i = 0, l = nodes.length; i < l; i++) {
+        v += nodes[i].name + ",";
+    }
+    if (v.length > 0) v = v.substring(0, v.length - 1);
+    if (treeId == 'commodityTree') {
+        $("#commodityName").attr('value', v);
+    } else {
+        $("#cName").attr('value', v);
+    }
+}
+
+var treeTemp;
+// 角色树展示与收缩
+function showMenu(temp) {
+    treeTemp = temp;
+    if (treeTemp == 'model') {
+        $("#modelContent").css({ left: 0, top: "37px" }).slideDown("fast");
+    } else if (treeTemp == 'main') {
+        $("#menuContent").css({ left: 0, top: "37px" }).slideDown("fast");
+    }
+    $("body").bind("mousedown", onBodyDown);
+}
+
+function hideMenu() {
+    if (treeTemp == 'model') {
+        $("#modelContent").fadeOut("fast");
+    } else if (treeTemp == 'main') {
+        $("#menuContent").fadeOut("fast");
+    }
+    $("body").unbind("mousedown", onBodyDown);
+}
+
+function onBodyDown(event) {
+    if (treeTemp == 'model') {
+        if (!(event.target.id == "menuBtn" || event.target.id == "modelContent" || $(event.target).parents("#modelContent").length > 0)) {
+            hideMenu();
+        }
+    } else if (treeTemp == 'main') {
+        if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
+            hideMenu();
+        }
+    }
+}
+
+// 角色树初始化
+$(document).ready(function() {
+    $.fn.zTree.init($("#commodityTree"), setting, zNodes());
+    $.fn.zTree.init($("#cTree"), setting, zNodes());
+});
+// 角色树设置
+var setting = {
+    view: {
+        dblClickExpand: false,
+        autoCancelSelected: false
+    },
+    data: {
+        simpleData: {
+            enable: true
+        }
+    },
+    callback: {
+        beforeClick: beforeClick,
+        onClick: onClick
+    }
+};
+
+/**
+ * 配件树数据源
+ * @returns
+ */
+function zNodes(){
+	$.ajax({
+		url : "/findpartstree",
+		type : "get",
+		async : false,
+		data : {"pid":"0"},
+		success : function(data){
+			alert("配件树");
+		},
+		error:function(data){
+			alert("页面查询失败");
+		}
+	});
+}
+// 角色树数据源
+var zNodes = [
+    { id: 1, pId: 0, name: "北京" },
+    { id: 2, pId: 0, name: "天津" },
+    { id: 3, pId: 0, name: "上海" },
+    { id: 6, pId: 0, name: "重庆" },
+    { id: 4, pId: 0, name: "河北省", open: true },
+    { id: 41, pId: 4, name: "石家庄" },
+    { id: 42, pId: 4, name: "保定" },
+    { id: 43, pId: 4, name: "邯郸" },
+    { id: 44, pId: 4, name: "承德" },
+    { id: 5, pId: 0, name: "广东省", open: true },
+    { id: 51, pId: 5, name: "广州" },
+    { id: 52, pId: 5, name: "深圳" },
+    { id: 53, pId: 5, name: "东莞" },
+    { id: 54, pId: 5, name: "佛山" },
+    { id: 6, pId: 0, name: "福建省", open: true },
+    { id: 61, pId: 6, name: "福州" },
+    { id: 62, pId: 6, name: "厦门" },
+    { id: 63, pId: 6, name: "泉州" },
+    { id: 64, pId: 6, name: "三明" }
+];
