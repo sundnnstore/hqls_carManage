@@ -44,5 +44,8 @@ public interface UserMapper {
 	public int updateUser(HqlsUser user);
 	
 	public UserDto getUserDtoByUserId(@Param("userId") Integer userId);
+	
+	@Select("SELECT count(*) FROM hqls_user_store WHERE user_id =( SELECT user_id FROM hqls_user WHERE global_user_id = #{1} AND is_useable =1)")
+	public Integer checkUser(Integer globalUserId);
 
 }

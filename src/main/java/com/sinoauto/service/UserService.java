@@ -68,6 +68,30 @@ public class UserService {
 		ul.setToken(rest.getResult().getToken());
 		return RestModel.success(ul);
 	}
+	
+	/**
+	 * 门店端登录
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord) {
+		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		Integer count = userMapper.checkUser(userId);
+		if (count == 0) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
+		}
+		UserLoginDto ul = new UserLoginDto();
+		ul.setMobile("");
+		ul.setUserName("");
+		ul.setToken(rest.getResult().getToken());
+		return RestModel.success(ul);
+	}
+
 
 	public ResponseEntity<RestModel<Map<String, Set<HqlsAuthority>>>> findUserAuthority(String token, Integer isBack) {
 		// 获取当前用户
