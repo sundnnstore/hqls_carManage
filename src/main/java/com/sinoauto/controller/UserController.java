@@ -76,7 +76,7 @@ public class UserController {
 	}
 
 	@ApiOperation(value = "禁用/启用人员状态", notes = "tangwt")
-	@PostMapping("updateuserstatus")
+	@GetMapping("updateuserstatus")
 	public ResponseEntity<RestModel<String>> updateUserStatus(@RequestParam("userId") Integer userId) {
 		if (userId == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "用户ID为空！");
@@ -88,6 +88,22 @@ public class UserController {
 	@GetMapping("findallrole")
 	public ResponseEntity<RestModel<List<CommonDto>>> findAllRole() {
 		return userService.findAllRole();
+	}
+	
+	@ApiOperation(value = "修改用户信息", notes = "wuxiao")
+	@PostMapping("updateuser")
+	public ResponseEntity<RestModel<String>> updateUser(@RequestBody UserDto userDto) {
+		if (userDto.getUserId() == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.PARAM_NOT_NULL, "userId不能为空");
+		}
+		return userService.updateUser(userDto);
+	}
+	
+	@ApiOperation(value = "根据用户Id查询用户信息", notes = "wuxiao")
+	@GetMapping("getuserbyuserid")
+	public ResponseEntity<RestModel<UserDto>> getUserByUserId(@RequestParam(value = "userId", required = true) Integer userId) {
+		
+		return userService.getUser(userId);
 	}
 
 }

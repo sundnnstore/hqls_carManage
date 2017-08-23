@@ -37,8 +37,12 @@ public interface UserMapper {
 	@Update("UPDATE hqls_user set mobile=#{newMobile} where user_id = #{userId}")
 	public int updateUserByUserId(@Param("newMobile") String newMobile,@Param("userId") Integer userId);
 	
+	@Select("select * from hqls_user where user_id = #{1}")
+	public HqlsUser getUserById(Integer userId);
 	
+	@Update("update hqls_user set user_name = #{userName}, dml_time = now() where user_id = #{userId}")
+	public int updateUser(HqlsUser user);
 	
-	
+	public UserDto getUserDtoByUserId(@Param("userId") Integer userId);
 
 }

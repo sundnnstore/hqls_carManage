@@ -17,6 +17,8 @@ public class UserDto {
 	private List<HqlsRole> roles;
 	@ApiModelProperty("是否禁用")
 	private Boolean isUseable;
+	@ApiModelProperty("全局用户Id")
+	private Integer globalUserId;
 
 	public Integer getUserId() {
 		return userId;
@@ -68,4 +70,14 @@ public class UserDto {
 		}
 	}
 
+	public Integer getGlobalUserId() {
+		return globalUserId;
+	}
+
+	public void setGlobalUserId(Integer globalUserId) {
+		if (globalUserId != null) {
+			this.globalUserId = globalUserId;
+		}
+	}
+	
 }

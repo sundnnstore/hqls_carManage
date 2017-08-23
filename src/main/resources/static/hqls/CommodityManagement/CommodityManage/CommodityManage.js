@@ -1,4 +1,4 @@
-layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
+layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     var $ = layui.jquery,
         layer = layui.layer,
         form = layui.form,
@@ -15,7 +15,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	        if (method == 'addCommodity') {
 	            title = '新增';
 	            //清空数据
-	            $("#commodityBox input,#commodityBox select").each(function(){
+	            $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
 	            	$(this).attr("value","");
 	            });
 	            //显示配件品牌
@@ -23,7 +23,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 	        } else if (method == 'view') {
 	            title = '查看';
 	            Detailview($(this).parent().find("#partsId").val());
-	            $('#commodityBox input,#commodityBox select').each(function(elem) {
+	            $('#commodityBox input,#commodityBox select').not("input:radio").each(function(elem) {
 	                $(this).attr('disabled', 'disabled');
 	            });
 	            
@@ -175,15 +175,18 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 			type : "get",
 			async : false,
 			data : {
-				"partsCode":$("#searchCommodity").val(),
-				"partsTypeId":$("#searchCommodity").val(),
-				"partsTopTypeId":$("#searchCommodity").val(),
-				"partsName":$("#searchCommodity").val(),
+				"partsCode":$("#partsCodeQuery").val(),
+//				"partsTypeId":$("#searchCommodity").val(), 暂无树形结构
+				"partsTopTypeId":$("#partsTypeTop").val(),
+				"partsName":$("#partsNameQuery").val(),
 				"pageSize":pageSize,
 				"pageIndex":pageIndex
 				},
 			success : function(data){
 				comboTable(data,pageIndex);
+			},
+			error:function(data){
+				alert("页面查询失败");
 			}
 		});
 	}
@@ -316,7 +319,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
      */
     function displayHtml(data,partsBrandId){
     	 //清空数据
-        $("#commodityBox input,#commodityBox select").each(function(){
+        $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).attr("value","");
         });
     	var piclen,attrlen;
@@ -351,6 +354,16 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	$(".uploadImg").html(""); //清空图片上传div
     	$(".attrExtra").html("");//清空动态扩展属性的div
     	//显示图片
+    	if(piclen==0){
+    		pics =` 
+	    		<div class="siteUpload">
+	                <img id="commodityImgUrl" src="">
+	                <div class="layui-box layui-upload-button">
+	                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" onchange="uploadImg(this)">
+	                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+	                </div>
+	            </div>`;
+    	}
     	for (var i = 0; i < piclen; i++) {
     		pics += `
                <div class="siteUpload">
@@ -394,7 +407,12 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     	/**
     	 * 上下架
     	 */
-    	$('input:radio:last').attr('checked', 'checked');
+    	if(data.result.isUsable==0){
+    		$('input:radio:last').attr('checked', 'checked');
+    	}else{
+    		$('input:radio:first').attr('checked', 'checked');
+    	}
+    	
     }
     
     /**
@@ -506,22 +524,22 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     function requestData(){
     	var partsAttrExtrs = attrExtra(); //扩展属性
     	var partsPics = imgs(); //图片集合
-    	var partsBrandId = $("#partsBrandId").val()=="undefined"?-1:$("#partsBrandId").val(),
-    			curPrice=$("#curPrice").val()=="undefined"?-1:$("#curPrice").val(),
-    			discount=$("#discount").val()=="undefined"?-1:$("#discount").val(),
-    			isUsable=$('input[name="state"]:checked').val(),
-    			partsTypeId=$("#partsTypeId").val()=="undefined"?-1:$("#partsTypeId").val(),
-    			partsId=$("#partsId").val()=="undefined"?-1:$("#partsId").val()
-    			pid=$("#pid").val()=="undefined"?-1:$("#pid").val()
+    	var partsBrandId = $("#partsBrandId").val()==undefined?-1:$("#partsBrandId").val(),
+    			curPrice=$("#curPrice").val()==undefined?-1:$("#curPrice").val(),
+    			discount=$("#discount").val()==undefined?-1:$("#discount").val(),
+    			partsTypeId=$("#partsTypeId").val()==undefined?-1:$("#partsTypeId").val(),
+    			partsId=$("#partsId").val()==undefined?-1:$("#partsId").val()
+    			pid=$("#pid").val()==undefined?-1:$("#pid").val(),
+    			uable=$('input:radio:checked').val()
     			; 
-    	//alert("isUsable:"+isUsable);
+    	console.log(uable);
     	var dataJson="{" +
     					"\"partsBrandId\":\""+partsBrandId+"\"," +
     					"\"partsCode\":\""+$("#partsCode").val()+"\"," +
     					"\"partsModel\":\""+$("#partsModel").val()+"\"," +
     					"\"curPrice\":\""+curPrice+"\"," +
     					"\"discount\":\""+discount+"\"," +
-    					"\"isUsable\":\""+0+"\"," +
+    					"\"isUsable\":\""+uable+"\"," +
     					"\"origin\":\""+$("#origin").val()+"\"," +
     					"\"partsFactory\":\""+$("#partsFactory").val()+"\"," +
     					"\"partsSpec\":\""+$("#partsSpec").val()+"\"," +
@@ -545,28 +563,21 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
 		return data;
     }
     
-    
-    /**
-     * 图片上传
-     */
-    function uploadImg(obj){
-    	alert("你好");
-////    	alert($(obj));
-//    	//判断,最后一个图片 ,上传追加,前提是 最后一个图片的不大于最大的上传限
-//    	var abc = $(obj).parent().parent();
-//    	appendImg(abc);
-////    	alert(abc.html());
-//    	alert($(abc).html());
-    }
-    
     /**
      * 追加图片
      * @returns
      */
-    function appendImg(obj){
-    	    var index = $(".siteUpload").index(obj);
-    	    alert(index);
-    	   
+    function appendImg(){
+    		var picHtml=`
+    			<div class="siteUpload">
+                <img id="commodityImgUrl" src="">
+                <div class="layui-box layui-upload-button">
+                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" value="0">
+                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+                </div>
+            </div>	
+    		`;
+    		$(".siteUpload:last").append(picHtml);
 //    	    $("ul li").click(function () {
 //    	        var index = $("ul li").index(this);
 //    	        alert(index);
@@ -574,11 +585,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload'], function() {
     }
     
     /**
-     * 图片新增
+     * 图片上传追加
      */
-    $(".uploadImg").on('change', '.commodityImg', function(obj) {
-    	alert($(obj).html());
-    	alert("图片点击事件");
-    });
+//    $(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
+//    	//默认为
+//    	var flag = $(this).attr("value");
+//    });
     
 });

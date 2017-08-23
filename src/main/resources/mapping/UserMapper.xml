@@ -57,4 +57,8 @@
 		</if>
 	</select>
 	
+	<select id="getUserDtoByUserId" resultMap="userDto">
+		select * from hqls_user where user_id = #{userId}
+	</select>
+	
 </mapper>
