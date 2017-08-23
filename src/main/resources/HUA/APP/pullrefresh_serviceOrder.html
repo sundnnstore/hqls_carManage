@@ -10,18 +10,16 @@
 
 		<link rel="stylesheet" href="../css/mui.min.css">
 		<style type="text/css">
-			.mui-table .mui-media-object {
-				max-width: 80px;
-				height: 80px;
+			.mui-table .mui-media-object{
+			    max-width: 80px;
+			    height: 80px;
 			}
-			
-			.price {
+			.price{
 				color: #FF7B25;
 			}
-			
-			#item2mobile .mui-table .mui-media-object {
-				max-width: 80px;
-				height: 60px;
+			#item2mobile .mui-table .mui-media-object{
+			    max-width: 80px;
+			    height: 60px;
 			}
 		</style>
 	</head>
@@ -32,137 +30,159 @@
 			<div class="mui-scroll">
 
 				<div style="padding: 10px 10px;">
-					<div id="segmentedControl" class="mui-segmented-control">
-						<a class="mui-control-item mui-active" href="#item1mobile">
-							待完成
-						</a>
-						<a class="mui-control-item" href="#item2mobile">
-							已完成
-						</a>
-					</div>
-				</div>
-				<!--待完成订单 start-->
-				<div id="item1mobile" class="mui-control-content mui-active mui-clearfix">
-					<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed" id="tobefinish_order">
-
-					</ul>
-				</div>
-
-				<div id="item2mobile" class="mui-control-content mui-clearfix">
-					<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed" id="finish_order">
-						<li class="mui-table-view-cell">
-							<div class="mui-table">
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<img class="mui-media-object " src="http://placehold.it/240X240">
-								</div>
-								<div class="mui-table-cell mui-col-xs-6 mui-pull-left">
-									张老大 15656585856
-									<p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
-									<p>洗车服务</p>
-								</div>
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<p class="mui-ellipsis">abc123456789</p>
-									<p class="mui-ellipsis price">￥356.00</p>
-									<p class="mui-ellipsis">07-22 15:00 </p>
-								</div>
-							</div>
-						</li>
-						<li class="mui-table-view-cell">
-							<div class="mui-table">
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<img class="mui-media-object " src="http://placehold.it/240X240">
-								</div>
-								<div class="mui-table-cell mui-col-xs-6 mui-pull-left">
-									张老大 15656585856
-									<p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
-									<p>洗车服务</p>
-								</div>
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<p class="mui-h5 mui-ellipsis">abc123456789</p>
-									<p class="mui-ellipsis price">￥356.00</p>
-									<p class="mui-h5 mui-ellipsis">07-22 15:00 </p>
-								</div>
-							</div>
-						</li>
-						<li class="mui-table-view-cell">
-							<div class="mui-table">
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<img class="mui-media-object " src="http://placehold.it/240X240">
-								</div>
-								<div class="mui-table-cell mui-col-xs-6 mui-pull-left">
-									张老大 15656585856
-									<p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
-									<p>洗车服务</p>
-								</div>
-								<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
-									<p class="mui-h5 mui-ellipsis">abc123456789</p>
-									<p class="mui-ellipsis price">￥356.00</p>
-									<p class="mui-h5 mui-ellipsis">07-22 15:00 </p>
-								</div>
-							</div>
-						</li>
-					</ul>
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1mobile">
+						待完成
+					</a>
+					<a class="mui-control-item" href="#item2mobile">
+						已完成
+					</a>
 				</div>
 			</div>
-		</div>
+			<!--待完成订单 start-->
+			<div id="item1mobile" class="mui-control-content mui-active mui-clearfix" >
+				 <ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+			        <li class="mui-table-view-cell" id="refreshContainer">
+			            <div class="mui-table" >
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left" >
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>
+			                    <p class="mui-ellipsis price">	￥356.00</p>
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-ellipsis">abc123456789</p>
+			                    <p class="mui-text-center"><span class="mui-icon mui-icon-phone mui-text-center"></span></p>
+			                    <p class="mui-ellipsis">07-22 15:00 到店</p>
+								<p class="mui-text-center"><button class="mui-btn">完成</button></p>
+			                </div>
+			            </div>
+			        </li>
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left" >
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>
+			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>
+			                    <p class="mui-ellipsis price">	￥356.00</p>
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-ellipsis">abc123456789</p>
+			                    <p class="mui-text-center"><span class="mui-icon mui-icon-phone mui-text-center"></span></p>
+			                    <p class="mui-ellipsis">07-22 15:00 到店</p>
+								<p class="mui-text-center"><button class="mui-btn">完成</button></p>
+			                </div>
+			            </div>
+			        </li>
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left" >
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>
+			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>
+			                    <p class="mui-ellipsis price">	￥356.00</p>
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-ellipsis">abc123456789</p>
+			                    <p class="mui-text-center"><span class="mui-icon mui-icon-phone mui-text-center"></span></p>
+			                    <p class="mui-ellipsis">07-22 15:00 到店</p>
+								<p class="mui-text-center"><button class="mui-btn">完成</button></p>
+			                </div>
+			            </div>
+			        </li>
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left" >
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>
+			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>
+			                    <p class="mui-ellipsis price">	￥356.00</p>
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-ellipsis">abc123456789</p>
+			                    <p class="mui-text-center"><span class="mui-icon mui-icon-phone mui-text-center"></span></p>
+			                    <p class="mui-ellipsis">07-22 15:00 到店</p>
+								<p class="mui-text-center"><button class="mui-btn">完成</button></p>
+			                </div>
+			            </div>
+			        </li>
+		        </ul>
+			</div>
+
+			<div id="item2mobile" class="mui-control-content mui-clearfix">
+				<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed">
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>			                   
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-ellipsis">abc123456789</p>
+			                     <p class="mui-ellipsis price">￥356.00</p>
+			                    <p class="mui-ellipsis">07-22 15:00 </p>								
+			                </div>
+			            </div>
+			        </li>
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>			                   
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-h5 mui-ellipsis">abc123456789</p>
+			                    <p class="mui-ellipsis price">￥356.00</p>
+			                    <p class="mui-h5 mui-ellipsis">07-22 15:00 </p>								
+			                </div>
+			            </div>
+			        </li>
+			        <li class="mui-table-view-cell">
+			            <div class="mui-table">
+			            	<div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			            		<img class="mui-media-object " src="http://placehold.it/240X240">
+			            	</div>			            	
+			                <div class="mui-table-cell mui-col-xs-6 mui-pull-left">
+			                	张老大 15656585856
+			                    <p class="mui-ellipsis">苏A555666 奥迪/A8/2017新款</p>
+			                    <p>洗车服务</p>			                   
+			                </div>
+			                <div class="mui-table-cell mui-col-xs-3 mui-pull-left">
+			                    <p class="mui-h5 mui-ellipsis">abc123456789</p>
+			                    <p class="mui-ellipsis price">￥356.00</p>
+			                    <p class="mui-h5 mui-ellipsis">07-22 15:00 </p>								
+			                </div>
+			            </div>
+			        </li>
+		        </ul>
+			</div>
+			</div>
+	</div>
 		<script src="../js/mui.min.js"></script>
 		<script>
-			localStorage.storeId = 1;
-			var pageSize = 10;
-			findToBeFinishOrder(1,1);
-			function findToBeFinishOrder(orderStatus,pageIndex){
-				mui.ajax('http://192.168.1.54:8881/findordersbystatus', {
-					data: {
-						orderStatus: orderStatus,
-						storeId : localStorage.storeId,
-						pageIndex : pageIndex,
-						pageSize: pageIndex
-					},
-					dataType: 'json', //服务器返回json格式数据
-					type: 'get', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					async : false,
-					/*headers: {
-						'Content-Type': 'application/json'
-					},*/
-					success: function(data) {
-						comboToBeFinishOrder(data);
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
-					}
-				});
-			}
-			
-			function comboToBeFinishOrder(data){
-				var result = data.result;
-					var str = "";
-					for(i=0;i<result.length;i++){
-						var order = result[i];
-						str +='<li class="mui-table-view-cell">'+
-							  '<div class="mui-table">'+
-							  '<div class="mui-table-cell mui-col-xs-3 mui-pull-left">'+
-							  '<img class="mui-media-object " src="'+order.avatarUrl+'"></div>'+
-							  '<div class="mui-table-cell mui-col-xs-6 mui-pull-left">'+
-									order.customerName+order.customerMobile+
-									'<p class="mui-ellipsis">'+order.carModel+'</p>'+
-									'<p>'+order.serviceType+'</p>'+
-									'<p class="mui-ellipsis price"> ￥'+order.orderAmount+'</p></div>'+
-								'<div class="mui-table-cell mui-col-xs-3 mui-pull-left">'+
-									'<p class="mui-ellipsis">'+order.orderNo+'</p>'+
-									'<p class="mui-text-center"><span class="mui-icon mui-icon-phone mui-text-center"></span></p>'+
-									'<p class="mui-ellipsis">'+order.expectArriveTime+' 到店</p>'+
-									'<p class="mui-text-center"><button class="mui-btn finish-btn" name="'+order.serviceOrderId+'">完成</button></p></div></div></li>';
-					}
-					document.getElementById("tobefinish_order").innerHTML=str;
-			}
-			
-			mui('.mui-table-view-cell').on('tap','.finish-btn',function(){
-				console.log(this.name)
-			})
-			
-
 			mui.init({
 				pullRefresh: {
 					container: '#pullrefresh',
@@ -182,7 +202,7 @@
 				setTimeout(function() {
 					var table = document.body.querySelector('.mui-table-view');
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for(var i = cells.length, len = i + 3; i < len; i++) {
+					for (var i = cells.length, len = i + 3; i < len; i++) {
 						var li = document.createElement('li');
 						li.className = 'mui-table-view-cell';
 						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
@@ -201,7 +221,7 @@
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
 					var table = document.body.querySelector('.mui-table-view');
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					for(var i = cells.length, len = i + 5; i < len; i++) {
+					for (var i = cells.length, len = i + 5; i < len; i++) {
 						var li = document.createElement('li');
 						li.className = 'mui-table-view-cell';
 						li.innerHTML = '<a class="mui-navigate-right">Item ' + (i + 1) + '</a>';
@@ -209,19 +229,19 @@
 					}
 				}, 1500);
 			}
-
-			//			if (mui.os.plus) {
-			//				mui.plusReady(function() {
-			//					setTimeout(function() {
-			//						mui('#pullrefresh').pullRefresh().pullupLoading();
-			//					}, 10);
-			//
-			//				});
-			//			} else {
-			//				mui.ready(function() {
-			//					mui('#pullrefresh').pullRefresh().pullupLoading();
-			//				});
-			//			}
+			
+//			if (mui.os.plus) {
+//				mui.plusReady(function() {
+//					setTimeout(function() {
+//						mui('#pullrefresh').pullRefresh().pullupLoading();
+//					}, 10);
+//
+//				});
+//			} else {
+//				mui.ready(function() {
+//					mui('#pullrefresh').pullRefresh().pullupLoading();
+//				});
+//			}
 		</script>
 	</body>
 
