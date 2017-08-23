@@ -488,10 +488,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     function imgs(){
     	var imgs = "[",flag=1;
     	var len = $(".uploadImg img").length;
-    	$(".uploadImg input").each(function(i){
-    		if(i==(len-1)){
+    	$(".uploadImg .siteUpload img").each(function(i){
+    		var url = $(this).attr("url");
+    		if(i==(len-1)&&url!=undefined){
     			imgs+="{\"sorting\":"+flag+",\"url\":\""+$(this).attr("url")+"\"}";
-    		}else{
+    		}else if(url!=undefined){
     			imgs+="{\"sorting\":"+flag+",\"url\":\""+$(this).attr("url")+"\"},";
     		}
     		flag++;
@@ -624,23 +625,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     }
 });
 
-
-
-///**
-// * 图片上传追加
-// */
-//$(".uploadImg .siteUpload input").on('click','.commodityImg', function(event) {
-//	//默认为
-//	alert("你好");
-//	var flag = $(this).attr("value");
-//});
-
 function change(obj){
 	var form =$("#form");
 	var imgUrl = uploadImg(form,obj);
 	$(obj).parent().parent().find("img").attr("src",imgUrl);
-//	alert($(obj).html());
-//	alert("你好");
 	appendImg(obj);
 } 
 
