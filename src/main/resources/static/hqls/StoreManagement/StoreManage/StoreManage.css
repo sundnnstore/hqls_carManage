@@ -61,6 +61,7 @@
 .storeInfo {
     display: none;
     padding: 15px 20px;
+    user-select: none;
 }
 
 .storeInfo input {
@@ -147,12 +148,21 @@
     line-height: 140px;
 }
 
-.layui-layer-btn {
-    text-align: center !important;
-}
 
 .storeInfo tr>td:last-child {
     text-align: left;
+}
+
+.storeImage{
+	display: none;
+}
+
+.storeImage>img{
+	width: 100%;
+}
+
+.layui-layer-btn {
+    text-align: center !important;
 }
 
 .layui-layer-btn0,

@@ -74,7 +74,10 @@
 		sto.is_useable as isUseable,
 		users.mobile as userMobile,
 		sto.store_name as storeName,
-		sto.store_code as storeCode
+		sto.store_code as storeCode,
+		sto.province_name as provinceName,
+		sto.city_name as cityName,
+		sto.county_name as countyName
 		FROM
 		hqls_store sto
 		LEFT JOIN 
