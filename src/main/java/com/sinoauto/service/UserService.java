@@ -68,7 +68,7 @@ public class UserService {
 		ul.setToken(rest.getResult().getToken());
 		return RestModel.success(ul);
 	}
-	
+
 	/**
 	 * 门店端登录
 	 * @param username
@@ -81,17 +81,17 @@ public class UserService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
-		Integer count = userMapper.checkUser(userId);
-		if (count == 0) {
+		Integer storeId = userMapper.checkUser(userId);
+		if (storeId == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
 		}
 		UserLoginDto ul = new UserLoginDto();
 		ul.setMobile("");
 		ul.setUserName("");
 		ul.setToken(rest.getResult().getToken());
+		ul.setStoreId(storeId);
 		return RestModel.success(ul);
 	}
-
 
 	public ResponseEntity<RestModel<Map<String, Set<HqlsAuthority>>>> findUserAuthority(String token, Integer isBack) {
 		// 获取当前用户
@@ -171,18 +171,20 @@ public class UserService {
 					userMapper.updateGlobalUserId(globalUserId, user.getUserId());
 				}
 			} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息,
-				/*RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, userDto.getMobile());
-				if (uInfo.getErrcode() == 0) {
-					globalUserId = uInfo.getResult().getUserId();
-					user.setGlobalUserId(globalUserId);
-					if (flag) {// 本系统中用户不存在
-						userMapper.insert(user);
-					} else {// 修改本系统中用户的全局用户ID
-						userMapper.updateGlobalUserId(globalUserId, user.getUserId());
-					}
-				} else {
-					return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
-				}*/
+				/*
+				 * RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, userDto.getMobile());
+				 * if (uInfo.getErrcode() == 0) {
+				 * globalUserId = uInfo.getResult().getUserId();
+				 * user.setGlobalUserId(globalUserId);
+				 * if (flag) {// 本系统中用户不存在
+				 * userMapper.insert(user);
+				 * } else {// 修改本系统中用户的全局用户ID
+				 * userMapper.updateGlobalUserId(globalUserId, user.getUserId());
+				 * }
+				 * } else {
+				 * return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+				 * }
+				 */
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "用户已注册！");
 			} else {
 				return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
@@ -214,13 +216,12 @@ public class UserService {
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "编辑失败");
 	}
-	
+
 	public ResponseEntity<RestModel<List<CommonDto>>> findAllRole() {
-		
-		return RestModel.success(roleMapper.findAll()); 
+
+		return RestModel.success(roleMapper.findAll());
 	}
 
-	
 	/**
 	 * 修改用户账号信息
 	 * 
@@ -236,9 +237,9 @@ public class UserService {
 		HqlsUser user = userMapper.getUserByGloabUserId(globalId);
 		// 获取当前登录人userId
 		Integer userId = user.getUserId();
-		//判断新账号在数据库是否存在
+		// 判断新账号在数据库是否存在
 		HqlsUser hqlsUser = userMapper.getUserInfoByMobile(newMobile);
-		if(hqlsUser != null ){
+		if (hqlsUser != null) {
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "账号在数据中已存在！");
 		} else {
 			// 根据userId更新用户表的信息
@@ -246,7 +247,7 @@ public class UserService {
 		}
 		return RestModel.success();
 	}
-	
+
 	/**
 	 * 修改用户信息（用户名，用户角色）
 	 * @param userDto
@@ -290,5 +291,19 @@ public class UserService {
 	public ResponseEntity<RestModel<UserDto>> getUser(Integer userId) {
 		return RestModel.success(userMapper.getUserDtoByUserId(userId));
 	}
-	
+
+	public ResponseEntity<RestModel<Boolean>> checkAuthorization(String token) {
+		// 获取当前用户
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_TOKEN);
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		Integer count = userMapper.checkUser(userId);
+		if (count == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA);
+		}
+		return RestModel.success(true);
+	}
+
 }

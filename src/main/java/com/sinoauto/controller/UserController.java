@@ -113,5 +113,11 @@ public class UserController {
 		
 		return userService.getUser(userId);
 	}
+	
+	@ApiOperation(value = "获取权限集合", notes = "tangwt")
+	@PostMapping("checkauth")
+	public ResponseEntity<RestModel<Boolean>> checkAuthorization(@RequestHeader String Authorization) {
+		return userService.checkAuthorization(Authorization);
+	}
 
 }
