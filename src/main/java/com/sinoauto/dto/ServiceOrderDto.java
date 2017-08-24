@@ -18,6 +18,8 @@ public class ServiceOrderDto {
 	private String serviceType;
 	@ApiModelProperty("订单状态（1待完成；2已完成）")
 	private Integer orderStatus;
+	@ApiModelProperty("订单类型 1服务订单 2 预约表单")
+	private Integer orderType;
 	@ApiModelProperty("车牌")
 	private String carNo;
 	@ApiModelProperty("车型")
@@ -210,5 +212,14 @@ public class ServiceOrderDto {
 			this.finishTime = finishTime;
 		}
 	}
+
+	public Integer getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
+	}
+	
 
 }

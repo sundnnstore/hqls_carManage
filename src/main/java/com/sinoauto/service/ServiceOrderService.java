@@ -145,6 +145,7 @@ public class ServiceOrderService {
 				customerMapper.insert(customer);
 			}
 			order.setCustomerId(customer.getCustomerId());
+			order.setOrderType(1);//服务订单
 			// 新增一条服务订单信息
 			serviceOrderMapper.insert(order);
 			// 推送给门店的联系人
