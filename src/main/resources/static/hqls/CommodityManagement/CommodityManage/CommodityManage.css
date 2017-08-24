@@ -49,7 +49,7 @@
 }
 
 
-/* 鏂板鍟嗗搧淇℃伅鐨勬牱寮� */
+/* 新增商品信息的样式 */
 
 .commodityBox {
     display: none;
@@ -145,6 +145,10 @@
     margin-right: 11px;
 }
 
+.uploadImg .siteUpload:hover .closeBtn {
+    display: block;
+}
+
 .uploadImg .siteUpload:last-child {
     margin-right: 0;
 }
@@ -161,6 +165,23 @@
     width: 138px;
     height: 140px;
     line-height: 140px;
+}
+
+.uploadImg .siteUpload .closeBtn {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 0;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.uploadImg .siteUpload .closeBtn i {
+    color: #fff;
 }
 
 .state {
@@ -180,7 +201,7 @@
 .commodityState {
     display: none;
     text-align: center;
-    /* line-height 鐨勫�间笌JS涓脊妗嗙殑area鍙傛暟鏈夊叧 */
+    /* line-height 的值与JS中弹框的area参数有关 */
     line-height: 142px;
 }
 

@@ -121,6 +121,7 @@ public class PartsService {
 				HqlsPartsType hqlsPartsType = new HqlsPartsType();
 				hqlsPartsType.setPartsType(partsOperDto.getPartsType());
 				hqlsPartsType.setPid(partsOperDto.getPid());
+				hqlsPartsType.setPname(partsOperDto.getPname());
 				hqlsPartsType.setTypeName(partsOperDto.getPartsName()); //
 				partsTypeMapper.insert(hqlsPartsType);
 				
@@ -171,6 +172,20 @@ public class PartsService {
 			if(partsOperDto!=null){
 				Integer partsId = partsOperDto.getPartsId();
 				if(partsId!=null){
+					//根据配件ID查询 配给类型
+					Integer partsTypeId =partsMapper.findPartsTypeIdByPartsId(partsId);
+					if(partsOperDto.getPid()!=null){
+						HqlsPartsType pt =new HqlsPartsType();
+						pt.setPartsTypeId(partsTypeId);
+						pt.setPid(partsOperDto.getPid());
+						pt.setPname(partsOperDto.getPname());
+						pt.setPartsType(partsOperDto.getPartsType());
+						pt.setTypeName(partsOperDto.getTypeName());
+						//根据配件类型修改配件父级菜单
+						partsTypeMapper.update(pt);
+					}
+					
+					
 					//修改配件的基本属性
 					partsMapper.update(partsOperDto);
 					List<HqlsPartsPic> partsPics =partsOperDto.getPartsPics();

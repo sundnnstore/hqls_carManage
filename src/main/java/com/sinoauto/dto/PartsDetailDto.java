@@ -14,7 +14,10 @@ import io.swagger.annotations.ApiModelProperty;
  * @date 2017-08-16 17:45:22
  */
 public class PartsDetailDto {
-
+	@ApiModelProperty("父类ID")
+	private Integer pId;
+	@ApiModelProperty("父类名称")
+	private String pName;
 	@ApiModelProperty("配件ID")
 	private Integer partsId;
 	@ApiModelProperty("配件编码")
@@ -210,6 +213,22 @@ public class PartsDetailDto {
 
 	public void setIsUsable(Integer isUsable) {
 		this.isUsable = isUsable;
+	}
+
+	public Integer getpId() {
+		return pId;
+	}
+
+	public void setpId(Integer pId) {
+		this.pId = pId;
+	}
+
+	public String getpName() {
+		return pName;
+	}
+
+	public void setpName(String pName) {
+		this.pName = pName;
 	}
 
 }
