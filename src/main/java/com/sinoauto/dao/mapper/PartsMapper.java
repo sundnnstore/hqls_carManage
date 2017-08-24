@@ -54,7 +54,7 @@ public interface PartsMapper {
 	 */
 	public Page<PartsDesListDto> findPartsListByTypeId(@Param("partTypeId") Integer partTypeId);
 	
-	@Select("select count(1) from hqls_parts_type where type.pid = #{1}")
+	@Select("select count(1) from hqls_parts_type as type where type.pid = #{1}")
 	public int getPartsCountByPid(Integer pid);
 	
 	/**

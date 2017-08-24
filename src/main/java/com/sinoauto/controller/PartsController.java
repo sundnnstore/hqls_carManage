@@ -2,6 +2,8 @@ package com.sinoauto.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +56,7 @@ public class PartsController {
 	
 	@ApiOperation(value = "查询所有配件列表", notes = "wuxiao")
 	@GetMapping(value = "findallparts")
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllParts(
+	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(
 			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
 			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
 		
@@ -65,10 +67,16 @@ public class PartsController {
 	@GetMapping(value = "findpartsbypid")
 	public ResponseEntity<RestModel<Object>> findPartsListByPid(
 			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
-			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
-			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		
 		return partsService.findListByPid(partsTypeId, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "按配件Id查询配件是否有子类列表", notes = "wuxiao")
+	@GetMapping(value = "haschildtype")
+	public ResponseEntity<RestModel<Boolean>> hasChildType(@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId) {
+		return partsService.hasChildType(partsTypeId);
 	}
 	
 	/**
