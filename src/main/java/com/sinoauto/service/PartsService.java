@@ -16,10 +16,8 @@ import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dao.bean.HqlsPartsPic;
-import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsPicMapper;
-import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
@@ -41,8 +39,6 @@ public class PartsService {
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
 	
-	@Autowired
-	private PartsTypeMapper partsTypeMapper;
 	
 	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
@@ -117,14 +113,6 @@ public class PartsService {
 	public ResponseEntity<RestModel<Integer>> addParts(PartsOperDto partsOperDto){
 		try {
 			if(partsOperDto!=null){
-				//配件父类
-				HqlsPartsType hqlsPartsType = new HqlsPartsType();
-				hqlsPartsType.setPartsType(partsOperDto.getPartsType());
-				hqlsPartsType.setPid(partsOperDto.getPid());
-				hqlsPartsType.setPname(partsOperDto.getPname());
-				hqlsPartsType.setTypeName(partsOperDto.getPartsName()); //
-				partsTypeMapper.insert(hqlsPartsType);
-				
 				//插入配件属性基础表
 				HqlsParts hqlsParts = new HqlsParts();	
 				hqlsParts.setCreateTime(new Date());
@@ -139,7 +127,7 @@ public class PartsService {
 				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
 				hqlsParts.setPartsName(partsOperDto.getPartsName());
 				hqlsParts.setPartsSpec(partsOperDto.getPartsSpec());
-				hqlsParts.setPartsTypeId(hqlsPartsType.getPartsTypeId());//配件类型id
+				hqlsParts.setPartsTypeId(partsOperDto.getPartsType());//配件类型id
 				hqlsParts.setPartsUnit(partsOperDto.getPartsUnit());
 				hqlsParts.setPrice(partsOperDto.getPrice());
 				hqlsParts.setRemark(partsOperDto.getRemark());
@@ -172,20 +160,6 @@ public class PartsService {
 			if(partsOperDto!=null){
 				Integer partsId = partsOperDto.getPartsId();
 				if(partsId!=null){
-					//根据配件ID查询 配给类型
-					Integer partsTypeId =partsMapper.findPartsTypeIdByPartsId(partsId);
-					if(partsOperDto.getPid()!=null){
-						HqlsPartsType pt =new HqlsPartsType();
-						pt.setPartsTypeId(partsTypeId);
-						pt.setPid(partsOperDto.getPid());
-						pt.setPname(partsOperDto.getPname());
-						pt.setPartsType(partsOperDto.getPartsType());
-						pt.setTypeName(partsOperDto.getTypeName());
-						//根据配件类型修改配件父级菜单
-						partsTypeMapper.update(pt);
-					}
-					
-					
 					//修改配件的基本属性
 					partsMapper.update(partsOperDto);
 					List<HqlsPartsPic> partsPics =partsOperDto.getPartsPics();

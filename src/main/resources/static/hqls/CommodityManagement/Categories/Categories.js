@@ -20,7 +20,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
              * 1 是节点等级
              * 0 是新增  1 编辑的
              */
-            loadNodes(1,0);//加载节点树
+            loadNodes(0,0);//加载节点树
         } else if (method == 'view') {
         	$('#storeItemTree').html('');
             first_title = '查看';
@@ -44,7 +44,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 
     /**
      * 
-     * @param level
+     * @param level 1
      * @param flag 0:新增  1:编辑
      * @returns
      */
@@ -81,7 +81,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	console.log(data);
     	 // 构建商品分类节点树
         layui.tree({
-            elem: '#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+            elem:'#partsTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
             click: function(item) { //点击节点回调
                 first_title != '查看' && categoriesEdit(item);
             },
@@ -91,7 +91,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function editTree(data){
     	console.log(data);
     	 layui.tree({
-             elem: '#storeItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+             elem: '#partsItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
              click: function(item) { //点击节点回调
                  first_title != '查看' && categoriesEdit(item);
              },
@@ -139,21 +139,18 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             shade: 0,
             area: ['300px', '260px'], //宽高
             content: $('#categoriesLocate'),
-            btn: ['添加子节点', '上方添加节点', '下方添加节点', '删除'],
+            btn: ['添加子节点', '添加同级节点','删除'],
             btnAlign: 'c', //按钮居中
-            yes: function(index, layero) { // 选中在上方添加节点的回调
+            yes: function(index, layero) { // 添加子节点
+            	console.log("index:",index,"\n当前节点id",item.id,"\n当前节点name",item.name);
+            	categoriesEditCommon(item.id);
                 layer.close(index);
-                categoriesEditCommon(); // 调用store方法
             },
-            btn2: function(index, layero) { // 选中在下方添加节点的回调
+            btn2: function(index, layero) { //添加同级节点
+            	categoriesEditCommon(item.id); //输入
                 layer.close(index);
-                categoriesEditCommon(); // 调用store方法
             },
-            btn3: function(index, layero) { // 选中在添加子节点的回调
-                layer.close(index);
-                categoriesEditCommon(); // 调用store方法
-            },
-            btn4: function(index, layero) { // 选中删除的回调
+            btn3: function(index, layero) { // 选中删除的回调
                 layer.close(index);
                 var temp = 'del';
                 /*
@@ -184,8 +181,15 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             },
         });
     }
-    // 商品分类详细信息
-    function categoriesEditCommon() {
+    
+    /**
+     * 
+     * @param selectNodeId 当前选中节点
+     * @param typeName 新增类型名称
+     * @param operFlag 操作标志
+     * @returns
+     */
+    function categoriesEditCommon(selectNodeId,operFlag) {
         layer.open({
             type: 1,
             title: second_title == 'edit' ? '编辑' : '新增',
@@ -196,28 +200,29 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btn: second_title == 'view' ? '确定' : '提交',
             btnAlign: 'c', //按钮居中
             yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-                // console.log(layero);
-                layer.close(index); //如果设定了yes回调，需进行手工关闭
+            	var typeName = $("#partsTypeName").val(); //输入框的名称
+            	addChildren(selectNodeId,typeName);
+            	
+            	layer.close(index); //如果设定了yes回调，需进行手工关闭
                 inputReset(); // 清空表单
-
-                // do something
-
                 // 在新增的情况下，如果要添加的的内容已存在，则提示用户已存在
-                if (second_title != 'view' && false) { // 第一参数表明是否新增，第二参数表明是否已存在
-                    layer.open({
-                        type: 1,
-                        title: '提示',
-                        skin: 'layui-layer-lan', //弹框主题
-                        shade: 0,
-                        area: '400px', //宽高
-                        content: $('#categoriesAdd'),
-                        btn: '确定',
-                        btnAlign: 'c', //按钮居中
-                        yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-                            layer.close(index);
-                        }
-                    });
-                }
+//                if (second_title != 'view' && false) { // 第一参数表明是否新增，第二参数表明是否已存在
+//                    layer.open({
+//                        type: 1,
+//                        title: '提示',
+//                        skin: 'layui-layer-lan', //弹框主题
+//                        shade: 0,
+//                        area: '400px', //宽高
+//                        content: $('#categoriesAdd'),
+//                        btn: '确定',
+//                        btnAlign: 'c', //按钮居中
+//                        yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+//                            layer.close(index);
+//                        }
+//                    });
+//                }
+                
+                
             }
         });
     }
@@ -269,19 +274,29 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function getdata(pageIndex){
-    	$.ajax({
-			url : "/findpartslevel",
-			type : "get",
-			async : false,
-			data : {
-				"pid":0,
-				"pageSize":pageSize,
-				"pageIndex":pageIndex
-				},
-			success : function(res){
-				comboTable(res,pageIndex);
-			}
-		});
+//    	$.ajax({
+//			url : "/",
+//			type : "get",
+//			async : false,
+//			data : {
+//				"partsCode":$("#partsCodeQuery").val(),
+//				"partsTypeId":selectTreeId, //暂无树形结构
+//				"partsTopTypeId":$("#partsTypeTop").val(),
+//				"partsName":$("#partsNameQuery").val(),
+//				"pageSize":pageSize,
+//				"pageIndex":pageIndex
+//				},
+//			success : function(data){
+//				comboTable(data,pageIndex);
+//			},
+//			error:function(data){
+//				alert("页面查询失败");
+//			}
+//		});
+    	
+    	
+    	//手动加载
+    	partsLevel();
 	}
     
     /**
@@ -291,24 +306,58 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function comboTable(res,pageIndex){
-		var onlevel=``,twolevel=``,threelevel=``;
+		/**
+		 * 显示一二三等级
+		 */
+    	partsLevel();
+    	
+    	/**
+    	 * 显示表单数据
+    	 */
+    	displayPartsTypeInfo(res);
+    	
+		/**
+		 * 初始化分页
+		 */
+		initPage(res.totalCount,pageIndex); 
+    }
+    
+    /**
+     * 获取等级数据源
+     * @returns
+     */
+    function partsLevel(){
+    	$.ajax({
+			url : "/findpartslevel",
+			type : "get",
+			async : false,
+			data : {"pid":0},
+			success : function(res){
+				displayLevel(res);
+			}
+		});
+    }
+    /**
+     * 显示等级
+     * @param res
+     * @returns
+     */
+    function displayLevel(res){
+    	var onlevel=``,twolevel=``,threelevel=``;
 		var trs=``,one=``,two=``,three=``;
 		//循环菜单树
-		if(res.children!=null){
-			for (var i = 0; i < res.children.length; i++) { //一级菜单
-				onlevel+=`<option value="${res.children[i].id}">${res.children[i].name}</option>`;
-				if(res.children[i].children!=null){
+		if(res.children!=null&&res.children!=undefined){
+			var oneChildren = res.children;
+			for (var i = 0; i < oneChildren.length; i++) { //一级菜单
+				onlevel+=`<option value="${oneChildren[i].id}">${oneChildren[i].name}</option>`;
+					var twoChildren = res.children[i].children;
+				if(twoChildren!=null&&twoChildren!=undefined){
 					for (var j = 0; j < res.children[i].children.length; j++) { //二级菜单
-						twolevel+=`<option value="${res.children[i].children[j].id}">${res.children[i].children[j].name}</option>`;
-//						one=`<tr><td>${res.children[i].name}</td>`;
-//						trs+=one;
-//						two=`<td>${res.children[i].children[j].name}</td>`;
-//						trs+=two;
-						if(res.children[i].children[i].children!=null){
-							for (var q = 0; q <res.children[i].children[j].children.length; q++) {//三级菜单
-								threelevel+=`<option value="${res.children[i].children[j].children[q].id}">${res.children[i].children[j].children[q].name}</option>`;
-//								three=`<td>${res.children[i].children[j].children[q].name}</td>`;
-//								trs+=three;
+						twolevel+=`<option value="${twoChildren[j].id}">${twoChildren[j].name}</option>`;
+						var threeChildren = res.children[i].children[j].children;
+						if(threeChildren!=null&&threeChildren!=undefined){
+							for (var q = 0; q <threeChildren.length; q++) {//三级菜单
+								threelevel+=`<option value="${threeChildren[q].id}">${threeChildren[q].name}</option>`;
 								continue;
 							}
 							//第三级拼接
@@ -319,22 +368,61 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 					//第二级别的拼接
 					$("#twoleveltype").html(twolevel);
 				}
-//				trs+=`
-//					<td class="operation">
-//	                <button id="view" data-method="view" class="layui-btn">查看</button>
-//	                <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-//	                </td>`;
-//				trs+=`</tr>`;
-//				$("#partsTypeInfo").append(trs);
 				continue;
 				 
 			}
 			$("#oneleveltype").html(onlevel);
 		}
-		
-		/**
-		 * 拼接  一级  二级  三级  菜单
-		 */
-		initPage(res.totalCount,pageIndex); 
+    }
+    
+    function displayPartsTypeInfo(res){
+    	
+    }
+    
+    /**
+     * 添加子节点
+     * @param selectNodeId 当前选中节点
+     * @param typeName 类型名称
+     * @param index 弹出层
+     * @returns
+     */
+    
+    function addChildren(selectNodeId,typeName,index){
+    	//把他的id当做 pid
+    	//新增一个配件信息	
+    	alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
+    	data = {"partsTypeId":selectNodeId,"typeName":typeName};
+    	var data = JSON.stringify(data);
+    	$.ajax({
+			url : "/addpartstype",
+			type : "post",
+			async : false,
+			contentType: "application/json; charset=utf-8",
+			data : data,
+			success : function(data){
+				layer.msg("子节点添加成功");
+				//layer.close(index);
+				loadNodes(0,0);
+			},
+			error:function(data){
+				layer.msg("子节点添加失败");
+			}
+		});
+    } 
+    
+    /**
+     * 添加相同节点
+     * @returns
+     */
+    function addSameLevelNode(){
+    	
+    }
+    
+    /**
+     * 删除节点
+     * @returns
+     */
+    function del(){
+    	
     }
 });

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsBrand;
+import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
@@ -140,5 +141,11 @@ public class PartsController {
 	@GetMapping("findpartlevel")
 	public PartsTreeRecursionDto findPartsByLevel(@RequestParam("onelevel") Integer onelevel ,@RequestParam("twolevel") Integer twolevel,@RequestParam("threelevel") Integer threelevel  ){
 		return null;
+	}
+	
+	@ApiOperation(value = "新增配件树", notes = "liud")
+	@PostMapping("addpartstype")
+	public ResponseEntity<RestModel<Integer>> insert(@RequestBody HqlsPartsType hqlsPartsType){
+		return partsTypeService.insert(hqlsPartsType);
 	}
 }
