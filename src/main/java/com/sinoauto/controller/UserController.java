@@ -119,5 +119,11 @@ public class UserController {
 	public ResponseEntity<RestModel<Boolean>> checkAuthorization(@RequestHeader String Authorization) {
 		return userService.checkAuthorization(Authorization);
 	}
+	
+	@ApiOperation(value = "验证手机号码", notes = "tangwt")
+	@PostMapping("checkmobile")
+	public ResponseEntity<RestModel<Boolean>> checkMobile(@RequestParam("mobile")String mobile) {
+		return userService.checkMobile(mobile);
+	}
 
 }

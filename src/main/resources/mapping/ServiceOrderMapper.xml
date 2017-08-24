@@ -4,19 +4,19 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-		service_order_id, order_no, customer_id, service_type_id, store_id, order_status,
-		car_no, car_model, order_amount, create_time, dml_time
+		service_order_id, order_no, customer_id, service_type_id, store_id, order_status,order_type,
+		car_no, car_model,fault_desc, order_amount,expect_arrive_time,remark, create_time, dml_time
 	</sql>
 
 	<!-- 新增 -->
 	<insert id="insert" parameterType="com.sinoauto.dto.ServiceOrderDto"
 		useGeneratedKeys="true" keyProperty="serviceOrderId">
 		INSERT INTO hqls_service_order (
-		order_no, customer_id, service_type_id, store_id, order_status, car_no,
-		car_model, order_amount,expect_arrive_time, create_time, dml_time
+		order_no, customer_id, service_type_id, store_id, order_status,order_type, car_no,
+		car_model,fault_desc, order_amount,expect_arrive_time,remark, create_time, dml_time
 		) VALUES (
-		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, 1,
-		#{carNo}, #{carModel}, #{orderAmount},#{expectArriveTime}, now(), now()
+		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, 1,#{orderType},
+		#{carNo}, #{carModel}, #{faultDesc},#{orderAmount},#{expectArriveTime}, #{remark},now(), now()
 		)
 	</insert>
 
@@ -58,6 +58,7 @@
 		ON hso.service_type_id = hst.service_type_id
 		WHERE hso.order_status = #{orderStatus}
 		AND hso.store_id = #{storeId}
+		AND hso.order_type = 1
 	</select>
 
 </mapper>

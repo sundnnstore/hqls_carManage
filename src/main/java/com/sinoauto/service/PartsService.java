@@ -1,8 +1,12 @@
 package com.sinoauto.service;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,7 @@ import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
@@ -46,29 +51,41 @@ public class PartsService {
 		return RestModel.success(page, (int) page.getTotal());
 	}
 	
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllParts(Integer pageIndex, Integer pageSize) {
+	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page1 = partsMapper.findPartsTypeListByType(1);
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page2 = partsMapper.findPartsTypeListByType(2);
-		page1.addAll(page2);
-		return RestModel.success(page1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("obj1", page1);
+		map.put("count1", page1.getTotal());
+		map.put("obj2", page2);
+		map.put("count2", page2.getTotal());
+		return RestModel.success(map);
 	} 
+	
+	public ResponseEntity<RestModel<Boolean>> hasChildType(Integer partsTypeId) {
+		//查询此类别下的子类数量
+		int count = partsMapper.getPartsCountByPid(partsTypeId);
+		if (count > 0) {
+			return RestModel.success(true);
+		}
+		return RestModel.success(false);
+	}
 	
 	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
 		//查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
 		Object objList;
+//		PageHelper.startPage(pageIndex, pageSize);
 		//此类别下还有子类
 		if (count > 0) {
-			PageHelper.startPage(pageIndex, pageSize);
 			objList = partsMapper.findPartsTypeListByPid(partsTypeId);
 		}
 		//此类别下没有子类，展示商品列表
 		else {
 			objList = partsMapper.findPartsListByTypeId(partsTypeId);
 		}
-		
 		return RestModel.success(objList);
 	}
 	
