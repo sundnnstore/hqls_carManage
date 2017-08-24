@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -132,17 +133,17 @@ public class PartsController {
 	
 	@ApiOperation(value = "查询配件树", notes = "liud")
 	@GetMapping("findpartstree")
-	public List<PartsTreeRecursionDto> partsTreeRecursion(@RequestParam("pid") Integer pid){
+	public List<PartsTreeRecursionDto> partsTreeRecursion(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
 		List<PartsTreeRecursionDto> trees = new ArrayList<>();
-		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(pid);
+		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(pid,operflag);
 		if(partsTree!=null){trees.add(partsTree);};
 		return trees;
 	}
 	
 	@ApiOperation(value = "查询配件树", notes = "liud")
 	@GetMapping("findpartslevel")
-	public PartsTreeRecursionDto partsTreelevel(@RequestParam("pid") Integer pid){
-		return  partsService.partsTreeRecursion(pid);
+	public PartsTreeRecursionDto partsTreelevel(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
+		return  partsService.partsTreeRecursion(pid,operflag);
 	}
 	
 	@ApiOperation(value = "根据配件等级查询配件id", notes = "liud")
@@ -151,9 +152,27 @@ public class PartsController {
 		return null;
 	}
 	
-	@ApiOperation(value = "新增配件树", notes = "liud")
+	@ApiOperation(value = "新增配件子集", notes = "liud")
 	@PostMapping("addpartstype")
 	public ResponseEntity<RestModel<Integer>> insert(@RequestBody HqlsPartsType hqlsPartsType){
 		return partsTypeService.insert(hqlsPartsType);
+	}
+	
+	@ApiOperation(value = "新增同级配件", notes = "liud")
+	@PostMapping("addsamelevelpartstype")
+	public ResponseEntity<RestModel<Integer>> addSameLevel(@RequestBody HqlsPartsType hqlsPartsType){
+		return partsTypeService.addSameLevel(hqlsPartsType);
+	}
+	
+	@ApiOperation(value = "检查是否可以删除", notes = "liud")
+	@GetMapping("checkdel")
+	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(@RequestParam("partTypeId") Integer partsTypeId){
+		return partsTypeService.checkIsCanbeDel(partsTypeId);
+	}
+	
+	@ApiOperation(value = "删除配件类型", notes = "liud")
+	@DeleteMapping("deletepartstype")
+	public ResponseEntity<RestModel<Boolean>> deletePartsType(@RequestParam("partTypeId") Integer partTypeId){
+		return partsTypeService.delete(partTypeId);
 	}
 }

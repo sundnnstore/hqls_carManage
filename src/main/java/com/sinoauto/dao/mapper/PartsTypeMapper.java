@@ -2,6 +2,7 @@ package com.sinoauto.dao.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -36,4 +37,14 @@ public interface PartsTypeMapper {
 	 */
 	public void update(HqlsPartsType pt);
 	
+	/**
+	 * 查询配件类型父类
+	 * @param partsTypeId
+	 * @return
+	 */
+	@Select("select `pid` from  `hqls_parts_type` where parts_type_id=#{1}")
+	public Integer findPidByPartsTypeId(Integer partsTypeId);
+	
+	@Delete("delete from `hqls_parts_type` where `parts_type_id` = #{1}")
+	public void delete(Integer partTypeId);
 }

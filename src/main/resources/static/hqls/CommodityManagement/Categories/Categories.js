@@ -28,7 +28,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         	$('#storeItemTree').html('');
             first_title = '编辑';
             //传入一级菜单id
-            $(this).parent().parent().val();//节点树等级
+            //var level = $(this).parent().parent().val();//节点树等级
             loadNodes(1,1);//加载节点树
         }
         first_title && layer.open({
@@ -55,11 +55,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			async : false,
 			data : {"pid":level},
 			success : function(res){
-				//data=JSON.stringify(res);
-//				res=JSON.parse(res);
-//				alert("操作标记:"+flag);
-				
-				if(!flag){
+				if(flag==0){
 					addTree(res);
 				}else{
 					editTree(res);
@@ -143,14 +139,15 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btnAlign: 'c', //按钮居中
             yes: function(index, layero) { // 添加子节点
             	console.log("index:",index,"\n当前节点id",item.id,"\n当前节点name",item.name);
-            	categoriesEditCommon(item.id);
+            	categoriesEditCommon(item.id,1);
                 layer.close(index);
             },
             btn2: function(index, layero) { //添加同级节点
-            	categoriesEditCommon(item.id); //输入
+            	categoriesEditCommon(item.id,2); 
                 layer.close(index);
             },
             btn3: function(index, layero) { // 选中删除的回调
+            	//categoriesEditCommon(item.id,3); 
                 layer.close(index);
                 var temp = 'del';
                 /*
@@ -171,6 +168,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                     btnAlign: 'c', //按钮居中
                     yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
                         // console.log(layero);
+                    	check(item.id);
                         layer.close(index); //如果设定了yes回调，需进行手工关闭
                     },
                     btn2: function(index, layero) {
@@ -186,7 +184,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * 
      * @param selectNodeId 当前选中节点
      * @param typeName 新增类型名称
-     * @param operFlag 操作标志
+     * @param operFlag 操作标志  1 增加子节点 2.增加同节点 3. 删除
      * @returns
      */
     function categoriesEditCommon(selectNodeId,operFlag) {
@@ -201,7 +199,18 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btnAlign: 'c', //按钮居中
             yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
             	var typeName = $("#partsTypeName").val(); //输入框的名称
-            	addChildren(selectNodeId,typeName);
+            	switch (operFlag){
+	            	case 1: 
+	            		addChildren(selectNodeId,typeName);
+	            		break;
+	            	case 2:
+	            		addSameLevelNode(selectNodeId,typeName);
+	            		break;
+	            	case 3:
+	            		check(selectNodeId); //检查删除
+	            		break;
+            	}
+            	
             	
             	layer.close(index); //如果设定了yes回调，需进行手工关闭
                 inputReset(); // 清空表单
@@ -391,8 +400,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	//把他的id当做 pid
     	//新增一个配件信息	
     	alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
-    	data = {"partsTypeId":selectNodeId,"typeName":typeName};
-    	var data = JSON.stringify(data);
+    	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
+    	data = JSON.stringify(data);
     	$.ajax({
 			url : "/addpartstype",
 			type : "post",
@@ -414,15 +423,80 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * 添加相同节点
      * @returns
      */
-    function addSameLevelNode(){
-    	
+    function addSameLevelNode(selectNodeId,typeName){
+    	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
+    	data = JSON.stringify(data);
+    	$.ajax({
+			url : "/addsamelevelpartstype",
+			type : "post",
+			async : false,
+			contentType: "application/json; charset=utf-8",
+			data : data,
+			success : function(data){
+				layer.msg("添加同级几点成功");
+				//layer.close(index);
+				//loadNodes(0,0);
+			},
+			error:function(data){
+				layer.msg("添加同级几点失败");
+			}
+		});
     }
     
     /**
      * 删除节点
      * @returns
      */
-    function del(){
-    	
+    function del(selectNodeId){
+    	var data= {"partsTypeId":selectNodeId};
+    	data = JSON.stringify(data);
+    	//alert("删除里面的:"+selectNodeId);
+    	$.ajax({
+			url : "/deletepartstype/?partTypeId="+selectNodeId,
+			type : "DELETE",
+			async : false,
+			//contentType: "application/json; charset=utf-8",
+			//data : data,
+			success : function(data){
+				layer.msg("删除成功");
+				layer.close(index);
+				
+				//loadNodes(0,0);
+			},
+			error:function(data){
+				layer.msg("删除失败");
+			}
+		});
     }
+    
+    /**
+     * 删除检查
+     * @returns
+     */
+    function check(selectNodeId){
+//    	var data = {"partsTypeId":selectNodeId};
+//    	data = JSON.stringify(data);
+    	$.ajax({
+			url : "/checkdel",
+			type : "get",
+			async : false,
+			//contentType: "application/json; charset=utf-8",
+			data :  {"partTypeId":selectNodeId},
+			success : function(data){
+				if(data.result==true){
+					layer.msg("存在子集不可删除");
+					layer.close(index);
+				}else{
+					alert("检查selectNodeId："+selectNodeId);
+					del(selectNodeId);
+				}
+				//loadNodes(0,0);
+			},
+			error:function(data){
+				layer.msg("检查节点失败");
+			}
+		});
+    }
+    
+    
 });
