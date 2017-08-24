@@ -119,7 +119,7 @@ public class ServiceOrderController {
 		if(StringUtils.isEmpty(order.getArriveTime())){
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"到店时间不能为空！");
 		}else{
-			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			try {
 				Date arriveTime = sdf.parse(order.getArriveTime());
 				order.setExpectArriveTime(arriveTime);

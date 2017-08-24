@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -143,6 +144,12 @@ public class ServiceOrderService {
 				customer.setAvatarUrl(order.getAvatarUrl());
 				customer.setMobile(order.getCustomerMobile());
 				customerMapper.insert(customer);
+			}else{
+				if(!StringUtils.isEmpty(order.getAvatarUrl())){
+					customer.setAvatarUrl(order.getAvatarUrl());
+				}
+				customer.setCustomerName(order.getCustomerName());
+				customerMapper.updateCustomer(customer);
 			}
 			order.setCustomerId(customer.getCustomerId());
 			//order.setOrderType(1);//服务订单
