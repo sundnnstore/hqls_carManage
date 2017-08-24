@@ -128,8 +128,48 @@ public class ServiceOrderController {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"时间格式有误！");
 			}
 		}
+		order.setOrderType(1);
 		return serviceOrderService.createOrder(order);
 	}
+	
+	@ApiOperation(value = "创建预约表单接口", notes = "tangwt")
+	@PostMapping("createorderedorder")
+	public ResponseEntity<RestModel<String>> createOrderedOrder(@RequestBody ServiceOrderDto order){
+		if(StringUtils.isEmpty(order.getCustomerName())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户姓名不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCustomerMobile())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"客户手机号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getServiceType())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务项目不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getStoreCode())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"门店编码不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getCarModel())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车型不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getFaultDesc())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"故障位置描述不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getArriveTime())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"到店时间不能为空！");
+		}else{
+			SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+			try {
+				Date arriveTime = sdf.parse(order.getArriveTime());
+				order.setExpectArriveTime(arriveTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"时间格式有误！");
+			}
+		}
+		order.setOrderType(2);
+		order.setOrderAmount(0.0);
+		return serviceOrderService.createOrder(order);
+	}
+	
 	
 
 }

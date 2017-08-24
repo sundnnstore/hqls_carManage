@@ -13,10 +13,10 @@
 		useGeneratedKeys="true" keyProperty="serviceOrderId">
 		INSERT INTO hqls_service_order (
 		order_no, customer_id, service_type_id, store_id, order_status,order_type, car_no,
-		car_model, order_amount,expect_arrive_time, create_time, dml_time
+		car_model,fault_desc, order_amount,expect_arrive_time,remark, create_time, dml_time
 		) VALUES (
 		#{orderNo}, #{customerId}, #{serviceTypeId}, #{storeId}, 1,#{orderType},
-		#{carNo}, #{carModel}, #{orderAmount},#{expectArriveTime}, now(), now()
+		#{carNo}, #{carModel}, #{faultDesc},#{orderAmount},#{expectArriveTime}, #{remark},now(), now()
 		)
 	</insert>
 
