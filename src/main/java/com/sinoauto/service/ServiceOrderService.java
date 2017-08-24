@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -143,8 +144,15 @@ public class ServiceOrderService {
 				customer.setAvatarUrl(order.getAvatarUrl());
 				customer.setMobile(order.getCustomerMobile());
 				customerMapper.insert(customer);
+			}else{
+				if(!StringUtils.isEmpty(order.getAvatarUrl())){
+					customer.setAvatarUrl(order.getAvatarUrl());
+				}
+				customer.setCustomerName(order.getCustomerName());
+				customerMapper.updateCustomer(customer);
 			}
 			order.setCustomerId(customer.getCustomerId());
+			//order.setOrderType(1);//服务订单
 			// 新增一条服务订单信息
 			serviceOrderMapper.insert(order);
 			// 推送给门店的联系人
@@ -153,7 +161,11 @@ public class ServiceOrderService {
 			PushAction pa = new PushAction("serviceorder", 0, true, "");
 			List<PushAction> action = new ArrayList<>();
 			action.add(pa);
-			PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, "您有一条新的服务订单", "", null, 0);
+			String title = "您有一条新的服务订单";
+			if(order.getOrderType() == 2){
+				title = "您有一条新的预约订单";
+			}
+			PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
 			PushUtil.push2Andriod(parms);
 			PushUtil.push2IOSByAPNS(parms);
 			return RestModel.success("success");

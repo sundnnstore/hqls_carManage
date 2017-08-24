@@ -78,6 +78,27 @@ function displayImg(imgObj,imgurl){
 }
 
 /**
+ * 删除图片
+ */
+function delFile(imgUrl){
+	alert("进入删除图片的方法imgUrl:--->"+imgUrl);
+	$.ajax({
+		type : "DELETE",//"OPTIONS"可以删除,
+		async : false,
+		//contentType:"application/json;charset=utf-8",
+		data:imgUrl,
+		url : fileurl+"/?url="+imgUrl,
+		success : function(data) {
+			alert("删除图片成功");
+		},
+		error : function(e) {
+			alert("删除图片失败");
+		}
+	}); 
+}
+
+
+/**
  * 
  * @param elementd
  * @returns

@@ -305,5 +305,18 @@ public class UserService {
 		}
 		return RestModel.success(true);
 	}
+	
+	public ResponseEntity<RestModel<Boolean>> checkMobile(String mobile) {
+		// 获取当前用户
+		HqlsUser user = userMapper.getUserByMobile(mobile);
+		if(user == null){
+			return RestModel.success(false);
+		}
+		Integer count = userMapper.checkUser(user.getGlobalUserId());
+		if (count == null) {
+			return RestModel.success(false);
+		}
+		return RestModel.success(true);
+	}
 
 }

@@ -169,4 +169,12 @@ public interface PartsMapper {
 	 * 	@return
 	 */
 	public List<PartsLevelDto> findPartsLevel(@Param("onelevel") Integer onelevel,@Param("twolevel") Integer twolevel,@Param("threelevel") Integer threelevel);
+
+	/**
+	 * 根据配件id查询配件类型id
+	 * @param partId
+	 * @return
+	 */
+	@Select("SELECT parts_type_id FROM hqls_parts WHERE parts_id=#{1}")
+	public Integer findPartsTypeIdByPartsId(Integer partId);
 }

@@ -15,14 +15,17 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
+            $('#storeTree').html('');
             /**
              * 1 是节点等级
              * 0 是新增  1 编辑的
              */
             loadNodes(1,0);//加载节点树
         } else if (method == 'view') {
+        	$('#storeItemTree').html('');
             first_title = '查看';
         } else if (method == 'edit') {
+        	$('#storeItemTree').html('');
             first_title = '编辑';
             //传入一级菜单id
             $(this).parent().parent().val();//节点树等级
@@ -54,7 +57,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			success : function(res){
 				//data=JSON.stringify(res);
 //				res=JSON.parse(res);
-				alert("操作标记:"+flag);
+//				alert("操作标记:"+flag);
 				
 				if(!flag){
 					addTree(res);

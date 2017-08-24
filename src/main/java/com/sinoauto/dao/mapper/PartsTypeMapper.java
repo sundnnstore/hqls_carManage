@@ -21,4 +21,6 @@ public interface PartsTypeMapper {
 	 */
 	@Select("select parts_type_id as id,type_name as name,pid from hqls_parts_type")
 	public List<PartsTypeDto> partsType();
+	
+	public void update(HqlsPartsType pt);
 }
