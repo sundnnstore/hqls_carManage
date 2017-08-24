@@ -50,5 +50,8 @@ public interface UserMapper {
 			"WHERE hus.user_id =( SELECT user_id FROM hqls_user WHERE global_user_id = #{1} AND is_useable =1) "+ 
 			"AND hs.is_useable = 1 LIMIT 1")
 	public Integer checkUser(Integer globalUserId);
+	
+	@Select("select * from hqls_user where mobile = #{1}")
+	public HqlsUser getUserByMobile(String mobile);
 
 }
