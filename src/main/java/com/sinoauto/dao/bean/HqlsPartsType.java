@@ -22,6 +22,8 @@ public class HqlsPartsType implements Serializable {
 	private String typeName;
 	@ApiModelProperty("父级ID")
 	private Integer pid;
+	@ApiModelProperty("父级名称")
+	private String pname;
 	@ApiModelProperty("配件类型（1易损件 2通用件）")
 	private Integer partsType;
 	
@@ -81,6 +83,13 @@ public class HqlsPartsType implements Serializable {
 	public Integer getPartsType() {
 		return this.partsType;
 	}
+	public String getPname() {
+		return pname;
+	}
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+	
 
 }
 
