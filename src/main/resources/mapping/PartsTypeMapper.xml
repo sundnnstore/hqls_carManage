@@ -18,12 +18,14 @@
 
 	<!-- 修改 -->
 	<update id="update" parameterType="HqlsPartsType">
-	   UPDATE hqls_parts_type SET
-		   type_name = #{typeName}, 
-		   pid = #{pid}, 
-		   parts_type = #{partsType}
-	   WHERE 
-		   parts_type_id = #{partsTypeId}
-	</update>
+		UPDATE hqls_parts_type SET
+			<if test="typeName!=null">type_name = #{typeName},</if>
+			<if test="pid!=null"> pid = #{pid}, </if>
+			<if test="pname!=null"> pname = #{pname}, </if>
+			<if test="partsType!=null"> parts_type = #{partsType} </if>
+		<!-- 暂时写成这样，这里本来应该有一个操作时间，防止出错 -->
+		WHERE
+		parts_type_id = #{partsTypeId}
+</update>
 	
 </mapper>
