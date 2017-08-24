@@ -40,8 +40,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
 	            btnAlign: 'c', //按钮居中
 	            yes: function(index, layero) {
+	            	// 校验规格、型号、品牌必填
+	            	var titleInfo;
 	            	switch(title){
 	            		case "新增":
+	            			check();
 	            			addPart();
 	            			break;
 	            		case "编辑":
@@ -53,18 +56,8 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            			alert("未知标题");
 	            			break;	
 	            	}
-	                // 校验规格、型号、品牌必填
-	                var titleInfo; // 校验提示信息
-	                if (!$('#partsSpec').val()) {
-	                    titleInfo = '请输入规格参数，该项必填！';
-	                } else if (!$('#partsModel').val()) {
-	                    titleInfo = '请输入型号参数，该项必填！';
-	                } else if (!$('#partsBrandId').val()) {
-	                    titleInfo = '请输入品牌参数，该项必填！';
-	                }
-	                titleInfo && layer.msg(titleInfo);
-
-	                !titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
+	                
+	                //!titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 	            },
 	            btn2: function(index, layero) {
 	                // console.log(layero);
@@ -76,6 +69,61 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            }
 	        });
 	    });
+	    
+	    /**
+	     * 检查页面
+	     * @returns
+	     */
+	    function check(){
+	    	var titleInfo; // 校验提示信息
+            if (!$('#partsSpec').val()) {
+                titleInfo = '请输入规格参数，该项必填！';
+                layer.msg(titleInfo);
+                return ;
+            } else if (!$('#partsModel').val()) {
+                titleInfo = '请输入型号参数，该项必填！';
+                layer.msg(titleInfo);
+                return ;
+            } else if (!$('#partsBrandId').val()) {
+                titleInfo = '请输入品牌参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#partsName').val()) {
+                titleInfo = '请输入配件名称参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (selectTreeId==-1) {
+                titleInfo = '请输入配件分类参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            } else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if (!$('#').val()) {
+                titleInfo = '请输入参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }
+	    }
+	    
+	    
 	    // 上下架事件及结果提示
 	    $('.layui-table tbody').on('click', '#isUse', function() {
 	        var othis = $(this);
