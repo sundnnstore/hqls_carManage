@@ -41,6 +41,8 @@ public class HqlsServiceOrder implements Serializable {
 	private Date expectArriveTime;
 	@ApiModelProperty("备注")
 	private String remark;
+	@ApiModelProperty("核销码")
+	private String code;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
 	@ApiModelProperty("完成时间")
@@ -267,7 +269,15 @@ public class HqlsServiceOrder implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-	
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		if (code != null) {
+			this.code = code;
+		}
+	}
 
 }

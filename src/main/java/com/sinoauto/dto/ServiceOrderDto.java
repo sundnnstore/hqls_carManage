@@ -24,6 +24,8 @@ public class ServiceOrderDto {
 	private String carNo;
 	@ApiModelProperty("车型")
 	private String carModel;
+	@ApiModelProperty("故障位置")
+	private String faultDesc;
 	@ApiModelProperty("订单金额")
 	private Double orderAmount;
 	@ApiModelProperty("预计到店时间")
@@ -32,6 +34,8 @@ public class ServiceOrderDto {
 	private String arriveTime;
 	@ApiModelProperty("门店编码")
 	private String storeCode;
+	@ApiModelProperty("备注")
+	private String remark;
 	@ApiModelProperty("客户ID")
 	private Integer customerId;
 	@ApiModelProperty("服务项目ID")
@@ -42,6 +46,8 @@ public class ServiceOrderDto {
 	private String avatarUrl;
 	@ApiModelProperty("完成时间")
 	private Date finishTime;
+	@ApiModelProperty("核销码")
+	private String code;
 
 	public Integer getServiceOrderId() {
 		return serviceOrderId;
@@ -220,6 +226,37 @@ public class ServiceOrderDto {
 	public void setOrderType(Integer orderType) {
 		this.orderType = orderType;
 	}
+
+	public String getFaultDesc() {
+		return faultDesc;
+	}
+
+	public void setFaultDesc(String faultDesc) {
+		if (faultDesc != null) {
+			this.faultDesc = faultDesc;
+		}
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		if (remark != null) {
+			this.remark = remark;
+		}
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		if (code != null) {
+			this.code = code;
+		}
+	}
+	
 	
 
 }

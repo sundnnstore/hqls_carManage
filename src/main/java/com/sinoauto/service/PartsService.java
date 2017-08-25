@@ -1,8 +1,12 @@
 package com.sinoauto.service;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,16 +15,16 @@ import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dao.bean.HqlsPartsPic;
-import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsPicMapper;
-import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.PartsDto;
+import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -41,8 +45,18 @@ public class PartsService {
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
 	
-	@Autowired
-	private PartsTypeMapper partsTypeMapper;
+	/**
+	 * 根据指定的不同级查询数据
+	 * 		例如:3级,则会查三层
+	 * 		例如:4级,则会查四层
+	 */
+	private PartsTreeRecursionDto partsLevel;
+	
+	/**
+	 * 指定级别
+	 */
+	private Integer countFlag=0;
+	
 	
 	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
@@ -50,29 +64,41 @@ public class PartsService {
 		return RestModel.success(page, (int) page.getTotal());
 	}
 	
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllParts(Integer pageIndex, Integer pageSize) {
+	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page1 = partsMapper.findPartsTypeListByType(1);
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page2 = partsMapper.findPartsTypeListByType(2);
-		page1.addAll(page2);
-		return RestModel.success(page1);
+		Map<String, Object> map = new HashMap<>();
+		map.put("obj1", page1);
+		map.put("count1", page1.getTotal());
+		map.put("obj2", page2);
+		map.put("count2", page2.getTotal());
+		return RestModel.success(map);
 	} 
+	
+	public ResponseEntity<RestModel<Boolean>> hasChildType(Integer partsTypeId) {
+		//查询此类别下的子类数量
+		int count = partsMapper.getPartsCountByPid(partsTypeId);
+		if (count > 0) {
+			return RestModel.success(true);
+		}
+		return RestModel.success(false);
+	}
 	
 	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
 		//查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
 		Object objList;
+//		PageHelper.startPage(pageIndex, pageSize);
 		//此类别下还有子类
 		if (count > 0) {
-			PageHelper.startPage(pageIndex, pageSize);
 			objList = partsMapper.findPartsTypeListByPid(partsTypeId);
 		}
 		//此类别下没有子类，展示商品列表
 		else {
 			objList = partsMapper.findPartsListByTypeId(partsTypeId);
 		}
-		
 		return RestModel.success(objList);
 	}
 	
@@ -117,14 +143,6 @@ public class PartsService {
 	public ResponseEntity<RestModel<Integer>> addParts(PartsOperDto partsOperDto){
 		try {
 			if(partsOperDto!=null){
-				//配件父类
-				HqlsPartsType hqlsPartsType = new HqlsPartsType();
-				hqlsPartsType.setPartsType(partsOperDto.getPartsType());
-				hqlsPartsType.setPid(partsOperDto.getPid());
-				hqlsPartsType.setPname(partsOperDto.getPname());
-				hqlsPartsType.setTypeName(partsOperDto.getPartsName()); //
-				partsTypeMapper.insert(hqlsPartsType);
-				
 				//插入配件属性基础表
 				HqlsParts hqlsParts = new HqlsParts();	
 				hqlsParts.setCreateTime(new Date());
@@ -139,7 +157,7 @@ public class PartsService {
 				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
 				hqlsParts.setPartsName(partsOperDto.getPartsName());
 				hqlsParts.setPartsSpec(partsOperDto.getPartsSpec());
-				hqlsParts.setPartsTypeId(hqlsPartsType.getPartsTypeId());//配件类型id
+				hqlsParts.setPartsTypeId(partsOperDto.getPartsType());//配件类型id
 				hqlsParts.setPartsUnit(partsOperDto.getPartsUnit());
 				hqlsParts.setPrice(partsOperDto.getPrice());
 				hqlsParts.setRemark(partsOperDto.getRemark());
@@ -172,20 +190,6 @@ public class PartsService {
 			if(partsOperDto!=null){
 				Integer partsId = partsOperDto.getPartsId();
 				if(partsId!=null){
-					//根据配件ID查询 配给类型
-					Integer partsTypeId =partsMapper.findPartsTypeIdByPartsId(partsId);
-					if(partsOperDto.getPid()!=null){
-						HqlsPartsType pt =new HqlsPartsType();
-						pt.setPartsTypeId(partsTypeId);
-						pt.setPid(partsOperDto.getPid());
-						pt.setPname(partsOperDto.getPname());
-						pt.setPartsType(partsOperDto.getPartsType());
-						pt.setTypeName(partsOperDto.getTypeName());
-						//根据配件类型修改配件父级菜单
-						partsTypeMapper.update(pt);
-					}
-					
-					
 					//修改配件的基本属性
 					partsMapper.update(partsOperDto);
 					List<HqlsPartsPic> partsPics =partsOperDto.getPartsPics();
@@ -297,16 +301,31 @@ public class PartsService {
 	}
 	
 	/**
-	 * 	配件树形菜单查询,根据一级菜单，加载出所有的子集菜单
-	 * 	@User liud
-	 * 	@Date 2017年8月19日下午1:35:56
-	 * 	@param pid  第一级的菜单id
-	 * 	@return
+	 * 
+	 * @param pid 父id
+	 * @param operflag 操作标识 --> 1:新增  2.编辑 3.查看 
+	 * @return
 	 */
-	public PartsTreeRecursionDto partsTreeRecursion(Integer pid){
+	public PartsTreeRecursionDto partsTreeRecursion(Integer pid,Integer operflag){
 		//父级菜单自己
 		PartsTreeRecursionDto partsParent = partsMapper.partsParent(pid);
 		if(partsParent==null){partsParent=new PartsTreeRecursionDto();};
+		if(operflag==null){}
+		switch (operflag) {
+		case 1:
+			partsParent.setSpread(false); //收缩
+			break;
+		case 2:
+			partsParent.setSpread(true); //展开
+			break;
+		case 3:
+			partsParent.setSpread(true); //展开
+			break;
+		default:
+			partsParent.setSpread(false); //展开
+			break;
+		}
+		
 		//查询出子集的集合
 		List<PartsTreeRecursionDto> childTree = null; 
 		childTree = partsMapper.partsChildTreeByPid(pid);
@@ -317,7 +336,7 @@ public class PartsService {
 			//存储子节点树；
 			for (PartsTreeRecursionDto child : childTree) {
 				//查询子菜单下是否存在子菜单
-				PartsTreeRecursionDto part = partsTreeRecursion(child.getId());
+				PartsTreeRecursionDto part = partsTreeRecursion(child.getId(),operflag);
 				partsParent.getChildren().add(part);
 			}
 		}else{
@@ -327,15 +346,114 @@ public class PartsService {
 	}
 	
 	/**
-	 *  根据配件等级查询配件信息
-	 * 	@User liud
-	 * 	@Date 2017年8月23日下午4:02:08
-	 * 	@param onelevel 第一个等级,可以查询所有子集
-	 * 	@param twolevel 第二个等级,查询上一个等级,和下一个等级
-	 * 	@param threelevel 查询所有父级
-	 * 	@return
+	 * 查询 菜单等级集合
+	 * @param level
+	 * @param selecCount
+	 * @return
 	 */
-	public PartsTreeRecursionDto findPartsByLevel(Integer onelevel,Integer twolevel,Integer threelevel){
+	public List<PartsLevelDto> findPartsByLevel(Integer level,Integer selecCount){
+		//List<PartsLevelDto> partsLevelsInfo =null;//最后返回数据
+		List<PartsTreeRecursionDto> partsTrees =null; //循环数据
+		try {
+			if(level!=null){
+				Integer pid = findTopId(level);
+				/**
+				 * 树形数据源
+				 */
+				partsLevel = this.partsLevels(pid,1,selecCount);
+				if(partsLevel!=null){
+					partsTrees = partsLevel.getChildren();
+					if(!partsTrees.isEmpty()&&partsTrees.size()>0){
+						//暂且循环三次
+//						for (int i = 0; i < ; i++) {
+//							
+//						}
+					}
+					
+				}
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 		return null;
+		
+	}
+	
+	/**
+	 * 根据当前id反查询,最上级的id
+	 * @param partsTypeId
+	 * @return
+	 */
+	public Integer findTopId(Integer partsTypeId){
+		//查询出当前partstypeid的父级别id
+		Integer retId=null;
+		Integer pid = partsMapper.findPidByPtId(partsTypeId);
+		if(pid==0){
+			retId= partsTypeId;
+		}else{
+			findTopId(pid);
+		}
+		return retId;
+	}
+
+	/**
+	 * 指定属性菜单的有几级,并获取指定级的循环数据
+	 * 			例如:如果指定的是循环四级,
+	 * 				 则会获取四级的数据
+	 * @param pid
+	 * @param operflag
+	 * @return
+	 */
+	public PartsTreeRecursionDto partsLevels(Integer pid,Integer operflag,Integer selecCount){
+		if(selecCount==countFlag){
+			return partsLevel;
+		}
+		//父级菜单自己
+		partsLevel = partsMapper.partsParent(pid);
+		if(partsLevel==null){partsLevel=new PartsTreeRecursionDto();};
+		if(operflag==null){}
+		switch (operflag) {
+		case 1:
+			partsLevel.setSpread(false); //收缩
+			break;
+		case 2:
+			partsLevel.setSpread(true); //展开
+			break;
+		case 3:
+			partsLevel.setSpread(true); //展开
+			break;
+		default:
+			partsLevel.setSpread(false); //展开
+			break;
+		}
+		
+		//查询出子集的集合
+		List<PartsTreeRecursionDto> childTree = null; 
+		childTree = partsMapper.partsChildTreeByPid(pid);
+		//判断是否存在子菜单
+		if(childTree!=null){
+			//创建存储子菜单集合
+			partsLevel.setChildren(new ArrayList<>());
+			//存储子节点树；
+			for (PartsTreeRecursionDto child : childTree) {
+				//执行节点之前++
+				countFlag++;
+				//查询子菜单下是否存在子菜单
+				PartsTreeRecursionDto part = partsTreeRecursion(child.getId(),operflag);
+				partsLevel.getChildren().add(part);
+			}
+		}else{
+			childTree = new ArrayList<>();
+		}
+		return partsLevel;
+	}
+	
+	
+	public PartsTreeRecursionDto getPartsLevel() {
+		return partsLevel;
+	}
+
+	public void setPartsLevel(PartsTreeRecursionDto partsLevel) {
+		this.partsLevel = partsLevel;
 	}
 }
