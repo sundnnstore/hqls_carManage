@@ -14,6 +14,8 @@ public class PartsTreeRecursionDto {
 	private Integer id;
 	@ApiModelProperty("配件名称")
 	private String name;
+	@ApiModelProperty("是否展开")
+	private boolean spread;
 	private List<PartsTreeRecursionDto> children;
 	
 	
@@ -34,6 +36,12 @@ public class PartsTreeRecursionDto {
 	}
 	public void setChildren(List<PartsTreeRecursionDto> children) {
 		this.children = children;
+	}
+	public boolean isSpread() {
+		return spread;
+	}
+	public void setSpread(boolean spread) {
+		this.spread = spread;
 	}
 	
 }

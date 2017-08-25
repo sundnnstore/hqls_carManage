@@ -177,4 +177,12 @@ public interface PartsMapper {
 	 */
 	@Select("SELECT parts_type_id FROM hqls_parts WHERE parts_id=#{1}")
 	public Integer findPartsTypeIdByPartsId(Integer partId);
+	
+	/**
+	 * 查询父级ID
+	 * @param partsTypeId
+	 * @return
+	 */
+	@Select("select pid from hqls_parts_type where parts_type_id=#{partsTypeId}")
+	public Integer findPidByPtId(@Param("partsTypeId")Integer partsTypeId);
 }

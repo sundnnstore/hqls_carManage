@@ -204,10 +204,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('图片不能为空！');
     		return;
     	}
-    	if(storeInfoDto.isUseable ==''  || storeInfoDto.isUseable == null){
-    		layer.msg('是否启用不能为空！');
-    		return;
-    	}
+    	
     	
 		$.ajax({
 			url : "/changestorebystoreid",
@@ -279,7 +276,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('图片不能为空！');
     		return;
     	}
-    	if(storeInfoDto.isUseable ==''  || storeInfoDto.isUseable == null){
+    	if(storeInfoDto.isUseable != true && storeInfoDto.isUseable != false){
     		layer.msg('是否启用不能为空！');
     		return;
     	}

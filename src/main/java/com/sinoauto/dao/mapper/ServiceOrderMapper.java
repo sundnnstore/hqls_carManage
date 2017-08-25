@@ -17,7 +17,7 @@ public interface ServiceOrderMapper {
 	@Select("select * from hqls_service_order where service_order_id = #{orderId}")
 	public HqlsServiceOrder getServiceOrderByOrderId(@Param("orderId")Integer orderId);
 	
-	@Update("update hqls_service_order set order_status = 2 where service_order_id = #{orderId}")
+	@Update("update hqls_service_order set order_status = 2 ,finish_time = now() where service_order_id = #{orderId}")
 	public int updateOrderStauts(@Param("orderId")Integer orderId);
 	
 	public int insert(ServiceOrderDto order);

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sinoauto</groupId>
 	<artifactId>hqls-service</artifactId>
@@ -35,10 +36,8 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>com.google.code.gson</groupId> <artifactId>gson</artifactId> 
+			</dependency> -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
@@ -82,7 +81,7 @@
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>cn.jpush.api</groupId>
 			<artifactId>jpush-client</artifactId>
@@ -102,22 +101,54 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			</dependency>
+		</dependency>
 
 		<!-- For log4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			</dependency>
+		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google</groupId>
+			<artifactId>protobuf</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gexin.rp.sdk</groupId>
+			<artifactId>http</artifactId>
+			<version>4.0.1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gexin.rp.sdk</groupId>
+			<artifactId>template</artifactId>
+			<version>4.0.0.8</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gexin.rp.sdk</groupId>
+			<artifactId>base</artifactId>
+			<version>4.0.0.14</version>
+		</dependency>
+		<dependency>
+			<groupId>com.gexin</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.0.0.0</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.gexin.platform</groupId>
+			<artifactId>gexin-rp-sdk-http</artifactId>
+			<version>4.0.1.7</version>
+			
+		</dependency> -->
+
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>

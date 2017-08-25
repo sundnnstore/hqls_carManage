@@ -173,7 +173,7 @@ public class StoreService {
 		user.setMobile(mobile);
 		user.setUserName(userName);
 		user.setPassword(password);
-		user.setIsUseable(true);
+		user.setIsUseable(storeInfoDto.getIsUseable());
 		user.setCreateTime(new Date());
 		user.setDmlTime(new Date());
 		HqlsStore store = new HqlsStore();

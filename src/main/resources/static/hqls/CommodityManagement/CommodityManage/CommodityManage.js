@@ -4,7 +4,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
         form = layui.form,
         laypage = layui.laypage;
 		var pageSize = 10;
-		selectTreeId=-1;
+		selectTreeId=0;
 		// 弹出框
 	    var title; // 弹出框的标题
 	    var active = {
@@ -39,16 +39,60 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
 	            btnAlign: 'c', //按钮居中
 	            yes: function(index, layero) {
-
 	            	// 校验规格、型号、品牌必填
 	                var titleInfo; // 校验提示信
+	    	    	if (!$('#partsSpec').val()) {
+	                    titleInfo = '请输入规格参数，该项必填！';
+	                    layer.msg(titleInfo);
+	                    return;
+	                } else if (!$('#partsModel').val()) {
+	                    titleInfo = '请输入型号参数，该项必填！';
+	                    layer.msg(titleInfo);
+	                    return;
+	                } else if (!$('#partsBrandId').val()) {
+	                    titleInfo = '请输入品牌参数，该项必填！';
+	                    layer.msg(titleInfo);
+	                    return;
+	                }else if(!$('#partsName').val()){
+	                	titleInfo = '请输入配件名称参数，该项必填！';
+	                	layer.msg(titleInfo);
+	                	 return;
+	                }else if(selectTreeId==-1){
+	                	titleInfo = '请选择配件分类，该项必填!';
+	                	layer.msg(titleInfo);
+	                	 return;
+	                }else if(!$('#partsType').val()){
+	                	titleInfo = '请选择配件类型,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }else if(!$('#partsBrandId').val()){
+	                	titleInfo = '请选择品牌，,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }else if(!$('#price').val()){
+	                	titleInfo = '请输入价格,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }else if(!$('#discount').val()){
+	                	titleInfo = '请输入折扣,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }else if(!$('#curPrice').val()){
+	                	titleInfo = '请输入现价,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }else if(!$('#partsUnit').val()){
+	                	titleInfo = '请输入单位,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
+	                }
 	            	switch(title){
 	            		case "新增":
-	            			 titleInfo= formCheck(titleInfo);
+	            			//formCheck();
 	            			addPart();
 	            			break;
 	            		case "编辑":
-	            			 titleInfo= formCheck(titleInfo);
+	            			//formCheck();
 	            			editPart();
 	            			break;
 	            		case "查看":
@@ -57,15 +101,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            			alert("未知标题");
 	            			break;	
 	            	}
-	                
-	                clearElementValue();//清空数据
-	                
-	                titleInfo && layer.msg(titleInfo);
-
+	               
 	                !titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 	            },
 	            btn2: function(index, layero) {
-	                // console.log(layero);
 	            	clearElementValue();//清空数据
 	                layer.close(index);
 	                
@@ -81,39 +120,51 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	     /* 表单检查
 	     * @returns
 	     */
-	    function formCheck(titleInfo){
+	    function formCheck(){
+	    	var titleInfo;
 	    	if (!$('#partsSpec').val()) {
                 titleInfo = '请输入规格参数，该项必填！';
+                layer.msg(titleInfo);
                 return;
             } else if (!$('#partsModel').val()) {
                 titleInfo = '请输入型号参数，该项必填！';
+                layer.msg(titleInfo);
                 return;
             } else if (!$('#partsBrandId').val()) {
                 titleInfo = '请输入品牌参数，该项必填！';
+                layer.msg(titleInfo);
                 return;
             }else if(!$('#partsName').val()){
             	titleInfo = '请输入配件名称参数，该项必填！';
+            	layer.msg(titleInfo);
             	 return;
             }else if(selectTreeId==-1){
             	titleInfo = '请选择配件分类，该项必填!';
+            	layer.msg(titleInfo);
             	 return;
             }else if(!$('#partsType').val()){
             	titleInfo = '请选择配件类型,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }else if(!$('#partsBrandId').val()){
             	titleInfo = '请选择品牌，,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }else if(!$('#price').val()){
             	titleInfo = '请输入价格,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }else if(!$('#discount').val()){
             	titleInfo = '请输入折扣,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }else if(!$('#curPrice').val()){
             	titleInfo = '请输入现价,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }else if(!$('#partsUnit').val()){
             	titleInfo = '请输入单位,该项必填!';
+            	layer.msg(titleInfo);
             	return;
             }
 	    
@@ -412,37 +463,34 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$("#partsUnit").attr("value",data.result.partsUnit);
     	//$("#partsBrandName").val(data.result.partsBrandName);
     	//清空图片和扩展属性
-    	$(".uploadImg").html(""); //清空图片上传div
+    	//$(".uploadImg").html(""); //清空图片上传div
     	$(".attrExtra").html("");//清空动态扩展属性的div
     	for (var i = 0; i < piclen; i++) {
     		pics += `
                <div class="siteUpload">
 	                <img id="commodityImgUrl${i}" src="${data.result.partsPicList[i].url}">
 	                <div class="layui-box layui-upload-button">
-                		<input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" value="1">
-                		<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+                		<input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+                		<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
 					</div>
             		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
     			</div>
             `;
 		}
-    	//给一个上传 用的图片
-    	pics+=`
-			<div class="siteUpload">
-            	<img id="commodityImgUrl" src="">
-            	<div class="layui-box layui-upload-button">
-                <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" value="1">
-                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-				</div>
-            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-			</div>
-		`;
+    	//给一个上传用的图片
+//    	pics+=`
+//			<div class="siteUpload">
+//            	<img id="commodityImgUrl" src="">
+//            	<div class="layui-box layui-upload-button">
+//                <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+//                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
+//				</div>
+//            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+//			</div>
+//		`;
     	
-    	
-    	
-    	//alert(pics+":pics");
     	//动态属性追加到指定位置
-    	$(".uploadImg").html(pics);
+    	$(".uploadImg").prepend(pics);
     	
     	var flag= 0;
     	for (var i = 0; i <=attrlen; i++) {
@@ -473,9 +521,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	 * 配件分类
     	 *
     	 */
-    	$("#cName").attr('value', data.result.pName);
+    	$("#cName").val(data.result.pName);
     	alert("配件分类-->"+data.result.pName);
-    	$("#modelContent a[title='"+data.result.pName+"']").addClass('curSelectedNode');
+    	//$("#modelContent a[title='"+data.result.pName+"']").addClass('curSelectedNode');
     	selectTreeId = data.result.pId;
     	
     	/**
@@ -486,6 +534,15 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     		$('input:radio:last').attr('checked', 'checked');
     	}else{
     		$('input:radio:first').attr('checked', 'checked');
+    	}
+    	
+    	/**
+    	 * 配件类型
+    	 */
+    	if(data.result.partsType==1){
+    		$("#partsType").find("option[value='1']").attr("selected",true);
+    	}else if(data.result.partsType==2){
+    		$("#partsType").find("option[value='2']").attr("selected",true);
     	}
     	
     }
@@ -609,7 +666,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     			partsId=$("#partsId").val()==undefined?-1:$("#partsId").val(),
     			//pid=$("#pid").val()==undefined?-1:$("#pid").val(),
     			uable=$('input:radio:checked').val(),
-    			pname=$("#cName").val()==undefined?"":$("#cName").val()
+    			typeName=$("#cName").val()==undefined?"":$("#cName").val()
     			; 
     	console.log(uable);
     	var dataJson="{" +
@@ -622,15 +679,14 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     					"\"origin\":\""+$("#origin").val()+"\"," +
     					"\"partsFactory\":\""+$("#partsFactory").val()+"\"," +
     					"\"partsSpec\":\""+$("#partsSpec").val()+"\"," +
-    					//"\"typeName\":\""+$("#partsTypeId").find("option:selected").text()+"\"," +
     					//"\"partsTypeId\":\""+partsTypeId+"\"," +
     					"\"partsType\":\""+$("#partsType").val()+"\"," +
     					"\"partsUnit\":\""+$("#partsUnit").val()+"\"," +
-    					"\"pid\":\""+selectTreeId+"\"," +
-    					"\"pname\":\""+pname+"\"," +
+    					"\"partsTypeId\":\""+selectTreeId+"\"," +
+    					//"\"pname\":\""+typeName+"\"," +
     					"\"price\":\""+$("#price").val()+"\"," +
     					"\"shelfLife\":\""+$("#shelfLife").val()+"\"," +
-    					//"\"typeName\":\""+$("#typeName").val()+"\"," +
+    					"\"typeName\":\""+typeName+"\"," +
     					"\"partsName\":\""+$("#partsName").val()+"\"," +
     					"\"partsId\":\""+partsId+"\"," +
     					"\"partsPics\":";
@@ -648,22 +704,22 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
      * 追加图片
      * @returns
      */
-    function appendImg(){
-    		var picHtml=`
-    			<div class="siteUpload">
-                <img id="commodityImgUrl" src="">
-                <div class="layui-box layui-upload-button">
-                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" value="0">
-                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
-                </div>
-            </div>	
-    		`;
-    		$(".siteUpload:last").append(picHtml);
+//    function appendImg(){
+//    		var picHtml=`
+//    			<div class="siteUpload">
+//                <img id="commodityImgUrl" src="">
+//                <div class="layui-box layui-upload-button">
+//                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*" value="0">
+//                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>第一个上传图片</span>
+//                </div>
+//            </div>	
+//    		`;
+//    		$(".siteUpload:last").append(picHtml);
 //    	    $("ul li").click(function () {
 //    	        var index = $("ul li").index(this);
 //    	        alert(index);
 //    	     });
-    }
+//    }
    
 //    layui.tree({
 //    	  elem: '#commodityName' //传入元素选择器
@@ -689,12 +745,15 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     function clearElementValue(){
         //清空数据
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
+        	//alert($(this).parent().html());
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	//$(this).val('');
         	
         });
-        $("#cName").attr('value', '');
+        $("#form")[0].reset();
+        $("#cName").val('');
         $("#modelContent a").removeClass('curSelectedNode');
+        selectTreeId=-1;
     }
     
     //禁用元素
@@ -706,25 +765,42 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     }
 });
 
+/**
+ * 图片上传
+ * @param obj 图片对象
+ * @returns
+ */
 function change(obj){
-	alert("图片上传");
+	alert("文件上传");
+	var flag=$(".siteUpload").length;
+	if(flag==5){
+		alert("最后一张图片上传");
+		upload(obj);
+		//alert("只能上传5张图片");
+		return;
+	}
+	//上传图片
+	upload(obj);
+	
+} 
+
+function upload(obj){
+	console.log("上传的文件---->,",obj);
 	var form =$("#form");
 	var imgUrl = uploadImg(form,obj);
-	alert("图片上传返回路径:--->"+imgUrl);
-	$(obj).parent().parent().find("img").attr("src",imgUrl);
-	//禁用上传按钮
-	$(obj).attr("disabled", "disabled");
-	appendImg(obj);
-} 
+	if(imgUrl!=""){ //如果上传文件成功
+		appendImg(obj);
+		$(obj).parent().parent().find("img").attr("src",imgUrl);
+		//禁用上传按钮
+		$(obj).attr("disabled", "disabled");
+	}else{
+		alert("图片上传返回路径:--->",imgUrl);
+	}
+	
+}
 
 //追加图片
 function appendImg(obj){
-	var flag=$(".siteUpload").length;
-	alert("已经上传"+flag+"张图片");
-	if(flag>5){	
-		alert("只能上传5张图片");
-		return ;
-	}
 	var img=`
 		<div class="siteUpload">
             <img id="commodityImgUrl" src="">
@@ -734,10 +810,16 @@ function appendImg(obj){
             </div>
             <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
         </div>`;
+	
 	$(obj).parent().parent().parent().append(img);
-	$(".siteUpload:last").find(".closeBtn").css('display', 'none');
-	
-	
+	var flag=$(".siteUpload").length;
+	if(flag==6){
+		//隐藏最后一张图片
+		$(".siteUpload:last").hide();
+	}else{
+		$(".siteUpload:last").show();
+	}
+	//$(".siteUpload:last").find(".closeBtn").css('display', 'none');
 }
 /**
  * 删除图片
@@ -746,14 +828,13 @@ function appendImg(obj){
  */
 function delImg(obj){
 	var url = $(obj).parent().find("img").attr("src");
-	alert("imgurl--->"+url);
-	//console.log("url---->"+url);
 	delFile(url);
 	//干掉div
 	$(obj).parent().remove(); 
-	//干掉最后一张,重新追加一张图片
-	$(obj).parent().next().remove();
-	appendImg(obj);//追加一张图片
+	var flag=$(".siteUpload").length;
+	if(flag<6){
+		appendImg(obj);
+	}
 }
 //在配件树中选中配件后写入input中
 function beforeClick(treeId, treeNode) {
@@ -774,16 +855,15 @@ function beforeClick(treeId, treeNode) {
 function onClick(e, treeId, treeNode) {
 	//console.log("e:",e,"\ntreeId:",treeId,"\ntreeNode:",treeNode);
 	//var nodes = $.fn.zTree.getZTreeObj(treeId).getSelectedNodes();
+	$(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
 	if (treeId == 'commodityTree') {
 		// 保存id
 		selectTreeId = treeNode.id;
-		alert(selectTreeId);
 		console.log("onClick--->"+treeNode.id);
 	$("#commodityName").attr('value', treeNode.name);
 	} else {
 		// 保存id
 		selectTreeId = treeNode.id;
-		alert(selectTreeId);
 	$("#cName").attr('value', treeNode.name);
 	}
 }

@@ -26,6 +26,7 @@
 		<!-- 暂时写成这样，这里本来应该有一个操作时间，防止出错 -->
 		WHERE
 		parts_type_id = #{partsTypeId}
-</update>
+	</update>
+
 	
 </mapper>

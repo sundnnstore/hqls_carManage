@@ -94,8 +94,8 @@ public class ServiceOrderController {
 	
 	@ApiOperation(value = "服务订单完成接口", notes = "tangwt")
 	@PostMapping("finishorder")
-	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("serviceOrderId")Integer serviceOrderId){
-		return serviceOrderService.finishOrder(Authorization,serviceOrderId);
+	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("serviceOrderId")Integer serviceOrderId,@RequestParam("code")String code){
+		return serviceOrderService.finishOrder(Authorization,serviceOrderId,code);
 	}
 	
 	@ApiOperation(value = "创建服务订单接口", notes = "tangwt")

@@ -44,11 +44,11 @@ function uploadImg(formObj,imgObj){
 		}
 		
 	}  
-	//第一 我需要把 上传文件的流打印出来
+	//上传文件的流
 	console.log(imgObj.files[0]);
 	var returnResult = "";
 	$.ajax({
-		type : "post",
+		type : "POST",
 		async : false,
 		data :formdata,
 		processData: false,
@@ -58,12 +58,13 @@ function uploadImg(formObj,imgObj){
 		},
 		url : url,
 		success : function(data) {
+			alert(data.result);
 			returnResult =data.result.fileUrl;
-			displayImg(imgObj,returnResult); //显示图片
+			//displayImg(imgObj,returnResult); //显示图片
 		},
 		error : function(e) {
-			console.log(JSON.stringify(e));
-			returnResult =e ;
+			e = JSON.stringify(e);
+			alert(e);
 		}
 	}); 
 	return returnResult;
@@ -73,9 +74,9 @@ function uploadImg(formObj,imgObj){
  * 图片显示
  * @returns
  */
-function displayImg(imgObj,imgurl){
-	$(imgObj).css("background-image","url("+imgurl+")"); 
-}
+//function displayImg(imgObj,imgurl){
+//	$(imgObj).css("background-image","url("+imgurl+")"); 
+//}
 
 /**
  * 删除图片
@@ -95,21 +96,4 @@ function delFile(imgUrl){
 			alert("删除图片失败");
 		}
 	}); 
-}
-
-
-/**
- * 
- * @param elementd
- * @returns
- */
-function layuiUpload(elementd){
-	layui.upload({
-        url: imgurl, //上传接口
-        elem: '#'+elementd, //指定第一个图片上传框
-        method: 'POST', //上传接口的http类型            
-        success: function(res) { //上传成功后的回调
-            commodityImg1.src = res.result.fileUrl; // 将上传成功的图片展示到页面第一个图片上传框上
-        }
-    });
 }
