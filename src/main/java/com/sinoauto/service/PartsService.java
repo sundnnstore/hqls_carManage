@@ -57,7 +57,10 @@ public class PartsService {
 	 */
 	private Page<PartsLevelDto> partsLevelDtos =new Page<>();
 	
-	private List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<>();
+	/**
+	 * 组装一个
+	 */
+	//private List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<>();
 	
 	/**
 	 * 储存每次循环的节点的id,name
