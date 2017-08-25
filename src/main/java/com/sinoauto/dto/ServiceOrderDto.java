@@ -46,6 +46,8 @@ public class ServiceOrderDto {
 	private String avatarUrl;
 	@ApiModelProperty("完成时间")
 	private Date finishTime;
+	@ApiModelProperty("核销码")
+	private String code;
 
 	public Integer getServiceOrderId() {
 		return serviceOrderId;
@@ -244,5 +246,17 @@ public class ServiceOrderDto {
 			this.remark = remark;
 		}
 	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		if (code != null) {
+			this.code = code;
+		}
+	}
+	
+	
 
 }
