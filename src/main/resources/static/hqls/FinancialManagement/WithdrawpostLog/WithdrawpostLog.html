@@ -1,83 +1,66 @@
 <link rel="stylesheet" type="text/css" href="FinancialManagement/WithdrawpostLog/WithdrawpostLog.css">
-
 <div>
-    账户提现记录
+	账户提现日志
 </div>
 <div>
-    <div class="layui-inline">
-        <label class="layui-form-label mylayui-form-label">门店</label>
-        <div class="layui-input-block mylayui-input-block">
-            <select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">门店</option>
+	<div class="layui-inline">
+		<label class="layui-form-label mylayui-form-label">门店</label>
+		<div class="layui-input-block mylayui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select" id="store_id">
 			</select>
-        </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label mylayui-form-label">门店联系人</label>
-        <div class="layui-input-inline">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label mylayui-form-label">联系人电话</label>
-        <div class="layui-input-inline">
-            <input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label mylayui-form-label">时间</label>
-        <div class="layui-input-inline">
-            <input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
-        </div>
-    </div>
-    <div class="layui-inline">
-        <label class="layui-form-label mylayui-form-label">状态</label>
-        <div class="layui-input-block mylayui-input-block">
-            <select name="interest" lay-filter="aihao" class="layui-select">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label mylayui-form-label">门店联系人</label>
+		<div class="layui-input-inline">
+			<input type="text" id="customer_name" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label mylayui-form-label">联系人电话</label>
+		<div class="layui-input-inline">
+			<input type="text" id="mobile" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label mylayui-form-label">时间</label>
+		<div class="layui-input-inline">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label mylayui-form-label">状态</label>
+		<div class="layui-input-block mylayui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select">
 				<option value="0">成功</option>
+
 			</select>
-        </div>
-    </div>
-    <div class="layui-inline">
-        <button class="layui-btn" id='searchOrder'>搜索</button>
-    </div>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<button class="layui-btn" id='searchFlow'>搜索</button>
+	</div>
 </div>
 <div>
-    <table class="layui-table ">
-        <thead>
-            <tr>
-                <th>单号</th>
-                <th>门店名称</th>
-                <th>门店联系人</th>
-                <th>联系人电话</th>
-                <th>银行</th>
-                <th>银行账号</th>
-                <th>开户行</th>
-                <th>充值金额</th>
-                <th>状态</th>
-                <th>操作人</th>
-                <th>操作时间</th>
-                <th>操作备注</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-                <td>12</td>
-            </tr>
-        </tbody>
-    </table>
-    <div id="pages" style="text-align: right;"></div>
+	<table class="layui-table ">
+		<thead>
+			<tr>
+				<th>门店名称</th>
+				<th>门店联系人</th>
+				<th>联系人电话</th>
+				<th>银行</th>
+				<th>银行账号</th>
+				<th>开户行</th>
+				<th>单号</th>
+				<th>提现金额</th>
+				<th>状态</th>
+				<th>操作人</th>
+				<th>操作时间</th>
+			</tr>
+		</thead>
+		<tbody id="log_tb">
+		</tbody>
+	</table>
+	<div id="pages" style="text-align: right;"></div>
 </div>
-
 <script src="FinancialManagement/WithdrawpostLog/WithdrawpostLog.js"></script>
