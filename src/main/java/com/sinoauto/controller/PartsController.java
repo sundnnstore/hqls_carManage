@@ -18,6 +18,7 @@ import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsBrand;
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsOperDto;
@@ -73,6 +74,15 @@ public class PartsController {
 			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		
 		return partsService.findListByPid(partsTypeId, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "按配件名称、规格或型号查询配件", notes = "wuxiao")
+	@GetMapping(value = "getpartsbycondition")
+	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByCondition(
+			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
+			@RequestParam(value = "condition", required = false) String condition) {
+		
+		return partsService.findPartsByConditon(partsTypeId, condition);
 	}
 	
 	@ApiOperation(value = "按配件Id查询配件是否有子类列表", notes = "wuxiao")

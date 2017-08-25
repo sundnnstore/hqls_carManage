@@ -1,4 +1,4 @@
-.layui-form-label{
+/* .layui-form-label{
 	text-align: center;
 }
 .layui-table td, .layui-table th{
@@ -9,7 +9,7 @@
 	width: 40px;
 }
 .mylayui-typebox{
-	/*margin-right: 100px;*/
+	margin-right: 100px;
 	position: fixed;
 }
 .mylayui-rigthbox{
@@ -17,3 +17,12 @@
 	width: 550px;
 	margin-left: 190px;
 }
+ */
+ 
+ .mylayui-input-block{
+	margin-left: 60px;
+}
+.mylayui-form-label{
+	width: auto;
+}
+ 
