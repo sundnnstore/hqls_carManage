@@ -40,4 +40,52 @@
 		   finance_flow_id = #{financeFlowId}
 	</update>
 	
+	<select id="findFlowListByContidion" resultType="com.sinoauto.dto.RechargeDto">
+		SELECT
+			f.*, u.store_name,
+			CASE
+		WHEN f.check_status = 1 THEN
+			'待审核'
+		WHEN f.check_status = 2 THEN
+			'审核通过'
+		WHEN f.check_status = 2 THEN
+			'审核不通过'
+		ELSE
+			'标志数字不存在'
+		END AS check_status_desc
+		FROM
+			hqls_finance_flow f,
+			(
+				SELECT
+					c.customer_name,
+					c.mobile,
+					s.store_id,
+					s.store_name
+				FROM
+					hqls_customer c,
+					hqls_store s,
+					hqls_customer_store cs
+				WHERE
+					c.customer_id = cs.customer_id
+				AND s.store_id = cs.store_id
+			) u
+		WHERE
+			f.store_id = u.store_id 
+		<if test="storeId != null">
+			AND f.store_id = #{storeId}
+		</if>
+		<if test="changeType != null">
+			AND f.change_type = #{changeType}
+		</if>
+		<if test="customerName != null and customerName != ''">
+			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')
+		</if>
+		<if test="mobile != null and mobile != ''">
+			AND u.mobile LIKE CONCAT('%', #{mobile}, '%')
+		</if>
+		<if test="createTime != null and createTime != ''">
+			AND f.create_time = str_to_date(#{createime}, '%Y-%m-%d')
+		</if>
+	</select>
+	
 </mapper>
