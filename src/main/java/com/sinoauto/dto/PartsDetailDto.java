@@ -18,6 +18,8 @@ public class PartsDetailDto {
 	private Integer pId;
 	@ApiModelProperty("父类名称")
 	private String pName;
+	@ApiModelProperty("配件类型")
+	private Integer partsType;
 	@ApiModelProperty("配件ID")
 	private Integer partsId;
 	@ApiModelProperty("配件编码")
@@ -229,6 +231,14 @@ public class PartsDetailDto {
 
 	public void setpName(String pName) {
 		this.pName = pName;
+	}
+
+	public Integer getPartsType() {
+		return partsType;
+	}
+
+	public void setPartsType(Integer partsType) {
+		this.partsType = partsType;
 	}
 
 }
