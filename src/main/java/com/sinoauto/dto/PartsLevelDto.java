@@ -10,36 +10,25 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class PartsLevelDto {
 	
-	@ApiModelProperty("第一等级名称")
-	private String oneLevelName;
+	@ApiModelProperty("存储当前等级的名称")
+	private Integer id;
 	
-	@ApiModelProperty("第二等级名称")
-	private String twoLevelName;
-	
-	@ApiModelProperty("第三等级名称")
-	private String threeLevelName;
+	@ApiModelProperty("存储当前等级的名称")
+	private String name;
 
-	public String getOneLevelName() {
-		return oneLevelName;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setOneLevelName(String oneLevelName) {
-		this.oneLevelName = oneLevelName;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getTwoLevelName() {
-		return twoLevelName;
+	public String getName() {
+		return name;
 	}
 
-	public void setTwoLevelName(String twoLevelName) {
-		this.twoLevelName = twoLevelName;
-	}
-
-	public String getThreeLevelName() {
-		return threeLevelName;
-	}
-
-	public void setThreeLevelName(String threeLevelName) {
-		this.threeLevelName = threeLevelName;
-	}
+	public void setName(String name) {
+		this.name = name;
+	}	
 }
