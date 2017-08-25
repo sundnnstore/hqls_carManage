@@ -236,7 +236,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addStore(pid,index){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
-    	debugger;
     	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
     		layer.msg('城市不能为空！');
     		return;
