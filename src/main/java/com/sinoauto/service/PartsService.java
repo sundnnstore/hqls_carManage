@@ -57,6 +57,8 @@ public class PartsService {
 	 */
 	private Page<PartsLevelDto> partsLevelDtos =new Page<>();
 	
+	private List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<>();
+	
 	/**
 	 * 储存每次循环的节点的id,name
 	 */
@@ -466,7 +468,7 @@ public class PartsService {
 				}
 			}else{ //如果不存在子集,则他是最后一级,拼接数据
 				/**
-				 * 组装数据
+				 * 组装一个集合对象  一级  二级  三级
 				 */
 				for (int i = 0; i < depth; i++) {  //定义的级别
 					if(mapNode.size()>i){
@@ -488,6 +490,8 @@ public class PartsService {
 						}
 					}
 				}  
+				//清空集合
+				mapNode.clear();
 			}
 			
 		}
