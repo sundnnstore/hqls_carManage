@@ -75,7 +75,7 @@ public class PushUtil {
 						.setAudience(Audience.alias(parms.getAccount()))
 						.setNotification(Notification.newBuilder()
 						.addPlatformNotification(IosNotification.newBuilder()
-						.setAlert(parms.getAlert())
+						.setAlert(parms.getAlert().getTitle())
 						.setBadge(parms.getBadge())
 						.setSound(parms.getSound())
 						.addExtra("from", "HQLS")

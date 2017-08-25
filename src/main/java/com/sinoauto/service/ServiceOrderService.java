@@ -1,7 +1,9 @@
 package com.sinoauto.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +31,10 @@ import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
+import com.sinoauto.entity.RespEntity;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
+import com.sinoauto.util.HttpUtil;
 import com.sinoauto.util.push.PushAction;
 import com.sinoauto.util.push.PushParms;
 import com.sinoauto.util.push.PushUtil;
@@ -70,7 +74,7 @@ public class ServiceOrderService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId) {
+	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId,String code) {
 		// 判断服务订单是否已经完成，
 		// 未完成的订单，确认完成
 		// 推送给车小主，更新门店的余额,记录账单
@@ -86,29 +90,40 @@ public class ServiceOrderService {
 			if (order.getOrderStatus() == 2) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单已完成");
 			}
-			// 订单完成操作
-			serviceOrderMapper.updateOrderStauts(serviceOrderId);
-			// 推送给车小主
-			// TODO 推送给车小主完成接口
-			// 更新余额
-			int result = storeFinanceMapper.getStoreFinanceByStoreId(order.getStoreId());
-			if (result == 0) {// 插入余额记录
-				HqlsStoreFinance finance = new HqlsStoreFinance();
-				finance.setStoreId(order.getStoreId());
-				finance.setRemark("");
-				storeFinanceMapper.insert(finance);
+			//核销
+			String res = checkCode(code, order.getOrderNo());
+			if(res.contains("success")){
+				// 订单完成操作
+				serviceOrderMapper.updateOrderStauts(serviceOrderId);
+				// 更新余额
+				int result = storeFinanceMapper.getStoreFinanceByStoreId(order.getStoreId());
+				if (result == 0) {// 插入余额记录
+					HqlsStoreFinance finance = new HqlsStoreFinance();
+					finance.setStoreId(order.getStoreId());
+					finance.setRemark("");
+					storeFinanceMapper.insert(finance);
+				}
+				storeFinanceMapper.addCash(order.getStoreId(), order.getOrderAmount());
+				// 增加账单流水
+				HqlsFinanceFlow financeFlow = new HqlsFinanceFlow();
+				financeFlow.setStoreId(order.getStoreId());
+				financeFlow.setTransactionNo("FW" + order.getStoreId() + System.currentTimeMillis());
+				financeFlow.setChangeType(4);
+				financeFlow.setChangeMoney(order.getOrderAmount());
+				financeFlow.setChargeType(1);
+				financeFlow.setOperPerson(user.getUserName());
+				financeFlow.setIsDelete(0);
+				financeFlowMapper.insert(financeFlow);
+				return RestModel.success("操作成功");
+			}else if(res.contains("-5")){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销码已使用过！");
+			}else if(res.contains("-3")){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销码错误！");
+			}else if(res.contains("-2")){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"订单号错误！");
+			}else{
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"其他错误！");
 			}
-			storeFinanceMapper.addCash(order.getStoreId(), order.getOrderAmount());
-			// 增加账单流水
-			HqlsFinanceFlow financeFlow = new HqlsFinanceFlow();
-			financeFlow.setStoreId(order.getStoreId());
-			financeFlow.setTransactionNo("FW" + order.getStoreId() + System.currentTimeMillis());
-			financeFlow.setChangeType(4);
-			financeFlow.setChangeMoney(order.getOrderAmount());
-			financeFlow.setChargeType(1);
-			financeFlow.setOperPerson(user.getUserName());
-			financeFlowMapper.insert(financeFlow);
-			return RestModel.success("操作成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -175,6 +190,29 @@ public class ServiceOrderService {
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION);
 
+	}
+	
+	public String checkCode(String code,String orderNo){
+		String url = "http://www.chexiaozhu.cn/api/openapi/dataapi.ashx";
+		Map<String, Object> params = new HashMap<>();
+		params.put("method", "codeVerification");
+		params.put("check", "shopnum1Api");
+		params.put("AppKey", "21654209");
+		params.put("Md5key", "56fbdc15701c985dd8d798060d9f51e5");
+		params.put("OrderNumber", orderNo);
+		params.put("Code", code);
+		RespEntity res = HttpUtil.request("GET", url, null, params, null);
+		return res.getResult();
+	}
+	
+	public static void main(String[] args) {
+		PushAction pa = new PushAction("serviceorder", 0, true, "");
+		List<PushAction> action = new ArrayList<>();
+		action.add(pa);
+		String title = "您有一条新的服务订单";
+		PushParms parms = PushUtil.comboPushParms("15950565975", action, null, title, "", null, 0);
+		PushUtil.push2Andriod(parms);
+		PushUtil.push2IOSByAPNS(parms);
 	}
 
 }
