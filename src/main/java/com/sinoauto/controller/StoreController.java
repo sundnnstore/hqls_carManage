@@ -106,8 +106,7 @@ public class StoreController {
 	
 	@ApiOperation(value = "新增门店信息",notes = "tangrx")
 	@PostMapping("insertstore")
-	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto
-														  ){
+	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
 		return storeService.insertStore(Authorization,storeInfoDto);
 		
 	}
