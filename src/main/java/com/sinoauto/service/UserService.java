@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -21,6 +22,7 @@ import com.sinoauto.dao.bean.HqlsRole;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
+import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.RoleMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
@@ -45,6 +47,8 @@ public class UserService {
 	private UserRoleMapper userRoleMapper;
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private ClientInfoMapper clientInfoMapper;
 
 	/**
 	 * 登录
@@ -75,7 +79,8 @@ public class UserService {
 	 * @param password
 	 * @return
 	 */
-	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord) {
+	@Transactional
+	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord,String clientId) {
 		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
 		if (rest.getErrcode() != 0) {// 解析token失败
 			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
@@ -90,6 +95,11 @@ public class UserService {
 		ul.setUserName("");
 		ul.setToken(rest.getResult().getToken());
 		ul.setStoreId(storeId);
+		if(!StringUtils.isEmpty(clientId)){
+			HqlsUser user = userMapper.getUserByGloabUserId(userId);
+			clientInfoMapper.deleteClientInfoByCId(clientId);
+			clientInfoMapper.insertClientInfo(clientId, user.getUserId());
+		}
 		return RestModel.success(ul);
 	}
 

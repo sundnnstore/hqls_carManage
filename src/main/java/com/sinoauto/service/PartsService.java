@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -102,11 +103,18 @@ public class PartsService {
 		}
 		// 此类别下没有子类，展示商品列表
 		else {
-			objList = partsMapper.findPartsListByTypeId(partsTypeId);
+			objList = partsMapper.findPartsListByTypeId(partsTypeId, null);
 		}
 		return RestModel.success(objList);
 	}
 
+	public ResponseEntity<RestModel<List<PartsDesListDto>>> findPartsByConditon(Integer partsTypeId, String condition) {
+		if (condition != null) {
+			condition = condition.trim();
+		}
+		return RestModel.success(partsMapper.findPartsListByTypeId(partsTypeId, condition));
+	}
+	
 	public ResponseEntity<RestModel<PartsDetailDto>> getPartsDetail(Integer partsId) {
 
 		return RestModel.success(partsMapper.getPartsDetail(partsId));

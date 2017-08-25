@@ -25,11 +25,16 @@
 		<association column="parts_id" property="partsPic" select="com.sinoauto.dao.mapper.PartsPicMapper.getFirstUrlByPartsId"/>
 	</resultMap>
 	
-	<select id="findPartsListByTypeId" parameterType="Integer" resultMap="desList">
+	<select id="findPartsListByTypeId" resultMap="desList">
 		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
 				parts.parts_spec, parts.cur_price
 		from hqls_parts as parts
 		where parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
+		<if test="condition != null and condition != ''">
+			and (parts.parts_name like CONCAT('%', #{condition} ,'%')
+				or parts.parts_spec like CONCAT('%', #{condition} ,'%')
+				or parts.parts_model like CONCAT('%', #{condition} ,'%'))
+		</if>
 	</select>
 	
 	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
