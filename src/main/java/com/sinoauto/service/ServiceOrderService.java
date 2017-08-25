@@ -204,15 +204,5 @@ public class ServiceOrderService {
 		RespEntity res = HttpUtil.request("GET", url, null, params, null);
 		return res.getResult();
 	}
-	
-	public static void main(String[] args) {
-		PushAction pa = new PushAction("serviceorder", 0, true, "");
-		List<PushAction> action = new ArrayList<>();
-		action.add(pa);
-		String title = "您有一条新的服务订单";
-		PushParms parms = PushUtil.comboPushParms("15950565975", action, null, title, "", null, 0);
-		PushUtil.push2Andriod(parms);
-		PushUtil.push2IOSByAPNS(parms);
-	}
 
 }
