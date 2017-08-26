@@ -521,9 +521,9 @@ public class PartsService {
 									while (iter.hasNext()) {
 										Map.Entry<Integer, String> entry = iter.next();
 										delEleId =entry.getKey(); //id
-									}
-									if(id1==delEleId){//删除他下面的子集
-										mapNode.remove(j);
+										if(id1==delEleId){//删除他下面的子集
+											mapNode.remove(j);
+										}
 									}
 									if(nextNode.getId()==delEleId){ //删除他自己
 										mapNode.remove(j);
