@@ -45,7 +45,11 @@ public class PartsService {
 
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
-
+	
+	/**
+	 * 储存每次循环的节点的id,name
+	 */
+	private List<Map<Integer, String>> mapNode =new  ArrayList<>();
 	
 	/**
 	 * 组装等级的集合 
@@ -53,13 +57,7 @@ public class PartsService {
 	 */
 	private List<List<PartsLevelDto>> partsLevelDtos =new ArrayList<List<PartsLevelDto>>();
 	
-	/**
-	 * 储存每次循环的节点的id,name
-	 */
-	private List<Map<Integer, String>> mapNode =new  ArrayList<>();
-
 	
-
 	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page = partsMapper.findPartsTypeListByType(partsType);
@@ -418,7 +416,7 @@ public class PartsService {
 	}
 
 	/**
-	 * 根据当前id反查询,最上级的id
+	 * 根据当前id反一级菜单ID
 	 * @param partsTypeId
 	 * @return
 	 */
@@ -431,7 +429,7 @@ public class PartsService {
 				System.out.println("pid----->"+hqlsPartsType.getPid());
 				retId = findTopId(hqlsPartsType.getPid());
 			}else{
-				retId =0;
+				retId =partsTypeId;
 			}
 		}else{
 			retId =0;
@@ -450,46 +448,49 @@ public class PartsService {
 	 */
 	public List<List<PartsLevelDto>> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
 		List<PartsTreeRecursionDto> partChildren =null; //组装数据
+		
 		/**
 		 * 存储循环过得配件类型的id 和 name
 		 */
 		Map<Integer, String> nodeTemp=new HashMap<>();
 		if(data!=null){
 			partChildren = data.getChildren();
-			System.out.println(partChildren.size());
-			if(partChildren.size()>0){//如果子集存在,继续循环
-				if(data.getId()>0){
-					nodeTemp.put(data.getId(), data.getName());
-					mapNode.add(nodeTemp);	
-				}
+//			System.out.println("打印每一次递归下一个对象名称:"+data.getName()+"\nID:"+data.getId());
 				for (PartsTreeRecursionDto nextNode : partChildren) {
+					System.out.println("nextNode children:"+nextNode.getChildren().size()+"\nNodeName:"+nextNode.getName());
+					if(nextNode.getId()>0&&nextNode.getChildren().size()>0){ //记录每一次的循环id 和 名称 
+						nodeTemp.put(nextNode.getId(), nextNode.getName());
+						mapNode.add(nodeTemp);			
+					}
 					parseTreeRecurData(nextNode,depth);
 					
-					//清空临时集合
-					//mapNode.clear();
-				}
-			}else{ //如果不存在子集,则他是最后一级,拼接数据
-				/**
-				 * 组装一个  一级  二级  三级 对象
-				 */
-				List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<PartsLevelDto>();
-				
-				for (int i = 0; i < depth; i++) {  //定义的级别
-					if(mapNode.size()>i){  //级别 
-						Map<Integer, String> node = mapNode.get(i);
-						if(node!=null&&!node.isEmpty()){
-							Iterator<Entry<Integer, String>> iter = node.entrySet().iterator();
-							while (iter.hasNext()) {
-								Map.Entry<Integer, String> entry = iter.next();
-								Integer id =entry.getKey(); //id
-								String name =entry.getValue(); //name
-								PartsLevelDto levelInfo =new PartsLevelDto();
-								//将这个值拼装到 List<PartsLevlDto中去>
-								id=id==null?0:id;
-								name=name==null?"暂无数据":name;
-								levelInfo.setId(id);
-								levelInfo.setName(name);
-								orginzeOneLevelInfo.add(levelInfo);  //orginzeOneLevelInfo
+					//如果我能确定跳出来的是最后一级则,不删除追加
+					Integer le = nextNode.getChildren().size();
+					if(le<=0){
+						nodeTemp.put(nextNode.getId(), nextNode.getName());
+						mapNode.add(nodeTemp);
+						//新增
+						List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<PartsLevelDto>();
+						for (int i = 0; i < depth; i++) {  //定义的级别
+							if(mapNode.size()>i){  //级别 
+								Map<Integer, String> node = mapNode.get(i);
+								if(node!=null&&!node.isEmpty()){
+									Iterator<Entry<Integer, String>> iter = node.entrySet().iterator();
+									while (iter.hasNext()) {
+										Map.Entry<Integer, String> entry = iter.next();
+										Integer id =entry.getKey(); //id
+										String name =entry.getValue(); //name
+										PartsLevelDto levelInfo =new PartsLevelDto();
+										//将这个值拼装到 List<PartsLevlDto中去>
+										id=id==null?0:id;
+										name=name==null?"暂无数据":name;
+										levelInfo.setId(id);
+										levelInfo.setName(name);
+										orginzeOneLevelInfo.add(levelInfo);  //orginzeOneLevelInfo
+									}
+									
+								}
+								
 							}
 						}
 						if(mapNode.size()<depth){
@@ -502,18 +503,39 @@ public class PartsService {
 								
 							}
 						}
+						/**
+						 * 添加到返回对象中去
+						 */
+						partsLevelDtos.add(orginzeOneLevelInfo);
+						
+					}else{//如果不是最后一级,则删除他下面的子集和他自己
+						if(mapNode.size()>0){
+							//删除他的子集
+							for (int i = 0; i < le; i++) {
+								Integer id1 = nextNode.getChildren().get(i).getId();//他自己下面的子集对象
+								Integer delEleId =null;
+								for (int j = 0; j < mapNode.size(); j++) {
+									//存储的临时子集下面的对象
+									Map<Integer, String> delEle = mapNode.get(j);
+									Iterator<Entry<Integer, String>> iter = delEle.entrySet().iterator();
+									while (iter.hasNext()) {
+										Map.Entry<Integer, String> entry = iter.next();
+										delEleId =entry.getKey(); //id
+									}
+									if(id1==delEleId){//删除他下面的子集
+										mapNode.remove(j);
+									}
+									if(nextNode.getId()==delEleId){ //删除他自己
+										mapNode.remove(j);
+									}
+								}
+								
+							}
+						}
 					}
+					
 				}
-				partsLevelDtos.add(orginzeOneLevelInfo);
-				
-				//清除最后一个
-				if(mapNode.size()>=depth){
-					mapNode.remove(mapNode.size()-1);
-				}
-				
-			}
-			
-		}
+			}			
 		return partsLevelDtos;
 	}
 	
