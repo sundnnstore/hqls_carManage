@@ -167,7 +167,7 @@ public class PartsController {
 	
 	@ApiOperation(value = "查询配件相应等级集合", notes = "liud")
 	@GetMapping("levelinfo")
-	public ResponseEntity<RestModel<Page<PartsLevelDto>>> findPartsByLevel(
+	public ResponseEntity<RestModel<List<List<PartsLevelDto>>>> findPartsByLevel(
 							@RequestParam("partsTypeId") Integer partsTypeId,
 							@RequestParam("selecCount") Integer selecCount,
 							@RequestParam("pageIndex") Integer pageIndex,

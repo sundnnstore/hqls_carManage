@@ -46,21 +46,12 @@ public class PartsService {
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
 
-	/**
-	 * 指定级别
-	 */
-	//private Integer countFlag = 0;
 	
 	/**
 	 * 组装等级的集合 
 	 * 		格式 ： 一级  二级  三级
 	 */
-	private Page<PartsLevelDto> partsLevelDtos =new Page<>();
-	
-	/**
-	 * 组装一个
-	 */
-	//private List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<>();
+	private List<List<PartsLevelDto>> partsLevelDtos =new ArrayList<List<PartsLevelDto>>();
 	
 	/**
 	 * 储存每次循环的节点的id,name
@@ -379,9 +370,9 @@ public class PartsService {
 	 * 	@param pageSize
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<Page<PartsLevelDto>>> findPartsByLevel(Integer partsTypeId,Integer depth,Integer pageIndex,Integer pageSize){
+	public ResponseEntity<RestModel<List<List<PartsLevelDto>>>> findPartsByLevel(Integer partsTypeId,Integer depth,Integer pageIndex,Integer pageSize){
 		PageHelper.startPage(pageIndex, pageSize);
-		Page<PartsLevelDto> pagePartsLevel=null; //页面数据
+		List<List<PartsLevelDto>> pagePartsLevel=null; //页面数据
 		//List<PartsLevelDto> partsLevelsInfo =null;//最后返回数据
 		PartsTreeRecursionDto data =null ;
 		try {
@@ -392,12 +383,15 @@ public class PartsService {
 				Integer pid = findTopId(partsTypeId);
 				if(pid==null) pid=0;
 				/**
-				 * 按照 一级  二级  三级  组装树形菜单
+				 * 拿到菜单数据源
 				 */
 				data = this.findPartsTreeByDepth(pid,depth);
 				if(data==null){
 					data =new PartsTreeRecursionDto();
 				}else{
+					/**
+					 * 按照 一级  二级  三级  组装树形菜单
+					 */
 					pagePartsLevel = parseTreeRecurData(data,depth);
 				}
 			}else{//查询全部
@@ -417,7 +411,7 @@ public class PartsService {
 		if(pagePartsLevel==null){
 			total =0;
 		}else{
-			total = (int)pagePartsLevel.getTotal();
+			total = (int)pagePartsLevel.size();
 		}
 		return RestModel.success(pagePartsLevel,total);
 		
@@ -454,7 +448,7 @@ public class PartsService {
 	 * 	@param depth
 	 * 	@return
 	 */
-	public Page<PartsLevelDto> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
+	public List<List<PartsLevelDto>> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
 		List<PartsTreeRecursionDto> partChildren =null; //组装数据
 		/**
 		 * 存储循环过得配件类型的id 和 name
@@ -464,17 +458,24 @@ public class PartsService {
 			partChildren = data.getChildren();
 			System.out.println(partChildren.size());
 			if(partChildren.size()>0){//如果子集存在,继续循环
-				nodeTemp.put(data.getId(), data.getName());
-				mapNode.add(nodeTemp);
+				if(data.getId()>0){
+					nodeTemp.put(data.getId(), data.getName());
+					mapNode.add(nodeTemp);	
+				}
 				for (PartsTreeRecursionDto nextNode : partChildren) {
 					parseTreeRecurData(nextNode,depth);
+					
+					//清空临时集合
+					//mapNode.clear();
 				}
 			}else{ //如果不存在子集,则他是最后一级,拼接数据
 				/**
-				 * 组装一个集合对象  一级  二级  三级
+				 * 组装一个  一级  二级  三级 对象
 				 */
+				List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<PartsLevelDto>();
+				
 				for (int i = 0; i < depth; i++) {  //定义的级别
-					if(mapNode.size()>i){
+					if(mapNode.size()>i){  //级别 
 						Map<Integer, String> node = mapNode.get(i);
 						if(node!=null&&!node.isEmpty()){
 							Iterator<Entry<Integer, String>> iter = node.entrySet().iterator();
@@ -484,17 +485,32 @@ public class PartsService {
 								String name =entry.getValue(); //name
 								PartsLevelDto levelInfo =new PartsLevelDto();
 								//将这个值拼装到 List<PartsLevlDto中去>
-								id=id==null?null:id;
+								id=id==null?0:id;
 								name=name==null?"暂无数据":name;
 								levelInfo.setId(id);
 								levelInfo.setName(name);
-								partsLevelDtos.add(levelInfo);
+								orginzeOneLevelInfo.add(levelInfo);  //orginzeOneLevelInfo
+							}
+						}
+						if(mapNode.size()<depth){
+							Integer len = mapNode.size();
+							for (int j = 0; j <(3-len);j++) {
+								PartsLevelDto levelInfo =new PartsLevelDto();
+								levelInfo.setId(-1);
+								levelInfo.setName("暂无数据");
+								orginzeOneLevelInfo.add(levelInfo);
+								
 							}
 						}
 					}
-				}  
-				//清空集合
-				mapNode.clear();
+				}
+				partsLevelDtos.add(orginzeOneLevelInfo);
+				
+				//清除最后一个
+				if(mapNode.size()>=depth){
+					mapNode.remove(mapNode.size()-1);
+				}
+				
 			}
 			
 		}
