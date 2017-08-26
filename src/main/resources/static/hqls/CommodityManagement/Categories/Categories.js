@@ -45,7 +45,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     /**
      * 
      * @param level 1
-     * @param flag 0:新增  1:编辑
+     * @param flag 1:新增  2:编辑 3.查看
      * @returns
      */
     function loadNodes(level,flag){
@@ -53,12 +53,20 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/findpartstree",
 			type : "get",
 			async : false,
-			data : {"pid":level},
+			data : {"pid":level,"operflag":flag},
 			success : function(res){
-				if(flag==0){
-					addTree(res);
-				}else{
-					editTree(res);
+				switch (flag) {
+					case 1:
+						addTree(res);
+						break;
+					case 2:
+						editTree(res);
+					break;
+						case 3:
+						//查看
+						break;
+				default:
+					break;
 				}						
 			},
 			error :function(res){
@@ -276,36 +284,25 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		
 	}
     
-    
     /**
      * 获取分页数据
      * @param pageIndex
      * @returns
      */
     function getdata(pageIndex){
-//    	$.ajax({
-//			url : "/",
-//			type : "get",
-//			async : false,
-//			data : {
-//				"partsCode":$("#partsCodeQuery").val(),
-//				"partsTypeId":selectTreeId, //暂无树形结构
-//				"partsTopTypeId":$("#partsTypeTop").val(),
-//				"partsName":$("#partsNameQuery").val(),
-//				"pageSize":pageSize,
-//				"pageIndex":pageIndex
-//				},
-//			success : function(data){
-//				comboTable(data,pageIndex);
-//			},
-//			error:function(data){
-//				alert("页面查询失败");
-//			}
-//		});
+    	$.ajax({
+			url : "/levelinfo",
+			type : "get",
+			async : false,
+			data : {"partsTypeId":$("#partsCodeQuery").val(),"selecCount":3,"pageSize":pageSize,"pageIndex":pageIndex},
+			success : function(data){
+				comboTable(data,pageIndex);
+			},
+			error:function(data){
+				alert("页面查询失败");
+			}
+		});
     	
-    	
-    	//手动加载
-    	partsLevel();
 	}
     
     /**
@@ -319,7 +316,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		 * 显示一二三等级
 		 */
     	partsLevel();
-    	
+
     	/**
     	 * 显示表单数据
     	 */
@@ -340,7 +337,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/findpartslevel",
 			type : "get",
 			async : false,
-			data : {"pid":0},
+			data : {"pid":0,"operflag":1},
 			success : function(res){
 				displayLevel(res);
 			}

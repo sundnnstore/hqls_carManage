@@ -58,7 +58,7 @@ function uploadImg(formObj,imgObj){
 		},
 		url : url,
 		success : function(data) {
-			alert(data.result);
+			//alert(data.result);
 			returnResult =data.result.fileUrl;
 			//displayImg(imgObj,returnResult); //显示图片
 		},
