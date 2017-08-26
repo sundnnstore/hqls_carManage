@@ -3,6 +3,8 @@ package com.sinoauto.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
@@ -444,34 +446,42 @@ public class PartsService {
 	 * 	@Date 2017年8月25日下午4:30:34
 	 * 	@param data
 	 * 	@param depth
-	 * 	@return
+	 * 	@return  
+	 * 
+	 *  备注临时存储等级的对象最好 将hashmap --> 换成对象
 	 */
 	public List<List<PartsLevelDto>> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
 		List<PartsTreeRecursionDto> partChildren =null; //组装数据
-		
 		/**
 		 * 存储循环过得配件类型的id 和 name
 		 */
-		Map<Integer, String> nodeTemp=new HashMap<>();
+		ConcurrentHashMap<Integer, String> nodeTemp =new ConcurrentHashMap<Integer, String>();
 		if(data!=null){
 			partChildren = data.getChildren();
 //			System.out.println("打印每一次递归下一个对象名称:"+data.getName()+"\nID:"+data.getId());
 				for (PartsTreeRecursionDto nextNode : partChildren) {
-					System.out.println("nextNode children:"+nextNode.getChildren().size()+"\nNodeName:"+nextNode.getName());
-					if(nextNode.getId()>0&&nextNode.getChildren().size()>0){ //记录每一次的循环id 和 名称 
-						nodeTemp.put(nextNode.getId(), nextNode.getName());
+					System.out.println("nextNodeId"+nextNode.getId()+"\tnextNodeName"+nextNode.getName());
+					if(nextNode.getId()>0&&nextNode.getChildren().size()>0){
+						/**
+						 * 可以用对象代替，这样可以省一点事,减少维护
+						 */
+						nodeTemp.put(nextNode.getId(), nextNode.getName());  
+						//CommonDto keyValue = new CommonDto();
+						//keyValue.setId(nextNode.getId());
+						//keyValue.setValue(value);
 						mapNode.add(nodeTemp);			
 					}
 					parseTreeRecurData(nextNode,depth);
-					
+					//System.out.println("当他自己下面没有集合的时候跳出的节点:"+nextNode.getChildren().size()+"\nNodeName:"+nextNode.getName());
 					//如果我能确定跳出来的是最后一级则,不删除追加
-					Integer le = nextNode.getChildren().size();
+					Integer le = nextNode.getChildren().size(); //子节点数量
 					if(le<=0){
+						nodeTemp.clear();
 						nodeTemp.put(nextNode.getId(), nextNode.getName());
 						mapNode.add(nodeTemp);
 						//新增
 						List<PartsLevelDto> orginzeOneLevelInfo =new ArrayList<PartsLevelDto>();
-						for (int i = 0; i < depth; i++) {  //定义的级别
+						for (int i = 0; i < depth; i++) {  //自定义的查询树深度
 							if(mapNode.size()>i){  //级别 
 								Map<Integer, String> node = mapNode.get(i);
 								if(node!=null&&!node.isEmpty()){
@@ -495,7 +505,7 @@ public class PartsService {
 						}
 						if(mapNode.size()<depth){
 							Integer len = mapNode.size();
-							for (int j = 0; j <(3-len);j++) {
+							for (int j = 0; j <(depth-len);j++) {
 								PartsLevelDto levelInfo =new PartsLevelDto();
 								levelInfo.setId(-1);
 								levelInfo.setName("暂无数据");
@@ -503,6 +513,9 @@ public class PartsService {
 								
 							}
 						}
+						
+						mapNode.remove(mapNode.size()-1);
+						nodeTemp.clear();
 						/**
 						 * 添加到返回对象中去
 						 */
@@ -510,9 +523,8 @@ public class PartsService {
 						
 					}else{//如果不是最后一级,则删除他下面的子集和他自己
 						if(mapNode.size()>0){
-							//删除他的子集
 							for (int i = 0; i < le; i++) {
-								Integer id1 = nextNode.getChildren().get(i).getId();//他自己下面的子集对象
+								Integer chilId = nextNode.getChildren().get(i).getId();//他自己下面的子集对象
 								Integer delEleId =null;
 								for (int j = 0; j < mapNode.size(); j++) {
 									//存储的临时子集下面的对象
@@ -520,14 +532,17 @@ public class PartsService {
 									Iterator<Entry<Integer, String>> iter = delEle.entrySet().iterator();
 									while (iter.hasNext()) {
 										Map.Entry<Integer, String> entry = iter.next();
-										delEleId =entry.getKey(); //id
-										if(id1==delEleId){//删除他下面的子集
+										delEleId =entry.getKey();
+										if(chilId==delEleId){//临时变量中是否存在当前id 和他子集id 
 											mapNode.remove(j);
+											j=0;
 										}
 									}
 									if(nextNode.getId()==delEleId){ //删除他自己
 										mapNode.remove(j);
+										j=0;
 									}
+									if(mapNode.size()==0){mapNode.clear();nodeTemp.clear();}
 								}
 								
 							}
