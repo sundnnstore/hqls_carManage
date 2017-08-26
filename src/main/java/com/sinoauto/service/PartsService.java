@@ -59,7 +59,7 @@ public class PartsService {
 	 */
 	private List<List<PartsLevelDto>> partsLevelDtos =new ArrayList<List<PartsLevelDto>>();
 	
-	
+
 	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
 		Page<CommonDto> page = partsMapper.findPartsTypeListByType(partsType);
@@ -402,7 +402,7 @@ public class PartsService {
 					pagePartsLevel = parseTreeRecurData(data,depth);
 				}
 			}
-			
+			partsLevelDtos = new ArrayList<>();
 		} catch (Exception e) {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询树形等级信息失败");
@@ -451,6 +451,7 @@ public class PartsService {
 	 *  备注临时存储等级的对象最好 将hashmap --> 换成对象
 	 */
 	public List<List<PartsLevelDto>> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
+		
 		List<PartsTreeRecursionDto> partChildren =null; //组装数据
 		/**
 		 * 存储循环过得配件类型的id 和 name

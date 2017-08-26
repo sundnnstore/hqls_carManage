@@ -169,10 +169,10 @@ public class PartsController {
 	@GetMapping("levelinfo")
 	public ResponseEntity<RestModel<List<List<PartsLevelDto>>>> findPartsByLevel(
 							@RequestParam("partsTypeId") Integer partsTypeId,
-							@RequestParam("selecCount") Integer selecCount,
+							@RequestParam("selecDepth") Integer selecDepth,
 							@RequestParam("pageIndex") Integer pageIndex,
 							@RequestParam("pageSize") Integer pageSize){
-		return partsService.findPartsByLevel(partsTypeId,selecCount,pageIndex,pageSize);
+		return partsService.findPartsByLevel(partsTypeId,selecDepth,pageIndex,pageSize);
 	}
 	
 	@ApiOperation(value = "新增配件子集", notes = "liud")
