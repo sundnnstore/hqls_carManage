@@ -22,6 +22,8 @@ public class PartsDesListDto {
 	private String partsSpec;
 	@ApiModelProperty("现价")
 	private Double curPrice;
+	@ApiModelProperty("原价")
+	private Double price;
 	@ApiModelProperty("封面图")
 	private String partsPic;
 	@ApiModelProperty("下单时价格")
@@ -118,6 +120,26 @@ public class PartsDesListDto {
 	public void setBuyPrice(Double buyPrice) {
 		if (buyPrice != null) {
 			this.buyPrice = buyPrice;
+		}
+	}
+
+	public Double getPrice() {
+		return price;
+	}
+
+	public void setPrice(Double price) {
+		if (price != null) {
+			this.price = price;
+		}
+	}
+
+	public Integer getIsUsable() {
+		return isUsable;
+	}
+
+	public void setIsUsable(Integer isUsable) {
+		if (isUsable != null) {
+			this.isUsable = isUsable;
 		}
 	}
 	

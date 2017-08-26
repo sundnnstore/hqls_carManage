@@ -27,6 +27,9 @@ public interface PartsMapper {
 	 */
 	@Select("select * from hqls_parts where parts_id = #{1} and is_usable = 1")
 	public HqlsParts getPartsById(Integer partsId);
+	
+	@Select("select * from hqls_parts where parts_id = #{1}")
+	public HqlsParts getPartsByPartsId(Integer partsId);
 
 	/**
 	 * 按配件类型查询第一级分类，pid = 0

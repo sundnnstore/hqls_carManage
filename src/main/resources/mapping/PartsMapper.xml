@@ -39,7 +39,7 @@
 	
 	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
 		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
-				parts.parts_spec, parts.cur_price, parts.is_usable
+				parts.parts_spec, parts.cur_price, parts.is_usable, parts.price
 		from hqls_parts as parts 
 		where parts.parts_id = #{partsId}
 	</select>

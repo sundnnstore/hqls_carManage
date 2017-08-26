@@ -157,10 +157,10 @@ public class PurchaseOrderService {
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> checkShopCart(List<ShopCartParamDto> param) {
+		// 购物车中没商品
 		if (param.isEmpty()) {
 			return RestModel.success(null);
 		}
-		
 		try {
 			List<PartsDesListDto> partsList = new ArrayList<>();
 			for (ShopCartParamDto sc: param) {
@@ -170,11 +170,10 @@ public class PurchaseOrderService {
 			}
 			ShopCartInfoDto infoList = new ShopCartInfoDto();
 			infoList.setPartsDesList(partsList);
-			infoList.setTotalAmount(calculationAmount(partsList));
+			infoList.setTotalAmount(calculationAmount(partsList));// 计算商品总价
 			
 			return RestModel.success(infoList);
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "购物车查询异常");
@@ -322,7 +321,7 @@ public class PurchaseOrderService {
 		if (parts.isEmpty()) return 0.00;
 		BigDecimal result = new BigDecimal(0.00);
 		for (PartsDesListDto p: parts) {
-			HqlsParts hqpart = partsMapper.getPartsById(p.getPartsId());
+			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
 			result = result.add(eachOrderPrice);
 		}
