@@ -1,4 +1,4 @@
-package com.sinoauto.dao.bean;
+package com.sinoauto.dto;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version 1.0, 2017-08-16
  */
 
-public class HqlsStoreFinance implements Serializable {
+public class StoreFinanceDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

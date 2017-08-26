@@ -1,6 +1,5 @@
-package com.sinoauto.dao.bean;
+package com.sinoauto.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
@@ -11,9 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version 1.0, 2017-08-16
  */
 
-public class HqlsCashBack implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class CashBackDto {
 
 	@ApiModelProperty("返利ID")
 	private Integer cashBackId;
@@ -31,6 +28,30 @@ public class HqlsCashBack implements Serializable {
 	private Integer isUsable;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
+
+	private String operateUserName;
+	private String returnTypeDesc;
+	private String content;
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		if (content != null) {
+			this.content = content;
+		}
+	}
+
+	public String getReturnTypeDesc() {
+		return returnTypeDesc;
+	}
+
+	public void setReturnTypeDesc(String returnTypeDesc) {
+		if (returnTypeDesc != null) {
+			this.returnTypeDesc = returnTypeDesc;
+		}
+	}
 
 	/**
 	 * 设置返利ID
@@ -151,6 +172,16 @@ public class HqlsCashBack implements Serializable {
 	public void setOperateUserId(Integer operateUserId) {
 		if (operateUserId != null) {
 			this.operateUserId = operateUserId;
+		}
+	}
+
+	public String getOperateUserName() {
+		return operateUserName;
+	}
+
+	public void setOperateUserName(String operateUserName) {
+		if (operateUserName != null) {
+			this.operateUserName = operateUserName;
 		}
 	}
 

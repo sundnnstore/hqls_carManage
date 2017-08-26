@@ -1,27 +1,27 @@
 <link rel="stylesheet" type="text/css" href="FinancialManagement/RebateSetting/RebateSetting.css" />
-<div>
-	返利设置
 
-</div>
+<div>返利设置</div>
 <div>
 	<div class="layui-inline">
-		<label class="layui-form-label">类型</label>
+		<label class="layui-form-label">返现类型</label>
 		<div class="layui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">写作</option>
+			<select name="interest" lay-filter="aihao" class="layui-select" id="return_type">
+				<option value="0">全部</option>
+				<option value="2">金额</option>
+				<option value="1">返利率</option>
 			</select>
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label">操作人</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入操作人" autocomplete="off" class="layui-input" id="operateUserName">
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label">时间</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})" id="createTime">
 		</div>
 	</div>
 	<div class="layui-inline">
@@ -30,7 +30,7 @@
 	</div>
 </div>
 <div>
-	<table class="layui-table">
+	<table class="layui-table ">
 		<thead>
 			<tr>
 				<th>类型</th>
@@ -39,43 +39,50 @@
 				<th>操作时间</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>贤心</td>
-				<td>2016-11-29</td>
-				<td>人生就像是一场修行</td>
-				<td>sdfsd</td>
-			</tr>
-			<tr>
-				<td>贤心</td>
-				<td>2016-11-29</td>
-				<td>人生就像是一场修行</td>
-				<td>sdfsdf</td>
-			</tr>
+		<tbody id="log_tb">
 		</tbody>
 	</table>
+	<div id="pages" style="text-align: right;"></div>
 </div>
 
 <div id="addRebatepage" style="display: none">
-	<div class="layui-inline mylayui-typebox">
-		<label class="layui-form-label mylayui-label">类型</label>
-		<select name="interest" lay-filter="aihao" class="layui-select">
+	<!-- <div class="layui-inline mylayui-typebox">
+		<label class="layui-form-label mylayui-label">类型</label> <select name="interest" lay-filter="aihao" class="layui-select">
 			<option value="0">写作</option>
 		</select>
-	</div>
+	</div> -->
 	<div class="mylayui-rigthbox">
 		<div class="mylayui-inline">
 			<div class="layui-inline">
 				<label class="layui-form-label mylayui-label">满</label>
 				<div class="layui-input-inline">
+					<input type="text" lay-verify="required" autocomplete="off" class="layui-input" name="money">
+				</div>
+			</div>
+			<div class="layui-inline">
+				<label class="layui-form-label mylayui-label">返</label> <select name="interest" lay-filter="aihao" class="layui-select" name="returnType" id="returnType">
+				<option value="2">金额</option>
+				<option value="1">返利率</option>
+				</select>
+			</div>
+			<div class="layui-inline">
+				<div class="layui-input-inline">
+					<input type="text" lay-verify="required" autocomplete="off" class="layui-input" name="returnMoney" >
+				</div>
+			</div>
+			<span class="flicon"></span>
+		</div>
+		<div class="mylayui-inline">
+			<div class="layui-inline">
+				<label class="layui-form-label mylayui-label">满</label>
+				<div class="layui-input-inline">
 					<input type="text" lay-verify="required" autocomplete="off" class="layui-input">
 				</div>
 			</div>
 			<div class="layui-inline">
-				<label class="layui-form-label mylayui-label">返</label>
-				<select name="interest" lay-filter="aihao" class="layui-select">
-					<option value="0">金额</option>
-					<option value="1">返利</option>
+				<label class="layui-form-label mylayui-label">返</label> <select name="interest" lay-filter="aihao" class="layui-select">
+				<option value="2">金额</option>
+				<option value="1">返利率</option>
 				</select>
 			</div>
 			<div class="layui-inline">
@@ -93,31 +100,10 @@
 				</div>
 			</div>
 			<div class="layui-inline">
-				<label class="layui-form-label mylayui-label">返</label>
+				<label class="layui-form-label mylayui-label">返</label> 
 				<select name="interest" lay-filter="aihao" class="layui-select">
-					<option value="0">金额</option>
-					<option value="1">返利</option>
-				</select>
-			</div>
-			<div class="layui-inline">
-				<div class="layui-input-inline">
-					<input type="text" lay-verify="required" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<span class="flicon"></span>
-		</div>
-		<div class="mylayui-inline">
-			<div class="layui-inline">
-				<label class="layui-form-label mylayui-label">满</label>
-				<div class="layui-input-inline">
-					<input type="text" lay-verify="required" autocomplete="off" class="layui-input">
-				</div>
-			</div>
-			<div class="layui-inline">
-				<label class="layui-form-label mylayui-label">返</label>
-				<select name="interest" lay-filter="aihao" class="layui-select">
-					<option value="0">金额</option>
-					<option value="1">返利</option>
+					<option value="2">金额</option>
+					<option value="1">返利率</option>
 				</select>
 			</div>
 			<div class="layui-inline">
@@ -128,7 +114,8 @@
 			</div>
 		</div>
 	</div>
-	<i class="layui-icon" style="font-size: 30px; color: #1E9FFF; cursor: pointer;">&#xe61f;</i>  
+	<i class="layui-icon" style="font-size: 30px; color: #1E9FFF; cursor: pointer;">&#xe61f;</i>
 </div>
 <script type="text/javascript" src="FinancialManagement/RebateSetting/RebateSetting.js">
+	
 </script>

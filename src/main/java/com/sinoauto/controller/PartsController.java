@@ -18,8 +18,10 @@ import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsBrand;
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
+import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
@@ -73,6 +75,15 @@ public class PartsController {
 			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		
 		return partsService.findListByPid(partsTypeId, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "按配件名称、规格或型号查询配件", notes = "wuxiao")
+	@GetMapping(value = "getpartsbycondition")
+	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByCondition(
+			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
+			@RequestParam(value = "condition", required = false) String condition) {
+		
+		return partsService.findPartsByConditon(partsTypeId, condition);
 	}
 	
 	@ApiOperation(value = "按配件Id查询配件是否有子类列表", notes = "wuxiao")
@@ -140,16 +151,28 @@ public class PartsController {
 		return trees;
 	}
 	
+	/**
+	 * 
+	 * 	@User liud
+	 * 	@Date 2017年8月25日上午11:11:39
+	 * 	@param pid 父级ID
+	 * 	@param operflag 1:新增  2.编辑 3.查看 
+	 * 	@return
+	 */
 	@ApiOperation(value = "查询配件树", notes = "liud")
 	@GetMapping("findpartslevel")
 	public PartsTreeRecursionDto partsTreelevel(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
 		return  partsService.partsTreeRecursion(pid,operflag);
 	}
 	
-	@ApiOperation(value = "根据配件等级查询配件id", notes = "liud")
-	@GetMapping("findpartlevel")
-	public PartsTreeRecursionDto findPartsByLevel(@RequestParam("onelevel") Integer onelevel ,@RequestParam("twolevel") Integer twolevel,@RequestParam("threelevel") Integer threelevel  ){
-		return null;
+	@ApiOperation(value = "查询配件相应等级集合", notes = "liud")
+	@GetMapping("levelinfo")
+	public ResponseEntity<RestModel<List<List<PartsLevelDto>>>> findPartsByLevel(
+							@RequestParam("partsTypeId") Integer partsTypeId,
+							@RequestParam("selecCount") Integer selecCount,
+							@RequestParam("pageIndex") Integer pageIndex,
+							@RequestParam("pageSize") Integer pageSize){
+		return partsService.findPartsByLevel(partsTypeId,selecCount,pageIndex,pageSize);
 	}
 	
 	@ApiOperation(value = "新增配件子集", notes = "liud")

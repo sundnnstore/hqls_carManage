@@ -16,9 +16,7 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">门店</label>
 		<div class="layui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">门店</option>
-
+			<select name="interest" lay-filter="aihao" class="layui-select" id="store_id">
 			</select>
 		</div>
 	</div>
@@ -38,67 +36,26 @@
 		<button class="layui-btn" id='searchOrder'>搜索</button>
 	</div>
 </div>
-<div class="All-order-list">
-	<table class="layui-table mylayui-table">
-		<tbody>
+<div>
+	<table class="layui-table ">
+		<thead>
 			<tr>
-				<td>提现门店:</td>
-				<td>*****************</td>
-				<td>提现金额:</td>
-				<td>505050</td>
-				<td>选择银行:</td>
-				<td>222******</td>
-				<td>银行账号:</td>
-				<td>******************</td>
-				<td>开户行:</td>
-				<td>**********-*****</td>
-				<td>状态:</td>
-				<td>待审核</td>
-				<td>操作:</td>
-				<td class="operating">
-					<button class="layui-btn layui-btn-normal operating-btn">确认</button>
-					<button class="layui-btn layui-btn-danger operating-btn">拒绝</button>
-				</td>
+				<th>提现门店</th>
+				<th>提现金额</th>
+				<th>选择银行</th>
+				<th>银行账号</th>
+				<th>开户行</th>
+				<th>状态</th>
+				<th>操作</th>
 			</tr>
-			<tr>
-				<td>提现门店:</td>
-				<td>*****************</td>
-				<td>提现金额:</td>
-				<td>505050</td>
-				<td>选择银行:</td>
-				<td>222******</td>
-				<td>银行账号:</td>
-				<td>******************</td>
-				<td>开户行:</td>
-				<td>**********-*****</td>
-				<td>状态:</td>
-				<td>待审核</td>
-				<td>操作人:</td>
-				<td>*****</td>
-				<td>操作时间</td>
-				<td>2016-12-06</td>
-			</tr>
-
-			<tr>
-				<td>提现门店:</td>
-				<td>*****************</td>
-				<td>提现金额:</td>
-				<td>505050</td>
-				<td>选择银行:</td>
-				<td>222******</td>
-				<td>银行账号:</td>
-				<td>******************</td>
-				<td>开户行:</td>
-				<td>**********-*****</td>
-				<td>状态:</td>
-				<td>待审核</td>
-				<td>操作人:</td>
-				<td>*****</td>
-				<td>操作时间</td>
-				<td>2016-12-06</td>
-			</tr>
+		</thead>
+		<tbody id="log_tb">
 		</tbody>
 	</table>
+	<div id="pages" style="text-align: right;"></div>
+	<!-- <td class="operating">
+					<button class="layui-btn layui-btn-normal operating-btn">确认</button>
+					<button class="layui-btn layui-btn-danger operating-btn">拒绝</button>
+				</td> -->
 </div>
 <script type="text/javascript" src="FinancialManagement/withdrawpost/withdrawpost.js">
-</script>

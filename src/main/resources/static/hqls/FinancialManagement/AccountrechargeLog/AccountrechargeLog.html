@@ -6,22 +6,20 @@
 	<div class="layui-inline">
 		<label class="layui-form-label mylayui-form-label">门店</label>
 		<div class="layui-input-block mylayui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">门店</option>
-
+			<select name="interest" lay-filter="aihao" class="layui-select" id="store_id">
 			</select>
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label mylayui-form-label">门店联系人</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" id="customer_name" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label mylayui-form-label">联系人电话</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+			<input type="text" id="mobile" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
 		</div>
 	</div>
 	<div class="layui-inline">
@@ -40,7 +38,7 @@
 		</div>
 	</div>
 	<div class="layui-inline">
-		<button class="layui-btn" id='searchOrder'>搜索</button>
+		<button class="layui-btn" id='searchFlow'>搜索</button>
 	</div>
 </div>
 <div>
@@ -60,22 +58,7 @@
 				<th>操作时间</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td>*****</td>
-				<td>**-----***</td>
-				<td>++++++-----++++</td>
-				<td>4545</td>
-				<td>250.00$</td>
-				<td>*****</td>
-				<td>**-----***</td>
-				<td>++++++-----++++</td>
-				<td>4545</td>
-				<td>250.00$</td>
-				<td>250.00$</td>
-
-			</tr>
-
+		<tbody id="log_tb">
 		</tbody>
 	</table>
 	<div id="pages" style="text-align: right;"></div>

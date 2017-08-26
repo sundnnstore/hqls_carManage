@@ -1,4 +1,4 @@
-.mylayui-table,
+/* .mylayui-table,
 .layui-table {
 	width: auto;
 	background-color: transparent;
@@ -17,7 +17,7 @@
 
 .All-order-list {
 	border: 1px solid #e2e2e2;
-	/*width: -webkit-fit-content;*/
+	width: -webkit-fit-content;
 	min-width: 780px;
 	background-color: #f1f1f1;
 	margin: 10px 0px;
@@ -31,4 +31,13 @@ td.operating{
 
 .shipbox button {
 	width: 200px;
+} */
+.mylayui-input-block {
+    margin-left: 60px;
 }
+
+.mylayui-form-label {
+    width: auto;
+}
+
+
