@@ -22,6 +22,7 @@ import com.sinoauto.dao.bean.HqlsServiceType;
 import com.sinoauto.dao.bean.HqlsStore;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.CustomerMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.ServiceOrderMapper;
@@ -35,9 +36,8 @@ import com.sinoauto.entity.RespEntity;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 import com.sinoauto.util.HttpUtil;
+import com.sinoauto.util.push.GeTuiUtil;
 import com.sinoauto.util.push.PushAction;
-import com.sinoauto.util.push.PushParms;
-import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class ServiceOrderService {
@@ -58,6 +58,8 @@ public class ServiceOrderService {
 	private ServiceTypeMapper serviceTypeMapper;
 	@Autowired
 	private StoreMapper storeMapper;
+	@Autowired
+	private ClientInfoMapper clientInfoMapper;
 
 	public ResponseEntity<RestModel<List<ServiceOrderDto>>> findServiceOrdersByOrderStatus(Integer orderStatus, Integer storeId, Integer pageIndex,
 			Integer pageSize) {
@@ -176,13 +178,16 @@ public class ServiceOrderService {
 			PushAction pa = new PushAction("serviceorder", 0, true, "");
 			List<PushAction> action = new ArrayList<>();
 			action.add(pa);
-			String title = "您有一条新的服务订单";
+			String text = "您有一条新的服务订单";
 			if(order.getOrderType() == 2){
-				title = "您有一条新的预约订单";
+				text = "您有一条新的预约订单";
 			}
-			PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
+			/*PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
 			PushUtil.push2Andriod(parms);
-			PushUtil.push2IOSByAPNS(parms);
+			PushUtil.push2IOSByAPNS(parms);*/
+			String title = "订单提醒";
+			List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
+			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order");
 			return RestModel.success("success");
 		} catch (Exception e) {
 			e.printStackTrace();
