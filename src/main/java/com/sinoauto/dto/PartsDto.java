@@ -44,6 +44,8 @@ public class PartsDto {
 	private Integer partsTopTypeId;
 	@ApiModelProperty(name="配件大分类名称")
 	private String partsTopType;
+	@ApiModelProperty(name="是否可用")
+	private Integer isUsable;
 	/**
 	 * 返回对象属性
 	 */
@@ -201,5 +203,13 @@ public class PartsDto {
 
 	public void setpName(String pName) {
 		this.pName = pName;
+	}
+
+	public Integer getIsUsable() {
+		return isUsable;
+	}
+
+	public void setIsUsable(Integer isUsable) {
+		this.isUsable = isUsable;
 	}
 }

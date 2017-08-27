@@ -398,14 +398,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function displayPartsTypeInfo(res){
-//    	alert(res.result[0]+"\n"+res.result[0][1].name);
+    	var tr;
     	if(res!=null){
     		var len = res.result.length;
-    		for (var i = 0; i < len; i++) {
+    		for (var i = 0; i < len; i++) { 
     			var levelInfo = res.result[i].length;
-    			var tr = `<tr>`;
+    			tr += `<tr>`;
 				for (var j = 0; j < levelInfo; j++) {
-					tr+=` <td>${res.result[i][j].name}</td>`;
+					tr+=` <td>${res.result[i][j].name}<input type="hidden" value=${res.result[i][j].id}></td>`;
 				}
 				tr+=`<td class="operation">
 		                  <button id="view" data-method="view" class="layui-btn">查看</button>
@@ -429,7 +429,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addChildren(selectNodeId,typeName,index){
     	//把他的id当做 pid
     	//新增一个配件信息	
-    	//alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
     	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
     	data = JSON.stringify(data);
     	$.ajax({
@@ -517,7 +516,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 					layer.msg("存在子集不可删除");
 					layer.close(index);
 				}else{
-					//alert("检查selectNodeId："+selectNodeId);
 					del(selectNodeId);
 				}
 				//loadNodes(0,0);
