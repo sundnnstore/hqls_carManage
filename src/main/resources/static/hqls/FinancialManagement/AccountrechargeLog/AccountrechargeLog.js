@@ -11,6 +11,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		OrderParam.customerName = $("#customer_name").val();
 		OrderParam.mobile = $("#mobile").val();
 		OrderParam.storeId = $("#store_id").val() == 0 ? null :$("#store_id").val();
+		OrderParam.flowStatus = $("#flow_status").val() == 0 ? null :$("#flow_status").val();
+		OrderParam.createTime = $("#createTime").val();
 	}
 	
 	$("#searchFlow").click(function() {
@@ -67,15 +69,15 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		var html = "";
 		for (var i = 0; i < data.length; i++) {
 			html += `<tr>`;
-			html += `<td>${data[i].storeId}</td>
-					<td>${data[i].storeId}</td>
-					<td>${data[i].storeId}</td>
+			html += `<td>${data[i].storeName}</td>
+					<td>${data[i].customerName}</td>
+					<td>${data[i].mobile}</td>
 					<td>${data[i].bank}</td>
 					<td>${data[i].account}</td>
 					<td>${data[i].openBank}</td>
 					<td>${data[i].transactionNo}</td>
 					<td>${data[i].changeMoney}</td>
-					<td>${data[i].checkStatus}</td>
+					<td>${data[i].flowStatusDesc}</td>
 					<td>${data[i].operPerson}</td>
 					<td>${data[i].createTime}</td></tr>`;
 		}

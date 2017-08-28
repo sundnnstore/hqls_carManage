@@ -87,7 +87,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			html += `<tr>`;
 			html += `<td>${data[i].returnTypeDesc}</td>
 					<td>${data[i].content}</td>
-					<td>${data[i].returnType}</td>
+					<td>${data[i].operateUserName}</td>
 					<td>${data[i].createTime}</td>
 					</tr>`;
 		}
@@ -131,7 +131,6 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			btn: ['确定', '取消'],
 			yes: function(index, layero) {
 				//确定的回调
-				layer.msg("调用添加");
 				layer.close(index);//关闭弹框
 				addRebate();
 			},

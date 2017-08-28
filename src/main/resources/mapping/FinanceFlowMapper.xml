@@ -42,7 +42,7 @@
 	
 	<select id="findFlowListByContidion" resultType="com.sinoauto.dto.RechargeDto">
 		SELECT
-			f.*, u.store_name,
+			f.*, u.store_name,u.customer_name,u.mobile,
 			CASE
 		WHEN f.check_status = 1 THEN
 			'待审核'
@@ -52,7 +52,15 @@
 			'审核不通过'
 		ELSE
 			'标志数字不存在'
-		END AS check_status_desc
+		END AS check_status_desc,
+			CASE
+		WHEN f.flow_status = 1 THEN
+			'成功'
+		WHEN f.flow_status = 2 THEN
+			'失败'
+		ELSE
+			'标志数字不存在'
+		END AS flow_status_desc
 		FROM
 			hqls_finance_flow f,
 			(
@@ -77,6 +85,9 @@
 		<if test="changeType != null">
 			AND f.change_type = #{changeType}
 		</if>
+		<if test="flowStatus != null">
+			AND f.flow_status = #{flowStatus}
+		</if>
 		<if test="customerName != null and customerName != ''">
 			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')
 		</if>
@@ -84,7 +95,7 @@
 			AND u.mobile LIKE CONCAT('%', #{mobile}, '%')
 		</if>
 		<if test="createTime != null and createTime != ''">
-			AND f.create_time = str_to_date(#{createime}, '%Y-%m-%d')
+			AND datediff(f.create_time,#{createTime})=0
 		</if>
 	</select>
 	
