@@ -24,9 +24,11 @@ import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
 import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.RoleMapper;
+import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -49,6 +51,8 @@ public class UserService {
 	private RoleMapper roleMapper;
 	@Autowired
 	private ClientInfoMapper clientInfoMapper;
+	@Autowired
+	private StoreMapper storeMapper;
 
 	/**
 	 * 登录
@@ -87,7 +91,8 @@ public class UserService {
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		Integer storeId = userMapper.checkUser(userId);
-		if (storeId == null) {
+		StoreInfoDto store = storeMapper.getStoreInfoByStoreId(storeId);
+		if (storeId == null || store == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
 		}
 		UserLoginDto ul = new UserLoginDto();
@@ -95,6 +100,7 @@ public class UserService {
 		ul.setUserName("");
 		ul.setToken(rest.getResult().getToken());
 		ul.setStoreId(storeId);
+		ul.setStore(store);
 		if(!StringUtils.isEmpty(clientId)){
 			HqlsUser user = userMapper.getUserByGloabUserId(userId);
 			clientInfoMapper.deleteClientInfoByCId(clientId);

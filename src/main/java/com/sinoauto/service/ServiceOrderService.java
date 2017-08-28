@@ -70,13 +70,24 @@ public class ServiceOrderService {
 		return RestModel.success(orders, (int) orders.getTotal());
 	}
 
+	@Transactional
+	public ResponseEntity<RestModel<String>> finishOrderByCode(String token, String code) {
+		Integer serviceOrderId = serviceOrderMapper.getOrderIdByCode(code);
+		if (serviceOrderId != null && serviceOrderId > 0) {
+			return finishOrder(token, serviceOrderId, code);
+		} else {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "核销码不正确！");
+		}
+
+	}
+
 	/**
 	 * 服务订单完成功能
 	 * @param serviceOrderId
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId,String code) {
+	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId, String code) {
 		// 判断服务订单是否已经完成，
 		// 未完成的订单，确认完成
 		// 推送给车小主，更新门店的余额,记录账单
@@ -92,9 +103,9 @@ public class ServiceOrderService {
 			if (order.getOrderStatus() == 2) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单已完成");
 			}
-			//核销
+			// 核销
 			String res = checkCode(code, order.getOrderNo());
-			if(res.contains("success")){
+			if (res.contains("success")) {
 				// 订单完成操作
 				serviceOrderMapper.updateOrderStauts(serviceOrderId);
 				// 更新余额
@@ -117,14 +128,14 @@ public class ServiceOrderService {
 				financeFlow.setIsDelete(0);
 				financeFlowMapper.insert(financeFlow);
 				return RestModel.success("操作成功");
-			}else if(res.contains("-5")){
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销码已使用过！");
-			}else if(res.contains("-3")){
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销码错误！");
-			}else if(res.contains("-2")){
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"订单号错误！");
-			}else{
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"其他错误！");
+			} else if (res.contains("-5")) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "核销码已使用过！");
+			} else if (res.contains("-3")) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "核销码错误！");
+			} else if (res.contains("-2")) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单号错误！");
+			} else {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "其他错误！");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -161,15 +172,15 @@ public class ServiceOrderService {
 				customer.setAvatarUrl(order.getAvatarUrl());
 				customer.setMobile(order.getCustomerMobile());
 				customerMapper.insert(customer);
-			}else{
-				if(!StringUtils.isEmpty(order.getAvatarUrl())){
+			} else {
+				if (!StringUtils.isEmpty(order.getAvatarUrl())) {
 					customer.setAvatarUrl(order.getAvatarUrl());
 				}
 				customer.setCustomerName(order.getCustomerName());
 				customerMapper.updateCustomer(customer);
 			}
 			order.setCustomerId(customer.getCustomerId());
-			//order.setOrderType(1);//服务订单
+			// order.setOrderType(1);//服务订单
 			// 新增一条服务订单信息
 			serviceOrderMapper.insert(order);
 			// 推送给门店的联系人
@@ -179,12 +190,14 @@ public class ServiceOrderService {
 			List<PushAction> action = new ArrayList<>();
 			action.add(pa);
 			String text = "您有一条新的服务订单";
-			if(order.getOrderType() == 2){
+			if (order.getOrderType() == 2) {
 				text = "您有一条新的预约订单";
 			}
-			/*PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
-			PushUtil.push2Andriod(parms);
-			PushUtil.push2IOSByAPNS(parms);*/
+			/*
+			 * PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
+			 * PushUtil.push2Andriod(parms);
+			 * PushUtil.push2IOSByAPNS(parms);
+			 */
 			String title = "订单提醒";
 			List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order");
@@ -196,8 +209,8 @@ public class ServiceOrderService {
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION);
 
 	}
-	
-	public String checkCode(String code,String orderNo){
+
+	public String checkCode(String code, String orderNo) {
 		String url = "http://www.chexiaozhu.cn/api/openapi/dataapi.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("method", "codeVerification");

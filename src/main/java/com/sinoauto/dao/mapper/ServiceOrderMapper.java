@@ -21,5 +21,8 @@ public interface ServiceOrderMapper {
 	public int updateOrderStauts(@Param("orderId")Integer orderId);
 	
 	public int insert(ServiceOrderDto order);
+	
+	@Select("select service_order_id from hqls_service_order where code = #{code} and order_status = 1 and order_type = 1")
+	public Integer getOrderIdByCode(@Param("code")String code);
 
 }
