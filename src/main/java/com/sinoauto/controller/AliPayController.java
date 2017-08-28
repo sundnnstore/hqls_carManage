@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
@@ -32,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
  * @version 1.0
  * @date 2017-08-28 16:07:24
  */
-@Api(tags = "支付宝服务端接口")
+@Api(tags = "支付宝服务端SDK")
 @RestController
 public class AliPayController {
 
@@ -65,7 +66,7 @@ public class AliPayController {
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-			return RestModel.success(response.getBody());// 就是orderString 可以直接给客户端请求，无需再做处理。
+			return RestModel.success(UriEncoder.decode(response.getBody()));// 就是orderString 可以直接给客户端请求，无需再做处理。
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
