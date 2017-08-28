@@ -60,6 +60,10 @@
     text-align: center !important;
 }
 
+.layui-layer-content {
+    max-height: 610px;
+}
+
 .layui-layer-btn0,
 .layui-layer-btn1,
 .layui-layer-btn2,
