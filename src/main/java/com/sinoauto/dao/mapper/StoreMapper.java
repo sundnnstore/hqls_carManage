@@ -66,7 +66,7 @@ public interface StoreMapper {
 	public List<CommonDto> findAllStore();
 	
 	
-	@Select("select us.user_name as userName,sto.store_name as storeName,sto.address,sto.mobile as stoMobile,us.mobile as userMobile,sto.back_url as backUrl,sto.is_useable as isUseable,us.user_id as userId,"
+	@Select("select us.user_name as userName,sto.store_name as storeName,sto.address,sto.mobile as stoMobile,us.mobile as userMobile,sto.back_url as backUrl,sto.store_id as storeId,sto.is_useable as isUseable,us.user_id as userId,"
 			+ " sto.longitude,sto.latitude,sto.province_id as provinceId,sto.province_name as provinceName,sto.city_id as cityId,sto.city_name as cityName,sto.county_id as countyId,sto.county_name as countyName  from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
 			+ " where sto.store_id = #{storeId} and hqus.is_contact=1")
 	public StoreDto getStoreInfoByStoreId(@Param("storeId") Integer storeId);

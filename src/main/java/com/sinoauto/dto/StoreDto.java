@@ -37,6 +37,7 @@ public class StoreDto {
 	@ApiModelProperty("区县名称")
 	private String countyName;
 	
+	
 
 	public String getUserMobile() {
 		return userMobile;
