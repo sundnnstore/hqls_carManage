@@ -38,6 +38,9 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			$("#userName").val("");
 			$("#mobile").val("");
 			$("#address").val("");
+			$("#province").val("");
+    		$("#city").val("");
+    		$("#county").val("");
 			
             layer.open({
                 type: 1,
@@ -395,8 +398,8 @@ $("body").on('click','.sedit',function(){
     		$("#storeName").val(result.storeName);
     		$("#userName").val(result.userName);
     		$("#userName").attr("name",result.userName);
-    		$("#mobile").val(result.mobile);
-    		$("#mobile").attr("name",result.mobile);
+    		$("#mobile").val(result.userMobile);
+    		$("#mobile").attr("name",result.userMobile);
     		$("#province").val(result.provinceId);
     		comboChlidren('province','city');
     		$("#city").val(result.cityId);
@@ -435,7 +438,7 @@ $("body").on('click','.sshow',function(){
     		var result = data.result;
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
-    		$("#mobile_show").html(result.mobile);
+    		$("#mobile_show").html(result.stoMobile);
     		/*
 			 * $("#province").val(result.provinceId);
 			 * comboChlidren('province','city'); $("#city").val(result.cityId);
