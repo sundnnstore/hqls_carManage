@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class PartsTreeRecursionDto {
 	@ApiModelProperty("配件ID")
-	private Integer id;
+	private Integer id = -1;
 	@ApiModelProperty("配件名称")
 	private String name;
 	@ApiModelProperty("是否展开")

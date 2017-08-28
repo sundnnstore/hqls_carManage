@@ -21,6 +21,7 @@ import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
+import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
@@ -150,16 +151,28 @@ public class PartsController {
 		return trees;
 	}
 	
+	/**
+	 * 
+	 * 	@User liud
+	 * 	@Date 2017年8月25日上午11:11:39
+	 * 	@param pid 父级ID
+	 * 	@param operflag 1:新增  2.编辑 3.查看 
+	 * 	@return
+	 */
 	@ApiOperation(value = "查询配件树", notes = "liud")
 	@GetMapping("findpartslevel")
 	public PartsTreeRecursionDto partsTreelevel(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
 		return  partsService.partsTreeRecursion(pid,operflag);
 	}
 	
-	@ApiOperation(value = "根据配件等级查询配件id", notes = "liud")
-	@GetMapping("findpartlevel")
-	public PartsTreeRecursionDto findPartsByLevel(@RequestParam("onelevel") Integer onelevel ,@RequestParam("twolevel") Integer twolevel,@RequestParam("threelevel") Integer threelevel  ){
-		return null;
+	@ApiOperation(value = "查询配件相应等级集合", notes = "liud")
+	@GetMapping("levelinfo")
+	public ResponseEntity<RestModel<List<List<PartsLevelDto>>>> findPartsByLevel(
+							@RequestParam("partsTypeId") Integer partsTypeId,
+							@RequestParam("selecDepth") Integer selecDepth,
+							@RequestParam("pageIndex") Integer pageIndex,
+							@RequestParam("pageSize") Integer pageSize){
+		return partsService.findPartsByLevel(partsTypeId,selecDepth,pageIndex,pageSize);
 	}
 	
 	@ApiOperation(value = "新增配件子集", notes = "liud")

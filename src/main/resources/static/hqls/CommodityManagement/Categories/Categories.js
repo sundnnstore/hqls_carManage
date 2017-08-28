@@ -15,21 +15,27 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
-            $('#storeTree').html('');
+            $('#partsTree').html('');
             /**
              * 1 是节点等级
-             * 0 是新增  1 编辑的
+             * 1 是新增  2 编辑的
              */
-            loadNodes(0,0);//加载节点树
+            loadNodes(0,1);//加载节点树
         } else if (method == 'view') {
-        	$('#storeItemTree').html('');
+        	$('#partsItemTree').html('');
             first_title = '查看';
+            loadNodes(2,3);//加载节点树
         } else if (method == 'edit') {
-        	$('#storeItemTree').html('');
+        	//alert("编辑");
+        	$('#partsItemTree').html('');
             first_title = '编辑';
             //传入一级菜单id
             //var level = $(this).parent().parent().val();//节点树等级
-            loadNodes(1,1);//加载节点树
+            /**
+             * 第一个  2 等级
+             * 第二个  2 操作方式
+             */
+            loadNodes(2,2);//加载节点树
         }
         first_title && layer.open({
             type: 1,
@@ -45,7 +51,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     /**
      * 
      * @param level 1
-     * @param flag 0:新增  1:编辑
+     * @param flag 1:新增  2:编辑 3.查看
      * @returns
      */
     function loadNodes(level,flag){
@@ -53,12 +59,21 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/findpartstree",
 			type : "get",
 			async : false,
-			data : {"pid":level},
+			data : {"pid":level,"operflag":flag},
 			success : function(res){
-				if(flag==0){
-					addTree(res);
-				}else{
-					editTree(res);
+				switch (flag) {
+					case 1:
+						addTree(res);
+						break;
+					case 2:
+						editTree(res);
+						break;
+					case 3:
+						view(res);
+						//查看
+						break;
+				default:
+					break;
 				}						
 			},
 			error :function(res){
@@ -85,22 +100,26 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         });
     }
     function editTree(data){
-    	console.log(data);
+    	//alert("编辑操作");
+    	 console.log(data);
     	 layui.tree({
              elem: '#partsItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
              click: function(item) { //点击节点回调
-                 first_title != '查看' && categoriesEdit(item);
+                 first_title != '编辑' && categoriesEdit(item);
              },
              nodes: data
          });
     }
-//    layui.tree({
-//        elem: '#categoriesTreeView', //指定元素
-//        click: function(item) {
-//            first_title != '查看' && categoriesEdit(item);
-//        },
-//        nodes: createTree()
-//    });
+    function view(data){
+      layui.tree({
+      elem: '#categoriesTreeView', //指定元素
+      click: function(item) {
+          first_title != '查看' && categoriesEdit(item);
+      },
+      nodes: data
+      });
+    }
+
    
     var createTree = function(node, start) {
         node = node || function() {
@@ -276,36 +295,25 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		
 	}
     
-    
     /**
      * 获取分页数据
      * @param pageIndex
      * @returns
      */
     function getdata(pageIndex){
-//    	$.ajax({
-//			url : "/",
-//			type : "get",
-//			async : false,
-//			data : {
-//				"partsCode":$("#partsCodeQuery").val(),
-//				"partsTypeId":selectTreeId, //暂无树形结构
-//				"partsTopTypeId":$("#partsTypeTop").val(),
-//				"partsName":$("#partsNameQuery").val(),
-//				"pageSize":pageSize,
-//				"pageIndex":pageIndex
-//				},
-//			success : function(data){
-//				comboTable(data,pageIndex);
-//			},
-//			error:function(data){
-//				alert("页面查询失败");
-//			}
-//		});
+    	$.ajax({
+			url : "/levelinfo",
+			type : "get",
+			async : false,
+			data : {"partsTypeId":60,"selecDepth":3,"pageSize":pageSize,"pageIndex":pageIndex},
+			success : function(data){
+				comboTable(data,pageIndex);
+			},
+			error:function(data){
+				alert("页面查询失败");
+			}
+		});
     	
-    	
-    	//手动加载
-    	partsLevel();
 	}
     
     /**
@@ -319,7 +327,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		 * 显示一二三等级
 		 */
     	partsLevel();
-    	
+
     	/**
     	 * 显示表单数据
     	 */
@@ -340,7 +348,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/findpartslevel",
 			type : "get",
 			async : false,
-			data : {"pid":0},
+			data : {"pid":0,"operflag":1},
 			success : function(res){
 				displayLevel(res);
 			}
@@ -384,7 +392,29 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		}
     }
     
+    /**
+     * 组装显示等级的数据
+     * @param res
+     * @returns
+     */
     function displayPartsTypeInfo(res){
+//    	alert(res.result[0]+"\n"+res.result[0][1].name);
+    	if(res!=null){
+    		var len = res.result.length;
+    		for (var i = 0; i < len; i++) {
+    			var levelInfo = res.result[i].length;
+    			var tr = `<tr>`;
+				for (var j = 0; j < levelInfo; j++) {
+					tr+=` <td>${res.result[i][j].name}</td>`;
+				}
+				tr+=`<td class="operation">
+		                  <button id="view" data-method="view" class="layui-btn">查看</button>
+		                  <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
+		       </td></tr>`;
+			$("#partsTypeInfo").html(tr);
+    		}
+    		
+    	}
     	
     }
     
@@ -399,7 +429,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addChildren(selectNodeId,typeName,index){
     	//把他的id当做 pid
     	//新增一个配件信息	
-    	alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
+    	//alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
     	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
     	data = JSON.stringify(data);
     	$.ajax({
@@ -487,7 +517,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 					layer.msg("存在子集不可删除");
 					layer.close(index);
 				}else{
-					alert("检查selectNodeId："+selectNodeId);
+					//alert("检查selectNodeId："+selectNodeId);
 					del(selectNodeId);
 				}
 				//loadNodes(0,0);

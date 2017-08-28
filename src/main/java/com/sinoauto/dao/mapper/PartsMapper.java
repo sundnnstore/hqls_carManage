@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
@@ -27,6 +28,9 @@ public interface PartsMapper {
 	 */
 	@Select("select * from hqls_parts where parts_id = #{1} and is_usable = 1")
 	public HqlsParts getPartsById(Integer partsId);
+	
+	@Select("select * from hqls_parts where parts_id = #{1}")
+	public HqlsParts getPartsByPartsId(Integer partsId);
 
 	/**
 	 * 按配件类型查询第一级分类，pid = 0
@@ -183,6 +187,6 @@ public interface PartsMapper {
 	 * @param partsTypeId
 	 * @return
 	 */
-	@Select("select pid from hqls_parts_type where parts_type_id=#{partsTypeId}")
-	public Integer findPidByPtId(@Param("partsTypeId")Integer partsTypeId);
+	@Select("select * from hqls_parts_type where parts_type_id=#{partsTypeId}")
+	public HqlsPartsType findPidByPtId(@Param("partsTypeId")Integer partsTypeId);
 }
