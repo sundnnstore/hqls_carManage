@@ -13,7 +13,7 @@ public class UserLoginDto {
 	@ApiModelProperty("门店ID")
 	private Integer storeId;
 	@ApiModelProperty("门店信息")
-	private StoreInfoDto store;
+	private StoreDto store;
 
 	public String getUserName() {
 		return userName;
@@ -55,11 +55,11 @@ public class UserLoginDto {
 		}
 	}
 
-	public StoreInfoDto getStore() {
+	public StoreDto getStore() {
 		return store;
 	}
 
-	public void setStore(StoreInfoDto store) {
+	public void setStore(StoreDto store) {
 		if (store != null) {
 			this.store = store;
 		}
