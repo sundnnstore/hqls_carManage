@@ -265,8 +265,8 @@ public class StoreService {
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(Integer storeId) {
-		StoreInfoDto store = storeMapper.getStoreInfoByStoreId(storeId);
+	public ResponseEntity<RestModel<StoreDto>> getStoreByStoreId(Integer storeId) {
+		StoreDto store = storeMapper.getStoreInfoByStoreId(storeId);
 		return RestModel.success(store);
 
 	}

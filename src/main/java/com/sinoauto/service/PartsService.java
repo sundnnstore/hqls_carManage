@@ -472,6 +472,9 @@ public class PartsService {
 						//keyValue.setValue(value);
 						mapNode.add(nodeTemp);			
 					}
+					/**
+					 * 递归查询
+					 */
 					parseTreeRecurData(nextNode,depth);
 					//System.out.println("当他自己下面没有集合的时候跳出的节点:"+nextNode.getChildren().size()+"\nNodeName:"+nextNode.getName());
 					//如果我能确定跳出来的是最后一级则,不删除追加

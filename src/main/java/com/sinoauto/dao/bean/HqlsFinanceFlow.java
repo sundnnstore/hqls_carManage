@@ -5,8 +5,6 @@ import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
 
-
-
 /**
  * 财务流水表财务流水表<br>
  * @author tangwt
@@ -14,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class HqlsFinanceFlow implements Serializable {
-	
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("财务流水ID")
 	private Integer financeFlowId;
@@ -53,7 +51,20 @@ public class HqlsFinanceFlow implements Serializable {
 	private String openBank;
 	@ApiModelProperty("是否删除(0,1)")
 	private Integer isDelete;
+
+	private Integer flowStatus;
+
 	
+	public Integer getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(Integer flowStatus) {
+		if (flowStatus != null) {
+			this.flowStatus = flowStatus;
+		}
+	}
+
 	/**
 	 * 设置财务流水ID
 	 * @param financeFlowId 财务流水ID
@@ -61,6 +72,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setFinanceFlowId(Integer financeFlowId) {
 		this.financeFlowId = financeFlowId;
 	}
+
 	/**
 	 * 获取财务流水ID
 	 * @return 财务流水ID
@@ -68,6 +80,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getFinanceFlowId() {
 		return this.financeFlowId;
 	}
+
 	/**
 	 * 设置门店ID
 	 * @param storeId 门店ID
@@ -75,6 +88,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
 	}
+
 	/**
 	 * 获取门店ID
 	 * @return 门店ID
@@ -82,6 +96,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getStoreId() {
 		return this.storeId;
 	}
+
 	/**
 	 * 设置交易单号
 	 * @param transactionNo 交易单号
@@ -89,6 +104,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setTransactionNo(String transactionNo) {
 		this.transactionNo = transactionNo;
 	}
+
 	/**
 	 * 获取交易单号
 	 * @return 交易单号
@@ -96,6 +112,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getTransactionNo() {
 		return this.transactionNo;
 	}
+
 	/**
 	 * 设置金额变动类型（1充值；2提现；3采购；4汽车维护服务）
 	 * @param changeType 金额变动类型（1充值；2提现；3采购；4汽车维护服务）
@@ -103,6 +120,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setChangeType(Integer changeType) {
 		this.changeType = changeType;
 	}
+
 	/**
 	 * 获取金额变动类型（1充值；2提现；3采购；4汽车维护服务）
 	 * @return 金额变动类型（1充值；2提现；3采购；4汽车维护服务）
@@ -110,6 +128,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getChangeType() {
 		return this.changeType;
 	}
+
 	/**
 	 * 设置变动金额
 	 * @param changeMoney 变动金额
@@ -117,6 +136,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setChangeMoney(Double changeMoney) {
 		this.changeMoney = changeMoney;
 	}
+
 	/**
 	 * 获取变动金额
 	 * @return 变动金额
@@ -124,6 +144,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Double getChangeMoney() {
 		return this.changeMoney;
 	}
+
 	/**
 	 * 设置1收入 2支出
 	 * @param chargeType 1收入 2支出
@@ -131,6 +152,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setChargeType(Integer chargeType) {
 		this.chargeType = chargeType;
 	}
+
 	/**
 	 * 获取1收入 2支出
 	 * @return 1收入 2支出
@@ -138,6 +160,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getChargeType() {
 		return this.chargeType;
 	}
+
 	/**
 	 * 设置充值方式(1支付宝 2微信 3线下)
 	 * @param payType 充值方式(1支付宝 2微信 3线下)
@@ -145,6 +168,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setPayType(Integer payType) {
 		this.payType = payType;
 	}
+
 	/**
 	 * 获取充值方式(1支付宝 2微信 3线下)
 	 * @return 充值方式(1支付宝 2微信 3线下)
@@ -152,6 +176,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getPayType() {
 		return this.payType;
 	}
+
 	/**
 	 * 设置提现审核状态（1待审核；2审核通过；3审核不通过）
 	 * @param checkStatus 提现审核状态（1待审核；2审核通过；3审核不通过）
@@ -159,6 +184,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setCheckStatus(Integer checkStatus) {
 		this.checkStatus = checkStatus;
 	}
+
 	/**
 	 * 获取提现审核状态（1待审核；2审核通过；3审核不通过）
 	 * @return 提现审核状态（1待审核；2审核通过；3审核不通过）
@@ -166,6 +192,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Integer getCheckStatus() {
 		return this.checkStatus;
 	}
+
 	/**
 	 * 设置订单号
 	 * @param orderNo 订单号
@@ -173,6 +200,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setOrderNo(String orderNo) {
 		this.orderNo = orderNo;
 	}
+
 	/**
 	 * 获取订单号
 	 * @return 订单号
@@ -180,6 +208,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getOrderNo() {
 		return this.orderNo;
 	}
+
 	/**
 	 * 设置操作人
 	 * @param operPerson 操作人
@@ -187,6 +216,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setOperPerson(String operPerson) {
 		this.operPerson = operPerson;
 	}
+
 	/**
 	 * 获取操作人
 	 * @return 操作人
@@ -194,6 +224,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getOperPerson() {
 		return this.operPerson;
 	}
+
 	/**
 	 * 设置创建时间
 	 * @param createTime 创建时间
@@ -201,6 +232,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
 	/**
 	 * 获取创建时间
 	 * @return 创建时间
@@ -208,6 +240,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Date getCreateTime() {
 		return this.createTime;
 	}
+
 	/**
 	 * 设置备注
 	 * @param remark 备注
@@ -215,6 +248,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+
 	/**
 	 * 获取备注
 	 * @return 备注
@@ -222,6 +256,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getRemark() {
 		return this.remark;
 	}
+
 	/**
 	 * 设置操作时间
 	 * @param dmlTime 操作时间
@@ -229,6 +264,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setDmlTime(Date dmlTime) {
 		this.dmlTime = dmlTime;
 	}
+
 	/**
 	 * 获取操作时间
 	 * @return 操作时间
@@ -236,6 +272,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public Date getDmlTime() {
 		return this.dmlTime;
 	}
+
 	/**
 	 * 设置收款人姓名
 	 * @param accountName 收款人姓名
@@ -243,6 +280,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
+
 	/**
 	 * 获取收款人姓名
 	 * @return 收款人姓名
@@ -250,6 +288,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getAccountName() {
 		return this.accountName;
 	}
+
 	/**
 	 * 设置账号
 	 * @param account 账号
@@ -257,6 +296,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setAccount(String account) {
 		this.account = account;
 	}
+
 	/**
 	 * 获取账号
 	 * @return 账号
@@ -264,6 +304,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getAccount() {
 		return this.account;
 	}
+
 	/**
 	 * 设置银行
 	 * @param bank 银行
@@ -271,6 +312,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setBank(String bank) {
 		this.bank = bank;
 	}
+
 	/**
 	 * 获取银行
 	 * @return 银行
@@ -278,6 +320,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getBank() {
 		return this.bank;
 	}
+
 	/**
 	 * 设置开户行
 	 * @param openBank 开户行
@@ -285,6 +328,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setOpenBank(String openBank) {
 		this.openBank = openBank;
 	}
+
 	/**
 	 * 获取开户行
 	 * @return 开户行
@@ -292,6 +336,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public String getOpenBank() {
 		return this.openBank;
 	}
+
 	/**
 	 * 设置是否删除(0,1)
 	 * @param isDelete 是否删除(0,1)
@@ -299,6 +344,7 @@ public class HqlsFinanceFlow implements Serializable {
 	public void setIsDelete(Integer isDelete) {
 		this.isDelete = isDelete;
 	}
+
 	/**
 	 * 获取是否删除(0,1)
 	 * @return 是否删除(0,1)
@@ -308,4 +354,3 @@ public class HqlsFinanceFlow implements Serializable {
 	}
 
 }
-

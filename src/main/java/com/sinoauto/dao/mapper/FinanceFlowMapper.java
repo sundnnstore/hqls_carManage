@@ -1,5 +1,7 @@
 package com.sinoauto.dao.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,5 +17,9 @@ public interface FinanceFlowMapper {
 	public Page<RechargeDto> findFlowListByContidion(@Param("changeType") Integer changeType, @Param("storeId") Integer storeId,
 			@Param("customerName") String customerName, @Param("mobile") String mobile, @Param("createTime") String createTime,
 			@Param("flowStatus") Integer flowStatus);
+
+	public List<HqlsFinanceFlow> findFlowList(@Param("storeId") Integer storeId);
+	
+	public HqlsFinanceFlow findFlow(@Param("financeFlowId") Integer financeFlowId);
 
 }

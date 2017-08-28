@@ -3,10 +3,10 @@
 <mapper namespace="com.sinoauto.dao.mapper.PurchaseOrderMapper">
 
 	<resultMap type="com.sinoauto.dto.PurchaseOrderParamDto" id="orderList">
-		<id column="order_id" property="orderId"/>
+		<id column="purchase_order_id" property="orderId"/>
 		<result column="ship_address_id" property="shipAddressId" />
 		<association column="ship_address_id" property="shipAddress" select="com.sinoauto.dao.mapper.ShipAddressMapper.getShipAddressById" ></association>
-		<collection column="order_id" property="partsList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
+		<collection column="purchase_order_id" property="partsList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
 	</resultMap>
 	
 	<!-- 中天采购订单 -->
@@ -17,7 +17,7 @@
 	
 	
 	<select id="findOrder" parameterType="Integer" resultMap="orderList">
-		select order_id, ship_address_id 
+		select purchase_order_id, ship_address_id 
 		from hqls_purchase_order 
 		where store_id = #{storeId}
 		<if test="orderStatus != null">
@@ -26,9 +26,9 @@
 	</select>
 	
 	<select id="findOrderByOrderId" parameterType="Integer" resultMap="orderList">
-		select order_id, ship_address_id, other_fee, remark
+		select purchase_order_id, ship_address_id, other_fee, remark
 		from hqls_purchase_order
-		where order_id = #{orderId}
+		where purchase_order_id = #{orderId}
 	</select>
 	
 	<update id="payOperation" parameterType="HqlsPurchaseOrder">
