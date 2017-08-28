@@ -149,4 +149,34 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			}
 		});
 	}
+	
+	$('.Accountcz').on('click', function() {
+
+		layer.open({
+			type: 1, //添加一个模板
+			title: '充值',
+			content: $('#AccountczPage'), //弹出框的内容
+			skin: 'layui-layer-lan', //弹框主题
+			area: '500px', //宽高
+			cancel: function() {
+				//右上角关闭的回调
+			},
+			shade: 0
+		})
+	})
+	$('.okAccountCz').on('click', function() {
+		//close中的参数是type的类型
+		layer.close(1);
+		layer.open({
+			type: 1, //添加一个模板
+			title: '成功',
+			content: $('#czSucces'), //弹出框的内容
+			skin: 'layui-layer-lan', //弹框主题
+			area: '300px', //宽高
+			cancel: function() {
+				//右上角关闭的回调
+			},
+			shade: 0
+		})
+	})
 })

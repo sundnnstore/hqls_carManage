@@ -49,7 +49,43 @@ public class RechargeDto {
 	private Integer isDelete;
 
 	private String checkStatusDesc;
+	private String flowStatusDesc;
 	private String storeName;
+	private Integer flowStatus;
+	private String mobile;
+	private String customerName;
+
+	public Integer getFlowStatus() {
+		return flowStatus;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public void setFlowStatus(Integer flowStatus) {
+		this.flowStatus = flowStatus;
+	}
+
+	public String getFlowStatusDesc() {
+		return flowStatusDesc;
+	}
+
+	public void setFlowStatusDesc(String flowStatusDesc) {
+		this.flowStatusDesc = flowStatusDesc;
+	}
 
 	/**
 	 * 设置财务流水ID

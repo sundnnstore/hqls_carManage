@@ -115,6 +115,7 @@ public class StoreController {
 	@PostMapping("changeaccount")
 	public ResponseEntity<RestModel<String>> changeAccount(@RequestHeader(value = "Authorization") String Authorization,
 															@RequestParam(value="newMobile") String newMobile){
+		
 		return userService.updateUserAccount(Authorization, newMobile);
 		
 	}
@@ -127,7 +128,7 @@ public class StoreController {
 	
 	@ApiOperation(value = "根据storedId查询当前门店信息",notes = "tangrx")
 	@GetMapping("getstorebystoreid")
-	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(@RequestParam(value="storeId") Integer storeId){
+	public ResponseEntity<RestModel<StoreDto>> getStoreByStoreId(@RequestParam(value="storeId") Integer storeId){
 		return storeService.getStoreByStoreId(storeId);
 		
 	}

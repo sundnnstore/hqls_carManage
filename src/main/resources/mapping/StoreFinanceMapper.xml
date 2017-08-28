@@ -63,7 +63,7 @@
 		WHERE
 			sf.store_id = u.store_id
 		<if test="storeId != null">
-			AND f.store_id = #{storeId}
+			AND sf.store_id = #{storeId}
 		</if>
 		<if test="customerName != null and customerName != ''">
 			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')

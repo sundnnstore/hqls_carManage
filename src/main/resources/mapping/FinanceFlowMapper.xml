@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsFinanceFlow">
+	<insert id="insert" parameterType="HqlsFinanceFlow" useGeneratedKeys="true" keyProperty="financeFlowId">
 	    INSERT INTO hqls_finance_flow (
-	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
+	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, flow_status, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
 	    ) VALUES (
-	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
+	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{flowStatus}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
 	    )
 	</insert>
 
@@ -42,7 +42,7 @@
 	
 	<select id="findFlowListByContidion" resultType="com.sinoauto.dto.RechargeDto">
 		SELECT
-			f.*, u.store_name,
+			f.*, u.store_name,u.customer_name,u.mobile,
 			CASE
 		WHEN f.check_status = 1 THEN
 			'待审核'
@@ -52,7 +52,15 @@
 			'审核不通过'
 		ELSE
 			'标志数字不存在'
-		END AS check_status_desc
+		END AS check_status_desc,
+			CASE
+		WHEN f.flow_status = 1 THEN
+			'成功'
+		WHEN f.flow_status = 2 THEN
+			'失败'
+		ELSE
+			'标志数字不存在'
+		END AS flow_status_desc
 		FROM
 			hqls_finance_flow f,
 			(
@@ -77,6 +85,9 @@
 		<if test="changeType != null">
 			AND f.change_type = #{changeType}
 		</if>
+		<if test="flowStatus != null">
+			AND f.flow_status = #{flowStatus}
+		</if>
 		<if test="customerName != null and customerName != ''">
 			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')
 		</if>
@@ -84,8 +95,26 @@
 			AND u.mobile LIKE CONCAT('%', #{mobile}, '%')
 		</if>
 		<if test="createTime != null and createTime != ''">
-			AND f.create_time = str_to_date(#{createime}, '%Y-%m-%d')
+			AND datediff(f.create_time,#{createTime})=0
 		</if>
+	</select>
+	
+	<select id="findFlowList" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
+		SELECT 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+		FROM
+			hqls_finance_flow
+	    WHERE
+			is_delete = 0 and store_id = #{storeId}
+	</select>
+	
+	<select id="findFlow" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
+		SELECT 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+		FROM
+			hqls_finance_flow
+	    WHERE
+			finance_flow_id = #{financeFlowId}
 	</select>
 	
 </mapper>
