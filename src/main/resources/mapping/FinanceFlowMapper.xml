@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="HqlsFinanceFlow">
+	<insert id="insert" parameterType="HqlsFinanceFlow" useGeneratedKeys="true" keyProperty="financeFlowId">
 	    INSERT INTO hqls_finance_flow (
-	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
+	        store_id, transaction_no, change_type, change_money, charge_type, pay_type, flow_status, check_status, order_no, oper_person, create_time, remark, dml_time, account_name, account, bank, open_bank, is_delete
 	    ) VALUES (
-	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
+	        #{storeId}, #{transactionNo}, #{changeType}, #{changeMoney}, #{chargeType}, #{payType}, #{flowStatus}, #{checkStatus}, #{orderNo}, #{operPerson}, now(), #{remark}, now(), #{accountName}, #{account}, #{bank}, #{openBank}, #{isDelete}        
 	    )
 	</insert>
 
@@ -97,6 +97,24 @@
 		<if test="createTime != null and createTime != ''">
 			AND datediff(f.create_time,#{createTime})=0
 		</if>
+	</select>
+	
+	<select id="findFlowList" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
+		SELECT 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+		FROM
+			hqls_finance_flow
+	    WHERE
+			is_delete = 0 and store_id = #{storeId}
+	</select>
+	
+	<select id="findFlow" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
+		SELECT 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+		FROM
+			hqls_finance_flow
+	    WHERE
+			finance_flow_id = #{financeFlowId}
 	</select>
 	
 </mapper>
