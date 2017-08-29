@@ -83,12 +83,12 @@ public class GeTuiUtil {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static String pushToAndroid(List<String> clientIds, String title, String text, String payload) {
+	public static String pushToAndroid(List<String> clientIds, String title, String text, String payload,String titleContent) {
 		// 配置返回每个用户返回用户状态，可选
 		System.setProperty("gexin.rp.sdk.pushlist.needDetails", "true");
 		IGtPush push = new IGtPush(host, appKey, masterSecret);
 		// 通知透传模板
-		NotificationTemplate template = temp(title, text, payload);
+		NotificationTemplate template = temp(title, text, payload,titleContent);
 		ListMessage message = new ListMessage();
 		message.setData(template);
 		// 设置消息离线，并设置离线时间
@@ -115,7 +115,7 @@ public class GeTuiUtil {
 		}
 	}
 
-	public static NotificationTemplate temp(String title, String text, String payload) {
+	public static NotificationTemplate temp(String title, String text, String payload,String titleContent) {
 		NotificationTemplate template = new NotificationTemplate();
 		// 设置APPID与APPKEY
 		template.setAppId(appId);
@@ -135,7 +135,7 @@ public class GeTuiUtil {
 		template.setStyle(style);
 		// 透传消息设置，1为强制启动应用，客户端接收到消息后就会立即启动应用；2为等待应用启动
 		template.setTransmissionType(1);
-		template.setTransmissionContent("{'a':'安卓透传标题','b':'安卓透传内容','payload':'" + payload + "'}");
+		template.setTransmissionContent("{'title':"+titleContent+",'b':'安卓透传内容','payload':'" + payload + "'}");
 		return template;
 	}
 
