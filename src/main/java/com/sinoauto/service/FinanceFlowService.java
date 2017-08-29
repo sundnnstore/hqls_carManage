@@ -137,15 +137,14 @@ public class FinanceFlowService {
 		}
 		FlowDetailDto flowDto = new FlowDetailDto();
 		// TODO 先写死需改造
-		flowDto.setFlowStatus("交易成功");
 		if (hqlsFlow.getChangeType() == 1) {
-			flowDto.setFlowType("充值");
+			flowDto.setFlowType("充值成功");
 		} else if (hqlsFlow.getChangeType() == 2) {
-			flowDto.setFlowType("提现");
+			flowDto.setFlowType("提现成功");
 		} else if (hqlsFlow.getChangeType() == 3) {
-			flowDto.setFlowType("采购");
+			flowDto.setFlowType("采购交易成功");
 		} else if (hqlsFlow.getChangeType() == 4) {
-			flowDto.setFlowType("服务订单");
+			flowDto.setFlowType("服务订单交易成功");
 		} else {
 			flowDto.setFlowType("未知");
 		}
@@ -167,8 +166,8 @@ public class FinanceFlowService {
 		} else {
 			flowDto.setPayType("未知");
 		}
-		flowDto.setProductDesc("暂无说明");
-		flowDto.setTransactionNo(hqlsFlow.getTransactionNo());
+		flowDto.setPayDesc("暂无说明");
+		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
 	}
