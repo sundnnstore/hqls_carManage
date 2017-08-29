@@ -179,9 +179,16 @@ public class PurchaseOrderService {
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "购物车查询异常");
 	}
 	
+	/**
+	 * 	按订单状态查询不同门店的信息
+	 * 	@User liud
+	 * 	@Date 2017年8月29日下午2:36:29
+	 * 	@param storeId
+	 * 	@param orderStatus
+	 * 	@return
+	 */
 	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus) {
-		
-		return RestModel.success(purchaseOrderMapper.findOrder(storeId, orderStatus));
+		return RestModel.success( purchaseOrderMapper.findOrder(storeId, orderStatus));
 	}
 	
 	public ResponseEntity<RestModel<PurchaseOrderParamDto>> getOrderByOrderId(Integer orderId) {
