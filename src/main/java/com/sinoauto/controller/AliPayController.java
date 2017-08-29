@@ -1,7 +1,5 @@
 package com.sinoauto.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -67,10 +65,8 @@ public class AliPayController {
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-			return RestModel.success(URLDecoder.decode(response.getBody(), "UTF-8"));// 就是orderString 可以直接给客户端请求，无需再做处理。
+			return RestModel.success(response.getBody());// 就是orderString 可以直接给客户端请求，无需再做处理。
 		} catch (AlipayApiException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION);
