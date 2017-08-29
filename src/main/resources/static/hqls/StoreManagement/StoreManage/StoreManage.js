@@ -438,7 +438,7 @@ $("body").on('click','.sshow',function(){
     		var result = data.result;
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
-    		$("#mobile_show").html(result.stoMobile);
+    		$("#mobile_show").html(result.userMobile);
     		/*
 			 * $("#province").val(result.provinceId);
 			 * comboChlidren('province','city'); $("#city").val(result.cityId);
