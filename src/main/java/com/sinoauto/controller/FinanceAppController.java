@@ -1,7 +1,5 @@
 package com.sinoauto.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dto.FlowDetailDto;
-import com.sinoauto.dto.FlowDto;
+import com.sinoauto.dto.FlowListDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.FinanceFlowService;
 
@@ -92,7 +90,7 @@ public class FinanceAppController {
 	@GetMapping("flow")
 	@ApiOperation(value = "账单流水", notes = "fujl")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer") })
-	public ResponseEntity<RestModel<List<FlowDto>>> flow(Integer storeId) {
+	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId) {
 		return this.financeFlowService.findFlowByStoreId(storeId);
 	}
 	

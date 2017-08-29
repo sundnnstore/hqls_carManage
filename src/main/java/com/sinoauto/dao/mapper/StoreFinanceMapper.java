@@ -28,4 +28,6 @@ public interface StoreFinanceMapper {
 	public Page<StoreFinanceDto> findStoreFinanceistByContidion(@Param("storeId") Integer storeId, @Param("customerName") String customerName,
 			@Param("mobile") String mobile);
 
+	public HqlsStoreFinance findStoreFinance(@Param("storeId") Integer storeId);
+
 }
