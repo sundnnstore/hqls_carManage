@@ -15,19 +15,19 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
-            $('#partsTree').html('');
+            $('#addTree').html("");
             /**
              * 1 是节点等级
              * 1 是新增  2 编辑的
              */
             loadNodes(0,1);//加载节点树
         } else if (method == 'view') {
-        	$('#partsItemTree').html('');
+        	$('#editTree').html("");
             first_title = '查看';
             loadNodes(2,3);//加载节点树
         } else if (method == 'edit') {
         	//alert("编辑");
-        	$('#partsItemTree').html('');
+        	$('#viewTree').html("");
             first_title = '编辑';
             //传入一级菜单id
             //var level = $(this).parent().parent().val();//节点树等级
@@ -37,15 +37,21 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
              */
             loadNodes(2,2);//加载节点树
         }
-        first_title && layer.open({
-            type: 1,
-            title: first_title, // 标题
-            skin: 'layui-layer-lan', //弹框主题
-            shade: 0,
-            area: '450px', // 宽高
-            content: method == 'addCategories' ? $('#categoriesTreeBox') : $('#categoriesTreeView'), // 内容
-            btn: method == 'addCategories' ? null : '确定'
-        });
+//        first_title && layer.open({
+//            type: 1,
+//            title: first_title, // 标题
+//            skin: 'layui-layer-lan', //弹框主题
+//            shade: 0,
+//            area: '450px', // 宽高
+//            content: method == 'addCategories' ? $('#categoriesTreeBox') : $('#categoriesTreeView'), // 内容
+//            btn: method == 'addCategories' ? null : '确定',
+//            yes:function (){
+//            	alert("结束时候的按钮");
+//            },
+//            end:function(){
+//            	
+//            }
+//        });
     });
 
     /**
@@ -92,7 +98,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	console.log(data);
     	 // 构建商品分类节点树
         layui.tree({
-            elem:'#partsTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+            elem:'#addItemTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
             click: function(item) { //点击节点回调
                 first_title != '查看' && categoriesEdit(item);
             },
@@ -103,16 +109,17 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	//alert("编辑操作");
     	 console.log(data);
     	 layui.tree({
-             elem: '#partsItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+             elem: '#editItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
              click: function(item) { //点击节点回调
                  first_title != '编辑' && categoriesEdit(item);
              },
              nodes: data
          });
     }
+    
     function view(data){
       layui.tree({
-      elem: '#categoriesTreeView', //指定元素
+      elem: '#viewItemTree', //指定元素
       click: function(item) {
           first_title != '查看' && categoriesEdit(item);
       },
@@ -207,6 +214,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function categoriesEditCommon(selectNodeId,operFlag) {
+    	alert("你好");
         layer.open({
             type: 1,
             title: second_title == 'edit' ? '编辑' : '新增',
@@ -305,7 +313,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/levelinfo",
 			type : "get",
 			async : false,
-			data : {"partsTypeId":60,"selecDepth":3,"pageSize":pageSize,"pageIndex":pageIndex},
+			data : {"partsTypeId":60,"selecDepth":6,"pageSize":pageSize,"pageIndex":pageIndex},
 			success : function(data){
 				comboTable(data,pageIndex);
 			},
@@ -526,5 +534,18 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		});
     }
     
+    //查看
+    function afterViewClear(){
+    	
+    }
     
+    //新增
+    function afterAddClear(){
+    	
+    }
+    
+    //编辑
+    function afterEditClear(){
+    	
+    }
 });

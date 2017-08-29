@@ -1,5 +1,7 @@
 package com.sinoauto.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -53,8 +55,24 @@ public class CashBackService {
 		}
 
 		Page<CashBackDto> cashBackList = cashBackMapper.findCashBackList(returnType, operateUserName, createTimeStr);
-
 		return RestModel.success(cashBackList, (int) cashBackList.getTotal());
+	}
+
+	public ResponseEntity<RestModel<Double>> getCashBackByMoney(Double money) {
+		HqlsCashBack cashBack = this.cashBackMapper.getCashBackByMoney(money);
+		Double backMoney = 0.00;
+		if (null == cashBack) {
+			return RestModel.success(0.00);
+		}
+		new BigDecimal(backMoney).setScale(2, RoundingMode.UP);
+		if (1 == cashBack.getReturnType()) {
+			backMoney = money * cashBack.getDiscount();
+		} else if (2 == cashBack.getReturnType()) {
+			backMoney = cashBack.getReturnMoney();
+		} else {
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "不存在的返利类型!");
+		}
+		return RestModel.success(new BigDecimal(backMoney).setScale(2, RoundingMode.HALF_UP).doubleValue());
 	}
 
 }

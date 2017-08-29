@@ -24,4 +24,10 @@ public interface ShipAddressMapper {
 	@Select("select * from hqls_ship_address where ship_address_id = #{1}")
 	public HqlsShipAddress getShipAddressById(Integer shipAddressId);
 	
+	@Select("select * from hqls_ship_address where store_id = #{1} and is_default = 1")
+	public HqlsShipAddress getDefaultAddressByStoreId(Integer storeId);
+	
+	@Select("select * from hqls_ship_address where store_id = #{1} order by create_time desc limit 0,1")
+	public HqlsShipAddress getAddressByStoreId(Integer storeId);
+	
 }

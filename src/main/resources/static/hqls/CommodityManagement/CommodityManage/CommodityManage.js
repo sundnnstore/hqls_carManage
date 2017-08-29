@@ -16,18 +16,20 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	        $('.closeBtn').removeAttr('style');
 	        if (method == 'addCommodity') {
 	            title = '新增';
-	            afterAddPart();//点击新增按钮之后
 	            //显示配件品牌
 	        	partsBrand();
+	        	ButtonForbidden();
 	        } else if (method == 'view') {
 	            title = '查看';
 	            Detailview($(this).parent().find("#partsId").val());
-	            afterView();
+	            forbidden();//禁用元素
+	            ButtonForbidden();
 	        } else if (method == 'edit') {
 	            title = '编辑';
-	            afterEditPart();//清空之前数据
 				//编辑方法
 	            Detailview($(this).parent().find("#partsId").val());
+	        	$("#edit").attr("disabled","disabled");
+	        	ButtonForbidden();
 	        }
 	        method && layer.open({
 	            type: 1,
@@ -102,77 +104,20 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	               
 	                !titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 	            },
-	            btn2: function(index, layero) { //取消按钮
-	            	afterAddPart();
-	            	afterEditPart();
-	            	 afterView();
-	                layer.close(index);
-	                
-	            },
 	            end : function (){ //最后统一走的方法
+	            	if (method == 'addCommodity') {
+	    	            afterAddPart();
+	    	        } else if (method == 'view') {
+	    	        	afterView();
+	    	        } else if (method == 'edit') {
+	    	            afterEditPart();//清空之前数据
+	    	        }
 	            	$('#commodityBox').css("display","none");
-	            	
+	            	clearButtonForbidden();
 	            }
 	        });
 	    });
-	     
-<<<<<<< HEAD
-	     /* 表单检查
-	     * @returns
-	     */
-	    function formCheck(){
-	    	var titleInfo;
-	    	if (!$('#partsSpec').val()) {
-                titleInfo = '请输入规格参数，该项必填！';
-                layer.msg(titleInfo);
-                return;
-            } else if (!$('#partsModel').val()) {
-                titleInfo = '请输入型号参数，该项必填！';
-                layer.msg(titleInfo);
-                return;
-            } else if (!$('#partsBrandId').val()) {
-                titleInfo = '请输入品牌参数，该项必填！';
-                layer.msg(titleInfo);
-                return;
-            }else if(!$('#partsName').val()){
-            	titleInfo = '请输入配件名称参数，该项必填！';
-            	layer.msg(titleInfo);
-            	 return;
-            }else if(selectTreeId==-1){
-            	titleInfo = '请选择配件分类，该项必填!';
-            	layer.msg(titleInfo);
-            	 return;
-            }else if(!$('#partsType').val()){
-            	titleInfo = '请选择配件类型,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }else if(!$('#partsBrandId').val()){
-            	titleInfo = '请选择品牌，,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }else if(!$('#price').val()){
-            	titleInfo = '请输入价格,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }else if(!$('#discount').val()){
-            	titleInfo = '请输入折扣,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }else if(!$('#curPrice').val()){
-            	titleInfo = '请输入现价,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }else if(!$('#partsUnit').val()){
-            	titleInfo = '请输入单位,该项必填!';
-            	layer.msg(titleInfo);
-            	return;
-            }
 	    
-	    }
-	    
-	    
-=======
->>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 	    // 上下架事件及结果提示
 	    $('.layui-table tbody').on('click', '#isUse', function() {
 	        var othis = $(this);
@@ -466,7 +411,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
                <div class="siteUpload">
 	                <img id="commodityImgUrl${i}" src="${data.result.partsPicList[i].url}">
 	                <div class="layui-box layui-upload-button">
-                		<input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+                		<input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" disabled="disabled">
                 		<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
 					</div>
             		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
@@ -474,16 +419,16 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
             `;
 		}
     	//给一个上传用的图片
-//    	pics+=`
-//			<div class="siteUpload">
-//            	<img id="commodityImgUrl" src="">
-//            	<div class="layui-box layui-upload-button">
-//                <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-//                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
-//				</div>
-//            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-//			</div>
-//		`;
+    	pics+=`
+			<div class="siteUpload">
+            	<img id="commodityImgUrl" src="">
+            	<div class="layui-box layui-upload-button">
+                <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
+				</div>
+            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+			</div>
+		`;
     	
     	//动态属性追加到指定位置
     	$(".uploadImg").prepend(pics);
@@ -695,14 +640,15 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	//清空数据
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).val('');
+        	$(this).attr("value","");
         });
-        $("#form")[0].reset(); //清空表单数据
-        $("#cName").val(''); //清空树形菜单数据
+        $("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
         selectTreeId=0;//清空树形菜单id
         //清空图片
-        //$(".uploadImg").html('');
+        $(".uploadImg").not(".siteUpload:first").html('');
+        //将新增按钮变为可用
+        $("#addCommodity").removeAttr("disabled");
     }
     
     /**
@@ -710,16 +656,59 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
      * @returns
      */
     function afterEditPart(){
-    	 $("#form")[0].reset();
-    	 $(".uploadImg").html('');
+    	//清空数据
+        $("#commodityBox input,#commodityBox select").each(function(){
+        	$(this).removeAttr("disabled");
+        	$(this).attr("value","");
+        });
+        $(":input:radio").removeAttr("disabled");
+        $("#cName").val(""); //清空树形菜单数据
+        $("#modelContent a").removeClass('curSelectedNode'); //移除样式
+        selectTreeId=0;//清空树形菜单id
+        //清空图片
+        $(".uploadImg").not(".siteUpload:first").html("");
+        //将编辑按钮变为可用
+        $("#edit").removeAttr("disabled");
     }
     
     //点击查看按钮调用方法
     function afterView(){
-    	 $('#commodityBox input,#commodityBox select').each(function(elem) {
-             $(this).attr('disabled', 'disabled');
-         });
-    	 $('.closeBtn').css('display', 'none');
+    	$("#commodityBox input,#commodityBox select").each(function(){
+        	$(this).removeAttr("disabled");
+        	$(this).attr("value","");
+    	});
+    	$(":input:radio").removeAttr("disabled");
+    	$("#cName").val(""); //清空树形菜单数据
+        $("#modelContent a").removeClass('curSelectedNode'); //移除样式
+        $(".uploadImg").not(".siteUpload:first").html("");
+    	$('.closeBtn').css('display', 'none');
+    	//将查看按钮变为可用
+    	$("#view").removeAttr("disabled");
+    }
+    
+    //查看的时候禁用元素
+    function forbidden(){
+    	//禁用元素
+    	$("#commodityBox input,#commodityBox select").each(function(){
+        	$(this).attr("disabled","disabled");
+        });
+    	$("#view").attr("disabled","disabled");
+    }
+    //按钮禁用
+    function ButtonForbidden(){
+    	$("#view").attr("disabled","disabled");
+    	$("#edit").attr("disabled","disabled");
+    	$("#addCommodity").attr("disabled","disabled");
+    	$("#isUse").attr("disabled","disabled");
+    	$("#searchCommodity").attr("disabled","disabled");
+    }
+    //清除按钮禁用
+    function clearButtonForbidden(){
+    	$("#view").removeAttr("disabled");
+    	$("#edit").removeAttr("disabled");
+    	$("#addCommodity").removeAttr("disabled");
+    	$("#isUse").removeAttr("disabled");
+    	$("#searchCommodity").removeAttr("disabled");
     }
 });
 
@@ -729,12 +718,9 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
  * @returns
  */
 function change(obj){
-	//alert("文件上传");
 	var flag=$(".siteUpload").length;
 	if(flag==5){
-		//alert("最后一张图片上传");
 		upload(obj);
-		//alert("只能上传5张图片");
 		return;
 	}
 	//上传图片
@@ -743,7 +729,6 @@ function change(obj){
 } 
 
 function upload(obj){
-	console.log("上传的文件---->,",obj);
 	var form =$("#form");
 	var imgUrl = uploadImg(form,obj);
 	if(imgUrl!=""){ //如果上传文件成功
@@ -752,7 +737,6 @@ function upload(obj){
 		//禁用上传按钮
 		$(obj).attr("disabled", "disabled");
 	}else{
-		//alert("图片上传返回路径:--->",imgUrl);
 	}
 	
 }
@@ -777,7 +761,6 @@ function appendImg(obj){
 	}else{
 		$(".siteUpload:last").show();
 	}
-	//$(".siteUpload:last").find(".closeBtn").css('display', 'none');
 }
 /**
  * 删除图片
