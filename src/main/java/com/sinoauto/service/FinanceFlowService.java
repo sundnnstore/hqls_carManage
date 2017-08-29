@@ -56,7 +56,7 @@ public class FinanceFlowService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank) {
+	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank,String openBank) {
 
 		try {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
@@ -76,6 +76,7 @@ public class FinanceFlowService {
 			flow.setBank(bank);
 			flow.setOpenBank("");
 			flow.setIsDelete(0);
+			flow.setOpenBank(openBank);
 			return RestModel.success(financeFlowMapper.insert(flow));
 		} catch (Exception e) {
 			System.out.println(e);
