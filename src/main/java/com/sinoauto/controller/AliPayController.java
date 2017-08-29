@@ -96,8 +96,7 @@ public class AliPayController {
 		// boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
 		try {
 			boolean flag1 = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
-			boolean flag2 = AlipaySignature.rsaCheckV2(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
-			System.out.println("验证结果1:" + flag1 + " 验证结果2:" + flag2);
+			System.out.println("验证结果1:" + flag1);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
