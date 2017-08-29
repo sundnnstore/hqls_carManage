@@ -58,7 +58,7 @@ public class AliPayController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String", required = false),
 			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "Double", required = true),
-			@ApiImplicitParam(paramType = "query", name = "payType", value = "金额变动类型：1充值；2提现；3采购；4汽车维护服务", dataType = "Integer", required = true) })
+			@ApiImplicitParam(paramType = "query", name = "changeType", value = "金额变动类型：1充值；2提现；3采购；4汽车维护服务", dataType = "Integer", required = true) })
 	public ResponseEntity<RestModel<String>> generatePayOrder(Integer storeId, String orderNo, Double money, Integer changeType) {
 		// 实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", "UTF-8",
