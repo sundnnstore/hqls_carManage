@@ -9,8 +9,12 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class FlowDetailDto {
-	@ApiModelProperty("流水类型")
-	private String flowType;
+	
+	@ApiModelProperty("流水类型（1充值；2提现；3采购；4汽车维护服务）")
+	private Integer flowType;
+	
+	@ApiModelProperty("流水类型描述")
+	private String flowTypeDesc;
 
 	@ApiModelProperty("金额")
 	private String money;
@@ -26,14 +30,27 @@ public class FlowDetailDto {
 
 	@ApiModelProperty("支付订单号")
 	private String payNo;
+	
+	@ApiModelProperty("流水状态（1-成功，2-失败）")
+	private Integer flowStatus;
 
-	public String getFlowType() {
+	public Integer getFlowType() {
 		return flowType;
 	}
 
-	public void setFlowType(String flowType) {
+	public void setFlowType(Integer flowType) {
 		if (flowType != null) {
 			this.flowType = flowType;
+		}
+	}
+
+	public String getFlowTypeDesc() {
+		return flowTypeDesc;
+	}
+
+	public void setFlowTypeDesc(String flowTypeDesc) {
+		if (flowTypeDesc != null) {
+			this.flowTypeDesc = flowTypeDesc;
 		}
 	}
 
@@ -84,6 +101,16 @@ public class FlowDetailDto {
 	public void setPayNo(String payNo) {
 		if (payNo != null) {
 			this.payNo = payNo;
+		}
+	}
+
+	public Integer getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(Integer flowStatus) {
+		if (flowStatus != null) {
+			this.flowStatus = flowStatus;
 		}
 	}
 

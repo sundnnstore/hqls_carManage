@@ -56,7 +56,7 @@ public class FinanceFlowService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank) {
+	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank,String openBank) {
 
 		try {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
@@ -76,6 +76,7 @@ public class FinanceFlowService {
 			flow.setBank(bank);
 			flow.setOpenBank("");
 			flow.setIsDelete(0);
+			flow.setOpenBank(openBank);
 			return RestModel.success(financeFlowMapper.insert(flow));
 		} catch (Exception e) {
 			System.out.println(e);
@@ -136,17 +137,19 @@ public class FinanceFlowService {
 			return RestModel.success(null);
 		}
 		FlowDetailDto flowDto = new FlowDetailDto();
+		flowDto.setFlowStatus(hqlsFlow.getFlowStatus());
+		flowDto.setFlowType(hqlsFlow.getChangeType());
 		// TODO 先写死需改造
 		if (hqlsFlow.getChangeType() == 1) {
-			flowDto.setFlowType("充值成功");
+			flowDto.setFlowTypeDesc("充值成功");
 		} else if (hqlsFlow.getChangeType() == 2) {
-			flowDto.setFlowType("提现成功");
+			flowDto.setFlowTypeDesc("提现成功");
 		} else if (hqlsFlow.getChangeType() == 3) {
-			flowDto.setFlowType("采购交易成功");
+			flowDto.setFlowTypeDesc("采购交易成功");
 		} else if (hqlsFlow.getChangeType() == 4) {
-			flowDto.setFlowType("服务订单交易成功");
+			flowDto.setFlowTypeDesc("服务订单交易成功");
 		} else {
-			flowDto.setFlowType("未知");
+			flowDto.setFlowTypeDesc("未知");
 		}
 		// 收入
 		if (hqlsFlow.getChargeType() == 1) {

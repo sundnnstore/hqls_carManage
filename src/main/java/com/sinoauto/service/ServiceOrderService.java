@@ -200,7 +200,7 @@ public class ServiceOrderService {
 			 */
 			String title = "订单提醒";
 			List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
-			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order");
+			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order","服务订单");
 			return RestModel.success("success");
 		} catch (Exception e) {
 			e.printStackTrace();
