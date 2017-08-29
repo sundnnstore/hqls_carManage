@@ -114,4 +114,13 @@ public class FinanceAppController {
 		return this.financeFlowService.insertFlow(storeId, changeMoney, accountName, account, bank, openBank);
 	}
 
+	@ApiOperation(value = "汇款审核", notes = "fujl")
+	@PostMapping("audit")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "汇款金额", dataType = "Double"),
+			@ApiImplicitParam(paramType = "query", name = "transactionNo", value = "汇款流水单号", dataType = "String") })
+	public ResponseEntity<RestModel<Integer>> audit(Integer storeId, Double changeMoney, String transactionNo) {
+		return this.financeFlowService.insertRemitFlow(storeId, changeMoney, transactionNo);
+	}
+
 }
