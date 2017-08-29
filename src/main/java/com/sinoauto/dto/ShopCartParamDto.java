@@ -14,6 +14,8 @@ public class ShopCartParamDto {
 	private Integer partsId;
 	@ApiModelProperty("购买数量")
 	private Integer num;
+	@ApiModelProperty("购买价格")
+	private Double buyPrice;
 
 	public Integer getPartsId() {
 		return partsId;
@@ -32,6 +34,16 @@ public class ShopCartParamDto {
 	public void setNum(Integer num) {
 		if (num != null) {
 			this.num = num;
+		}
+	}
+
+	public Double getBuyPrice() {
+		return buyPrice;
+	}
+
+	public void setBuyPrice(Double buyPrice) {
+		if (buyPrice != null) {
+			this.buyPrice = buyPrice;
 		}
 	}
 
