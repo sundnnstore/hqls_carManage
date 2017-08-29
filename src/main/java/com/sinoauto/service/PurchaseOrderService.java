@@ -35,6 +35,7 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
+import com.sinoauto.dto.SettlementOperationParamDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -121,34 +122,61 @@ public class PurchaseOrderService {
 		return RestModel.success(shipAddressMapper.findAll());
 	}
 	
+	/**
+	 * 生成结算订单
+	 * @param orderParamDto
+	 */
+	public Integer generatorPurchaseOrder(SettlementOperationParamDto orderParamDto) {
+		// 获取商品列表
+		List<ShopCartParamDto> parts = orderParamDto.getPartsList();
+		// 生成订单
+		HqlsPurchaseOrder order = new HqlsPurchaseOrder();
+		order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
+		order.setDiscountFee(0.00);
+		order.setOrderStatus(1);
+		// 获取默认收货地址
+		HqlsShipAddress address = shipAddressMapper.getDefaultAddressByStoreId(orderParamDto.getStoreId());
+		if (address == null) {
+			address = shipAddressMapper.getAddressByStoreId(orderParamDto.getStoreId());
+		}
+		order.setShipAddressId(address.getShipAddressId());
+		order.setStoreId(orderParamDto.getStoreId());
+		order.setOtherFee(orderParamDto.getOtherFee());
+		// 计算订单总价
+		BigDecimal result = new BigDecimal(0.00);
+		for (ShopCartParamDto p: parts) {
+			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
+			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
+			result = result.add(eachOrderPrice);
+		}
+		order.setTotalFee(result.setScale(2, RoundingMode.HALF_UP).doubleValue());
+		purchaseOrderMapper.insert(order);
+		
+		// 生成订单详情表
+		for (ShopCartParamDto partDesc: parts) {
+			HqlsOrderDetail detail = new HqlsOrderDetail();
+			detail.setBuyCount(partDesc.getNum());
+			detail.setBuyPrice(partDesc.getBuyPrice());
+			detail.setPartsId(partDesc.getPartsId());
+			detail.setDiscountPrice(0.00);
+			detail.setPurchaseOrderId(order.getPurchaseOrderId());
+			orderDetailMapper.insert(detail);
+		}
+		return order.getPurchaseOrderId();
+	}
+	
+	/**
+	 * 结算操作
+	 * @return
+	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> generatorPurchaseOrder(PurchaseOrderParamDto orderParamDto) {
+	public ResponseEntity<RestModel<PurchaseOrderParamDto>> settlementOperation(SettlementOperationParamDto param) {
 		try {
-			// 获取商品列表
-			List<PartsDesListDto> parts = orderParamDto.getPartsList();
-			// 生成订单
-			HqlsPurchaseOrder order = new HqlsPurchaseOrder();
-			order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
-			order.setDiscountFee(0.00);
-			order.setOrderStatus(1);
-			order.setShipAddressId(orderParamDto.getShipAddressId());
-			order.setStoreId(orderParamDto.getStoreId());
-			order.setOtherFee(orderParamDto.getOtherFee());
-			order.setTotalFee(calculationAmount(parts));
-			order.setRemark(orderParamDto.getRemark());
-			purchaseOrderMapper.insert(order);
-			
-			// 生成订单详情表
-			for (PartsDesListDto partDesc: parts) {
-				HqlsOrderDetail detail = new HqlsOrderDetail();
-				detail.setBuyCount(partDesc.getPurchaseNum());
-				detail.setBuyPrice(partDesc.getCurPrice());
-				detail.setPartsId(partDesc.getPartsId());
-				detail.setDiscountPrice(0.00);
-				detail.setPurchaseOrderId(order.getPurchaseOrderId());
-				orderDetailMapper.insert(detail);
-			}
-			return RestModel.success("创建订单成功！");
+			// 生成待支付订单
+			Integer orderId = generatorPurchaseOrder(param);
+			PurchaseOrderParamDto order = partsMapper.getSettlementInfo(orderId);
+			order.setTotalFee(calculationAmount(order.getPartsList()) + order.getOtherFee());
+			return RestModel.success(order);
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
 			e.printStackTrace();

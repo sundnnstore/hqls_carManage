@@ -14,6 +14,8 @@ public class ShopCartInfoDto {
 
 	@ApiModelProperty("商品列表")
 	private List<PartsDesListDto> partsDesList;
+	@ApiModelProperty("门店Id")
+	private Integer storeId;
 	@ApiModelProperty("总价")
 	private Double totalAmount;
 
@@ -34,6 +36,16 @@ public class ShopCartInfoDto {
 	public void setTotalAmount(Double totalAmount) {
 		if (totalAmount != null) {
 			this.totalAmount = totalAmount;
+		}
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		if (storeId != null) {
+			this.storeId = storeId;
 		}
 	}
 
