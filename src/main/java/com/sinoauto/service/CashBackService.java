@@ -72,7 +72,7 @@ public class CashBackService {
 		} else {
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "不存在的返利类型!");
 		}
-		return RestModel.success(new BigDecimal(backMoney).setScale(2, RoundingMode.UP).doubleValue());
+		return RestModel.success(new BigDecimal(backMoney).setScale(2, RoundingMode.HALF_UP).doubleValue());
 	}
 
 }
