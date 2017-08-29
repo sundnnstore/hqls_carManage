@@ -49,8 +49,9 @@ public class AliPayController {
 
 	@ApiOperation(value = "生成支付订单", notes = "fujl")
 	@PostMapping("/alipay/generateorder")
-	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "String") })
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String", required = false),
+			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "payType", value = "1充值；2提现；3采购；4汽车维护服务", dataType = "Integer") })
 	public ResponseEntity<RestModel<String>> generatePayOrder(String orderNo, String money, Integer payType) {
 		// 实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", "UTF-8",
