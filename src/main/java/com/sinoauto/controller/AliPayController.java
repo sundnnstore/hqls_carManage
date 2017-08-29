@@ -32,7 +32,7 @@ import io.swagger.annotations.ApiOperation;
  * @version 1.0
  * @date 2017-08-28 16:07:24
  */
-@Api(tags = "支付宝服务端接口")
+@Api(tags = "支付宝服务端SDK")
 @RestController
 public class AliPayController {
 
@@ -95,8 +95,9 @@ public class AliPayController {
 		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
 		// boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
 		try {
-			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
-			System.out.println("验证结果:" + flag);
+			String key ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmWGgE7DqYASLZWLMqto+fBxeZYrZmTm7Rz5L+nhhwuYc0RpajZY69e3gyLuvjbfIsQQYt6SfHi66gs1e/n837uO8C454PAznayHyGoZrfGeM/vRjXSXC8mA3IbEk4F/3z4tXAohfS+sz6GbDTcrq8woz7vKtjgFCDJaxgl6vki69thzCmr8btE3vMNgCLVAJ7NKrTtBxr1YcGz79gyPlbYxsTlLGcxX9R9BrxqtCr1sHYD4+J9GZg+cGumk4TOlgZhxo/ZUZ0g0xLDAN3lUFqjuEMbYDJw/rckugTEmpUxlfmXcmqEcg4PQJvsSuVhI7ymkFrJA1h1RfRrg3k2yxRQIDAQAB";
+			boolean flag1 = AlipaySignature.rsaCheckV1(params, key, "UTF-8", "RSA2");
+			System.out.println("验证结果1:" + flag1);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}

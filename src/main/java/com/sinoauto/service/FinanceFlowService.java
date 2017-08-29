@@ -15,9 +15,12 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
+import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
+import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowDto;
+import com.sinoauto.dto.FlowListDto;
 import com.sinoauto.dto.RechargeDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
@@ -27,6 +30,9 @@ public class FinanceFlowService {
 
 	@Autowired
 	private FinanceFlowMapper financeFlowMapper;
+
+	@Autowired
+	private StoreFinanceMapper storeFinanceMapper;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
 			String mobile, Date createTime, Integer flowStatus, Integer pageIndex, Integer pageSize) {
@@ -84,7 +90,7 @@ public class FinanceFlowService {
 		return String.format("TX%d%s", storeId, time);
 	}
 
-	public ResponseEntity<RestModel<List<FlowDto>>> findFlowByStoreId(Integer storeId) {
+	public ResponseEntity<RestModel<FlowListDto>> findFlowByStoreId(Integer storeId) {
 		List<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
 		List<FlowDto> flowDtoList = new ArrayList<>();
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -104,19 +110,24 @@ public class FinanceFlowService {
 			}
 
 			if (orginal.getChangeType() == 1) {
-				flowDto.setContent("来自 充值");
+				flowDto.setContent("充值");
 			} else if (orginal.getChangeType() == 2) {
-				flowDto.setContent("用于 提现服务");
+				flowDto.setContent("提现服务");
 			} else if (orginal.getChangeType() == 3) {
-				flowDto.setContent("用于 采购");
+				flowDto.setContent("采购");
 			} else if (orginal.getChangeType() == 4) {
-				flowDto.setContent("来自 服务订单");
+				flowDto.setContent("服务订单");
 			} else {
 				flowDto.setContent("未知流水");
 			}
 			flowDtoList.add(flowDto);
 		}
-		return RestModel.success(flowDtoList, flowDtoList.size());
+		FlowListDto flowListDto = new FlowListDto();
+		flowListDto.setFlowList(flowDtoList);
+		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
+		flowListDto.setBalance(storeFinance.getBalance());
+		flowListDto.setCashAble(storeFinance.getCashAble());
+		return RestModel.success(flowListDto);
 	}
 
 	public ResponseEntity<RestModel<FlowDetailDto>> findFlowById(Integer financeFlowId) {
@@ -125,18 +136,19 @@ public class FinanceFlowService {
 			return RestModel.success(null);
 		}
 		FlowDetailDto flowDto = new FlowDetailDto();
+		flowDto.setFlowStatus(hqlsFlow.getFlowStatus());
+		flowDto.setFlowType(hqlsFlow.getChangeType());
 		// TODO 先写死需改造
-		flowDto.setFlowStatus("交易成功");
 		if (hqlsFlow.getChangeType() == 1) {
-			flowDto.setFlowType("充值");
+			flowDto.setFlowTypeDesc("充值成功");
 		} else if (hqlsFlow.getChangeType() == 2) {
-			flowDto.setFlowType("提现");
+			flowDto.setFlowTypeDesc("提现成功");
 		} else if (hqlsFlow.getChangeType() == 3) {
-			flowDto.setFlowType("采购");
+			flowDto.setFlowTypeDesc("采购交易成功");
 		} else if (hqlsFlow.getChangeType() == 4) {
-			flowDto.setFlowType("服务订单");
+			flowDto.setFlowTypeDesc("服务订单交易成功");
 		} else {
-			flowDto.setFlowType("未知");
+			flowDto.setFlowTypeDesc("未知");
 		}
 		// 收入
 		if (hqlsFlow.getChargeType() == 1) {
@@ -156,8 +168,8 @@ public class FinanceFlowService {
 		} else {
 			flowDto.setPayType("未知");
 		}
-		flowDto.setProductDesc("暂无说明");
-		flowDto.setTransactionNo(hqlsFlow.getTransactionNo());
+		flowDto.setPayDesc("暂无说明");
+		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
 	}

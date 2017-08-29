@@ -73,5 +73,12 @@
 		</if>
 	</select>
 	
-	
+	<select id="findStoreFinance" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsStoreFinance">
+		SELECT 
+			balance,cash_able 
+		FROM
+			hqls_store_finance
+	    WHERE
+			store_id = #{storeId} limit 1
+	</select>
 </mapper>

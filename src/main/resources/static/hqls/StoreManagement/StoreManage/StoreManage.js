@@ -438,14 +438,13 @@ $("body").on('click','.sshow',function(){
     		var result = data.result;
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
-    		$("#mobile_show").html(result.stoMobile);
+    		$("#mobile_show").html(result.userMobile);
     		/*
 			 * $("#province").val(result.provinceId);
 			 * comboChlidren('province','city'); $("#city").val(result.cityId);
 			 * comboChlidren('city','county');
 			 * $("#county").val(result.countyId);
 			 */
-    		console.log(result);
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
     		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);
