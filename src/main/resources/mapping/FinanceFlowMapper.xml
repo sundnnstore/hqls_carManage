@@ -119,7 +119,7 @@
 	
 	<select id="findFlow" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
 		SELECT 
-			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time,flow_status 
 		FROM
 			hqls_finance_flow
 	    WHERE
