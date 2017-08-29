@@ -173,7 +173,7 @@ public class StoreService {
 		user.setMobile(mobile);
 		user.setUserName(userName);
 		user.setPassword(password);
-		user.setIsUseable(storeInfoDto.getIsUseable());
+		user.setIsUseable(true);
 		user.setCreateTime(new Date());
 		user.setDmlTime(new Date());
 		HqlsStore store = new HqlsStore();
@@ -265,8 +265,8 @@ public class StoreService {
 	 * @param storeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<StoreInfoDto>> getStoreByStoreId(Integer storeId) {
-		StoreInfoDto store = storeMapper.getStoreInfoByStoreId(storeId);
+	public ResponseEntity<RestModel<StoreDto>> getStoreByStoreId(Integer storeId) {
+		StoreDto store = storeMapper.getStoreInfoByStoreId(storeId);
 		return RestModel.success(store);
 
 	}

@@ -82,11 +82,9 @@ function uploadImg(formObj,imgObj){
  * 删除图片
  */
 function delFile(imgUrl){
-	alert("进入删除图片的方法imgUrl:--->"+imgUrl);
 	$.ajax({
 		type : "DELETE",//"OPTIONS"可以删除,
 		async : false,
-		//contentType:"application/json;charset=utf-8",
 		data:imgUrl,
 		url : fileurl+"/?url="+imgUrl,
 		success : function(data) {
