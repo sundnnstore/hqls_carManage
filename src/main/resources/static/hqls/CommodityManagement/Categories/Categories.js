@@ -15,21 +15,27 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
-            $('#storeTree').html('');
+            $('#partsTree').html('');
             /**
              * 1 是节点等级
-             * 0 是新增  1 编辑的
+             * 1 是新增  2 编辑的
              */
-            loadNodes(0,0);//加载节点树
+            loadNodes(0,1);//加载节点树
         } else if (method == 'view') {
-        	$('#storeItemTree').html('');
+        	$('#partsItemTree').html('');
             first_title = '查看';
+            loadNodes(2,3);//加载节点树
         } else if (method == 'edit') {
-        	$('#storeItemTree').html('');
+        	//alert("编辑");
+        	$('#partsItemTree').html('');
             first_title = '编辑';
             //传入一级菜单id
             //var level = $(this).parent().parent().val();//节点树等级
-            loadNodes(1,1);//加载节点树
+            /**
+             * 第一个  2 等级
+             * 第二个  2 操作方式
+             */
+            loadNodes(2,2);//加载节点树
         }
         first_title && layer.open({
             type: 1,
@@ -61,8 +67,9 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 						break;
 					case 2:
 						editTree(res);
-					break;
-						case 3:
+						break;
+					case 3:
+						view(res);
 						//查看
 						break;
 				default:
@@ -93,22 +100,26 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         });
     }
     function editTree(data){
-    	console.log(data);
+    	//alert("编辑操作");
+    	 console.log(data);
     	 layui.tree({
              elem: '#partsItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
              click: function(item) { //点击节点回调
-                 first_title != '查看' && categoriesEdit(item);
+                 first_title != '编辑' && categoriesEdit(item);
              },
              nodes: data
          });
     }
-//    layui.tree({
-//        elem: '#categoriesTreeView', //指定元素
-//        click: function(item) {
-//            first_title != '查看' && categoriesEdit(item);
-//        },
-//        nodes: createTree()
-//    });
+    function view(data){
+      layui.tree({
+      elem: '#categoriesTreeView', //指定元素
+      click: function(item) {
+          first_title != '查看' && categoriesEdit(item);
+      },
+      nodes: data
+      });
+    }
+
    
     var createTree = function(node, start) {
         node = node || function() {
@@ -294,7 +305,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/levelinfo",
 			type : "get",
 			async : false,
-			data : {"partsTypeId":$("#partsCodeQuery").val(),"selecCount":3,"pageSize":pageSize,"pageIndex":pageIndex},
+			data : {"partsTypeId":60,"selecDepth":3,"pageSize":pageSize,"pageIndex":pageIndex},
 			success : function(data){
 				comboTable(data,pageIndex);
 			},
@@ -381,7 +392,29 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		}
     }
     
+    /**
+     * 组装显示等级的数据
+     * @param res
+     * @returns
+     */
     function displayPartsTypeInfo(res){
+    	var tr;
+    	if(res!=null){
+    		var len = res.result.length;
+    		for (var i = 0; i < len; i++) { 
+    			var levelInfo = res.result[i].length;
+    			tr += `<tr>`;
+				for (var j = 0; j < levelInfo; j++) {
+					tr+=` <td>${res.result[i][j].name}<input type="hidden" value=${res.result[i][j].id}></td>`;
+				}
+				tr+=`<td class="operation">
+		                  <button id="view" data-method="view" class="layui-btn">查看</button>
+		                  <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
+		       </td></tr>`;
+			$("#partsTypeInfo").html(tr);
+    		}
+    		
+    	}
     	
     }
     
@@ -396,7 +429,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addChildren(selectNodeId,typeName,index){
     	//把他的id当做 pid
     	//新增一个配件信息	
-    	alert("selectNodeId："+selectNodeId+"\ntypeName"+typeName);
     	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
     	data = JSON.stringify(data);
     	$.ajax({
@@ -484,7 +516,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 					layer.msg("存在子集不可删除");
 					layer.close(index);
 				}else{
-					alert("检查selectNodeId："+selectNodeId);
 					del(selectNodeId);
 				}
 				//loadNodes(0,0);

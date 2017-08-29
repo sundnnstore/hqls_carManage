@@ -12,7 +12,7 @@
 	<select id="getPartsDetail" resultMap="detail" parameterType="Integer">
 		select parts.parts_id,parts.parts_brand_id, parts.parts_name,parts.parts_code, parts.parts_model, parts.parts_unit, parts.parts_spec,
 				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,parts.is_usable,
-				brand.parts_brand_name,pt.pid,pt.pname as pName,pt.parts_type
+				brand.parts_brand_name,pt.parts_type_id,pt.type_name,pt.parts_type
 		from hqls_parts as parts, hqls_parts_brand as brand,hqls_parts_type pt
 		where parts.parts_brand_id = brand.parts_brand_id and parts.`parts_type_id`=pt.parts_type_id
 		and parts.parts_id = #{partsId} <!-- and parts.is_usable = 1 -->
@@ -107,7 +107,7 @@
 			pa.parts_id,pa.parts_name,pa.parts_code,
 			pa.parts_model,pa.parts_unit,pa.parts_spec,
 			pa.parts_factory,pa.origin,pa.shelf_life,
-			pa.price,pa.discount,pa.cur_price,
+			pa.price,pa.discount,pa.cur_price,pa.is_usable,
 			hpt.type_name as p_name,hpt.pid,hpt.parts_type as parts_top_type_id,
 			case 
 				when hpt.parts_type=1 then '易损件' 

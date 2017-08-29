@@ -25,15 +25,16 @@
 	<div class="layui-inline">
 		<label class="layui-form-label mylayui-form-label">时间</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})" id="createTime">
 		</div>
 	</div>
 	<div class="layui-inline">
 		<label class="layui-form-label mylayui-form-label">状态</label>
 		<div class="layui-input-block mylayui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">成功</option>
-
+			<select name="interest" lay-filter="aihao" class="layui-select" id="flow_status">
+				<option value="0">全部</option>
+				<option value="1">成功</option>
+				<option value="2">失败</option>
 			</select>
 		</div>
 	</div>

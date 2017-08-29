@@ -36,6 +36,9 @@ public class StoreDto {
 	private String cityName;
 	@ApiModelProperty("区县名称")
 	private String countyName;
+	@ApiModelProperty("门店联系人")
+	private String userName;
+	
 	
 
 	public String getUserMobile() {
@@ -165,6 +168,14 @@ public class StoreDto {
 
 	public void setCountyName(String countyName) {
 		this.countyName = countyName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	

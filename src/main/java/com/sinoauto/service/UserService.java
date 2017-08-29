@@ -24,9 +24,11 @@ import com.sinoauto.dao.bean.HqlsUserRole;
 import com.sinoauto.dao.mapper.AuthorityMapper;
 import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.RoleMapper;
+import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserRoleMapper;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.UserDto;
 import com.sinoauto.dto.UserLoginDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -49,6 +51,8 @@ public class UserService {
 	private RoleMapper roleMapper;
 	@Autowired
 	private ClientInfoMapper clientInfoMapper;
+	@Autowired
+	private StoreMapper storeMapper;
 
 	/**
 	 * 登录
@@ -80,14 +84,15 @@ public class UserService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord,String clientId) {
+	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord, String clientId) {
 		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
 		if (rest.getErrcode() != 0) {// 解析token失败
 			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		Integer storeId = userMapper.checkUser(userId);
-		if (storeId == null) {
+		StoreDto store = storeMapper.getStoreInfoByStoreId(storeId);
+		if (storeId == null || store == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
 		}
 		UserLoginDto ul = new UserLoginDto();
@@ -95,7 +100,8 @@ public class UserService {
 		ul.setUserName("");
 		ul.setToken(rest.getResult().getToken());
 		ul.setStoreId(storeId);
-		if(!StringUtils.isEmpty(clientId)){
+		ul.setStore(store);
+		if (!StringUtils.isEmpty(clientId)) {
 			HqlsUser user = userMapper.getUserByGloabUserId(userId);
 			clientInfoMapper.deleteClientInfoByCId(clientId);
 			clientInfoMapper.insertClientInfo(clientId, user.getUserId());
@@ -315,11 +321,11 @@ public class UserService {
 		}
 		return RestModel.success(true);
 	}
-	
+
 	public ResponseEntity<RestModel<Boolean>> checkMobile(String mobile) {
 		// 获取当前用户
 		HqlsUser user = userMapper.getUserByMobile(mobile);
-		if(user == null){
+		if (user == null) {
 			return RestModel.success(false);
 		}
 		Integer count = userMapper.checkUser(user.getGlobalUserId());

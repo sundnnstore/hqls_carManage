@@ -168,6 +168,7 @@
 }
 
 .uploadImg .siteUpload .closeBtn {
+    display: none;
     width: 20px;
     height: 20px;
     line-height: 20px;
@@ -178,7 +179,6 @@
     right: 2px;
     z-index: 10;
     cursor: pointer;
-    display: none;
 }
 
 .uploadImg .siteUpload .closeBtn i {
@@ -207,7 +207,7 @@
 }
 
 .layui-layer-content {
-    max-height: 609px;
+    max-height: 610px;
 }
 
 .layui-layer-btn {

@@ -38,6 +38,9 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			$("#userName").val("");
 			$("#mobile").val("");
 			$("#address").val("");
+			$("#province").val("");
+    		$("#city").val("");
+    		$("#county").val("");
 			
             layer.open({
                 type: 1,
@@ -103,6 +106,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         nodes: getNodes()
     });
     // 弹框：门店详细信息
+    var flag=0; //判断是否第一次提交或确定
     function store(pid,temp) {
         layer.open({
             type: 1,
@@ -113,8 +117,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             content: temp == 'view' ? $('#storeInfoView') : $('#storeInfoEdit'),
             btn: temp == 'view' ? '确定' : '提交',
             btnAlign: 'c', // 按钮居中
-            yes: function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-                // console.log(layero);
+            yes: function(index, layero) {// 当前层索引参数（index）、当前层的DOM对象（layero）
+            	if(flag ==0 ){            		
             		if(temp == 'addStore'){// 添加门店
             			addStore(pid,index);
             		}else if(temp == 'edit'){
@@ -122,8 +126,12 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             		}else if(temp == 'view'){
             			layer.close(index);
             		}
-                //layer.close(index); // 如果设定了yes回调，需进行手工关闭
-                inputReset(); // 清空表单
+            		inputReset();// 清空表单
+            		flag = 1;
+            	}
+            },
+            end: function(){
+            	flag=0;
             }
         });
     }
@@ -395,8 +403,8 @@ $("body").on('click','.sedit',function(){
     		$("#storeName").val(result.storeName);
     		$("#userName").val(result.userName);
     		$("#userName").attr("name",result.userName);
-    		$("#mobile").val(result.mobile);
-    		$("#mobile").attr("name",result.mobile);
+    		$("#mobile").val(result.userMobile);
+    		$("#mobile").attr("name",result.userMobile);
     		$("#province").val(result.provinceId);
     		comboChlidren('province','city');
     		$("#city").val(result.cityId);
@@ -435,14 +443,13 @@ $("body").on('click','.sshow',function(){
     		var result = data.result;
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
-    		$("#mobile_show").html(result.mobile);
+    		$("#mobile_show").html(result.userMobile);
     		/*
 			 * $("#province").val(result.provinceId);
 			 * comboChlidren('province','city'); $("#city").val(result.cityId);
 			 * comboChlidren('city','county');
 			 * $("#county").val(result.countyId);
 			 */
-    		console.log(result);
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
     		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);

@@ -63,7 +63,7 @@
 		WHERE
 			sf.store_id = u.store_id
 		<if test="storeId != null">
-			AND f.store_id = #{storeId}
+			AND sf.store_id = #{storeId}
 		</if>
 		<if test="customerName != null and customerName != ''">
 			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')
@@ -73,5 +73,12 @@
 		</if>
 	</select>
 	
-	
+	<select id="findStoreFinance" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsStoreFinance">
+		SELECT 
+			balance,cash_able 
+		FROM
+			hqls_store_finance
+	    WHERE
+			store_id = #{storeId} limit 1
+	</select>
 </mapper>
