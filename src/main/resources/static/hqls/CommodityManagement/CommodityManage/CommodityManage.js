@@ -116,6 +116,63 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	        });
 	    });
 	     
+<<<<<<< HEAD
+	     /* 表单检查
+	     * @returns
+	     */
+	    function formCheck(){
+	    	var titleInfo;
+	    	if (!$('#partsSpec').val()) {
+                titleInfo = '请输入规格参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            } else if (!$('#partsModel').val()) {
+                titleInfo = '请输入型号参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            } else if (!$('#partsBrandId').val()) {
+                titleInfo = '请输入品牌参数，该项必填！';
+                layer.msg(titleInfo);
+                return;
+            }else if(!$('#partsName').val()){
+            	titleInfo = '请输入配件名称参数，该项必填！';
+            	layer.msg(titleInfo);
+            	 return;
+            }else if(selectTreeId==-1){
+            	titleInfo = '请选择配件分类，该项必填!';
+            	layer.msg(titleInfo);
+            	 return;
+            }else if(!$('#partsType').val()){
+            	titleInfo = '请选择配件类型,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }else if(!$('#partsBrandId').val()){
+            	titleInfo = '请选择品牌，,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }else if(!$('#price').val()){
+            	titleInfo = '请输入价格,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }else if(!$('#discount').val()){
+            	titleInfo = '请输入折扣,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }else if(!$('#curPrice').val()){
+            	titleInfo = '请输入现价,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }else if(!$('#partsUnit').val()){
+            	titleInfo = '请输入单位,该项必填!';
+            	layer.msg(titleInfo);
+            	return;
+            }
+	    
+	    }
+	    
+	    
+=======
+>>>>>>> branch 'develop' of http://git.sinoauto.com/service/hqls-service.git
 	    // 上下架事件及结果提示
 	    $('.layui-table tbody').on('click', '#isUse', function() {
 	        var othis = $(this);

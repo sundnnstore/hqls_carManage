@@ -108,6 +108,15 @@
 			is_delete = 0 and store_id = #{storeId}
 	</select>
 	
+	<select id="findStoreFinance" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
+		SELECT 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 
+		FROM
+			hqls_finance_flow
+	    WHERE
+			finance_flow_id = #{financeFlowId}
+	</select>
+	
 	<select id="findFlow" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
 		SELECT 
 			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time 

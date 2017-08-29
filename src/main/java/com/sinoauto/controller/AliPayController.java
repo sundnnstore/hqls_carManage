@@ -1,7 +1,5 @@
 package com.sinoauto.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -67,10 +65,8 @@ public class AliPayController {
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
-			return RestModel.success(URLDecoder.decode(response.getBody(), "UTF-8"));// 就是orderString 可以直接给客户端请求，无需再做处理。
+			return RestModel.success(response.getBody());// 就是orderString 可以直接给客户端请求，无需再做处理。
 		} catch (AlipayApiException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION);
@@ -99,8 +95,9 @@ public class AliPayController {
 		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
 		// boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
 		try {
-			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
-			System.out.println("验证结果:" + flag);
+			String key ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmWGgE7DqYASLZWLMqto+fBxeZYrZmTm7Rz5L+nhhwuYc0RpajZY69e3gyLuvjbfIsQQYt6SfHi66gs1e/n837uO8C454PAznayHyGoZrfGeM/vRjXSXC8mA3IbEk4F/3z4tXAohfS+sz6GbDTcrq8woz7vKtjgFCDJaxgl6vki69thzCmr8btE3vMNgCLVAJ7NKrTtBxr1YcGz79gyPlbYxsTlLGcxX9R9BrxqtCr1sHYD4+J9GZg+cGumk4TOlgZhxo/ZUZ0g0xLDAN3lUFqjuEMbYDJw/rckugTEmpUxlfmXcmqEcg4PQJvsSuVhI7ymkFrJA1h1RfRrg3k2yxRQIDAQAB";
+			boolean flag1 = AlipaySignature.rsaCheckV1(params, key, "UTF-8", "RSA2");
+			System.out.println("验证结果1:" + flag1);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
