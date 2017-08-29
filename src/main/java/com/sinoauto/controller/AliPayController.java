@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.service.FinanceFlowService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,14 +47,19 @@ public class AliPayController {
 	private String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmWGgE7DqYASLZWLMqto+fBxeZYrZmTm7Rz5L+nhhwuYc0RpajZY69e3gyLuvjbfIsQQYt6SfHi66gs1e/n837uO8C454PAznayHyGoZrfGeM/vRjXSXC8mA3IbEk4F/3z4tXAohfS+sz6GbDTcrq8woz7vKtjgFCDJaxgl6vki69thzCmr8btE3vMNgCLVAJ7NKrTtBxr1YcGz79gyPlbYxsTlLGcxX9R9BrxqtCr1sHYD4+J9GZg+cGumk4TOlgZhxo/ZUZ0g0xLDAN3lUFqjuEMbYDJw/rckugTEmpUxlfmXcmqEcg4PQJvsSuVhI7ymkFrJA1h1RfRrg3k2yxRQIDAQAB";
 
 	@Autowired
+	private FinanceFlowService financeFlowService;
+
+	@Autowired
 	HttpServletRequest httpServletRequest;
 
 	@ApiOperation(value = "生成支付订单", notes = "fujl")
 	@PostMapping("/alipay/generateorder")
-	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String", required = false),
-			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "payType", value = "1充值；2提现；3采购；4汽车维护服务", dataType = "Integer") })
-	public ResponseEntity<RestModel<String>> generatePayOrder(String orderNo, String money, Integer payType) {
+
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer", required = true),
+			@ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String", required = false),
+			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "Double", required = true),
+			@ApiImplicitParam(paramType = "query", name = "payType", value = "金额变动类型：1充值；2提现；3采购；4汽车维护服务", dataType = "Integer", required = true) })
+	public ResponseEntity<RestModel<String>> generatePayOrder(Integer storeId, String orderNo, Double money, Integer changeType) {
 		// 实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", "UTF-8",
 				APP_PUBLIC_KEY, "RSA2");
@@ -60,15 +67,17 @@ public class AliPayController {
 		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
 		// SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
 		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+		String transactionNo = String.format("CZ%s", new SimpleDateFormat("yyyyMMddhhmmssSSS").format(new Date()));
 		model.setBody("我是测试数据");
 		model.setSubject("App支付测试Java");
-		model.setGoodsType(String.valueOf(payType));
-		model.setOutTradeNo(String.format("CZ%s", new SimpleDateFormat("yyyyMMddhhmmssSSS").format(new Date())));
+		model.setOutTradeNo(transactionNo);
 		model.setTimeoutExpress("30m");
-		model.setTotalAmount(money);
+		model.setTotalAmount(String.valueOf(money));
 		model.setProductCode("QUICK_MSECURITY_PAY");
 		request.setBizModel(model);
 		request.setNotifyUrl("http://42.159.202.20:8881/alipay/notify");
+		this.financeFlowService.insertRechargeFlow(storeId, money, transactionNo);
+
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
@@ -97,14 +106,21 @@ public class AliPayController {
 			// valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
 			params.put(name, valueStr);
 		}
+		String transactionNo = "";
 		for (String key : params.keySet()) {
+			if (StringUtils.equals("out_trade_no", key)) {
+				transactionNo = params.get(key);
+			}
 			System.out.println(String.format("%s : %s", key, params.get(key)));
 		}
 		// 切记alipaypublickey是支付宝的公钥，请去open.alipay.com对应应用下查看。
 		// boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
 		try {
-			boolean flag1 = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
-			System.out.println("验证结果1:" + flag1);
+			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
+			if (flag) {
+				this.financeFlowService.updateFlowStatus(transactionNo, 1);
+			}
+			System.out.println("验证结果: " + flag);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}

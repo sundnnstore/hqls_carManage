@@ -56,12 +56,13 @@ public class FinanceFlowService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank,String openBank) {
+	public ResponseEntity<RestModel<Integer>> insertFlow(Integer storeId, Double changeMoney, String accountName, String account, String bank,
+			String openBank) {
 
 		try {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
 			flow.setStoreId(storeId);
-			flow.setTransactionNo(generateTransactionNo(storeId));
+			flow.setTransactionNo(generateNo("TX", storeId));
 			flow.setChangeType(2);// 提现
 			flow.setChangeMoney(changeMoney);
 			flow.setChargeType(2);// 支出
@@ -84,7 +85,32 @@ public class FinanceFlowService {
 		}
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增流水记录失败");
 	}
-	
+
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> insertRechargeFlow(Integer storeId, Double changeMoney, String transactionNo) {
+
+		try {
+			HqlsFinanceFlow flow = new HqlsFinanceFlow();
+			flow.setStoreId(storeId);
+			flow.setTransactionNo(transactionNo);
+			flow.setChangeType(1);// 充值
+			flow.setChangeMoney(changeMoney);
+			flow.setChargeType(1);// 收入
+			flow.setFlowStatus(2);
+			flow.setCheckStatus(1);
+			flow.setOperPerson("");
+			flow.setCreateTime(new Date());
+			flow.setRemark("remark");
+			flow.setDmlTime(new Date());
+			flow.setIsDelete(0);
+			return RestModel.success(financeFlowMapper.insert(flow));
+		} catch (Exception e) {
+			System.out.println(e);
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "添加提现流水失败");
+	}
+
 	@Transactional
 	public ResponseEntity<RestModel<Integer>> insertRemitFlow(Integer storeId, Double changeMoney, String transactionNo) {
 
@@ -111,10 +137,10 @@ public class FinanceFlowService {
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增汇款记录失败");
 	}
 
-	private String generateTransactionNo(Integer storeId) {
+	private String generateNo(String business, Integer storeId) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmssSSS");
 		String time = sdf.format(new Date());
-		return String.format("TX%d%s", storeId, time);
+		return String.format("%s%d%s", business, storeId, time);
 	}
 
 	public ResponseEntity<RestModel<FlowListDto>> findFlowByStoreId(Integer storeId) {
@@ -199,6 +225,16 @@ public class FinanceFlowService {
 		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
+	}
+
+	public ResponseEntity<RestModel<Integer>> updateFlowStatus(String transactionNo, Integer flowStatus) {
+		try {
+			return RestModel.success(this.financeFlowMapper.updateFlowStatus(transactionNo, flowStatus));
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), e.getMessage());
+		}
+
 	}
 
 }

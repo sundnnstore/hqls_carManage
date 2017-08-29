@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
@@ -19,7 +20,10 @@ public interface FinanceFlowMapper {
 			@Param("flowStatus") Integer flowStatus);
 
 	public List<HqlsFinanceFlow> findFlowList(@Param("storeId") Integer storeId);
-	
+
 	public HqlsFinanceFlow findFlow(@Param("financeFlowId") Integer financeFlowId);
+
+	@Update("update hqls_cash_back set flow_status = #{flowStatus} where transaction_no = #{transactionNo}")
+	public int updateFlowStatus(@Param("transactionNo") String transactionNo, @Param("flowStatus") Integer flowStatus);
 
 }
