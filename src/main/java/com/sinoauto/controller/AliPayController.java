@@ -1,5 +1,7 @@
 package com.sinoauto.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class AliPayController {
 	@PostMapping("/alipay/generateorder")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "orderNo", value = "订单号", dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "money", value = "支付金额", dataType = "String") })
-	public ResponseEntity<RestModel<String>> generatePayOrder(String orderNo, String money) {
+	public ResponseEntity<RestModel<String>> generatePayOrder(String orderNo, String money, Integer payType) {
 		// 实例化客户端
 		AlipayClient alipayClient = new DefaultAlipayClient("https://openapi.alipay.com/gateway.do", APP_ID, APP_PRIVATE_KEY, "json", "UTF-8",
 				APP_PUBLIC_KEY, "RSA2");
@@ -59,7 +61,8 @@ public class AliPayController {
 		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
 		model.setBody("我是测试数据");
 		model.setSubject("App支付测试Java");
-		model.setOutTradeNo(orderNo);
+		model.setGoodsType(String.valueOf(payType));
+		model.setOutTradeNo(String.format("CZ%s", new SimpleDateFormat("yyyyMMddhhmmssSSS").format(new Date())));
 		model.setTimeoutExpress("30m");
 		model.setTotalAmount(money);
 		model.setProductCode("QUICK_MSECURITY_PAY");
