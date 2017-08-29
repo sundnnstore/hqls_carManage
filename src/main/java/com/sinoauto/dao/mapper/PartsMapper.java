@@ -17,6 +17,7 @@ import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
+import com.sinoauto.dto.PurchaseOrderParamDto;
 
 @Mapper
 public interface PartsMapper {
@@ -189,4 +190,6 @@ public interface PartsMapper {
 	 */
 	@Select("select * from hqls_parts_type where parts_type_id=#{partsTypeId}")
 	public HqlsPartsType findPidByPtId(@Param("partsTypeId")Integer partsTypeId);
+	
+	public PurchaseOrderParamDto getSettlementInfo(@Param("orderId") Integer orderId);
 }

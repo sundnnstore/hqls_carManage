@@ -9,34 +9,48 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class FlowDetailDto {
-	@ApiModelProperty("流水类型")
-	private String flowType;
+	
+	@ApiModelProperty("流水类型（1充值；2提现；3采购；4汽车维护服务）")
+	private Integer flowType;
+	
+	@ApiModelProperty("流水类型描述")
+	private String flowTypeDesc;
 
 	@ApiModelProperty("金额")
 	private String money;
 
-	@ApiModelProperty("流水状态")
-	private String flowStatus;
-
 	@ApiModelProperty("付款方式")
 	private String payType;
 
-	@ApiModelProperty("商品说明")
-	private String productDesc;
+	@ApiModelProperty("支付说明")
+	private String payDesc;
 
 	@ApiModelProperty("商品订单号")
 	private String orderNo;
 
-	@ApiModelProperty("支付单号")
-	private String transactionNo;
+	@ApiModelProperty("支付订单号")
+	private String payNo;
+	
+	@ApiModelProperty("流水状态（1-成功，2-失败）")
+	private Integer flowStatus;
 
-	public String getFlowType() {
+	public Integer getFlowType() {
 		return flowType;
 	}
 
-	public void setFlowType(String flowType) {
+	public void setFlowType(Integer flowType) {
 		if (flowType != null) {
 			this.flowType = flowType;
+		}
+	}
+
+	public String getFlowTypeDesc() {
+		return flowTypeDesc;
+	}
+
+	public void setFlowTypeDesc(String flowTypeDesc) {
+		if (flowTypeDesc != null) {
+			this.flowTypeDesc = flowTypeDesc;
 		}
 	}
 
@@ -50,16 +64,6 @@ public class FlowDetailDto {
 		}
 	}
 
-	public String getFlowStatus() {
-		return flowStatus;
-	}
-
-	public void setFlowStatus(String flowStatus) {
-		if (flowStatus != null) {
-			this.flowStatus = flowStatus;
-		}
-	}
-
 	public String getPayType() {
 		return payType;
 	}
@@ -70,13 +74,13 @@ public class FlowDetailDto {
 		}
 	}
 
-	public String getProductDesc() {
-		return productDesc;
+	public String getPayDesc() {
+		return payDesc;
 	}
 
-	public void setProductDesc(String productDesc) {
-		if (productDesc != null) {
-			this.productDesc = productDesc;
+	public void setPayDesc(String payDesc) {
+		if (payDesc != null) {
+			this.payDesc = payDesc;
 		}
 	}
 
@@ -90,13 +94,23 @@ public class FlowDetailDto {
 		}
 	}
 
-	public String getTransactionNo() {
-		return transactionNo;
+	public String getPayNo() {
+		return payNo;
 	}
 
-	public void setTransactionNo(String transactionNo) {
-		if (transactionNo != null) {
-			this.transactionNo = transactionNo;
+	public void setPayNo(String payNo) {
+		if (payNo != null) {
+			this.payNo = payNo;
+		}
+	}
+
+	public Integer getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(Integer flowStatus) {
+		if (flowStatus != null) {
+			this.flowStatus = flowStatus;
 		}
 	}
 

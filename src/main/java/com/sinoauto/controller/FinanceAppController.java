@@ -1,7 +1,5 @@
 package com.sinoauto.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dto.FlowDetailDto;
-import com.sinoauto.dto.FlowDto;
+import com.sinoauto.dto.FlowListDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.FinanceFlowService;
 
@@ -92,10 +90,10 @@ public class FinanceAppController {
 	@GetMapping("flow")
 	@ApiOperation(value = "账单流水", notes = "fujl")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer") })
-	public ResponseEntity<RestModel<List<FlowDto>>> flow(Integer storeId) {
+	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId) {
 		return this.financeFlowService.findFlowByStoreId(storeId);
 	}
-	
+
 	@GetMapping("detail")
 	@ApiOperation(value = "账单详情", notes = "fujl")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "financeFlowId", value = "流水ID", dataType = "Integer") })
@@ -106,12 +104,23 @@ public class FinanceAppController {
 	@ApiOperation(value = "APP提现", notes = "fujl")
 	@PostMapping("withdraw")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
-			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "充值金额", dataType = "Double"),
+			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "提现金额", dataType = "Double"),
 			@ApiImplicitParam(paramType = "query", name = "accountName", value = "户名", dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "account", value = "账号", dataType = "String"),
-			@ApiImplicitParam(paramType = "query", name = "bank", value = "银行", dataType = "String") })
-	public ResponseEntity<RestModel<Integer>> withdraw(Integer storeId, Double changeMoney, String accountName, String account, String bank) {
-		return this.financeFlowService.insertFlow(storeId, changeMoney, accountName, account, bank);
+			@ApiImplicitParam(paramType = "query", name = "bank", value = "银行", dataType = "String"),
+			@ApiImplicitParam(paramType = "query", name = "openBank", value = "开户行", dataType = "String") })
+	public ResponseEntity<RestModel<Integer>> withdraw(Integer storeId, Double changeMoney, String accountName, String account, String bank,
+			String openBank) {
+		return this.financeFlowService.insertFlow(storeId, changeMoney, accountName, account, bank, openBank);
+	}
+
+	@ApiOperation(value = "汇款审核", notes = "fujl")
+	@PostMapping("audit")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "汇款金额", dataType = "Double"),
+			@ApiImplicitParam(paramType = "query", name = "transactionNo", value = "汇款流水单号", dataType = "String") })
+	public ResponseEntity<RestModel<Integer>> audit(Integer storeId, Double changeMoney, String transactionNo) {
+		return this.financeFlowService.insertRemitFlow(storeId, changeMoney, transactionNo);
 	}
 
 }

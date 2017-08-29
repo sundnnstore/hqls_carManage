@@ -47,10 +47,21 @@
 	<select id="findPartsListByOrderId" parameterType="Integer" resultMap="desList">
 		select detail.buy_count, detail.buy_price,
 				parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
-				parts.parts_spec, parts.cur_price, parts.is_usable
+				parts.parts_spec, parts.cur_price, parts.is_usable, parts.price
 		from hqls_order_detail as detail
 		left join hqls_parts as parts on detail.parts_id = parts.parts_id
 		where detail.purchase_order_id = #{orderId}
+	</select>
+	
+	<resultMap type="com.sinoauto.dto.PurchaseOrderParamDto" id="settlementOperation">
+		<id property="orderId"  column="purchase_order_id" />
+		<result property="shipAddressId" column="ship_address_id" />
+		<association property="shipAddress" column="ship_address_id" select="com.sinoauto.dao.mapper.ShipAddressMapper.getShipAddressById"/>
+		<collection property="partsList" column="purchase_order_id" select="findPartsListByOrderId"></collection>
+	</resultMap>
+	
+	<select id="getSettlementInfo" resultMap="settlementOperation" parameterType="Integer">
+		select purchase_order_id, ship_address_id, IFNULL(other_fee, 0) as otherFee from hqls_purchase_order where purchase_order_id = #{orderId}
 	</select>
 
 	<!-- 用于select查询公用抽取的列 -->
