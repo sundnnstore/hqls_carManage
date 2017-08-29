@@ -38,6 +38,8 @@ import com.sinoauto.entity.TokenModel;
 import com.sinoauto.util.HttpUtil;
 import com.sinoauto.util.push.GeTuiUtil;
 import com.sinoauto.util.push.PushAction;
+import com.sinoauto.util.push.PushParms;
+import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class ServiceOrderService {
@@ -186,20 +188,19 @@ public class ServiceOrderService {
 			// 推送给门店的联系人
 			// 通过门店ID查找门店的联系人
 			HqlsUser user = userMapper.getUserByStoreId(order.getStoreId());
-			PushAction pa = new PushAction("serviceorder", 0, true, "");
+			PushAction pa = new PushAction("ServiceOrder", 0, true, "");
 			List<PushAction> action = new ArrayList<>();
 			action.add(pa);
 			String text = "您有一条新的服务订单";
 			if (order.getOrderType() == 2) {
 				text = "您有一条新的预约订单";
 			}
-			/*
-			 * PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
-			 * PushUtil.push2Andriod(parms);
-			 * PushUtil.push2IOSByAPNS(parms);
-			 */
+			//推送给IOSAPP端
+			PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
+			PushUtil.push2IOSByAPNS(parms);
 			String title = "订单提醒";
 			List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
+			//推送给安卓APP端
 			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order","服务订单");
 			return RestModel.success("success");
 		} catch (Exception e) {

@@ -59,6 +59,7 @@
 		WHERE hso.order_status = #{orderStatus}
 		AND hso.store_id = #{storeId}
 		AND hso.order_type = 1
+		order by hso.create_time desc 
 	</select>
 
 </mapper>
