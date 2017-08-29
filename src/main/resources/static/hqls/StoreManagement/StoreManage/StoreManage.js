@@ -445,7 +445,6 @@ $("body").on('click','.sshow',function(){
 			 * comboChlidren('city','county');
 			 * $("#county").val(result.countyId);
 			 */
-    		console.log(result);
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
     		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);
