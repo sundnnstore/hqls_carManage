@@ -71,7 +71,7 @@ public class AliPayController {
 		AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
 		// SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
 		AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-		String transactionNo = String.format("CZ%s", new SimpleDateFormat("yyyyMMddhhmmssSSS").format(new Date()));
+		String transactionNo = String.format("CZ%d%s", storeId, new SimpleDateFormat("yyyyMMddhhmmssSSS").format(new Date()));
 		model.setBody("我是测试数据");
 		model.setSubject("App支付测试Java");
 		model.setOutTradeNo(transactionNo);
@@ -126,8 +126,10 @@ public class AliPayController {
 			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
 			if (flag) {
 				synchronized (transactionNo) {
-					this.financeFlowService.updateFlowStatus(transactionNo, 1);
-					this.financeFlowService.updateBalance(money, transactionNo);
+					Integer affectRow = this.financeFlowService.updateFlowStatus(transactionNo, 1);
+					if (null != affectRow && affectRow != 0) {
+						this.financeFlowService.updateBalance(money, transactionNo);
+					}
 					try {
 						httpServletResponse.getWriter().print("success");
 					} catch (IOException e) {
@@ -140,5 +142,5 @@ public class AliPayController {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

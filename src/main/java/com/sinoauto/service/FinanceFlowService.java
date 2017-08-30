@@ -237,12 +237,12 @@ public class FinanceFlowService {
 		return RestModel.success(flowDto);
 	}
 
-	public ResponseEntity<RestModel<Integer>> updateFlowStatus(String transactionNo, Integer flowStatus) {
+	public Integer updateFlowStatus(String transactionNo, Integer flowStatus) {
 		try {
-			return RestModel.success(this.financeFlowMapper.updateFlowStatus(transactionNo, flowStatus));
+			return this.financeFlowMapper.updateFlowStatus(transactionNo, flowStatus);
 		} catch (Exception e) {
 			System.out.println(e);
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), e.getMessage());
+			return null;
 		}
 	}
 
