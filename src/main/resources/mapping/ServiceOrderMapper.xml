@@ -50,7 +50,9 @@
 		hso.order_amount,
 		hso.expect_arrive_time,
 		hso.finish_time,
-		hc.avatar_url
+		hc.avatar_url,
+		hso.order_type,
+		hso.fault_desc
 		FROM hqls_service_order hso
 		LEFT JOIN hqls_customer hc
 		ON hso.customer_id = hc.customer_id
@@ -58,7 +60,7 @@
 		ON hso.service_type_id = hst.service_type_id
 		WHERE hso.order_status = #{orderStatus}
 		AND hso.store_id = #{storeId}
-		AND hso.order_type = 1
+		order by hso.create_time desc 
 	</select>
 
 </mapper>

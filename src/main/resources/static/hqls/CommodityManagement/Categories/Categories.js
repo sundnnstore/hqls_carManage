@@ -11,41 +11,50 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     $('.categories').on('click', 'button', function() {
         var othis = $(this),
             method = othis.data('method');
+        var level =  othis.parent().parent().find("td:first").find("input").val();
         first_title = second_title = '';
         if (method == 'addCategories') {
             first_title = '新增';
             second_title = method;
-            $('#partsTree').html('');
             /**
              * 1 是节点等级
              * 1 是新增  2 编辑的
              */
-            loadNodes(0,1);//加载节点树
+            loadNodes(0,1);
+            buttongForbidden();
         } else if (method == 'view') {
-        	$('#partsItemTree').html('');
             first_title = '查看';
-            loadNodes(2,3);//加载节点树
+            loadNodes(level,3);
+            buttongForbidden();
         } else if (method == 'edit') {
-        	//alert("编辑");
-        	$('#partsItemTree').html('');
             first_title = '编辑';
-            //传入一级菜单id
-            //var level = $(this).parent().parent().val();//节点树等级
             /**
              * 第一个  2 等级
              * 第二个  2 操作方式
              */
-            loadNodes(2,2);//加载节点树
+            loadNodes(level,2);//加载节点树
+            buttongForbidden();
         }
-        first_title && layer.open({
-            type: 1,
-            title: first_title, // 标题
-            skin: 'layui-layer-lan', //弹框主题
-            shade: 0,
-            area: '450px', // 宽高
-            content: method == 'addCategories' ? $('#categoriesTreeBox') : $('#categoriesTreeView'), // 内容
-            btn: method == 'addCategories' ? null : '确定'
-        });
+        first_title&&layer.open({
+	      type: 1,
+	      title: first_title, // 标题
+	      skin: 'layui-layer-lan', //弹框主题
+	      shade: 0,
+	      area: '450px', // 宽高
+	      content:method=='addCategories'?$('#addTree'):method=='view'?$('#viewTree'):$('#editTree'), //弹框内容
+	      btn: method == 'addCategories' ? null : '确定',
+	      yes:function(index, layero) {
+	    	  layer.close(index);
+	      },
+	      end:function(index, layero){
+	    	  $('#viewItemTree').html("");
+	    	  $('#editItemTree').html("");
+	    	  $('#addItemTree').html("");
+	    	  clearButtonForbidden();
+	    	  layer.close(index);
+	      }
+      });
+
     });
 
     /**
@@ -89,12 +98,11 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function addTree(data){
-    	console.log(data);
     	 // 构建商品分类节点树
         layui.tree({
-            elem:'#partsTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+            elem:'#addItemTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
             click: function(item) { //点击节点回调
-                first_title != '查看' && categoriesEdit(item);
+                categoriesEdit(item);
             },
             nodes: data
         });
@@ -103,18 +111,19 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	//alert("编辑操作");
     	 console.log(data);
     	 layui.tree({
-             elem: '#partsItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
+             elem: '#editItemTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
              click: function(item) { //点击节点回调
-                 first_title != '编辑' && categoriesEdit(item);
+                 categoriesEdit(item);
              },
              nodes: data
          });
     }
+    
     function view(data){
       layui.tree({
-      elem: '#categoriesTreeView', //指定元素
+      elem: '#viewItemTree', //指定元素
       click: function(item) {
-          first_title != '查看' && categoriesEdit(item);
+          categoriesEdit(item);
       },
       nodes: data
       });
@@ -146,6 +155,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     
     // 弹框：以何种方式添加商品分类及删除提示
     function categoriesEdit(item) {
+    	alert(2);
         $('#categoriesName').text(item.name);
         layer.open({ // 弹框询问门店添加位置
             type: 1,
@@ -265,6 +275,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      */
     getdata(1);
 	$("#searchCategories").click(function(){
+		alert("搜索");
 		getdata(1);
 	});
 	
@@ -305,7 +316,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			url : "/levelinfo",
 			type : "get",
 			async : false,
-			data : {"partsTypeId":60,"selecDepth":3,"pageSize":pageSize,"pageIndex":pageIndex},
+			data : {"partsTypeId":0,"selecDepth":6,"pageSize":pageSize,"pageIndex":pageIndex},
 			success : function(data){
 				comboTable(data,pageIndex);
 			},
@@ -518,7 +529,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 				}else{
 					del(selectNodeId);
 				}
-				//loadNodes(0,0);
 			},
 			error:function(data){
 				layer.msg("检查节点失败");
@@ -526,5 +536,19 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		});
     }
     
-    
+    //按钮禁用
+   function buttongForbidden(){
+	   $("#view").attr("disabled","disabled");
+	   $("#edit").attr("disabled","disabled");
+	   $("#addCategories").attr("disabled","disabled");
+	   $("#searchCategories").attr("disabled","disabled");
+   }
+   
+   //按钮启用
+   function clearButtonForbidden(){
+	   $("#view").removeAttr("disabled");
+	   $("#edit").removeAttr("disabled");
+	   $("#addCategories").removeAttr("disabled");
+	   $("#searchCategories").removeAttr("disabled");
+   }
 });

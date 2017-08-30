@@ -14,10 +14,10 @@ import io.swagger.annotations.ApiModelProperty;
 public class FlowListDto {
 
 	@ApiModelProperty("余额")
-	private Double balance;
+	private Double balance = 0.00;
 
 	@ApiModelProperty("可提现")
-	private Double cashAble;
+	private Double cashAble = 0.00;
 
 	@ApiModelProperty("流水ID")
 	private List<FlowDto> flowList = new ArrayList<FlowDto>();

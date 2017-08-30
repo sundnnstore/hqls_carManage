@@ -38,6 +38,8 @@ import com.sinoauto.entity.TokenModel;
 import com.sinoauto.util.HttpUtil;
 import com.sinoauto.util.push.GeTuiUtil;
 import com.sinoauto.util.push.PushAction;
+import com.sinoauto.util.push.PushParms;
+import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class ServiceOrderService {
@@ -145,6 +147,32 @@ public class ServiceOrderService {
 	}
 
 	/**
+	 * 服务订单完成功能
+	 * @param serviceOrderId
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> finishOrderedOrder(Integer serviceOrderId) {
+		// 判断服务订单是否已经完成，
+		// 未完成的订单，确认完成
+		try {
+			HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(serviceOrderId);
+			if (order == null) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单号不正确");
+			}
+			if (order.getOrderStatus() == 2) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单已完成");
+			}
+			serviceOrderMapper.updateOrderStauts(serviceOrderId);
+			return RestModel.success("订单完成！");
+		} catch (Exception e) {
+			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION);
+	}
+
+	/**
 	 * 新增服务订单接口
 	 * @param order
 	 * @return
@@ -186,21 +214,20 @@ public class ServiceOrderService {
 			// 推送给门店的联系人
 			// 通过门店ID查找门店的联系人
 			HqlsUser user = userMapper.getUserByStoreId(order.getStoreId());
-			PushAction pa = new PushAction("serviceorder", 0, true, "");
+			PushAction pa = new PushAction("ServiceOrder", 0, true, "");
 			List<PushAction> action = new ArrayList<>();
 			action.add(pa);
 			String text = "您有一条新的服务订单";
 			if (order.getOrderType() == 2) {
 				text = "您有一条新的预约订单";
 			}
-			/*
-			 * PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, title, "", null, 0);
-			 * PushUtil.push2Andriod(parms);
-			 * PushUtil.push2IOSByAPNS(parms);
-			 */
+			// 推送给IOSAPP端
+			PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
+			PushUtil.push2IOSByAPNS(parms);
 			String title = "订单提醒";
 			List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
-			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order","服务订单");
+			// 推送给安卓APP端
+			GeTuiUtil.pushToAndroid(clientIds, title, text, "service_order", "服务订单");
 			return RestModel.success("success");
 		} catch (Exception e) {
 			e.printStackTrace();

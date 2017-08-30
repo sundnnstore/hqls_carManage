@@ -15,9 +15,8 @@ public interface CashBackMapper {
 
 	public Page<CashBackDto> findCashBackList(@Param("returnType") Integer returnType, @Param("operateUserName") String operateUserName,
 			@Param("createTime") String createTime);
-	
-	
+
 	@Select("SELECT * FROM hqls_cash_back WHERE money <= #{money} ORDER BY money DESC LIMIT 1")
-	public HqlsCashBack getCashBackByMoney(@Param("money")Double money);
+	public HqlsCashBack getCashBackByMoney(@Param("money") Double money);
 
 }

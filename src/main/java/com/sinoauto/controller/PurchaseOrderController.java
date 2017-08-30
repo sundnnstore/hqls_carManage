@@ -123,7 +123,6 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus) {
-		
 		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
 	}
 	
