@@ -202,6 +202,7 @@ public class StoreService {
 		storeMapper.insert(store);
 		int stoId = store.getStoreId();
 		
+		//新增门店财务表
 		HqlsStoreFinance hsf = new HqlsStoreFinance();
 		hsf.setStoreId(stoId);
 		hsf.setCreateTime(new Date());
