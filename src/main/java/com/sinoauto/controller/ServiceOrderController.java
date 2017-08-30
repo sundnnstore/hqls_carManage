@@ -98,6 +98,12 @@ public class ServiceOrderController {
 		return serviceOrderService.finishOrder(Authorization,serviceOrderId,code);
 	}
 	
+	@ApiOperation(value = "预约订单完成接口", notes = "tangwt")
+	@PostMapping("finishorderedorder")
+	public ResponseEntity<RestModel<String>> finishOrderedOrder(@RequestParam("serviceOrderId")Integer serviceOrderId){
+		return serviceOrderService.finishOrderedOrder(serviceOrderId);
+	}
+	
 	@ApiOperation(value = "核销接口", notes = "tangwt")
 	@PostMapping("finishorderbycode")
 	public ResponseEntity<RestModel<String>> finishOrder(@RequestHeader String Authorization,@RequestParam("code")String code){
