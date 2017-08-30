@@ -151,7 +151,7 @@ public class FinanceFlowService {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
 		}
-		List<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
+		Page<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
 		List<FlowDto> flowDtoList = new ArrayList<>();
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
 		SimpleDateFormat timeSdf = new SimpleDateFormat("hh:mm");
@@ -190,7 +190,7 @@ public class FinanceFlowService {
 		}
 		flowListDto.setBalance(storeFinance.getBalance());
 		flowListDto.setCashAble(storeFinance.getCashAble());
-		return RestModel.success(flowListDto);
+		return RestModel.success(flowListDto,(int)orginalList.getTotal());
 	}
 
 	public ResponseEntity<RestModel<FlowDetailDto>> findFlowById(Integer financeFlowId) {
