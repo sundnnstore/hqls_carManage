@@ -87,13 +87,13 @@ public class UserService {
 	public ResponseEntity<RestModel<UserLoginDto>> storeLogin(String userName, String passWord, String clientId) {
 		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
 		if (rest.getErrcode() != 0) {// 解析token失败
-			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), "账号或密码不正确");
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		Integer storeId = userMapper.checkUser(userId);
 		StoreDto store = storeMapper.getStoreInfoByStoreId(storeId);
 		if (storeId == null || store == null) {
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST.getErrcode(),"账号或密码不正确");
 		}
 		UserLoginDto ul = new UserLoginDto();
 		ul.setMobile("");
