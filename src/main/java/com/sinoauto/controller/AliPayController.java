@@ -90,7 +90,7 @@ public class AliPayController {
 	@ApiIgnore
 	@ApiOperation(value = "回调函数", notes = "fujl")
 	@PostMapping("/alipay/notify")
-	public void aliPayNotify() {
+	public String aliPayNotify() {
 		// 获取支付宝POST过来反馈信息
 		Map<String, String> params = new HashMap<String, String>();
 		Map<String, String[]> requestParams = httpServletRequest.getParameterMap();
@@ -121,13 +121,17 @@ public class AliPayController {
 		try {
 			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
 			if (flag) {
-				this.financeFlowService.updateFlowStatus(transactionNo, 1);
-				this.financeFlowService.updateBalance(money, transactionNo);
+				synchronized (transactionNo) {
+					this.financeFlowService.updateFlowStatus(transactionNo, 1);
+					this.financeFlowService.updateBalance(money, transactionNo);
+					return "success";
+				}
 			}
 			System.out.println("验证结果: " + flag);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }
