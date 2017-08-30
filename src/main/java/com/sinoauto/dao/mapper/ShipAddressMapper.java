@@ -18,8 +18,7 @@ public interface ShipAddressMapper {
 	
 	public int batchDelete(@Param("addressIds") Integer[] addressIds);
 	
-	@Select("select * from hqls_ship_address")
-	public Page<HqlsShipAddress> findAll();
+	public Page<HqlsShipAddress> findAll(@Param("storeId") Integer storeId);
 	
 	@Select("select * from hqls_ship_address where ship_address_id = #{1}")
 	public HqlsShipAddress getShipAddressById(Integer shipAddressId);
@@ -29,5 +28,8 @@ public interface ShipAddressMapper {
 	
 	@Select("select * from hqls_ship_address where store_id = #{1} order by create_time desc limit 0,1")
 	public HqlsShipAddress getAddressByStoreId(Integer storeId);
+	
+	@Select("select * from hqls_ship_address where ship_address_id = #{1}")
+	public HqlsShipAddress getAddressById(Integer addressId);
 	
 }

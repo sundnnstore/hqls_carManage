@@ -16,7 +16,7 @@ public enum ErrorStatus {
 	/** 数据不存在 */
 	DATA_NOT_EXIST(40004, "数据不存在"),
 	/** 用户名或密码错误 */
-	USERNAME_OR_PASSWORD_ERROR(40005, "用户名或密码错误"),
+	USERNAME_OR_PASSWORD_ERROR(40005, "账户或密码错误"),
 	/** 会话过程中 */
 	INVALID_LOGIN(40086, "当前账号正在视频中！"),
 	/** 非管理员登录 */
