@@ -73,13 +73,22 @@ public class PurchaseOrderService {
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
 		try {
-			shipAddressMapper.insert(shipAddress);
-			return RestModel.success("新增收货地址成功");
+			if (shipAddress.getShipAddressId() != null) {
+				shipAddressMapper.update(shipAddress);
+			} else {
+				shipAddressMapper.insert(shipAddress);
+			}
+			return RestModel.success();
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "新增异常！");
+	}
+	
+	public ResponseEntity<RestModel<HqlsShipAddress>> getAddressById(Integer addressId) {
+		
+		return RestModel.success(shipAddressMapper.getAddressById(addressId));
 	}
 	
 	@Transactional
@@ -118,8 +127,9 @@ public class PurchaseOrderService {
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "删除异常！");
 	}
 	
-	public ResponseEntity<RestModel<List<HqlsShipAddress>>> findAll() {
-		return RestModel.success(shipAddressMapper.findAll());
+	public ResponseEntity<RestModel<List<HqlsShipAddress>>> findAll(Integer storeId) {
+		
+		return RestModel.success(shipAddressMapper.findAll(storeId));
 	}
 	
 	/**

@@ -90,11 +90,18 @@ public class PurchaseOrderController {
 		return purchaseOrderService.batchDeleteShipAddress(shipAddressIds);
 	}
 	
-	@ApiOperation(value = "查询所有收货地址", notes = "wuxiao")
+	@ApiOperation(value = "根据门店查询所有收货地址", notes = "wuxiao")
 	@GetMapping("findallshipaddress")
-	public ResponseEntity<RestModel<List<HqlsShipAddress>>> findAllShipAddress() {
+	public ResponseEntity<RestModel<List<HqlsShipAddress>>> findAllShipAddress(@RequestParam(value = "storeId", required = false) Integer storeId) {
 		
-		return purchaseOrderService.findAll();
+		return purchaseOrderService.findAll(storeId);
+	}
+	
+	@ApiOperation(value = "根据Id查询收货地址", notes = "wuxiao")
+	@GetMapping("getaddressbyid")
+	public ResponseEntity<RestModel<HqlsShipAddress>> getAddressById(@RequestParam(value = "addressId", required = true) Integer addressId) {
+		
+		return purchaseOrderService.getAddressById(addressId);
 	}
 	
 	@ApiOperation(value = "点击结算进入待支付页", notes = "wuxiao")
