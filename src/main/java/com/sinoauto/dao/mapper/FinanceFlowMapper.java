@@ -22,7 +22,7 @@ public interface FinanceFlowMapper {
 
 	public HqlsFinanceFlow findFlow(@Param("financeFlowId") Integer financeFlowId);
 
-	@Update("update hqls_finance_flow set flow_status = #{flowStatus} where transaction_no = #{transactionNo}")
+	@Update("update hqls_finance_flow set flow_status = #{flowStatus} where transaction_no = #{transactionNo} and flow_status != #{flowStatus} ")
 	public int updateFlowStatus(@Param("transactionNo") String transactionNo, @Param("flowStatus") Integer flowStatus);
 
 	@Select("select store_id from hqls_finance_flow where transaction_no = #{transactionNo} ")

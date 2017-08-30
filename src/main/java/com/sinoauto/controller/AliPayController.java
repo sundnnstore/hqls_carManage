@@ -126,8 +126,10 @@ public class AliPayController {
 			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
 			if (flag) {
 				synchronized (transactionNo) {
-					this.financeFlowService.updateFlowStatus(transactionNo, 1);
-					this.financeFlowService.updateBalance(money, transactionNo);
+					Integer affectRow = this.financeFlowService.updateFlowStatus(transactionNo, 1);
+					if (null != affectRow && affectRow != 0) {
+						this.financeFlowService.updateBalance(money, transactionNo);
+					}
 					try {
 						httpServletResponse.getWriter().print("success");
 					} catch (IOException e) {
@@ -140,5 +142,5 @@ public class AliPayController {
 			e.printStackTrace();
 		}
 	}
-	
+
 }
