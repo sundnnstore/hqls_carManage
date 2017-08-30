@@ -76,7 +76,7 @@ public class AliPayController {
 		model.setProductCode("QUICK_MSECURITY_PAY");
 		request.setBizModel(model);
 		request.setNotifyUrl("http://42.159.202.20:8881/alipay/notify");
-		this.financeFlowService.insertRechargeFlow(storeId, money, transactionNo);
+		this.financeFlowService.insertRechargeFlow(storeId, money, 1, transactionNo);
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);

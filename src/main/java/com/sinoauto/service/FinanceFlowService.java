@@ -90,7 +90,7 @@ public class FinanceFlowService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<Integer>> insertRechargeFlow(Integer storeId, Double changeMoney, String transactionNo) {
+	public ResponseEntity<RestModel<Integer>> insertRechargeFlow(Integer storeId, Double changeMoney, Integer payType, String transactionNo) {
 
 		try {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
@@ -102,6 +102,7 @@ public class FinanceFlowService {
 			flow.setFlowStatus(2);
 			flow.setCheckStatus(1);
 			flow.setOperPerson("");
+			flow.setPayType(1);//支付宝
 			flow.setCreateTime(new Date());
 			flow.setRemark("remark");
 			flow.setDmlTime(new Date());
