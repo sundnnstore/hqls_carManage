@@ -186,10 +186,12 @@ public class FinanceFlowService {
 		flowListDto.setFlowList(flowDtoList);
 		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
 		if (storeFinance == null) {
-			return null;
+			flowListDto.setBalance(0.0);
+			flowListDto.setCashAble(0.0);
+		} else {
+			flowListDto.setBalance(storeFinance.getBalance() == null ? 0.0 : storeFinance.getBalance());
+			flowListDto.setCashAble(storeFinance.getCashAble() == null ? 0.0 : storeFinance.getCashAble());
 		}
-		flowListDto.setBalance(storeFinance.getBalance());
-		flowListDto.setCashAble(storeFinance.getCashAble());
 		return RestModel.success(flowListDto);
 	}
 
