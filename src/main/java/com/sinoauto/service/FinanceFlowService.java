@@ -102,7 +102,7 @@ public class FinanceFlowService {
 			flow.setFlowStatus(2);
 			flow.setCheckStatus(1);
 			flow.setOperPerson("");
-			flow.setPayType(1);//支付宝
+			flow.setPayType(1);// 支付宝
 			flow.setCreateTime(new Date());
 			flow.setRemark("remark");
 			flow.setDmlTime(new Date());
@@ -185,6 +185,9 @@ public class FinanceFlowService {
 		FlowListDto flowListDto = new FlowListDto();
 		flowListDto.setFlowList(flowDtoList);
 		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
+		if (storeFinance == null) {
+			return null;
+		}
 		flowListDto.setBalance(storeFinance.getBalance());
 		flowListDto.setCashAble(storeFinance.getCashAble());
 		return RestModel.success(flowListDto);

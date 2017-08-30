@@ -1,5 +1,6 @@
 package com.sinoauto.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,8 @@ public class AliPayController {
 
 	@Autowired
 	HttpServletRequest httpServletRequest;
+	@Autowired
+	HttpServletResponse httpServletResponse;
 
 	@ApiOperation(value = "生成支付订单", notes = "fujl")
 	@PostMapping("/alipay/generateorder")
@@ -90,7 +94,7 @@ public class AliPayController {
 	@ApiIgnore
 	@ApiOperation(value = "回调函数", notes = "fujl")
 	@PostMapping("/alipay/notify")
-	public String aliPayNotify() {
+	public void aliPayNotify() {
 		// 获取支付宝POST过来反馈信息
 		Map<String, String> params = new HashMap<String, String>();
 		Map<String, String[]> requestParams = httpServletRequest.getParameterMap();
@@ -124,14 +128,17 @@ public class AliPayController {
 				synchronized (transactionNo) {
 					this.financeFlowService.updateFlowStatus(transactionNo, 1);
 					this.financeFlowService.updateBalance(money, transactionNo);
-					return "success";
+					try {
+						httpServletResponse.getWriter().print("success");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 			System.out.println("验证结果: " + flag);
 		} catch (AlipayApiException e) {
 			e.printStackTrace();
 		}
-		return null;
 	}
-
+	
 }

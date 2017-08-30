@@ -70,7 +70,7 @@ public class CashBackService {
 		}
 		new BigDecimal(backMoney).setScale(2, RoundingMode.UP);
 		if (1 == cashBack.getReturnType()) {
-			backMoney = money * cashBack.getDiscount();
+			backMoney = new BigDecimal(money).multiply(new BigDecimal(cashBack.getDiscount())).doubleValue();
 		} else if (2 == cashBack.getReturnType()) {
 			backMoney = cashBack.getReturnMoney();
 		} else {
