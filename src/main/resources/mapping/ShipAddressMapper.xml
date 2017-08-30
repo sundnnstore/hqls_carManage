@@ -45,4 +45,11 @@
         </foreach>
 	</delete>
 	
+	<select id="findAll" parameterType="Integer" resultType="HqlsShipAddress">
+		select * from hqls_ship_address where 1=1 
+		<if test="storeId != null">
+			and store_id = #{storeId}
+		</if>
+	</select>
+	
 </mapper>
