@@ -77,7 +77,6 @@ public class AliPayController {
 		request.setBizModel(model);
 		request.setNotifyUrl("http://42.159.202.20:8881/alipay/notify");
 		this.financeFlowService.insertRechargeFlow(storeId, money, transactionNo);
-
 		try {
 			// 这里和普通的接口调用不同，使用的是sdkExecute
 			AlipayTradeAppPayResponse response = alipayClient.sdkExecute(request);
@@ -107,9 +106,13 @@ public class AliPayController {
 			params.put(name, valueStr);
 		}
 		String transactionNo = "";
+		double money = 0;
 		for (String key : params.keySet()) {
 			if (StringUtils.equals("out_trade_no", key)) {
 				transactionNo = params.get(key);
+			}
+			if (StringUtils.equals("total_amount", key)) {
+				money = Double.valueOf(params.get(key));
 			}
 			System.out.println(String.format("%s : %s", key, params.get(key)));
 		}
@@ -119,6 +122,7 @@ public class AliPayController {
 			boolean flag = AlipaySignature.rsaCheckV1(params, ALIPAY_PUBLIC_KEY, "UTF-8", "RSA2");
 			if (flag) {
 				this.financeFlowService.updateFlowStatus(transactionNo, 1);
+				this.financeFlowService.updateBalance(money, transactionNo);
 			}
 			System.out.println("验证结果: " + flag);
 		} catch (AlipayApiException e) {

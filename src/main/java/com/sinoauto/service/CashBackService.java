@@ -59,10 +59,14 @@ public class CashBackService {
 	}
 
 	public ResponseEntity<RestModel<Double>> getCashBackByMoney(Double money) {
+		return RestModel.success(new BigDecimal(this.calcBackMoney(money)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+	}
+
+	public Double calcBackMoney(Double money) {
 		HqlsCashBack cashBack = this.cashBackMapper.getCashBackByMoney(money);
 		Double backMoney = 0.00;
 		if (null == cashBack) {
-			return RestModel.success(0.00);
+			return 0.00;
 		}
 		new BigDecimal(backMoney).setScale(2, RoundingMode.UP);
 		if (1 == cashBack.getReturnType()) {
@@ -70,9 +74,9 @@ public class CashBackService {
 		} else if (2 == cashBack.getReturnType()) {
 			backMoney = cashBack.getReturnMoney();
 		} else {
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "不存在的返利类型!");
+			return null;
 		}
-		return RestModel.success(new BigDecimal(backMoney).setScale(2, RoundingMode.HALF_UP).doubleValue());
+		return new BigDecimal(backMoney).setScale(2, RoundingMode.HALF_UP).doubleValue();
 	}
 
 }

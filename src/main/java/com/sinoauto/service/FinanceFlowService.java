@@ -1,5 +1,6 @@
 package com.sinoauto.service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +34,9 @@ public class FinanceFlowService {
 
 	@Autowired
 	private StoreFinanceMapper storeFinanceMapper;
+
+	@Autowired
+	private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
 			String mobile, Date createTime, Integer flowStatus, Integer pageIndex, Integer pageSize) {
@@ -143,7 +147,10 @@ public class FinanceFlowService {
 		return String.format("%s%d%s", business, storeId, time);
 	}
 
-	public ResponseEntity<RestModel<FlowListDto>> findFlowByStoreId(Integer storeId) {
+	public ResponseEntity<RestModel<FlowListDto>> findFlowByStoreId(Integer storeId, Integer pageIndex, Integer pageSize) {
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);
+		}
 		List<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
 		List<FlowDto> flowDtoList = new ArrayList<>();
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -234,7 +241,13 @@ public class FinanceFlowService {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), e.getMessage());
 		}
+	}
 
+	public Integer updateBalance(Double changeMoney, String transactionNo) {
+		Double changeCashAble = this.cashBackService.calcBackMoney(changeMoney);
+		Double changeCashDisable = new BigDecimal(changeMoney).subtract(new BigDecimal(changeCashAble)).doubleValue();
+		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
+		return this.storeFinanceMapper.updateMoney(changeMoney, changeCashAble, changeCashDisable, storeId);
 	}
 
 }

@@ -106,6 +106,8 @@
 			hqls_finance_flow
 	    WHERE
 			is_delete = 0 and store_id = #{storeId}
+		ORDER BY 
+		    create_time desc
 	</select>
 	
 	<select id="findStoreFinance" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">

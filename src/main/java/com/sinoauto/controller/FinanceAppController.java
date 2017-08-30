@@ -89,9 +89,11 @@ public class FinanceAppController {
 
 	@GetMapping("flow")
 	@ApiOperation(value = "账单流水", notes = "fujl")
-	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer") })
-	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId) {
-		return this.financeFlowService.findFlowByStoreId(storeId);
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页面索引", dataType = "Integer", required = true),
+			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
+	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId, Integer pageIndex, Integer  pageSize) {
+		return this.financeFlowService.findFlowByStoreId(storeId ,pageIndex, pageSize);
 	}
 
 	@GetMapping("detail")
