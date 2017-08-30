@@ -1,6 +1,5 @@
 package com.sinoauto.service;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -244,10 +243,9 @@ public class FinanceFlowService {
 	}
 
 	public Integer updateBalance(Double changeMoney, String transactionNo) {
-		Double changeCashAble = this.cashBackService.calcBackMoney(changeMoney);
-		Double changeCashDisable = new BigDecimal(changeMoney).subtract(new BigDecimal(changeCashAble)).doubleValue();
+		Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
-		return this.storeFinanceMapper.updateMoney(changeMoney, changeCashAble, changeCashDisable, storeId);
+		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
 	}
 
 }
