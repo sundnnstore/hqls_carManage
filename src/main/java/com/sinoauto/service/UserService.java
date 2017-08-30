@@ -63,12 +63,12 @@ public class UserService {
 	public ResponseEntity<RestModel<UserLoginDto>> login(String userName, String passWord) {
 		RestModel<TokenModel> rest = authService.getToken(userName, passWord, "ls", "web", "1.0", Constant.UUID_LOGIN);
 		if (rest.getErrcode() != 0) {// 解析token失败
-			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), "账户不存在");
 		}
 		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 		HqlsUser user = userMapper.getUserByGloabUserId(userId);
 		if (user == null) {
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST);
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST.getErrcode(),"账户不存在");
 		}
 		UserLoginDto ul = new UserLoginDto();
 		ul.setMobile(user.getMobile());
