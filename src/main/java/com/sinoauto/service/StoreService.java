@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsStore;
+import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.bean.HqlsUserStore;
+import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dao.mapper.UserStoreMapper;
@@ -40,6 +42,8 @@ public class StoreService {
 	private UserMapper userMapper;
 	@Autowired
 	private UserStoreMapper userStoreMapper;
+	@Autowired
+	private StoreFinanceMapper storeFinanceMapper;
 
 	/**
 	 * 根据当前登陆人查询门店信息
@@ -197,6 +201,13 @@ public class StoreService {
 		// 新增门店信息
 		storeMapper.insert(store);
 		int stoId = store.getStoreId();
+		
+		HqlsStoreFinance hsf = new HqlsStoreFinance();
+		hsf.setStoreId(stoId);
+		hsf.setCreateTime(new Date());
+		hsf.setDmlTime(new Date());
+		storeFinanceMapper.insert(hsf);
+		
 		// 注册用户信息
 		RestModel<Integer> registerInfo = authService.register(mobile, password);
 		// 查询当前用户在系统中是否存在
