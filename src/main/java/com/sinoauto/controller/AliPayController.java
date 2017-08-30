@@ -1,7 +1,6 @@
 package com.sinoauto.controller;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -142,9 +141,4 @@ public class AliPayController {
 		}
 	}
 	
-	public static void main(String[] args) {
-		
-		System.out.println(new BigDecimal(0.03).multiply(new BigDecimal(0.5)));
-	}
-
 }
