@@ -100,4 +100,11 @@ public class FinanceController {
 		return this.cashBackService.insertCashBack(cashBack);
 	}
 
+	@ApiOperation(value = "根据充值金额获取返利金额", notes = "fujl")
+	@GetMapping("backmoney")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "money", value = "充值金额", dataType = "Double") })
+	public ResponseEntity<RestModel<Double>> getBackMoney(Double money) {
+		return this.cashBackService.getCashBackByMoney(money);
+	}
+
 }

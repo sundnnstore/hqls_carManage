@@ -22,6 +22,7 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
+import com.sinoauto.dto.SettlementOperationParamDto;
 import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.ShopCartParamDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -96,13 +97,11 @@ public class PurchaseOrderController {
 		return purchaseOrderService.findAll();
 	}
 	
-	@ApiOperation(value = "生成结算订单", notes = "wuxiao")
-	@PostMapping("generatorpurchaseorder")
-	public ResponseEntity<RestModel<String>> generatorPurchaseOrder(@RequestBody PurchaseOrderParamDto orderParamDto) {
-		if (orderParamDto.getPartsList().isEmpty()) {
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.PARAM_NOT_NULL, "请先选择商品");
-		}
-		return purchaseOrderService.generatorPurchaseOrder(orderParamDto);
+	@ApiOperation(value = "点击结算进入待支付页", notes = "wuxiao")
+	@PostMapping("settlementoperation")
+	public ResponseEntity<RestModel<PurchaseOrderParamDto>> settlementOperation(@RequestBody SettlementOperationParamDto settlementParam) {
+		
+		return purchaseOrderService.settlementOperation(settlementParam);
 	}
 	
 	@ApiOperation(value = "查看购物车信息", notes = "wuxiao")
@@ -117,7 +116,6 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus) {
-		
 		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
 	}
 	

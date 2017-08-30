@@ -30,4 +30,8 @@ public interface StoreFinanceMapper {
 
 	public HqlsStoreFinance findStoreFinance(@Param("storeId") Integer storeId);
 
+	@Update("UPDATE hqls_store_finance SET balance = #{balance}+balance, cash_able = #{cashAble}+cash_able,cash_disable = #{cashDisable}+cash_disable, dml_time = now() WHERE store_id = #{storeId}")
+	public int updateMoney(@Param("balance") Double balance, @Param("cashAble") Double cashAble, @Param("cashDisable") Double cash_disable,
+			@Param("storeId") Integer storeId);
+
 }
