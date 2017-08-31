@@ -192,7 +192,7 @@ public class FinanceFlowService {
 			flowListDto.setBalance(storeFinance.getBalance() == null ? 0.0 : storeFinance.getBalance());
 			flowListDto.setCashAble(storeFinance.getCashAble() == null ? 0.0 : storeFinance.getCashAble());
 		}
-		return RestModel.success(flowListDto,(int)orginalList.getTotal());
+		return RestModel.success(flowListDto, (int) orginalList.getTotal());
 	}
 
 	public ResponseEntity<RestModel<FlowDetailDto>> findFlowById(Integer financeFlowId) {
@@ -203,15 +203,18 @@ public class FinanceFlowService {
 		FlowDetailDto flowDto = new FlowDetailDto();
 		flowDto.setFlowStatus(hqlsFlow.getFlowStatus());
 		flowDto.setFlowType(hqlsFlow.getChangeType());
-		// TODO 先写死需改造
+		String flowStatusDesc = "失败";
+		if (1 == hqlsFlow.getFlowStatus()) {
+			flowStatusDesc = "成功";
+		}
 		if (hqlsFlow.getChangeType() == 1) {
-			flowDto.setFlowTypeDesc("充值成功");
+			flowDto.setFlowTypeDesc("充值".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 2) {
-			flowDto.setFlowTypeDesc("提现成功");
+			flowDto.setFlowTypeDesc("提现".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 3) {
-			flowDto.setFlowTypeDesc("采购交易成功");
+			flowDto.setFlowTypeDesc("采购交易".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 4) {
-			flowDto.setFlowTypeDesc("服务订单交易成功");
+			flowDto.setFlowTypeDesc("服务订单交易".concat(flowStatusDesc));
 		} else {
 			flowDto.setFlowTypeDesc("未知");
 		}
