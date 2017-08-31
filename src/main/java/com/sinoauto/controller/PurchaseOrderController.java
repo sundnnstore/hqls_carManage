@@ -19,6 +19,7 @@ import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
+import com.sinoauto.dto.PayReturnParamDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
@@ -106,7 +107,7 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "点击结算进入待支付页", notes = "wuxiao")
 	@PostMapping("settlementoperation")
-	public ResponseEntity<RestModel<PurchaseOrderParamDto>> settlementOperation(@RequestBody SettlementOperationParamDto settlementParam) {
+	public ResponseEntity<RestModel<ShopCartInfoDto>> settlementOperation(@RequestBody SettlementOperationParamDto settlementParam) {
 		
 		return purchaseOrderService.settlementOperation(settlementParam);
 	}
@@ -122,28 +123,25 @@ public class PurchaseOrderController {
 	@GetMapping("findorderbystoreidandstatus")
 	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
-			@RequestParam(value = "orderStatus", required = false) Integer orderStatus) {
+			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
+			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
 		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
 	}
 	
 	@ApiOperation(value = "按订单Id查询", notes = "wuxiao")
 	@GetMapping("findorderbyorderid")
-	public ResponseEntity<RestModel<PurchaseOrderParamDto>> findOrderByOrderId(
+	public ResponseEntity<RestModel<ShopCartInfoDto>> findOrderByOrderId(
 			@RequestParam(value = "orderId", required = true) Integer orderId) {
 		
 		return purchaseOrderService.getOrderByOrderId(orderId);
 	}
 	
 	@ApiOperation(value = "支付操作", notes = "wuxiao")
-	@GetMapping("payoperation")
-	public ResponseEntity<RestModel<String>> payOperation(
-			@RequestParam(value = "orderId", required = true) Integer orderId,
-			@RequestParam(value = "payType", required = true) Integer payType,
-			@RequestParam(value = "money", required = true) Double money,
-			@RequestParam(value = "payNo", required = true) String payNo,
-			@RequestHeader(value="Authorization") String Authorization) {
+	@PostMapping("payoperation")
+	public ResponseEntity<RestModel<PayReturnParamDto>> payOperation(@RequestBody SettlementOperationParamDto param, @RequestHeader(value="Authorization") String Authorization) {
 		
-		return purchaseOrderService.payOperation(orderId, payType, money, payNo, Authorization);
+		return purchaseOrderService.payOperation(param, Authorization);
 	}
 	
 	@ApiOperation(value = "查询门店余额", notes = "wuxiao")

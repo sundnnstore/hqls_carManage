@@ -13,7 +13,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	    // 触发弹框事件
 	    $('.commodity').on('click', 'button', function() {
 	        var method = $(this).data('method');
-	        $('.closeBtn').removeAttr('style');
+//	        $('.closeBtn').removeAttr('style');
 	        if (method == 'addCommodity') {
 	            title = '新增';
 	            //显示配件品牌
@@ -23,39 +23,27 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            title = '查看';
 	            Detailview($(this).parent().find("#partsId").val());
 	            forbidden();//禁用元素
-	            ButtonForbidden();
+	            ButtonForbidden();//禁用其他按钮
 	        } else if (method == 'edit') {
 	            title = '编辑';
 				//编辑方法
 	            Detailview($(this).parent().find("#partsId").val());
-	        	$("#edit").attr("disabled","disabled");
 	        	ButtonForbidden();
 	        }
 	        method && layer.open({
+	        	resize: false,
 	            type: 1,
 	            title: title, // 标题
 	            skin: 'layui-layer-lan', //弹框主题
 	            shade: 0,
-	            area: '800px', // 宽高
+	            area: '810px', // 宽高
 	            content: $('#commodityBox'), // 内容
 	            btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
 	            btnAlign: 'c', //按钮居中
 	            yes: function(index, layero) {
 	            	// 校验规格、型号、品牌必填
 	                var titleInfo; // 校验提示信
-	    	    	if (!$('#partsSpec').val()) {
-	                    titleInfo = '请输入规格参数，该项必填！';
-	                    layer.msg(titleInfo);
-	                    return;
-	                } else if (!$('#partsModel').val()) {
-	                    titleInfo = '请输入型号参数，该项必填！';
-	                    layer.msg(titleInfo);
-	                    return;
-	                } else if (!$('#partsBrandId').val()) {
-	                    titleInfo = '请输入品牌参数，该项必填！';
-	                    layer.msg(titleInfo);
-	                    return;
-	                }else if(!$('#partsName').val()){
+	    	    	if(!$('#partsName').val()){
 	                	titleInfo = '请输入配件名称参数，该项必填！';
 	                	layer.msg(titleInfo);
 	                	 return;
@@ -67,6 +55,14 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	                	titleInfo = '请选择配件类型,该项必填!';
 	                	layer.msg(titleInfo);
 	                	return;
+	                }else if (!$('#partsSpec').val()) {
+	                    titleInfo = '请输入规格参数，该项必填！';
+	                    layer.msg(titleInfo);
+	                    return;
+	                } else if (!$('#partsModel').val()) {
+	                    titleInfo = '请输入型号参数，该项必填！';
+	                    layer.msg(titleInfo);
+	                    return;
 	                }else if(!$('#partsBrandId').val()){
 	                	titleInfo = '请选择品牌，,该项必填!';
 	                	layer.msg(titleInfo);
@@ -79,6 +75,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	                	titleInfo = '请输入折扣,该项必填!';
 	                	layer.msg(titleInfo);
 	                	return;
+	                }else if(!parseFloat($('#discount').val())>1||parseFloat($('#discount').val())<0){
+	                	titleInfo = '请输入小数,该项必填!';
+	                	layer.msg(titleInfo);
+	                	return;
 	                }else if(!$('#curPrice').val()){
 	                	titleInfo = '请输入现价,该项必填!';
 	                	layer.msg(titleInfo);
@@ -87,24 +87,32 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	                	titleInfo = '请输入单位,该项必填!';
 	                	layer.msg(titleInfo);
 	                	return;
+	                }else{
+	                	var pric = parseFloat($('#price').val());
+	                	var disc= parseFloat($('#discount').val());
+	                	var curPrice= parseFloat($('#curPrice').val());
+	                	if(pric*disc!=curPrice){
+	                		titleInfo = '现价*折扣价格不等于当前价格!';
+		                	layer.msg(titleInfo);
+		                	return;
+	                	}
 	                }
 	            	switch(title){
 	            		case "新增":
-	            			addPart();
+	            			addPart(index);
 	            			break;
 	            		case "编辑":
-	            			editPart();
+	            			editPart(index);
 	            			break;
 	            		case "查看":
+	            			layer.close(index);//关闭弹框
 	            			break;
 	            		default:
-	            			alert("未知标题");
+	            			layer.msg("未知标题");
 	            			break;	
 	            	}
-	               
-	                !titleInfo && layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 	            },
-	            end : function (){ //最后统一走的方法
+	            end : function (index, layero){ //最后统一走的方法
 	            	if (method == 'addCommodity') {
 	    	            afterAddPart();
 	    	        } else if (method == 'view') {
@@ -112,8 +120,20 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	    	        } else if (method == 'edit') {
 	    	            afterEditPart();//清空之前数据
 	    	        }
-	            	$('#commodityBox').css("display","none");
-	            	clearButtonForbidden();
+	            	var picAppend=`
+	                 	<div class="siteUpload">
+	                         <img id="commodityImgUrl" src="">
+	                         <div class="layui-box layui-upload-button">
+	                             <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+	                             <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+	                         </div>
+	                         <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+	                     </div>`;
+	                $(".uploadImg").html(picAppend);
+	            	$('#commodityBox').css("display","none");//隐藏
+	            	clearButtonForbidden();//启用按钮
+	            	layer.close(index);//关闭弹框
+	            	
 	            }
 	        });
 	    });
@@ -123,7 +143,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	        var othis = $(this);
 	        var partsId= $(this).parent().find("#partsId").val();
 	        $('#chooseState').text(othis.text());
-	        //alert("你好");
 	        layer.open({
 	            type: 1,
 	            title: '提示', // 标题
@@ -258,7 +277,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 					'<td><button id="view" data-method="view" class="layui-btn">查看</button>'+
 					'<button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>'+
 					'';
-			if(tr.isUsable==0){
+			if(tr.isUsable==1){
 				$("#isUse").removeClass('layui-btn-warm').addClass('layui-btn-primary');
 				trs += '<button id="isUse" class="layui-btn layui-btn-warm">下架</button>';
 			}else{
@@ -274,7 +293,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     /**
      * 新增商品
      */ 
-    function addPart(){
+    function addPart(index){
     	$.ajax({
 			url:'/addparts',
 			type:'POST',
@@ -287,10 +306,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 				var pageIndex =parseInt($(".layui-laypage-skip").val());
 				selectTreeId = 0; //全部
 				getData(pageIndex);
-				alert("成功");
+				layer.msg("添加商品成功");
+				layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 			},
 			error : function(data) {
-				alert("失败");
+				layer.msg("添加商品失败");
 			}
 		});
     }
@@ -298,7 +318,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     /**
      * 编辑商品
      */
-    function editPart(){
+    function editPart(index){
     	//编辑商品
     	$.ajax({
 			url : "/updateparts",
@@ -310,9 +330,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 				var pageIndex =parseInt($(".layui-laypage-skip").val());
 				selectTreeId = 0; //全部
 				getData(pageIndex);
+				layer.msg("编辑商品成功");
+				layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
 			},
 			error:function (data){
-				alert("编辑商品失败"+data);
+				layer.msg("编辑商品失败"+data);
 			}
 		});
     }
@@ -339,10 +361,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
                 	elem.removeClass('layui-btn-warm').addClass('layui-btn-primary');
                 	elem.text('上架');
                 }
-				alert("操作成功");
+				layer.msg("操作成功");
 			},
 			error:function(data){
-				alert("操作失败");
+				layer.msg("操作失败");
 			}
 		});
     }
@@ -361,12 +383,12 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 				if(data.errcode==0){
 					displayHtml(data,data.result.partsBrandId);
 				}else{
-					alert("undefined");
+					layer.msg("undefined");
 				}
 				
 			},
 			error:function(data){
-				alert("查看明细失败返回值"+data.errmsg);
+				layer.msg("查看明细失败返回值"+data.errmsg);
 			}
 		});
     }
@@ -390,18 +412,20 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	var pics=""; //图片
     	var attrExtra=""; //配件的动态属性
     	//get data
-    	$("#partsId").attr("value",data.result.partsId);
-    	$("#partsCode").attr("value",data.result.partsCode);
-    	$("#partsName").attr("value",data.result.partsName);
-    	$("#partsModel").attr("value",data.result.partsModel);
-    	$("#partsSpec").attr("value",data.result.partsSpec);
-    	$("#price").attr("value",data.result.price);
-    	$("#discount").attr("value",data.result.discount);
-    	$("#curPrice").attr("value",data.result.curPrice);
-    	$("#origin").attr("value",data.result.origin);
-    	$("#partsFactory").attr("value",data.result.partsFactory);
-    	$("#shelfLife").attr("value",data.result.shelfLife);
-    	$("#partsUnit").attr("value",data.result.partsUnit);
+    	$("#partsId").val(data.result.partsId);
+    	$("#partsCode").val(data.result.partsCode);
+    	$("#partsName").val(data.result.partsName);
+    	$("#partsModel").val(data.result.partsModel);
+    	$("#partsSpec").val(data.result.partsSpec);
+    	$("#price").val(data.result.price);
+    	$("#discount").val(data.result.discount);
+    	$("#curPrice").val(data.result.curPrice);
+    	$("#origin").val(data.result.origin);
+    	$("#partsFactory").val(data.result.partsFactory);
+    	$("#shelfLife").val(data.result.shelfLife);
+    	$("#partsUnit").val(data.result.partsUnit);
+    	
+    	
     	//$("#partsBrandName").val(data.result.partsBrandName);
     	//清空图片和扩展属性
     	//$(".uploadImg").html(""); //清空图片上传div
@@ -419,16 +443,16 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
             `;
 		}
     	//给一个上传用的图片
-    	pics+=`
-			<div class="siteUpload">
-            	<img id="commodityImgUrl" src="">
-            	<div class="layui-box layui-upload-button">
-                <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
-				</div>
-            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-			</div>
-		`;
+//    	pics+=`
+//			<div class="siteUpload">
+//            	<img id="commodityImgUrl" src="">
+//            	<div class="layui-box layui-upload-button">
+//                <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
+//                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
+//				</div>
+//            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+//			</div>
+//		`;
     	
     	//动态属性追加到指定位置
     	$(".uploadImg").prepend(pics);
@@ -640,13 +664,13 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	//清空数据
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
         });
         $("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
         selectTreeId=0;//清空树形菜单id
         //清空图片
-        $(".uploadImg").not(".siteUpload:first").html('');
+        $(".uploadImg").html("");
         //将新增按钮变为可用
         $("#addCommodity").removeAttr("disabled");
     }
@@ -657,30 +681,30 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
      */
     function afterEditPart(){
     	//清空数据
-        $("#commodityBox input,#commodityBox select").each(function(){
+        $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
         });
         $(":input:radio").removeAttr("disabled");
         $("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
         selectTreeId=0;//清空树形菜单id
         //清空图片
-        $(".uploadImg").not(".siteUpload:first").html("");
+        $(".uploadImg").not(".uploadImg:first").html("");
         //将编辑按钮变为可用
         $("#edit").removeAttr("disabled");
     }
     
     //点击查看按钮调用方法
     function afterView(){
-    	$("#commodityBox input,#commodityBox select").each(function(){
+    	$("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
     	});
     	$(":input:radio").removeAttr("disabled");
     	$("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
-        $(".uploadImg").not(".siteUpload:first").html("");
+        $(".siteUpload").html("");
     	$('.closeBtn').css('display', 'none');
     	//将查看按钮变为可用
     	$("#view").removeAttr("disabled");
@@ -693,6 +717,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
         	$(this).attr("disabled","disabled");
         });
     	$("#view").attr("disabled","disabled");
+    	$('.closeBtn').css('display', 'none');
     }
     //按钮禁用
     function ButtonForbidden(){
@@ -701,6 +726,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$("#addCommodity").attr("disabled","disabled");
     	$("#isUse").attr("disabled","disabled");
     	$("#searchCommodity").attr("disabled","disabled");
+    	$("#addOption").hide();
     }
     //清除按钮禁用
     function clearButtonForbidden(){
@@ -709,6 +735,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$("#addCommodity").removeAttr("disabled");
     	$("#isUse").removeAttr("disabled");
     	$("#searchCommodity").removeAttr("disabled");
+    	$("#addOption").show();
     }
 });
 
@@ -721,6 +748,9 @@ function change(obj){
 	var flag=$(".siteUpload").length;
 	if(flag==5){
 		upload(obj);
+		return;
+	}else if(flag>5){
+		layer.msg("最多只能上传五个");
 		return;
 	}
 	//上传图片
@@ -857,7 +887,7 @@ function zNodes(){
 			node =data;
 		},
 		error:function(data){
-			alert("页面查询失败");
+			layer.msg("页面查询失败");
 		}
 	});
 	return node;

@@ -18,7 +18,7 @@
 
 .head>div>div,
 .state>div {
-    margin-left: 68px;
+    margin-left: 77px;
 }
 
 .head>.lastchild>div {
@@ -149,7 +149,7 @@
     display: block;
 }
 
-.uploadImg .siteUpload:last-child {
+.uploadImg .siteUpload:nth-child(5) {
     margin-right: 0;
 }
 

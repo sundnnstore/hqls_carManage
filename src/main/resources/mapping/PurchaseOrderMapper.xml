@@ -9,6 +9,13 @@
 		<collection column="purchase_order_id" property="partsList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
 	</resultMap>
 	
+	<resultMap type="com.sinoauto.dto.ShopCartInfoDto" id="shopCartInfo">
+		<id column="purchase_order_id" property="purchaseOrderId"/>
+		<result column="ship_address_id" property="shipAddressId" />
+		<association column="ship_address_id" property="address" select="com.sinoauto.dao.mapper.ShipAddressMapper.getShipAddressById" ></association>
+		<collection column="purchase_order_id" property="partsDesList" select="com.sinoauto.dao.mapper.PartsMapper.findPartsListByOrderId"></collection>
+	</resultMap>
+	
 	<!-- 中天采购订单 -->
 	<!-- <resultMap id="purchOrder" type="com.sinoauto.dto.PurchaseOrderDto">
 		查询订单的配件集合
@@ -25,9 +32,12 @@
 		</if>
 	</select>
 	
-	<select id="findOrderByOrderId" parameterType="Integer" resultMap="orderList">
-		select purchase_order_id, ship_address_id, other_fee, remark
-		from hqls_purchase_order
+	<select id="getOrderByOrderId" parameterType="Integer" resultMap="shopCartInfo">
+		select po.purchase_order_id, po.ship_address_id, IFNULL(po.other_fee, 0) as otherFee, po.remark,
+				sf.balance
+		from hqls_purchase_order po
+		left join hqls_store_finance sf 
+		on po.store_id = sf.store_id
 		where purchase_order_id = #{orderId}
 	</select>
 	
