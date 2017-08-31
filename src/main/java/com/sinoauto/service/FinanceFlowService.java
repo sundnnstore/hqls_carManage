@@ -151,10 +151,10 @@ public class FinanceFlowService {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
 		}
-		List<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
+		Page<HqlsFinanceFlow> orginalList = this.financeFlowMapper.findFlowList(storeId);
 		List<FlowDto> flowDtoList = new ArrayList<>();
 		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeSdf = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
 		for (HqlsFinanceFlow orginal : orginalList) {
 			FlowDto flowDto = new FlowDto();
 			flowDto.setDate(dateSdf.format(orginal.getCreateTime()));
@@ -186,11 +186,13 @@ public class FinanceFlowService {
 		flowListDto.setFlowList(flowDtoList);
 		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
 		if (storeFinance == null) {
-			return null;
+			flowListDto.setBalance(0.0);
+			flowListDto.setCashAble(0.0);
+		} else {
+			flowListDto.setBalance(storeFinance.getBalance() == null ? 0.0 : storeFinance.getBalance());
+			flowListDto.setCashAble(storeFinance.getCashAble() == null ? 0.0 : storeFinance.getCashAble());
 		}
-		flowListDto.setBalance(storeFinance.getBalance());
-		flowListDto.setCashAble(storeFinance.getCashAble());
-		return RestModel.success(flowListDto);
+		return RestModel.success(flowListDto, (int) orginalList.getTotal());
 	}
 
 	public ResponseEntity<RestModel<FlowDetailDto>> findFlowById(Integer financeFlowId) {
@@ -201,15 +203,18 @@ public class FinanceFlowService {
 		FlowDetailDto flowDto = new FlowDetailDto();
 		flowDto.setFlowStatus(hqlsFlow.getFlowStatus());
 		flowDto.setFlowType(hqlsFlow.getChangeType());
-		// TODO 先写死需改造
+		String flowStatusDesc = "失败";
+		if (1 == hqlsFlow.getFlowStatus()) {
+			flowStatusDesc = "成功";
+		}
 		if (hqlsFlow.getChangeType() == 1) {
-			flowDto.setFlowTypeDesc("充值成功");
+			flowDto.setFlowTypeDesc("充值".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 2) {
-			flowDto.setFlowTypeDesc("提现成功");
+			flowDto.setFlowTypeDesc("提现".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 3) {
-			flowDto.setFlowTypeDesc("采购交易成功");
+			flowDto.setFlowTypeDesc("采购交易".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 4) {
-			flowDto.setFlowTypeDesc("服务订单交易成功");
+			flowDto.setFlowTypeDesc("服务订单交易".concat(flowStatusDesc));
 		} else {
 			flowDto.setFlowTypeDesc("未知");
 		}
