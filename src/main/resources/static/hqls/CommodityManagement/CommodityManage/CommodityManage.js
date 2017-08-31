@@ -13,7 +13,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	    // 触发弹框事件
 	    $('.commodity').on('click', 'button', function() {
 	        var method = $(this).data('method');
-	        $('.closeBtn').removeAttr('style');
+//	        $('.closeBtn').removeAttr('style');
 	        if (method == 'addCommodity') {
 	            title = '新增';
 	            //显示配件品牌
@@ -23,12 +23,11 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            title = '查看';
 	            Detailview($(this).parent().find("#partsId").val());
 	            forbidden();//禁用元素
-	            ButtonForbidden();
+	            ButtonForbidden();//禁用其他按钮
 	        } else if (method == 'edit') {
 	            title = '编辑';
 				//编辑方法
 	            Detailview($(this).parent().find("#partsId").val());
-	        	$("#edit").attr("disabled","disabled");
 	        	ButtonForbidden();
 	        }
 	        method && layer.open({
@@ -98,11 +97,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 		                	return;
 	                	}
 	                }
-//	    	    	else if(!$("#partsFactory").val()){
-//	                	titleInfo = '请选择厂家，该项必填!';
-//	                	layer.msg(titleInfo);
-//	                	 return;
-//	                }
 	            	switch(title){
 	            		case "新增":
 	            			addPart(index);
@@ -111,15 +105,15 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            			editPart(index);
 	            			break;
 	            		case "查看":
+	            			layer.close(index);//关闭弹框
 	            			break;
 	            		default:
 	            			layer.msg("未知标题");
 	            			break;	
 	            	}
 	            },
-	            end : function (){ //最后统一走的方法
+	            end : function (index, layero){ //最后统一走的方法
 	            	if (method == 'addCommodity') {
-	            		//alert("新增");
 	    	            afterAddPart();
 	    	        } else if (method == 'view') {
 	    	        	afterView();
@@ -136,8 +130,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	                         <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
 	                     </div>`;
 	                $(".uploadImg").html(picAppend);
-	            	$('#commodityBox').css("display","none");
-	            	clearButtonForbidden();
+	            	$('#commodityBox').css("display","none");//隐藏
+	            	clearButtonForbidden();//启用按钮
+	            	layer.close(index);//关闭弹框
+	            	
 	            }
 	        });
 	    });
@@ -147,7 +143,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	        var othis = $(this);
 	        var partsId= $(this).parent().find("#partsId").val();
 	        $('#chooseState').text(othis.text());
-	        //alert("你好");
 	        layer.open({
 	            type: 1,
 	            title: '提示', // 标题
@@ -417,18 +412,20 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	var pics=""; //图片
     	var attrExtra=""; //配件的动态属性
     	//get data
-    	$("#partsId").attr("value",data.result.partsId);
-    	$("#partsCode").attr("value",data.result.partsCode);
-    	$("#partsName").attr("value",data.result.partsName);
-    	$("#partsModel").attr("value",data.result.partsModel);
-    	$("#partsSpec").attr("value",data.result.partsSpec);
-    	$("#price").attr("value",data.result.price);
-    	$("#discount").attr("value",data.result.discount);
-    	$("#curPrice").attr("value",data.result.curPrice);
-    	$("#origin").attr("value",data.result.origin);
-    	$("#partsFactory").attr("value",data.result.partsFactory);
-    	$("#shelfLife").attr("value",data.result.shelfLife);
-    	$("#partsUnit").attr("value",data.result.partsUnit);
+    	$("#partsId").val(data.result.partsId);
+    	$("#partsCode").val(data.result.partsCode);
+    	$("#partsName").val(data.result.partsName);
+    	$("#partsModel").val(data.result.partsModel);
+    	$("#partsSpec").val(data.result.partsSpec);
+    	$("#price").val(data.result.price);
+    	$("#discount").val(data.result.discount);
+    	$("#curPrice").val(data.result.curPrice);
+    	$("#origin").val(data.result.origin);
+    	$("#partsFactory").val(data.result.partsFactory);
+    	$("#shelfLife").val(data.result.shelfLife);
+    	$("#partsUnit").val(data.result.partsUnit);
+    	
+    	
     	//$("#partsBrandName").val(data.result.partsBrandName);
     	//清空图片和扩展属性
     	//$(".uploadImg").html(""); //清空图片上传div
@@ -667,7 +664,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	//清空数据
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
         });
         $("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
@@ -686,7 +683,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	//清空数据
         $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
         });
         $(":input:radio").removeAttr("disabled");
         $("#cName").val(""); //清空树形菜单数据
@@ -702,7 +699,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     function afterView(){
     	$("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
         	$(this).removeAttr("disabled");
-        	$(this).attr("value","");
+        	$(this).val("");
     	});
     	$(":input:radio").removeAttr("disabled");
     	$("#cName").val(""); //清空树形菜单数据
@@ -729,6 +726,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$("#addCommodity").attr("disabled","disabled");
     	$("#isUse").attr("disabled","disabled");
     	$("#searchCommodity").attr("disabled","disabled");
+    	$("#addOption").hide();
     }
     //清除按钮禁用
     function clearButtonForbidden(){
@@ -737,6 +735,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$("#addCommodity").removeAttr("disabled");
     	$("#isUse").removeAttr("disabled");
     	$("#searchCommodity").removeAttr("disabled");
+    	$("#addOption").show();
     }
 });
 
