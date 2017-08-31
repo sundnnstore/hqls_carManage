@@ -26,8 +26,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            ButtonForbidden();//禁用其他按钮
 	        } else if (method == 'edit') {
 	            title = '编辑';
+	            var partsId = $(this).parent().find("#partsId").val();
+	            alert(partsId);
 				//编辑方法
-	            Detailview($(this).parent().find("#partsId").val());
+	            Detailview(partsId);
 	        	ButtonForbidden();
 	        }
 	        method && layer.open({
@@ -133,7 +135,6 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            	$('#commodityBox').css("display","none");//隐藏
 	            	clearButtonForbidden();//启用按钮
 	            	layer.close(index);//关闭弹框
-	            	
 	            }
 	        });
 	    });
@@ -412,7 +413,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	var pics=""; //图片
     	var attrExtra=""; //配件的动态属性
     	//get data
-    	$("#partsId").val(data.result.partsId);
+    	$("#partsIdForOper").val(data.result.partsId);
     	$("#partsCode").val(data.result.partsCode);
     	$("#partsName").val(data.result.partsName);
     	$("#partsModel").val(data.result.partsModel);
@@ -501,11 +502,14 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	/**
     	 * 配件类型
     	 */
-    	if(data.result.partsType==1){
-    		$("#partsType").find("option[value='1']").attr("selected",true);
-    	}else if(data.result.partsType==2){
-    		$("#partsType").find("option[value='2']").attr("selected",true);
-    	}
+    	$("#partsType").val(data.result.partsType);
+//    	if(data.result.partsType==1){
+//    		//alert("配件类型1");
+//    		//$("#partsType").find("option[value='1']").attr("selected",true);
+//    	}else if(data.result.partsType==2){
+//    		//alert("配件类型2");
+//    		//$("#partsType").find("option[value='2']").attr("selected",true);
+//    	}
     	
     }
     
@@ -622,7 +626,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     			curPrice=$("#curPrice").val()==undefined?-1:$("#curPrice").val(),
     			discount=$("#discount").val()==undefined?-1:$("#discount").val(),
     			partsTypeId=$("#partsTypeId").val()==undefined?-1:$("#partsTypeId").val(),
-    			partsId=$("#partsId").val()==undefined?-1:$("#partsId").val(),
+    			partsId=$("#partsIdForOper").val()==undefined?-1:$("#partsIdForOper").val(),
     			//pid=$("#pid").val()==undefined?-1:$("#pid").val(),
     			uable=$('input:radio:checked').val(),
     			typeName=$("#cName").val()==undefined?"":$("#cName").val()
@@ -662,7 +666,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     //点击新增按钮
     function afterAddPart(){
     	//清空数据
-        $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
+        $("#commodityBox input,#commodityBox select").not("input:radio,#partsId").each(function(){
         	$(this).removeAttr("disabled");
         	$(this).val("");
         });
@@ -681,9 +685,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
      */
     function afterEditPart(){
     	//清空数据
-        $("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
+        $("#commodityBox :text,#commodityBox select").each(function(){
         	$(this).removeAttr("disabled");
         	$(this).val("");
+//        	$(this).attr("value","");
         });
         $(":input:radio").removeAttr("disabled");
         $("#cName").val(""); //清空树形菜单数据
@@ -697,9 +702,10 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     
     //点击查看按钮调用方法
     function afterView(){
-    	$("#commodityBox input,#commodityBox select").not("input:radio").each(function(){
+    	$("#commodityBox :text,#commodityBox select").each(function(){
         	$(this).removeAttr("disabled");
         	$(this).val("");
+//        	$(this).attr("value","");
     	});
     	$(":input:radio").removeAttr("disabled");
     	$("#cName").val(""); //清空树形菜单数据
@@ -708,6 +714,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
     	$('.closeBtn').css('display', 'none');
     	//将查看按钮变为可用
     	$("#view").removeAttr("disabled");
+    	selectTreeId=0;//清空树形菜单id
     }
     
     //查看的时候禁用元素
