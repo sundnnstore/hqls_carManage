@@ -142,11 +142,16 @@ public class PartsController {
 		return partsTypeService.partsTypes();
 	}
 	
-	@ApiOperation(value = "查询配件树", notes = "liud")
-	@GetMapping("findpartstree")
-	public List<PartsTreeRecursionDto> partsTreeRecursion(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
+	@ApiOperation(value = "新增、编辑、查看加载的节点树", notes = "liud")
+	@GetMapping("partstreeofaddeditview")
+	public List<PartsTreeRecursionDto> partsTreeOfAddEditView(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
 		List<PartsTreeRecursionDto> trees = new ArrayList<>();
-		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(pid,operflag);
+		/**
+		 * 反查第一级
+		 */
+		Integer topId = partsService.findTopId(pid);
+		if(topId==null) topId=0;
+		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(topId,operflag);
 		if(partsTree!=null){trees.add(partsTree);};
 		return trees;
 	}
