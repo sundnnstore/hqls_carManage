@@ -2,17 +2,15 @@ package com.sinoauto.dto;
 
 import java.util.List;
 
-import io.swagger.annotations.ApiModelProperty;
-
 public class SettlementOperationParamDto {
 
-	@ApiModelProperty("购买的商品列表")
+	private Integer orderId;
 	private List<ShopCartParamDto> partsList;
-	@ApiModelProperty("下单门店Id")
 	private Integer storeId;
-	@ApiModelProperty("其他费用")
 	private Double otherFee;
-	
+	private Integer payType;
+	private Double payMoney;
+	private Integer addressId;
 
 	public List<ShopCartParamDto> getPartsList() {
 		return partsList;
@@ -22,6 +20,7 @@ public class SettlementOperationParamDto {
 		if (partsList != null) {
 			this.partsList = partsList;
 		}
+
 	}
 
 	public Integer getStoreId() {
@@ -32,6 +31,7 @@ public class SettlementOperationParamDto {
 		if (storeId != null) {
 			this.storeId = storeId;
 		}
+
 	}
 
 	public Double getOtherFee() {
@@ -42,6 +42,51 @@ public class SettlementOperationParamDto {
 		if (otherFee != null) {
 			this.otherFee = otherFee;
 		}
+
+	}
+
+	public Integer getPayType() {
+		return payType;
+	}
+
+	public void setPayType(Integer payType) {
+		if(payType != null) {
+			this.payType = payType;
+		}
+		
+	}
+
+	public Double getPayMoney() {
+		return payMoney;
+	}
+
+	public void setPayMoney(Double payMoney) {
+		if(payMoney != null) {
+			this.payMoney = payMoney;
+		}
+		
+	}
+
+	public Integer getAddressId() {
+		return addressId;
+	}
+
+	public void setAddressId(Integer addressId) {
+		if(addressId != null) {
+			this.addressId = addressId;
+		}
+		
+	}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		if(orderId != null) {
+			this.orderId = orderId;
+		}
+		
 	}
 
 }

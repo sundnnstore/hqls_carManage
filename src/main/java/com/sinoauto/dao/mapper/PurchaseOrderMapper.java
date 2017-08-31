@@ -12,6 +12,7 @@ import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
+import com.sinoauto.dto.ShopCartInfoDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 
 @Mapper
@@ -42,7 +43,7 @@ public interface PurchaseOrderMapper {
 	 * @return
 	 * @author wuxiao
 	 */
-	public PurchaseOrderParamDto getOrderByOrderId(@Param("orderId") Integer orderId);
+	public ShopCartInfoDto getOrderByOrderId(@Param("orderId") Integer orderId);
 	
 	/**
 	 * 支付操作

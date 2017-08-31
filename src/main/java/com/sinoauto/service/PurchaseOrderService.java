@@ -32,6 +32,7 @@ import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
+import com.sinoauto.dto.PayReturnParamDto;
 import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
@@ -142,23 +143,18 @@ public class PurchaseOrderService {
 		// 生成订单
 		HqlsPurchaseOrder order = new HqlsPurchaseOrder();
 		order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
-		order.setDiscountFee(0.00);
-		order.setOrderStatus(1);
-		// 获取默认收货地址
-		HqlsShipAddress address = shipAddressMapper.getDefaultAddressByStoreId(orderParamDto.getStoreId());
-		if (address == null) {
-			address = shipAddressMapper.getAddressByStoreId(orderParamDto.getStoreId());
-		}
-		order.setShipAddressId(address.getShipAddressId());
-		order.setStoreId(orderParamDto.getStoreId());
-		order.setOtherFee(orderParamDto.getOtherFee());
-		// 计算订单总价
 		BigDecimal result = new BigDecimal(0.00);
 		for (ShopCartParamDto p: parts) {
 			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
 			result = result.add(eachOrderPrice);
 		}
+		Double discount = result.subtract(new BigDecimal(orderParamDto.getPayMoney())).setScale(2, RoundingMode.HALF_UP).doubleValue();
+		order.setDiscountFee(discount);
+		order.setOrderStatus(1);
+		order.setShipAddressId(orderParamDto.getAddressId());
+		order.setStoreId(orderParamDto.getStoreId());
+		order.setOtherFee(orderParamDto.getOtherFee());
 		order.setTotalFee(result.setScale(2, RoundingMode.HALF_UP).doubleValue());
 		purchaseOrderMapper.insert(order);
 		
@@ -176,22 +172,41 @@ public class PurchaseOrderService {
 	}
 	
 	/**
-	 * 结算操作
+	 * 进入结算页
 	 * @return
 	 */
-	@Transactional
-	public ResponseEntity<RestModel<PurchaseOrderParamDto>> settlementOperation(SettlementOperationParamDto param) {
+	public ResponseEntity<RestModel<ShopCartInfoDto>> settlementOperation(SettlementOperationParamDto orderParamDto) {
 		try {
-			// 生成待支付订单
-			Integer orderId = generatorPurchaseOrder(param);
-			PurchaseOrderParamDto order = partsMapper.getSettlementInfo(orderId);
-			order.setTotalFee(calculationAmount(order.getPartsList()) + order.getOtherFee());
+			List<ShopCartParamDto> parts = orderParamDto.getPartsList();
+			if (parts.isEmpty()) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "请先选择商品");
+			}
+			// 查询每件商品的信息
+			List<PartsDesListDto> partsList = new ArrayList<>();
+			for (ShopCartParamDto sc: parts) {
+				PartsDesListDto partsDesc = partsMapper.checkShopCart(sc.getPartsId());
+				partsDesc.setPurchaseNum(sc.getNum());
+				partsList.add(partsDesc);
+			}
+			// 默认地址获取
+			
+			// 组装返回数据
+			ShopCartInfoDto order = new ShopCartInfoDto();
+			order.setPartsDesList(partsList);
+			order.setTotalAmount(calculationAmount(partsList));
+			// 获取门店余额
+			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(orderParamDto.getStoreId());
+			order.setBalance(finance.getBalance());
+			if (finance.getBalance() != null) {
+				order.setIsEnough(finance.getBalance() > order.getTotalAmount());
+			} else {
+				order.setIsEnough(false);
+			}
 			return RestModel.success(order);
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
 			e.printStackTrace();
 		}
-		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "生成订单异常");
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "异常");
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> checkShopCart(List<ShopCartParamDto> param) {
@@ -214,7 +229,7 @@ public class PurchaseOrderService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "购物车查询异常");
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "查询异常");
 	}
 	
 	/**
@@ -229,18 +244,19 @@ public class PurchaseOrderService {
 		return RestModel.success( purchaseOrderMapper.findOrder(storeId, orderStatus));
 	}
 	
-	public ResponseEntity<RestModel<PurchaseOrderParamDto>> getOrderByOrderId(Integer orderId) {
+	public ResponseEntity<RestModel<ShopCartInfoDto>> getOrderByOrderId(Integer orderId) {
 		//计算总费用
-		PurchaseOrderParamDto order = purchaseOrderMapper.getOrderByOrderId(orderId);
-		BigDecimal totalFee = new BigDecimal(calculationAmount(order.getPartsList()));
+		ShopCartInfoDto order = purchaseOrderMapper.getOrderByOrderId(orderId);
+		BigDecimal totalFee = new BigDecimal(calculationAmount(order.getPartsDesList()));
 		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
-		order.setTotalFee(totalFee.setScale(2, RoundingMode.HALF_UP).doubleValue());
+		order.setTotalAmount(totalFee.setScale(2, RoundingMode.HALF_UP).doubleValue());
+		order.setIsEnough(order.getBalance() > order.getTotalAmount());
 		
 		return RestModel.success(order);
 	}
 	
 	@Transactional
-	public ResponseEntity<RestModel<String>> payOperation(Integer orderId, Integer payType, double money, String payNo, String token) {
+	public ResponseEntity<RestModel<PayReturnParamDto>> payOperation(SettlementOperationParamDto param, String token) {
 		// 获取当前用户
 		RestModel<TokenModel> rest = authService.validToken(token);
 		if (rest.getErrcode() != 0) {// 解析token失败
@@ -253,51 +269,51 @@ public class PurchaseOrderService {
 		}
 		
 		try {
+			// 生成待支付订单
+			Integer orderId = param.getOrderId() == null ? generatorPurchaseOrder(param) : param.getOrderId();
 			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
-			if (null == order) {
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单不存在");
+			/*
+			 *  余额支付方式
+			 */
+			if (param.getPayType() == 0) {
+				// 从财务余额中扣掉支付金额
+				HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(param.getStoreId());
+				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
+				if (returnMoney != null) {
+					finance.setBalance(returnMoney[0]);
+					finance.setCashDisable(returnMoney[1]);
+					finance.setCashAble(returnMoney[2]);
+					storeFinanceMapper.updateBalance(finance);
+				}
+				
+				// 修改订单
+				order.setOrderStatus(2);
+				order.setPayFee(param.getPayMoney());
+				order.setPayType(param.getPayType());
+				purchaseOrderMapper.payOperation(order);
+				
+				// 添加财务流水
+				HqlsFinanceFlow flow = new HqlsFinanceFlow();
+				flow.setChangeMoney(param.getPayMoney());
+				flow.setChangeType(3);
+				flow.setChargeType(2);
+				flow.setIsDelete(0);
+				flow.setOperPerson(user.getUserName());
+				flow.setOrderNo(order.getOrderNo());
+				flow.setStoreId(param.getStoreId());
+				financeFlowMapper.insert(flow);
+				return RestModel.success();
+				
+			} else if (param.getPayType() == 1) { // 支付宝支付
+				PayReturnParamDto pay = new PayReturnParamDto();
+				pay.setChangeType(3);// 采购
+				pay.setMoney(param.getPayMoney());
+				pay.setOrderNo(order.getOrderNo());
+				pay.setStoreId(order.getStoreId());
+				return RestModel.success(pay);
 			}
-			// 从财务余额中扣掉支付金额
-			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(order.getStoreId());
-			Double[] returnMoney = calculationBalance(finance, money);
-			if (returnMoney == null) {
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "余额不足！");
-			}
-			finance.setBalance(returnMoney[0]);
-			finance.setCashAble(returnMoney[2]);
-			finance.setCashDisable(returnMoney[1]);
-			storeFinanceMapper.updateBalance(finance);
-			
-			List<HqlsOrderDetail> detail = orderDetailMapper.getDetailByOrderId(orderId);
-			// 计算优惠
-			BigDecimal originPrice = new BigDecimal(0.00);
-			for (HqlsOrderDetail d: detail) {
-				originPrice = originPrice.add(new BigDecimal(d.getBuyPrice()).multiply(new BigDecimal(d.getBuyCount())));
-			}
-			Double discountFee = (originPrice.subtract(new BigDecimal(money))).setScale(2, RoundingMode.HALF_UP).doubleValue();
-			discountFee = discountFee < 0 ? 0.00 : discountFee;
-			// 修改订单
-			order.setDiscountFee(discountFee);
-			order.setOrderStatus(2);
-			order.setPayFee(money);
-			order.setPayType(payType);
-			order.setPayNo(payNo);
-			purchaseOrderMapper.payOperation(order);
-			
-			// 添加财务流水
-			HqlsFinanceFlow flow = new HqlsFinanceFlow();
-			flow.setChangeMoney(money);
-			flow.setChangeType(3);
-			flow.setChargeType(2);
-			flow.setIsDelete(0);
-			flow.setOperPerson(user.getUserName());
-			flow.setOrderNo(order.getOrderNo());
-			flow.setTransactionNo(payNo);
-			financeFlowMapper.insert(flow);
-			
-			return RestModel.success("支付成功");
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "支付异常");
@@ -321,7 +337,7 @@ public class PurchaseOrderService {
 			purchaseOrderMapper.confirmReceipt(order);
 			return RestModel.success("确认收货完成");
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "确认收货异常");
@@ -329,23 +345,25 @@ public class PurchaseOrderService {
 	
 	/**
 	 * 计算门店财务余额
-	 * @return
+	 * @return Double[余额，不可用提现，可用提现]
 	 */
 	public Double[] calculationBalance(HqlsStoreFinance finance, Double payMoney) {
+		// 余额减去支付金额
 		BigDecimal diffBalance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(payMoney)).setScale(2, RoundingMode.HALF_UP);
 		if (diffBalance.doubleValue() < 0) {
 			return null;
 		}
+		// 不可用提现减去支付金额
 		BigDecimal diff = new BigDecimal(finance.getCashDisable()).subtract(new BigDecimal(payMoney)).setScale(2, RoundingMode.HALF_UP);
 		Double[] returnMoney = new Double[3];
 		// 剩余余额
 		returnMoney[0] = diffBalance.doubleValue();
 		if (diff.doubleValue() < 0) {
-			// 先扣除不可用提现，再扣可用提现
+			// 先扣除不可用提现，再扣可用提现 （可用提现-（支付金额-不可用提现））
 			Double CashAble = (new BigDecimal(finance.getCashAble())
-					.subtract(new BigDecimal(payMoney).subtract(new BigDecimal(finance.getCashAble())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+					.subtract(new BigDecimal(payMoney).subtract(new BigDecimal(finance.getCashDisable())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
 			// 不可用提现用完
-			returnMoney[1] = 0.00;
+			returnMoney[1] = 0.0;
 			// 可用提现
 			returnMoney[2] = CashAble;
 		} else {
@@ -452,7 +470,7 @@ public class PurchaseOrderService {
 			}
 			return RestModel.success("发货完成");
 		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().isRollbackOnly();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "发货操作异常");
