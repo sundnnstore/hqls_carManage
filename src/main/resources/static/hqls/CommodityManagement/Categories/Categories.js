@@ -51,6 +51,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	    	  $('#editItemTree').html("");
 	    	  $('#addItemTree').html("");
 	    	  clearButtonForbidden();
+	    	  //强制隐藏
 	    	  layer.close(index);
 	      }
       });
@@ -58,7 +59,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     });
 
     /**
-     * 
+     * 加载节点树
      * @param level 1
      * @param flag 1:新增  2:编辑 3.查看
      * @returns
@@ -155,7 +156,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     
     // 弹框：以何种方式添加商品分类及删除提示
     function categoriesEdit(item) {
-    	alert(2);
         $('#categoriesName').text(item.name);
         layer.open({ // 弹框询问门店添加位置
             type: 1,
@@ -273,10 +273,24 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     /**
      * 页面加载默认显示
      */
-    getdata(1);
+    getdata(1,0);
 	$("#searchCategories").click(function(){
-		alert("搜索");
-		getdata(1);
+		var selectLevel=0;
+		//获取等级数据，然后判断
+    	var onelevelSelectVal = $("#oneleveltype").val();
+    	var twolevelSelectVal = $("#twoleveltype").val();
+    	var threelevelSelectVal=$("#threeleveltype").val();
+    	if(onelevelSelectVal!=-1){
+    		selectLevel = onelevelSelectVal;
+    	}else if(twolevelSelectVal!=-1){
+    		selectLevel=twolevelSelectVal;
+    	}else if(threelevelSelectVal!=-1){
+    		selectLevel=threelevelSelectVal;
+    	}else{
+    		selectLevel = 0;
+    	}
+    	//alert(oneleveSelectVal);
+		getdata(1,selectLevel);
 	});
 	
     /**
@@ -307,16 +321,17 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	}
     
     /**
-     * 获取分页数据
+     * 获取数据
      * @param pageIndex
      * @returns
      */
-    function getdata(pageIndex){
+    function getdata(pageIndex,selectLevel){
+    	if(selectLevel==undefined) selectLevel=0;
     	$.ajax({
 			url : "/levelinfo",
 			type : "get",
 			async : false,
-			data : {"partsTypeId":0,"selecDepth":6,"pageSize":pageSize,"pageIndex":pageIndex},
+			data : {"partsTypeId":selectLevel,"selecDepth":6,"pageSize":pageSize,"pageIndex":pageIndex},
 			success : function(data){
 				comboTable(data,pageIndex);
 			},
@@ -371,7 +386,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
      * @returns
      */
     function displayLevel(res){
-    	var onlevel=``,twolevel=``,threelevel=``;
+    	var onlevel=`<option value="-1">全部</option>`,twolevel=`<option value="-1">全部</option>`,threelevel=`<option value="-1">全部</option>`;
 		var trs=``,one=``,two=``,three=``;
 		//循环菜单树
 		if(res.children!=null&&res.children!=undefined){
@@ -440,6 +455,13 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addChildren(selectNodeId,typeName,index){
     	//把他的id当做 pid
     	//新增一个配件信息	
+    	/**
+         * 加载节点树
+         * @param level 1
+         * @param flag 1:新增  2:编辑 3.查看
+         * @returns
+         */
+        //function loadNodes(level,flag)
     	var data = {"partsTypeId":selectNodeId,"typeName":typeName};
     	data = JSON.stringify(data);
     	$.ajax({
@@ -451,7 +473,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			success : function(data){
 				layer.msg("子节点添加成功");
 				//layer.close(index);
-				loadNodes(0,0);
+				//loadNodes(0,0);
+				loadNodes(selectNodeId,1)
 			},
 			error:function(data){
 				layer.msg("子节点添加失败");

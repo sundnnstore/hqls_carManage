@@ -59,6 +59,11 @@ public class PartsService {
 	 */
 	private List<List<PartsLevelDto>> partsLevelDtos =new ArrayList<List<PartsLevelDto>>();
 	
+	/**
+	 * 操作标记
+	 */
+//	private Integer flag=0;
+	
 
 	public ResponseEntity<RestModel<List<CommonDto>>> findListByType(Integer partsType, Integer pageIndex, Integer pageSize) {
 		PageHelper.startPage(pageIndex, pageSize);
@@ -382,6 +387,7 @@ public class PartsService {
 				 */
 				Integer pid = findTopId(partsTypeId);
 				if(pid==null) pid=0;
+				
 				/**
 				 * 拿到菜单数据源
 				 */
@@ -402,7 +408,10 @@ public class PartsService {
 					pagePartsLevel = parseTreeRecurData(data,depth);
 				}
 			}
+			//初始化全局变量
 			partsLevelDtos = new ArrayList<>();
+//			flag=0;
+			mapNode =new ArrayList<>();
 		} catch (Exception e) {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"查询树形等级信息失败");
@@ -427,14 +436,14 @@ public class PartsService {
 		Integer retId=null;
 		HqlsPartsType hqlsPartsType = partsMapper.findPidByPtId(partsTypeId);
 		if(hqlsPartsType!=null){
-			if(hqlsPartsType.getPid()!=null){
+			if(hqlsPartsType.getPid()!=null&&hqlsPartsType.getPid()==0){
+				return partsTypeId;
+			}else{
 				System.out.println("pid----->"+hqlsPartsType.getPid());
 				retId = findTopId(hqlsPartsType.getPid());
-			}else{
-				retId =partsTypeId;
 			}
 		}else{
-			retId =0;
+			retId =partsTypeId;
 		}
 		return retId;
 	}
@@ -451,7 +460,6 @@ public class PartsService {
 	 *  备注临时存储等级的对象最好 将hashmap --> 换成对象
 	 */
 	public List<List<PartsLevelDto>> parseTreeRecurData(PartsTreeRecursionDto data,Integer depth){
-		
 		List<PartsTreeRecursionDto> partChildren =null; //组装数据
 		/**
 		 * 存储循环过得配件类型的id 和 name
@@ -459,19 +467,21 @@ public class PartsService {
 		ConcurrentHashMap<Integer, String> nodeTemp =new ConcurrentHashMap<Integer, String>();
 		if(data!=null){
 			partChildren = data.getChildren();
-//			System.out.println("打印每一次递归下一个对象名称:"+data.getName()+"\nID:"+data.getId());
-				for (PartsTreeRecursionDto nextNode : partChildren) {
+			for (PartsTreeRecursionDto nextNode : partChildren) {
+//					if(data.getId()!=0&&data.getId()>0&&flag==0){
+//						nodeTemp.put(data.getId(), data.getName());
+//						mapNode.add(nodeTemp);
+//					}
 					System.out.println("nextNodeId"+nextNode.getId()+"\tnextNodeName"+nextNode.getName());
+					//存储等级临时数据	
 					if(nextNode.getId()>0&&nextNode.getChildren().size()>0){
 						/**
 						 * 可以用对象代替，这样可以省一点事,减少维护
 						 */
-						nodeTemp.put(nextNode.getId(), nextNode.getName());  
-						//CommonDto keyValue = new CommonDto();
-						//keyValue.setId(nextNode.getId());
-						//keyValue.setValue(value);
+						nodeTemp.put(nextNode.getId(), nextNode.getName());
 						mapNode.add(nodeTemp);			
 					}
+					
 					/**
 					 * 递归查询
 					 */
