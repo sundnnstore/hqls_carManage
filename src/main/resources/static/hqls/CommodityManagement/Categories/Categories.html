@@ -45,39 +45,21 @@
                         <th>操作</th>
                     </tr>
                 </thead>
-                <tbody id="partsTypeInfo">
-                    <!-- <tr>
-                        <td>四滤产品</td>
-                        <td>机油滤清器</td>
-                        <td>旋装滤清器</td>
-                        <td class="operation">
-                            <button id="view" data-method="view" class="layui-btn">查看</button>
-                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>四滤产品</td>
-                        <td>机油滤清器</td>
-                        <td>旋装滤清器</td>
-                        <td class="operation">
-                            <button id="view" data-method="view" class="layui-btn">查看</button>
-                            <button id="edit" data-method="edit" class="layui-btn layui-btn-normal">编辑</button>
-                        </td>
-                    </tr> -->
-                </tbody>
+                <tbody id="partsTypeInfo"></tbody>
             </table>
         </div>
         <!-- <div id="pages"></div> -->
     </div>
 </div>
+
 <!-- 弹框一：商品分类树状结构 编辑-->
 <div id="addTree" class="categoriesTreeBox">
-   <!--  <ul id="partsTree"></ul> -->
-   <ul id="addItemTree"></ul>
+    <!--  <ul id="partsTree"></ul> -->
+    <ul id="addItemTree"></ul>
 </div>
 <div id="editTree" class="categoriesTreeBox">
-   <!--  <ul id="partsItemTree"></ul> -->
-   <ul id="editItemTree"></ul>
+    <!--  <ul id="partsItemTree"></ul> -->
+    <ul id="editItemTree"></ul>
 </div>
 <div id="viewTree" class="categoriesTreeBox">
     <!-- <ul id="viewItemTree"></ul> -->
@@ -94,6 +76,16 @@
             <label for="first_title" class="layui-form-label">分类名称</label>
             <div class="layui-input-block">
                 <input type="text" name="" id="partsTypeName" class="layui-input" placeholder="请输入分类名称" />
+            </div>
+        </div>
+        <div class="layui-input-inline">
+            <label for="" class="layui-form-label">类型  *</label>
+            <div class="layui-input-block">
+                <!-- 类型中的通用件和易损件的value值需要根据后台字段值设置 -->
+                <select class="layui-select" id="partsType">
+                    <option value="1" selected>易损件</option>
+                    <option value="2">车型件</option>
+                </select>
             </div>
         </div>
     </form>

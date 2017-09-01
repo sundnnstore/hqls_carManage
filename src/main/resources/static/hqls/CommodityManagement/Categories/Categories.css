@@ -54,6 +54,12 @@
 
 .categoriesInfo .layui-input-inline {
     display: block;
+    padding-right: 30px;
+    margin: 10px 0;
+}
+
+.categoriesInfo .layui-input-inline select {
+    width: 100%;
 }
 
 .layui-layer-btn {
