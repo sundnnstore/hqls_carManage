@@ -537,7 +537,7 @@ public class PurchaseOrderService {
 	@Transactional
 	public int updatePurchaseOrderStatus(String orderNo) {
 		try {
-			return purchaseOrderMapper.updateOrderStatus(orderNo);
+			return purchaseOrderMapper.updateOrderStatusForPay(orderNo);
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();

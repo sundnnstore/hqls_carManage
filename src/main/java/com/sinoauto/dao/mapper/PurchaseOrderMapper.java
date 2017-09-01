@@ -87,5 +87,5 @@ public interface PurchaseOrderMapper {
 			@Param("userName") String userName, @Param("mobile") String mobile);
 	
 	@Update("update hqls_purchase_order set order_status = 2 where order_no = #{1} and order_status <> 2")
-	public int updateOrderStatus(String orderNo);
+	public int updateOrderStatusForPay(String orderNo);
 }
