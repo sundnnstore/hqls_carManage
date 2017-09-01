@@ -96,9 +96,12 @@ public class FinanceFlowService {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
 			flow.setStoreId(storeId);
 			flow.setTransactionNo(transactionNo);
-			flow.setChangeType(1);// 充值
+			flow.setChangeType(payType);// 充值
 			flow.setChangeMoney(changeMoney);
 			flow.setChargeType(1);// 收入
+			if(3 == payType) {
+				flow.setChargeType(2);
+			}
 			flow.setFlowStatus(2);
 			flow.setCheckStatus(1);
 			flow.setOperPerson("");
