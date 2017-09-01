@@ -160,6 +160,7 @@ public class FinanceFlowService {
 		SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
 		for (HqlsFinanceFlow orginal : orginalList) {
 			FlowDto flowDto = new FlowDto();
+			flowDto.setFlowStatus(orginal.getFlowStatus());
 			flowDto.setDate(dateSdf.format(orginal.getCreateTime()));
 			flowDto.setTime(timeSdf.format(orginal.getCreateTime()));
 			flowDto.setFinanceFlowId(orginal.getFinanceFlowId());
