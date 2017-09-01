@@ -142,7 +142,19 @@ public class PartsController {
 		return partsTypeService.partsTypes();
 	}
 	
-	@ApiOperation(value = "新增、编辑、查看加载的节点树", notes = "liud")
+	@ApiOperation(value = "商品管理新增查看", notes = "liud")
+	@GetMapping("partstreeofadded")
+	public List<PartsTreeRecursionDto> partsTreeOfAdd(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
+		List<PartsTreeRecursionDto> trees = new ArrayList<>();
+//		Integer topId = partsService.findTopId(pid);
+//		if(topId==null) topId=0;
+		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(pid,operflag);
+		if(partsTree!=null){trees.add(partsTree);};
+		return trees;
+	}
+	
+	
+	@ApiOperation(value = "编辑、查看加载的节点树", notes = "liud")
 	@GetMapping("partstreeofaddeditview")
 	public List<PartsTreeRecursionDto> partsTreeOfAddEditView(@RequestParam("pid") Integer pid,@RequestParam("operflag") Integer operflag){
 		List<PartsTreeRecursionDto> trees = new ArrayList<>();
@@ -151,10 +163,11 @@ public class PartsController {
 		 */
 		Integer topId = partsService.findTopId(pid);
 		if(topId==null) topId=0;
-		PartsTreeRecursionDto partsTree =  partsService.partsTreeRecursion(topId,operflag);
+		PartsTreeRecursionDto partsTree =  partsService.partsTreeForEditAndView(topId,operflag);
 		if(partsTree!=null){trees.add(partsTree);};
 		return trees;
 	}
+	
 	
 	/**
 	 * 
