@@ -546,7 +546,4 @@ public class PurchaseOrderService {
 		}
 	}
 	
-	public static void main(String[] args) {
-		
-	}
 }
