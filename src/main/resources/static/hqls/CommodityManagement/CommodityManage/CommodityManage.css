@@ -18,7 +18,7 @@
 
 .head>div>div,
 .state>div {
-    margin-left: 77px;
+    margin-left: 77px
 }
 
 .head>.lastchild>div {
@@ -103,6 +103,7 @@
 
 .modelTableContainer .paramGroup input:first-child {
     float: left;
+    text-align: center;
 }
 
 .modelTableContainer .paramGroup input:last-child {
@@ -142,7 +143,7 @@
     text-align: center;
     display: inline-block;
     position: relative;
-    margin-right: 11px;
+    margin-right: 10px;
 }
 
 .uploadImg .siteUpload:hover .closeBtn {
@@ -207,7 +208,7 @@
 }
 
 .layui-layer-content {
-    max-height: 610px;
+    max-height: 609px;
 }
 
 .layui-layer-btn {

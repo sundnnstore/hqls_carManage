@@ -43,6 +43,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	            btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
 	            btnAlign: 'c', //按钮居中
 	            yes: function(index, layero) {
+	            	//折扣
 	            	// 校验规格、型号、品牌必填
 	                var titleInfo; // 校验提示信
 	    	    	if(!$('#partsName').val()){
@@ -77,7 +78,7 @@ layui.use(['jquery','layer', 'form', 'laypage', 'upload','tree'], function() {
 	                	titleInfo = '请输入折扣,该项必填!';
 	                	layer.msg(titleInfo);
 	                	return;
-	                }else if(!parseFloat($('#discount').val())>1||parseFloat($('#discount').val())<0){
+	                }else if(parseFloat($('#discount').val())>1||parseFloat($('#discount').val())<0){
 	                	titleInfo = '请输入小数,该项必填!';
 	                	layer.msg(titleInfo);
 	                	return;
