@@ -20,6 +20,8 @@ public class FlowDto {
 	private String content;
 	@ApiModelProperty("金额")
 	private String money;
+	@ApiModelProperty("交易状态：1-成功，2-失败")
+	private Integer flowStatus;
 
 	public String getDate() {
 		return date;
@@ -68,6 +70,16 @@ public class FlowDto {
 	public void setFinanceFlowId(Integer financeFlowId) {
 		if (financeFlowId != null) {
 			this.financeFlowId = financeFlowId;
+		}
+	}
+
+	public Integer getFlowStatus() {
+		return flowStatus;
+	}
+
+	public void setFlowStatus(Integer flowStatus) {
+		if (flowStatus != null) {
+			this.flowStatus = flowStatus;
 		}
 	}
 

@@ -71,6 +71,7 @@ public class UserService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST.getErrcode(),"账户不存在");
 		}
 		UserLoginDto ul = new UserLoginDto();
+		ul.setUserId(user.getUserId());
 		ul.setMobile(user.getMobile());
 		ul.setUserName(user.getUserName());
 		ul.setToken(rest.getResult().getToken());

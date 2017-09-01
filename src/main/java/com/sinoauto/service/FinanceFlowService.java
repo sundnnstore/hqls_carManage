@@ -96,9 +96,12 @@ public class FinanceFlowService {
 			HqlsFinanceFlow flow = new HqlsFinanceFlow();
 			flow.setStoreId(storeId);
 			flow.setTransactionNo(transactionNo);
-			flow.setChangeType(1);// 充值
+			flow.setChangeType(payType);// 充值
 			flow.setChangeMoney(changeMoney);
 			flow.setChargeType(1);// 收入
+			if (3 == payType) {
+				flow.setChargeType(2);
+			}
 			flow.setFlowStatus(2);
 			flow.setCheckStatus(1);
 			flow.setOperPerson("");
@@ -157,6 +160,7 @@ public class FinanceFlowService {
 		SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
 		for (HqlsFinanceFlow orginal : orginalList) {
 			FlowDto flowDto = new FlowDto();
+			flowDto.setFlowStatus(orginal.getFlowStatus());
 			flowDto.setDate(dateSdf.format(orginal.getCreateTime()));
 			flowDto.setTime(timeSdf.format(orginal.getCreateTime()));
 			flowDto.setFinanceFlowId(orginal.getFinanceFlowId());
@@ -227,7 +231,10 @@ public class FinanceFlowService {
 			flowDto.setMoney("-" + hqlsFlow.getChangeMoney());
 		}
 		flowDto.setOrderNo(hqlsFlow.getOrderNo());
-		if (hqlsFlow.getPayType() == 1) {
+
+		if (hqlsFlow.getPayType() == null) {
+			flowDto.setPayType("暂无说明");
+		} else if (hqlsFlow.getPayType() == 1) {
 			flowDto.setPayType("支付宝");
 		} else if (hqlsFlow.getPayType() == 2) {
 			flowDto.setPayType("微信");
@@ -236,7 +243,6 @@ public class FinanceFlowService {
 		} else {
 			flowDto.setPayType("未知");
 		}
-		flowDto.setPayDesc("暂无说明");
 		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
@@ -255,6 +261,11 @@ public class FinanceFlowService {
 		Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
+	}
+
+	public HqlsFinanceFlow findFlowByTransactionNo(String transactionNo) {
+		HqlsFinanceFlow hqlsFlow = this.financeFlowMapper.getFlowByTransactionNo(transactionNo);
+		return hqlsFlow;
 	}
 
 }

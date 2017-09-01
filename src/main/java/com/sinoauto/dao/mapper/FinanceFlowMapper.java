@@ -27,5 +27,10 @@ public interface FinanceFlowMapper {
 
 	@Select("select store_id from hqls_finance_flow where transaction_no = #{transactionNo} ")
 	public int getStoreIdByTransactionNo(@Param("transactionNo") String transactionNo);
+	
+	@Select("select * from hqls_finance_flow where transaction_no = #{transactionNo} ")
+	public HqlsFinanceFlow getFlowByTransactionNo(@Param("transactionNo") String transactionNo);
+	
+	
 
 }

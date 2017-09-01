@@ -20,11 +20,12 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
              * 1 是节点等级
              * 1 是新增  2 编辑的
              */
-            loadNodes(0,1);
+            loadAddNodes(0,1);
             buttongForbidden();
         } else if (method == 'view') {
             first_title = '查看';
-            loadNodes(level,3);
+//            loadNodes(level,3);
+            loadEditAndViewNodes(level,3);
             buttongForbidden();
         } else if (method == 'edit') {
             first_title = '编辑';
@@ -32,7 +33,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
              * 第一个  2 等级
              * 第二个  2 操作方式
              */
-            loadNodes(level,2);//加载节点树
+//            loadNodes(level,2);//加载节点树
+            loadEditAndViewNodes(level,2)
             buttongForbidden();
         }
         first_title&&layer.open({
@@ -60,27 +62,41 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     });
 
     /**
-     * 加载节点树,根据当前节点查到父节点，然后更具父节点查找
+     * 加载新增的节点树
      * @param level 1
      * @param flag 1:新增  2:编辑 3.查看
      * @returns
      */
-    function loadNodes(level,flag){
+    function loadAddNodes(level,flag){
     	$.ajax({
-			url : "/partstreeofaddeditview",
+			url : "/partstreeofadded",  //这个是新增显示的数据
+			type : "get",
+			async : false,
+			data : {"pid":level,"operflag":flag},
+			success : function(res){
+				addTree(res); //显示新增数据					
+			},
+			error :function(res){
+				alert('查询树形菜单失败');
+			}
+		});
+    }
+    
+    /**
+     * 加载 编辑和查看的数据
+     * @param level
+     * @param flag
+     * @returns
+     */
+    function loadEditAndViewNodes(level,flag){
+    	$.ajax({
+			url : "/partstreeofaddeditview",  //这个是view 和 edit的显示数据
 			type : "get",
 			async : false,
 			data : {"pid":level,"operflag":flag},
 			success : function(res){
 				switch (flag) {
-					case 1:
-						addTree(res);
-						break;
 					case 2:
-						/**
-						 * res 返回数据
-						 * level 查找条件
-						 */
 						editTree(res,level);
 						break;
 					case 3:
@@ -113,6 +129,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             nodes: data
         });
     }
+    
     function editTree(data,level){
     	 console.log(data);
     	 layui.tree({

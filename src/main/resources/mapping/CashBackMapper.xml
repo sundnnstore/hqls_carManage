@@ -10,9 +10,9 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsCashBack" useGeneratedKeys="true" keyProperty="cashBackId">
 	    INSERT INTO hqls_cash_back (
-	        money, discount, return_money, return_type, is_usable, create_time
+	        money, discount, return_money, return_type, operate_user_id, is_usable, create_time
 	    ) VALUES (
-	        #{money}, #{discount}, #{returnMoney}, #{returnType}, #{isUsable}, #{createTime}        
+	        #{money}, #{discount}, #{returnMoney}, #{returnType}, #{operateUserId}, #{isUsable}, #{createTime}        
 	    )
 	</insert>
 
@@ -31,7 +31,7 @@
 	
 	<select id="findCashBackList" resultType="com.sinoauto.dto.CashBackDto">
 		SELECT
-			cb.*, cu.customer_name as operate_user_name,
+			cb.*, user.user_name as operate_user_name,
 			CASE
 		WHEN cb.return_type = 1 THEN
 			'返利率'
@@ -50,14 +50,14 @@
 		END AS content
 		FROM
 			hqls_cash_back cb,
-			hqls_customer cu
+			hqls_user user
 		WHERE
-			cb.operate_user_id = cu.customer_id
+			cb.operate_user_id = user.user_id
 		<if test="returnType != null">
 			AND cb.return_type = #{returnType}
 		</if>
 		<if test="operateUserName != null and operateUserName != ''">
-			AND cu.customer_name LIKE CONCAT('%', #{operateUserName}, '%')
+			AND user.user_name LIKE CONCAT('%', #{operateUserName}, '%')
 		</if>
 		<if test="createTime != null and createTime != ''">
 			AND datediff(cb.create_time,#{createTime})=0

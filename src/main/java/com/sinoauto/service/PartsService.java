@@ -605,4 +605,61 @@ public class PartsService {
 			return partsParent;
 	}
 	
+	/**
+	 * 	商品分类查看和编辑显示
+	 * 	@User liud
+	 * 	@Date 2017年9月1日上午11:04:49
+	 * 	@param pid
+	 * 	@param operflag
+	 * 	@return
+	 */
+	public PartsTreeRecursionDto partsTreeForEditAndView(Integer pid, Integer operflag) {
+		/**
+		 * 配件子集
+		 */
+		List<PartsTreeRecursionDto> childTree = null;
+		
+		/**
+		 * 当前配件类型信息
+		 */
+		PartsTreeRecursionDto partsParent = partsMapper.partsParent(pid);
+		if (partsParent == null) {partsParent = new PartsTreeRecursionDto();};
+		if (operflag == null) {operflag =100;}
+		switch (operflag) {
+		case 1:
+			partsParent.setSpread(false); // 收缩
+			break;
+		case 2:
+			partsParent.setSpread(true); // 展开
+			break;
+		case 3:
+			partsParent.setSpread(true); // 展开
+			break;
+		default:
+			partsParent.setSpread(false); // 展开
+			break;
+		}
+
+		childTree = partsMapper.partsChildTreeByPid(pid);
+		// 判断是否存在子菜单
+		if (childTree != null) {
+			// 创建存储子菜单集合
+			partsParent.setChildren(new ArrayList<>());
+			// 存储子节点树；
+			for (PartsTreeRecursionDto child : childTree) {
+				if(child.getChildren()!=null){
+					partsParent.getChildren().add(child);
+				}else{
+					return partsParent;
+				}
+				
+				// 查询子菜单下是否存在子菜单
+				partsTreeRecursion(child.getId(), operflag);
+			}
+		} else {
+			childTree = new ArrayList<>();
+		}
+		return partsParent;
+	}
+	
 }

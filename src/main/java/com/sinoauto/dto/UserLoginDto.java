@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class UserLoginDto {
 
+	@ApiModelProperty("用户ID")
+	private Integer userId;
 	@ApiModelProperty("用户名")
 	private String userName;
 	@ApiModelProperty("token")
@@ -14,6 +16,14 @@ public class UserLoginDto {
 	private Integer storeId;
 	@ApiModelProperty("门店信息")
 	private StoreDto store;
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 
 	public String getUserName() {
 		return userName;
