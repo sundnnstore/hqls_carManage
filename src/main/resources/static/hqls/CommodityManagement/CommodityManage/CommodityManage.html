@@ -16,9 +16,9 @@
             <div class="layui-input-block">
                 <ul>
                     <li class="title">
-                    	<!-- onclick="showMenu('main')" -->
-                       <input type="text" id="commodityName" placeholder="请选择分类" class="layui-input" onclick="showMenu('main')" readonly/>
-                       <!--  <ul id="commodityName"></ul> -->
+                        <!-- onclick="showMenu('main')" -->
+                        <input type="text" id="commodityName" placeholder="请选择分类" class="layui-input" onclick="showMenu('main')" readonly/>
+                        <!--  <ul id="commodityName"></ul> -->
                     </li>
                 </ul>
             </div>
@@ -84,8 +84,7 @@
                 <div class="layui-input-block">
                     <ul>
                         <li class="title">
-                        		<!-- onclick="showMenu('model')" -->
-                            <input type="text" id="cName" class="layui-input"  placeholder="请选择分类" onclick="showMenu('model')" readonly/>
+                            <input type="text" id="cName" class="layui-input" placeholder="请选择分类" onclick="showMenu('model')" readonly/>
                         </li>
                     </ul>
                 </div>
@@ -101,20 +100,10 @@
                     <input type="text" name="" id="partsFactory" class="layui-input" value="" />
                 </div>
             </div>
-            <div class="layui-input-inline">
-                <label for="" class="layui-form-label">类型  *</label>
-                <div class="layui-input-block">
-                    <!-- 类型中的通用件和易损件的value值需要根据后台字段值设置 -->
-                    <select class="layui-select" id="partsType">
-                        <option value="1" selected>易损件</option>
-                        <option value="2">车型件</option>
-                    </select>
-                </div>
-            </div>
         </div>
         <!-- 新增商品中的商品详情 -->
         <div class="modelTableContainer">
-        	<input type="hidden" value="" id="partsIdForOper">
+            <input type="hidden" value="" id="partsIdForOper">
             <table class="layui-table">
                 <caption class="caption">
                     商品详情
@@ -134,18 +123,18 @@
                             </select>
                         </td>
                     </tr>
-                    <tr class="common">
+                    <tr>
                         <td class="common">价格 *</td>
                         <td class="common"><input type="text" name="" id="price" class="layui-input" placeholder="请输入价格" value=""></td>
-                        <td class="common">折扣  *</td>
+                        <td class="common">折扣 *</td>
                         <td class="common"><input type="text" name="" id="discount" class="layui-input" placeholder="折扣0-1之间小数" value=""></td>
-                        <td class="common">现价  *</td>
+                        <td class="common">现价 *</td>
                         <td class="common"><input type="text" name="" id="curPrice" class="layui-input" placeholder="请输入现价" value=""></td>
                     </tr>
-                    <tr class="common">
+                    <tr>
                         <td class="common">产地</td>
                         <td class="common"><input type="text" name="" id="origin" class="layui-input" placeholder="请输入产地" value=""></td>
-                        <td class="common">单位  *</td>
+                        <td class="common">单位 *</td>
                         <td class="common"><input type="text" name="" id="partsUnit" class="layui-input" placeholder="请输入单位" value=""></td>
                         <td class="common">保质期</td>
                         <td class="common"><input type="text" name="" id="shelfLife" class="layui-input" placeholder="请输入保质期" value=""></td>
@@ -173,17 +162,6 @@
         <!-- 新增商品中的商品图片 -->
         <p class="uploadImgTitle">上传图片</p>
         <div class="uploadImg">
-            <!-- 注意： -->
-            <!-- 1。 每个img标签的id都不一样，新出现的图片id要重新给定一个唯一值 -->
-            <!-- 2。 每个inpug标签的id也都不一样，新出现的图片上传框id也要重新给定一个唯一值 -->
-            <!-- 3。 如果img的id和input的id重新定义了，请在js中的layui.upload方法中同步更改 -->
-            <!-- <div class="siteUpload">
-                <img id="commodityImgUrl" src="">
-                <div class="layui-box layui-upload-button">
-                    <input type="file" name="image" class="commodityImg" class="layui-upload-file" accept="image/*">
-                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-                </div>
-            </div> -->
             <div class="siteUpload">
                 <img id="commodityImgUrl" src="">
                 <div class="layui-box layui-upload-button">
@@ -192,7 +170,6 @@
                 </div>
                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
             </div>
-            
         </div>
         <!-- 新增商品中的否上架选项 -->
         <div class="state">
