@@ -27,10 +27,11 @@ public interface FinanceFlowMapper {
 
 	@Select("select store_id from hqls_finance_flow where transaction_no = #{transactionNo} ")
 	public int getStoreIdByTransactionNo(@Param("transactionNo") String transactionNo);
-	
+
 	@Select("select * from hqls_finance_flow where transaction_no = #{transactionNo} ")
 	public HqlsFinanceFlow getFlowByTransactionNo(@Param("transactionNo") String transactionNo);
-	
-	
+
+	@Update("update hqls_finance_flow set check_status = #{checkStatus},remark = #{remark} where finance_flow_id = #{financeFlowId}")
+	public int updateCheckStatus(@Param("financeFlowId") Integer financeFlowId, @Param("checkStatus") Integer checkStatus,@Param("remark") String remark);
 
 }

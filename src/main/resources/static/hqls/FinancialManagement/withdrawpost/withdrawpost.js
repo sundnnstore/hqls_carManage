@@ -36,7 +36,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var layer = layui.layer;
 	var laypage=layui.laypage;
 	var orderId;
-	var pageSize = 2;
+	var pageSize = 5;
 	var OrderParam = {};
 	
 	function generatorParam() {
@@ -47,6 +47,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	
 	/**
 	 * 页面初始化加载所有门店
+	 * 
 	 * @returns
 	 */
 	function initStore() {
@@ -92,21 +93,48 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			}
 		});
 		
+		function refuseBtnClick(id,remark){
+			$.ajax({
+				url: "/updatecheckstatus",
+				type: "POST",
+				async : false,
+				data:{
+					"financeFlowId":id,
+					"checkStatus":3,
+					"remark":remark
+				},
+				success: function (data) {
+					console.log(data.result);
+					generatorParam();
+					getFlowList(1);
+					layer.closeAll();
+					layer.msg("审核不通过");
+				}
+			});
+		}
+		
+		$("#refuseBtn").on("click",function(){
+			refuseBtnClick(id,$("#remarkTextArea").val());
+		});
+		
 		$('.operating-btn').on('click', function() {
+			var id = $(this).attr("id");
+			event.stopPropagation();
 			if($(this).text() == '拒绝') {
+				refuseBtnClick(id);
 				layer.msg("拒绝: "+$(this).attr("id"));
-				/*layer.open({
+				layer.open({
 					type: 1, //添加一个模板
 					title: '拒绝理由',
 					content: `
-							<div class="layui-form-item layui-form-text mylayui-item ">
+							<div class="layui-form-item layui-form-text mylayui-item " style="margin:25px;">
 								<label class="layui-form-label">拒绝理由</label>
 								<div class="layui-input-block">
-									<textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+									<textarea placeholder="请输入内容" class="layui-textarea" id="remarkTextArea"></textarea>
 								</div>
 							</div>
 							<div class="layui-form-item layui-form-text shipbox">
-								<button class="layui-btn">拒绝</button>
+								<button class="layui-btn" align="center" id="refuseBtn">拒绝</button>
 							</div>
 				`, //弹出框的内容
 					skin: 'layui-layer-lan', //弹框主题
@@ -115,9 +143,31 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 						//右上角关闭的回调
 					},
 					shade: 0
-				})*/
+				});
+				
 			}else{
-				layer.msg("同意: "+$(this).attr("id"));
+				layer.confirm('是否确定该笔提现审核通过', {
+					btn: ['是','否'] // 按钮
+				}, function(){
+					$.ajax({
+						url: "/updatecheckstatus",
+						type: "POST",
+						async : false,
+						data:{
+							"financeFlowId":id,
+							"checkStatus":2
+						},
+						success: function (data) {
+							console.log(data.result);
+							generatorParam();
+							getFlowList(1);
+							layer.msg("审核通过！");
+						}
+					});
+					layer.msg("审核通过！");
+				}, function(){
+					layer.msg("拒绝");
+				});
 			}
 		});
 		

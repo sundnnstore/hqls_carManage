@@ -113,6 +113,7 @@ public class FinanceAppController {
 			@ApiImplicitParam(paramType = "query", name = "openBank", value = "开户行", dataType = "String") })
 	public ResponseEntity<RestModel<Integer>> withdraw(Integer storeId, Double changeMoney, String accountName, String account, String bank,
 			String openBank) {
+		this.financeFlowService.updateBalance(changeMoney, storeId);
 		return this.financeFlowService.insertFlow(storeId, changeMoney, accountName, account, bank, openBank);
 	}
 

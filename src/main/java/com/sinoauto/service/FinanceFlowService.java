@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -211,9 +212,17 @@ public class FinanceFlowService {
 		if (1 == hqlsFlow.getFlowStatus()) {
 			flowStatusDesc = "成功";
 		}
+
 		if (hqlsFlow.getChangeType() == 1) {
 			flowDto.setFlowTypeDesc("充值".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 2) {
+			if (1 == hqlsFlow.getCheckStatus()) {
+				flowStatusDesc = "待审核";
+			} else if (2 == hqlsFlow.getCheckStatus()) {
+				flowStatusDesc = "审核通过";
+			} else if (2 == hqlsFlow.getCheckStatus()) {
+				flowStatusDesc = "审核不通过";
+			}
 			flowDto.setFlowTypeDesc("提现".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 3) {
 			flowDto.setFlowTypeDesc("采购交易".concat(flowStatusDesc));
@@ -243,6 +252,12 @@ public class FinanceFlowService {
 		} else {
 			flowDto.setPayType("未知");
 		}
+
+		if (StringUtils.isNotBlank(hqlsFlow.getRemark())) {
+			flowDto.setPayDesc(hqlsFlow.getRemark());
+		} else {
+			flowDto.setPayDesc("");
+		}
 		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
@@ -257,10 +272,27 @@ public class FinanceFlowService {
 		}
 	}
 
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer checkStatus, String remark) {
+		try {
+			if (StringUtils.isBlank(remark)) {
+				remark = "审核通过！~";
+			}
+			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark);
+			return RestModel.success(affectRows);
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "更新审核状态失败");
+		}
+	}
+
 	public Integer updateBalance(Double changeMoney, String transactionNo) {
 		Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
+	}
+
+	public Integer updateBalance(Double changeMoney, Integer storeId) {
+		return this.storeFinanceMapper.updateMoney(-changeMoney, -changeMoney, 0.0, storeId);
 	}
 
 	public HqlsFinanceFlow findFlowByTransactionNo(String transactionNo) {

@@ -107,4 +107,13 @@ public class FinanceController {
 		return this.cashBackService.getCashBackByMoney(money);
 	}
 
+	@ApiOperation(value = "更新审核状态", notes = "fujl")
+	@PostMapping("updatecheckstatus")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "financeFlowId", value = "流水ID", dataType = "Integer", required = true),
+			@ApiImplicitParam(paramType = "query", name = "checkStatus", value = "审核状态（1待审核；2审核通过；3审核不通过）", dataType = "Integer", required = true),
+			@ApiImplicitParam(paramType = "query", name = "remark", value = "备注", dataType = "String", required = false) })
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer checkStatus, String remark) {
+		return this.financeFlowService.updateCheckStatus(financeFlowId, checkStatus, remark);
+	}
+
 }
