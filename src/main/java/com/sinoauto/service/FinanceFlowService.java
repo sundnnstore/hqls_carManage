@@ -99,7 +99,7 @@ public class FinanceFlowService {
 			flow.setChangeType(payType);// 充值
 			flow.setChangeMoney(changeMoney);
 			flow.setChargeType(1);// 收入
-			if(3 == payType) {
+			if (3 == payType) {
 				flow.setChargeType(2);
 			}
 			flow.setFlowStatus(2);
@@ -231,7 +231,10 @@ public class FinanceFlowService {
 			flowDto.setMoney("-" + hqlsFlow.getChangeMoney());
 		}
 		flowDto.setOrderNo(hqlsFlow.getOrderNo());
-		if (hqlsFlow.getPayType() == 1) {
+
+		if (hqlsFlow.getPayType() == null) {
+			flowDto.setPayType("暂无说明");
+		} else if (hqlsFlow.getPayType() == 1) {
 			flowDto.setPayType("支付宝");
 		} else if (hqlsFlow.getPayType() == 2) {
 			flowDto.setPayType("微信");
@@ -240,7 +243,6 @@ public class FinanceFlowService {
 		} else {
 			flowDto.setPayType("未知");
 		}
-		flowDto.setPayDesc("暂无说明");
 		flowDto.setPayNo(hqlsFlow.getTransactionNo());
 
 		return RestModel.success(flowDto);
