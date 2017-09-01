@@ -171,7 +171,7 @@ public class PartsService {
 				hqlsParts.setPartsModel(partsOperDto.getPartsModel());
 				hqlsParts.setPartsName(partsOperDto.getPartsName());
 				hqlsParts.setPartsSpec(partsOperDto.getPartsSpec());
-				hqlsParts.setPartsTypeId(partsOperDto.getPartsType());// 配件类型id
+				hqlsParts.setPartsTypeId(partsOperDto.getPartsTypeId());// 配件类型id
 				hqlsParts.setPartsUnit(partsOperDto.getPartsUnit());
 				hqlsParts.setPrice(partsOperDto.getPrice());
 				hqlsParts.setRemark(partsOperDto.getRemark());
@@ -468,10 +468,6 @@ public class PartsService {
 		if(data!=null){
 			partChildren = data.getChildren();
 			for (PartsTreeRecursionDto nextNode : partChildren) {
-//					if(data.getId()!=0&&data.getId()>0&&flag==0){
-//						nodeTemp.put(data.getId(), data.getName());
-//						mapNode.add(nodeTemp);
-//					}
 					System.out.println("nextNodeId"+nextNode.getId()+"\tnextNodeName"+nextNode.getName());
 					//存储等级临时数据	
 					if(nextNode.getId()>0&&nextNode.getChildren().size()>0){
@@ -654,7 +650,7 @@ public class PartsService {
 				}
 				
 				// 查询子菜单下是否存在子菜单
-				partsTreeRecursion(child.getId(), operflag);
+				partsTreeForEditAndView(child.getId(), operflag);
 			}
 		} else {
 			childTree = new ArrayList<>();
