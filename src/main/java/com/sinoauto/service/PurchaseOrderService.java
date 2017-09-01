@@ -528,4 +528,20 @@ public class PurchaseOrderService {
 		}
 		return RestModel.success(partsList);
 	}
+	
+	/**
+	 * 采购订单支付宝支付成功回调：更改订单状态为已支付
+	 * @param orderNo 订单号
+	 * @return 0:更新状态失败； 1：成功
+	 */
+	@Transactional
+	public int updatePurchaseOrderStatus(String orderNo) {
+		try {
+			return purchaseOrderMapper.updateOrderStatusForPay(orderNo);
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+			return 0;
+		}
+	}
 }

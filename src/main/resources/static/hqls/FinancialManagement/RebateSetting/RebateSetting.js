@@ -48,13 +48,10 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var OrderParam = {};
 	
 	function generatorParam() {
-// OrderParam.storeId = $("select[name=store_id]").val() == 0 ? null :
-// $("select[name=store_id]").val();
 		OrderParam.operateUserName = $("#customer_name").val();
 		OrderParam.returnType = $("#return_type").val() == 0 ? null :$("#return_type").val();
 		OrderParam.operateUserName = $("#operateUserName").val();
 		OrderParam.createTime = $("#createTime").val();
-		
 	}
 	
 	$("#searchRebate").click(function() {
@@ -135,12 +132,12 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 				addRebate();
 			},
 			btn2: function() {
-				layer.msg("btn2");
+				//layer.msg("btn2");
 				//取消的回调
 //				console.log('取消')
 			},
 			cancel: function() {
-				layer.msg("cancel");
+				//layer.msg("cancel");
 				//右上角关闭的回调
 			},
 			shade:0
@@ -153,8 +150,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
     	Param.returnType = $("#returnType").val();
     	Param.money = $('input[name=money]').val();
     	Param.returnMoney = $('input[name=returnMoney]').val();
+    	Param.operateUserId = localStorage.userId;
     	var cashBack = JSON.stringify(Param);
-    	layer.msg(cashBack);
     	$.ajax({
     		url: "http://127.0.0.1:8881/addcashback",
     		type: 'POST',
@@ -163,7 +160,9 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
     		async: false,
     		success: function(data) {
     			if (data.errmsg == 'success') {
-    				layer.msg(data.result);
+    				//layer.msg(data.result);
+    				generatorParam();
+    				getFlowList(1);
     			} else {
     				layer.msg('添加失败');
     			}
@@ -171,7 +170,6 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
     			$('input[name=add_mobile]').attr('readonly', false);// 修改完成将input的只读状态改回可编辑
 */    		}
     	});
-		
-		
 	}
+	
 })

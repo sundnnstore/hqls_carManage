@@ -86,4 +86,6 @@ public interface PurchaseOrderMapper {
 	public Page<PurchaseOrderDto> findOrderListByContidion(@Param("orderStatus") Integer orderStatus, @Param("storeId") Integer storeId, 
 			@Param("userName") String userName, @Param("mobile") String mobile);
 	
+	@Update("update hqls_purchase_order set order_status = 2 where order_no = #{1} and order_status <> 2")
+	public int updateOrderStatusForPay(String orderNo);
 }
