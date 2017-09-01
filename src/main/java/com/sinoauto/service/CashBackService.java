@@ -31,7 +31,13 @@ public class CashBackService {
 		try {
 			cashBack.setCreateTime(new Date());
 			cashBack.setIsUsable(1);
-			cashBack.setOperateUserId(1);
+			if (1 == cashBack.getReturnType()) {
+				cashBack.setDiscount(cashBack.getReturnMoney());
+				cashBack.setReturnMoney(0.0);
+			} else {
+				cashBack.setDiscount(0.0);
+			}
+
 			return RestModel.success(cashBackMapper.insert(cashBack));
 		} catch (Exception e) {
 			System.out.println(e);

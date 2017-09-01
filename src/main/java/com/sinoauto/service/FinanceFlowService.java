@@ -257,4 +257,9 @@ public class FinanceFlowService {
 		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
 	}
 
+	public HqlsFinanceFlow findFlowByTransactionNo(String transactionNo) {
+		HqlsFinanceFlow hqlsFlow = this.financeFlowMapper.getFlowByTransactionNo(transactionNo);
+		return hqlsFlow;
+	}
+
 }
