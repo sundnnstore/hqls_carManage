@@ -301,6 +301,7 @@ public class PurchaseOrderService {
 				flow.setOperPerson(user.getUserName());
 				flow.setOrderNo(order.getOrderNo());
 				flow.setStoreId(param.getStoreId());
+				flow.setFlowStatus(1);
 				financeFlowMapper.insert(flow);
 				return RestModel.success();
 				
@@ -543,5 +544,9 @@ public class PurchaseOrderService {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public static void main(String[] args) {
+		
 	}
 }
