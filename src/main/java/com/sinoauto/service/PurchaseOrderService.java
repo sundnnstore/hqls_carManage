@@ -541,7 +541,7 @@ public class PurchaseOrderService {
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			e.printStackTrace();
+			return 0;
 		}
-		return 0;
 	}
 }
