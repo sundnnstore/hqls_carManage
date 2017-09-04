@@ -77,6 +77,9 @@ public class PurchaseOrderService {
 			if (shipAddress.getShipAddressId() != null) {
 				shipAddressMapper.update(shipAddress);
 			} else {
+				if (shipAddress.getIsDefault() == null) {
+					shipAddress.setIsDefault(0);
+				}
 				shipAddressMapper.insert(shipAddress);
 			}
 			return RestModel.success();
