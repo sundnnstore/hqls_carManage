@@ -45,6 +45,14 @@ public interface PartsTypeMapper {
 	@Select("select `pid` from  `hqls_parts_type` where parts_type_id=#{1}")
 	public Integer findPidByPartsTypeId(Integer partsTypeId);
 	
+	/**
+	 * 查询配件类型对象
+	 * @param partsTypeId
+	 * @return
+	 */
+	@Select("select * from  `hqls_parts_type` where parts_type_id=#{1}")
+	public HqlsPartsType findPartsTypeByPartsTypeId(Integer partsTypeId);
+	
 	@Delete("delete from `hqls_parts_type` where `parts_type_id` = #{1}")
 	public void delete(Integer partTypeId);
 }

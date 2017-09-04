@@ -51,11 +51,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         layer.msg(titleInfo);
                         return;
                     } else if (selectTreeId == 0) {
-                        titleInfo = '请选择配件分类，该项必填!';
-                        layer.msg(titleInfo);
-                        return;
-                    } else if (!$('#partsType').val()) {
-                        titleInfo = '请选择配件类型,该项必填!';
+                        titleInfo = '请选择配件分类11111，该项必填!';
                         layer.msg(titleInfo);
                         return;
                     } else if (!$('#partsSpec').val()) {
@@ -629,7 +625,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsFactory\":\"" + $("#partsFactory").val() + "\"," +
             "\"partsSpec\":\"" + $("#partsSpec").val() + "\"," +
             //"\"partsTypeId\":\""+partsTypeId+"\"," +
-            "\"partsType\":\"" + $("#partsType").val() + "\"," +
+            //"\"partsType\":\"" + $("#partsType").val() + "\"," +
             "\"partsUnit\":\"" + $("#partsUnit").val() + "\"," +
             "\"partsTypeId\":\"" + selectTreeId + "\"," +
             //"\"pname\":\""+typeName+"\"," +
