@@ -162,8 +162,25 @@ var layer = layui.layer, $ = layui.jquery, title;
 		/**
 		 * 检查新增的名称
 		 */
-		addCheck(typeName,layerIndex);
-		
+		var result = addCheck(typeName,layerIndex);
+		if(result==true){
+			layer.open({
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', //弹框主题
+				shade : 0,
+				area : '400px', //宽高
+				content : $('#categoriesAdd'),
+				btn : '确定',
+				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+					layer.close(index);
+				},
+				end : function() { // 弹出框销毁时清空表单
+					inputReset(); // 清空表单
+				}
+			});
+			return ;
+		}
 		
 		var data = {
 			"partsTypeId" : selectNodeId,
@@ -195,6 +212,29 @@ var layer = layui.layer, $ = layui.jquery, title;
 	 * @returns
 	 */
 	function addSameLevelNode(selectNodeId, typeName, layerIndex) {
+		/**
+		 * 检查新增的名称
+		 */
+		var result = addCheck(typeName,layerIndex);
+		if(result==true){
+			layer.open({
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', //弹框主题
+				shade : 0,
+				area : '400px', //宽高
+				content : $('#categoriesAdd'),
+				btn : '确定',
+				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+					layer.close(index);
+				},
+				end : function() { // 弹出框销毁时清空表单
+					inputReset(); // 清空表单
+				}
+			});
+			return ;
+		}
+		
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
@@ -231,29 +271,13 @@ var layer = layui.layer, $ = layui.jquery, title;
 				"typeName" : typeName
 			},
 			success : function(data) {
-				if(data.result==true){
-					layer.open({
-						type : 1,
-						title : '提示',
-						skin : 'layui-layer-lan', //弹框主题
-						shade : 0,
-						area : '400px', //宽高
-						content : $('#categoriesAdd'),
-						btn : '确定',
-						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-							layer.close(index);
-						},
-						end : function() { // 弹出框销毁时清空表单
-							inputReset(); // 清空表单
-						}
-					});
-				}
-				return;
+					result =  data.result
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
 			}
 		});
+		return result;
 	}
 
 	/**
