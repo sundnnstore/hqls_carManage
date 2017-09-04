@@ -152,7 +152,6 @@ public class AliPayController {
 							}
 						}
 					}
-
 					try {
 						httpServletResponse.getWriter().print("success");
 					} catch (IOException e) {

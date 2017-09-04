@@ -6,10 +6,11 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">状态</label>
 		<div class="layui-input-block">
-			<select name="interest" lay-filter="aihao" class="layui-select">
-				<option value="0">已驳回</option>
-				<option value="1">已通过</option>
-				<option value="2">待审核</option>
+			<select name="interest" lay-filter="aihao" class="layui-select" id="checkStatus">
+				<option value="0">全部</option>
+				<option value="1">待审核</option>
+				<option value="2">审核通过</option>
+				<option value="3">审核不通过</option>
 			</select>
 		</div>
 	</div>
@@ -29,11 +30,11 @@
 	<div class="layui-inline">
 		<label class="layui-form-label">时间</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD hh:mm:ss'})">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})" id="createTime">
 		</div>
 	</div>
 	<div class="layui-inline">
-		<button class="layui-btn" id='searchOrder'>搜索</button>
+		<button class="layui-btn" id='searchFlow'>搜索</button>
 	</div>
 </div>
 <div>
@@ -41,6 +42,8 @@
 		<thead>
 			<tr>
 				<th>提现门店</th>
+				<th>门店联系人</th>
+				<th>联系人电话</th>
 				<th>提现金额</th>
 				<th>选择银行</th>
 				<th>银行账号</th>

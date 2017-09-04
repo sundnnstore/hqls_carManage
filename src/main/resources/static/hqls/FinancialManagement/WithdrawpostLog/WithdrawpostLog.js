@@ -4,13 +4,15 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var layer = layui.layer;
 	var laypage=layui.laypage;
 	var orderId;
-	var pageSize = 2;
+	var pageSize = 10;
 	var OrderParam = {};
 	
 	function generatorParam() {
 		OrderParam.customerName = $("#customer_name").val();
 		OrderParam.mobile = $("#mobile").val();
 		OrderParam.storeId = $("#store_id").val() == 0 ? null :$("#store_id").val();
+		OrderParam.createTime = $("#createTime").val();
+		OrderParam.checkStatus = $("#checkStatus").val() == 0 ? null :$("#checkStatus").val();
 	}
 	
 	/**
@@ -67,15 +69,15 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		var html = "";
 		for (var i = 0; i < data.length; i++) {
 			html += `<tr>`;
-			html += `<td>${data[i].storeId}</td>
-					<td>${data[i].storeId}</td>
-					<td>${data[i].storeId}</td>
+			html += `<td>${data[i].storeName}</td>
+					<td>${data[i].customerName}</td>
+					<td>${data[i].mobile}</td>
 					<td>${data[i].bank}</td>
 					<td>${data[i].account}</td>
 					<td>${data[i].openBank}</td>
 					<td>${data[i].transactionNo}</td>
 					<td>${data[i].changeMoney}</td>
-					<td>${data[i].checkStatus}</td>
+					<td>${data[i].checkStatusDesc}</td>
 					<td>${data[i].operPerson}</td>
 					<td>${data[i].createTime}</td></tr>`;
 		}

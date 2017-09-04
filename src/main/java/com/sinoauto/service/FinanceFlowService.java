@@ -39,7 +39,7 @@ public class FinanceFlowService {
 	private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
-			String mobile, Date createTime, Integer flowStatus, Integer pageIndex, Integer pageSize) {
+			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
 		}
@@ -54,7 +54,8 @@ public class FinanceFlowService {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			createTimeStr = sdf.format(createTime);
 		}
-		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName, mobile, createTimeStr, flowStatus);
+		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName, mobile, createTimeStr, flowStatus,
+				checkStatus);
 
 		return RestModel.success(flowList, (int) flowList.getTotal());
 	}
@@ -274,10 +275,12 @@ public class FinanceFlowService {
 
 	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer checkStatus, String remark) {
 		try {
-			if (StringUtils.isBlank(remark)) {
-				remark = "审核通过！~";
-			}
 			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark);
+			// 审核失败，返还给账户
+			if(3 == checkStatus) {
+				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
+				this.storeFinanceMapper.updateMoney(flow.getChangeMoney(), flow.getChangeMoney(), 0.0, flow.getStoreId());
+			}
 			return RestModel.success(affectRows);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -290,6 +293,8 @@ public class FinanceFlowService {
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
 	}
+	
+	
 
 	public Integer updateBalance(Double changeMoney, Integer storeId) {
 		return this.storeFinanceMapper.updateMoney(-changeMoney, -changeMoney, 0.0, storeId);
