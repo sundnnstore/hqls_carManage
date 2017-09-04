@@ -602,60 +602,29 @@ public class PartsService {
 	}
 	
 	/**
-	 * 	商品分类查看和编辑显示
+	 * 	商品分类查看和编辑显示  ,从最后一个级别开始查,知道找到最上层一个,跳出循环
 	 * 	@User liud
 	 * 	@Date 2017年9月1日上午11:04:49
 	 * 	@param pid
 	 * 	@param operflag
 	 * 	@return
 	 */
-	public PartsTreeRecursionDto partsTreeForEditAndView(Integer pid, Integer operflag) {
-		/**
-		 * 配件子集
-		 */
-		List<PartsTreeRecursionDto> childTree = null;
-		
-		/**
-		 * 当前配件类型信息
-		 */
-		PartsTreeRecursionDto partsParent = partsMapper.partsParent(pid);
-		if (partsParent == null) {partsParent = new PartsTreeRecursionDto();};
-		if (operflag == null) {operflag =100;}
-		switch (operflag) {
-		case 1:
-			partsParent.setSpread(false); // 收缩
-			break;
-		case 2:
-			partsParent.setSpread(true); // 展开
-			break;
-		case 3:
-			partsParent.setSpread(true); // 展开
-			break;
-		default:
-			partsParent.setSpread(false); // 展开
-			break;
-		}
-
-		childTree = partsMapper.partsChildTreeByPid(pid);
-		// 判断是否存在子菜单
-		if (childTree != null) {
-			// 创建存储子菜单集合
-			partsParent.setChildren(new ArrayList<>());
-			// 存储子节点树；
-			for (PartsTreeRecursionDto child : childTree) {
-				if(child.getChildren()!=null){
-					partsParent.getChildren().add(child);
-				}else{
-					return partsParent;
-				}
-				
-				// 查询子菜单下是否存在子菜单
-				partsTreeForEditAndView(child.getId(), operflag);
+	public PartsTreeRecursionDto partsTreeForEditAndView(Integer lastChildId, Integer operflag) {
+		//List<>
+		// 查询出当前partstypeid的父级别id
+//		Integer retId=null;
+		HqlsPartsType hqlsPartsType = partsMapper.findPidByPtId(lastChildId);
+		if(hqlsPartsType!=null){
+			if(hqlsPartsType.getPid()!=null&&hqlsPartsType.getPid()==0){ //如果到最顶层,返回对象,先倒过来查
+//				return partsTypeId;
+			}else{
+				System.out.println("pid----->"+hqlsPartsType.getPid());
+//				retId = findTopId(hqlsPartsType.getPid());
 			}
-		} else {
-			childTree = new ArrayList<>();
+		}else{//对象不存在
+			//retId =partsTypeId;
 		}
-		return partsParent;
+		return null;
 	}
 	
 }

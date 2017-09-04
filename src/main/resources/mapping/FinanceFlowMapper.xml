@@ -48,7 +48,7 @@
 			'待审核'
 		WHEN f.check_status = 2 THEN
 			'审核通过'
-		WHEN f.check_status = 2 THEN
+		WHEN f.check_status = 3 THEN
 			'审核不通过'
 		ELSE
 			'标志数字不存在'
@@ -97,6 +97,11 @@
 		<if test="createTime != null and createTime != ''">
 			AND datediff(f.create_time,#{createTime})=0
 		</if>
+		<if test="checkStatus != null">
+			AND f.check_status = #{checkStatus}
+		</if>
+				ORDER BY 
+		    create_time desc
 	</select>
 	
 	<select id="findFlowList" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
@@ -121,7 +126,7 @@
 	
 	<select id="findFlow" parameterType="int" resultType="com.sinoauto.dao.bean.HqlsFinanceFlow">
 		SELECT 
-			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time,flow_status 
+			finance_flow_id,transaction_no,change_type,change_money,charge_type,pay_type,check_status,order_no,create_time,flow_status,remark,store_id 
 		FROM
 			hqls_finance_flow
 	    WHERE
