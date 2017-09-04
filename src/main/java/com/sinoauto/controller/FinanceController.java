@@ -63,11 +63,13 @@ public class FinanceController {
 			@ApiImplicitParam(paramType = "query", name = "mobile", value = "联系人电话", dataType = "String"),
 			@ApiImplicitParam(paramType = "query", name = "createTime", value = "充值时间", dataType = "Date"),
 			@ApiImplicitParam(paramType = "query", name = "flowStatus", value = "流水状态(1成功；2失败)", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "checkStatus", value = "审核状态（1待审核；2审核通过；3审核不通过）", dataType = "Integer"),
 			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页面索引", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
-			String mobile, Date createTime, Integer flowStatus, Integer pageIndex, Integer pageSize) {
-		return financeFlowService.findFlowListByContidion(changeType, storeId, customerName, mobile, createTime, flowStatus, pageIndex, pageSize);
+			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer pageIndex, Integer pageSize) {
+		return financeFlowService.findFlowListByContidion(changeType, storeId, customerName, mobile, createTime, flowStatus, checkStatus, pageIndex,
+				pageSize);
 	}
 
 	@GetMapping("findstorefinancelist")

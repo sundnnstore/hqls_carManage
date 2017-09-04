@@ -36,13 +36,15 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var layer = layui.layer;
 	var laypage=layui.laypage;
 	var orderId;
-	var pageSize = 5;
+	var pageSize = 10;
 	var OrderParam = {};
 	
 	function generatorParam() {
 		OrderParam.customerName = $("#customer_name").val();
 		OrderParam.mobile = $("#mobile").val();
 		OrderParam.storeId = $("#store_id").val() == 0 ? null :$("#store_id").val();
+		OrderParam.createTime = $("#createTime").val();
+		OrderParam.checkStatus = $("#checkStatus").val() == 0 ? null :$("#checkStatus").val();
 	}
 	
 	/**
@@ -77,6 +79,26 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		getFlowList(1);
 	});
 	
+	function refuseBtnClick(id,remark){
+		$.ajax({
+			url: "/updatecheckstatus",
+			type: "POST",
+			async : false,
+			data:{
+				"financeFlowId":id,
+				"checkStatus":3,
+				"remark":remark
+			},
+			success: function (data) {
+				console.log(data.result);
+				generatorParam();
+				getFlowList(1);
+				layer.closeAll();
+				layer.msg("审核不通过");
+			}
+		});
+	}
+	
 	function initPage(totalCount,pageIndex){
 		laypage({
 			cont: 'pages',
@@ -93,35 +115,9 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			}
 		});
 		
-		function refuseBtnClick(id,remark){
-			$.ajax({
-				url: "/updatecheckstatus",
-				type: "POST",
-				async : false,
-				data:{
-					"financeFlowId":id,
-					"checkStatus":3,
-					"remark":remark
-				},
-				success: function (data) {
-					console.log(data.result);
-					generatorParam();
-					getFlowList(1);
-					layer.closeAll();
-					layer.msg("审核不通过");
-				}
-			});
-		}
-		
-		$("#refuseBtn").on("click",function(){
-			refuseBtnClick(id,$("#remarkTextArea").val());
-		});
-		
 		$('.operating-btn').on('click', function() {
 			var id = $(this).attr("id");
-			event.stopPropagation();
 			if($(this).text() == '拒绝') {
-				refuseBtnClick(id);
 				layer.msg("拒绝: "+$(this).attr("id"));
 				layer.open({
 					type: 1, //添加一个模板
@@ -144,7 +140,9 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					},
 					shade: 0
 				});
-				
+				$("#refuseBtn").on("click",function(){
+					refuseBtnClick(id,$("#remarkTextArea").val());
+				});
 			}else{
 				layer.confirm('是否确定该笔提现审核通过', {
 					btn: ['是','否'] // 按钮
@@ -155,7 +153,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 						async : false,
 						data:{
 							"financeFlowId":id,
-							"checkStatus":2
+							"checkStatus":2,
+							"remark":"审核通过"
 						},
 						success: function (data) {
 							console.log(data.result);
@@ -164,9 +163,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 							layer.msg("审核通过！");
 						}
 					});
-					layer.msg("审核通过！");
 				}, function(){
-					layer.msg("拒绝");
+					//layer.msg("拒绝");
 				});
 			}
 		});
@@ -180,16 +178,21 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		for (var i = 0; i < data.length; i++) {
 			html += `<tr>`;
 			html += `<td>${data[i].storeName}</td>
+					<td>${data[i].customerName}</td>
+					<td>${data[i].mobile}</td>
 					<td>${data[i].changeMoney}</td>
 					<td>${data[i].bank}</td>
 					<td>${data[i].account}</td>
 					<td>${data[i].openBank}</td>
 					<td>${data[i].checkStatusDesc}</td>
-					<td class="operating">
-						<button class="layui-btn layui-btn-normal operating-btn" id="${data[i].financeFlowId}">确认</button>
-						<button class="layui-btn layui-btn-danger operating-btn" id="${data[i].financeFlowId}">拒绝</button>
-					</td>
-					</tr>`;
+					<td class="operating">`
+			if(data[i].checkStatus == 1) {
+				html+= `	<button class="layui-btn layui-btn-normal operating-btn" id="${data[i].financeFlowId}">确认</button>
+							<button class="layui-btn layui-btn-danger operating-btn" id="${data[i].financeFlowId}">拒绝</button>`
+			} else {
+				html+= `已审核`
+			}
+			html += `</td></tr>`;
 		}
 		
 		$("#log_tb").html(html);
