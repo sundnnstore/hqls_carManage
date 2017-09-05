@@ -94,7 +94,7 @@ public class FinanceController {
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
 	public ResponseEntity<RestModel<Page<CashBackDto>>> findCashBackListByContidion(Integer returnType, String operateUserName, Date createTime,
 			Integer pageIndex, Integer pageSize) {
-		return cashBackService.findFlowListByContidion(returnType, operateUserName, createTime, pageIndex, pageSize);
+		return cashBackService.findCashBackListByContidion(returnType, operateUserName, createTime, pageIndex, pageSize);
 	}
 
 	@ApiOperation(value = "新增返利规则", notes = "fujl")
