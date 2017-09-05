@@ -153,7 +153,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
     	Param.operateUserId = localStorage.userId;
     	var cashBack = JSON.stringify(Param);
     	$.ajax({
-    		url: "http://127.0.0.1:8881/addcashback",
+    		url: "/addcashback",
     		type: 'POST',
     		contentType: "application/json; charset=utf-8",
     		data: cashBack,
