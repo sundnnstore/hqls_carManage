@@ -295,10 +295,6 @@ public class FinanceFlowService {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
 				this.updateBalance(flow.getChangeMoney(), flow.getTransactionNo());
 				this.updateFlowStatus(flow.getTransactionNo(), 1);
-				System.out.println("----------------------------------------");
-				System.out.println("----------------------------------------");
-				System.out.println("----------------------------------------");
-				System.out.println("----------------------------------------");
 			}
 
 			return RestModel.success(affectRows);
