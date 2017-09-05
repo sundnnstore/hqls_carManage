@@ -74,7 +74,8 @@
 					hqls_store s,
 					hqls_user_store cs
 				WHERE
-					c.user_id = cs.user_id
+					cs.is_contact = 1 
+				AND c.user_id = cs.user_id
 				AND s.store_id = cs.store_id
 			) u
 		WHERE
@@ -99,6 +100,9 @@
 		</if>
 		<if test="checkStatus != null">
 			AND f.check_status = #{checkStatus}
+		</if>
+		<if test="payType != null">
+			AND f.pay_type = #{payType}
 		</if>
 				ORDER BY 
 		    create_time desc
