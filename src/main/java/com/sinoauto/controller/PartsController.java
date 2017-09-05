@@ -211,9 +211,41 @@ public class PartsController {
 		return partsTypeService.checkIsCanbeDel(partsTypeId);
 	}
 	
+	@ApiOperation(value = "检查新增的名称是否存在", notes = "liud")
+	@GetMapping("checkadd")
+	public ResponseEntity<RestModel<Boolean>> checkIsCanbeAdd(@RequestParam("typeName") String typeName){
+		return partsTypeService.checkIsCanbeAdd(typeName);
+	}
+	
 	@ApiOperation(value = "删除配件类型", notes = "liud")
 	@DeleteMapping("deletepartstype")
 	public ResponseEntity<RestModel<Boolean>> deletePartsType(@RequestParam("partTypeId") Integer partTypeId){
 		return partsTypeService.delete(partTypeId);
+	}
+	
+	/**
+	 *  根据配件类型id查询配件类型对象
+	 * 	@User liud
+	 * 	@Date 2017年9月4日下午12:54:56
+	 * 	@param partTypeId
+	 * 	@return
+	 */
+	@ApiOperation(value = "根据配件类型id查询配件类型对象", notes = "liud")
+	@GetMapping("findparttypeobj")
+	public ResponseEntity<RestModel<HqlsPartsType>> getHqlsPartsTypeById(@RequestParam("partTypeId") Integer partTypeId){
+		return partsTypeService.findHqlsPartsTypeById(partTypeId);
+	}
+	
+	/**
+	 *  修改配件类型对象
+	 * 	@User liud
+	 * 	@Date 2017年9月4日下午1:09:37
+	 * 	@param pt
+	 * 	@return
+	 */
+	@ApiOperation(value = "修改", notes = "liud")
+	@PostMapping("update")
+	public ResponseEntity<RestModel<HqlsPartsType>> update(@RequestBody HqlsPartsType pt){
+		return partsTypeService.update(pt);
 	}
 }
