@@ -51,11 +51,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         layer.msg(titleInfo);
                         return;
                     } else if (selectTreeId == 0) {
-                        titleInfo = '请选择配件分类，该项必填!';
-                        layer.msg(titleInfo);
-                        return;
-                    } else if (!$('#partsType').val()) {
-                        titleInfo = '请选择配件类型,该项必填!';
+                        titleInfo = '请选择配件分类11111，该项必填!';
                         layer.msg(titleInfo);
                         return;
                     } else if (!$('#partsSpec').val()) {
@@ -274,8 +270,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             trs += '<tr>' +
                 '<td>' + tr.partsName + '</td>' +
                 '<td>' + tr.partsTopType + '</td>' +
-                '<td>' + tr.pName + '</td>' +
-                '<td>' + tr.partsName + '</td>' +
+                '<td>' + tr.price + '</td>' +
+                '<td>' + tr.curPrice + '</td>' +
                 '<td>' + tr.partsCode + '</td>' +
                 '<td><button id="view" data-method="view" class="layui-btn view_c">查看</button>' +
                 '<button id="edit" data-method="edit" class="layui-btn layui-btn-normal edit_c">编辑</button>' +
@@ -629,7 +625,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsFactory\":\"" + $("#partsFactory").val() + "\"," +
             "\"partsSpec\":\"" + $("#partsSpec").val() + "\"," +
             //"\"partsTypeId\":\""+partsTypeId+"\"," +
-            "\"partsType\":\"" + $("#partsType").val() + "\"," +
+            //"\"partsType\":\"" + $("#partsType").val() + "\"," +
             "\"partsUnit\":\"" + $("#partsUnit").val() + "\"," +
             "\"partsTypeId\":\"" + selectTreeId + "\"," +
             //"\"pname\":\""+typeName+"\"," +

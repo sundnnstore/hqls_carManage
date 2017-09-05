@@ -44,13 +44,15 @@ public interface PartsMapper {
 	public Page<CommonDto> findAllParts();
 	
 	/**
-	 * 按父级Id查询配件类型
+	 * 按父级Id查询配件类型集合
 	 * @param pid
 	 * @return
 	 */
 	@Select("select parts_type_id as `key`, type_name as `value` from hqls_parts_type where pid = #{1}")
 	public Page<CommonDto> findPartsTypeListByPid(Integer pid);
 	
+	@Select("select count(*) from hqls_parts_type where type_name = #{1}")
+	public Integer findPartsTypeListBytypeName(String typeName);
 	/**
 	 * 根据配件类型查询所有配件信息
 	 * @param partTypeId

@@ -15,22 +15,24 @@ var layer = layui.layer, $ = layui.jquery, title;
 			btnAlign : 'c', //按钮居中
 			yes : function(index, layero) { // 选中上方添加节点的回调
 				title = '添加';
-				categoriesEditCommon(item);
+				categoriesEditCommon(item,1);  
 				layer.close(index);
 			},
 			btn2 : function(index, layero) { // 选中添加同级节点的回调
 				title = '添加';
 				layer.close(index);
-				categoriesEditCommon();
+				categoriesEditCommon(item,2); 
 			},
-			btn3 : function(index, layero) { // 选中修改的回调
+			btn3 : function(index, layero) { // 选中修改
 				title = '编辑';
 				// 点击修改按钮后，展示当前节点信息：名称、类型
-				$('#categoriesInfoEdit input').val('123');
-				$('#categoriesInfoEdit select').val('2');
-				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
-				layer.close(index);
-				categoriesEditCommon();
+//				$('#categoriesInfoEdit input').val('123');
+//				$('#categoriesInfoEdit select').val('2');
+//				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
+//				layer.close(index);
+				//展示树形结构数据
+				viewPartType(item);
+				categoriesEditCommon(item,3);  
 			},
 			btn4 : function(index, layero) { // 选中删除的回调
 				layer.close(index);
@@ -54,7 +56,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 					btnAlign : 'c', //按钮居中
 					yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
 						// console.log(layero);
-						layer.close(index); //如果设定了yes回调，需进行手工关闭
+						check(item,index);
 					},
 					btn2 : function(index, layero) {
 						// console.log(index);
@@ -65,7 +67,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 		});
 	}
 	// 商品分类详细信息
-	function categoriesEditCommon() {
+	function categoriesEditCommon(item,operFlag) {
 		layer.open({
 			type : 1,
 			title : title,
@@ -75,25 +77,25 @@ var layer = layui.layer, $ = layui.jquery, title;
 			content : $('#categoriesInfoEdit'),
 			btn : [ '提交', '取消' ],
 			yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-				$('#storeTree').html('');
 				// layer.close(index); //如果设定了yes回调，需进行手工关闭
-
-				if (true) { // 在新增的情况下，如果要添加的的内容已存在，则不可添加且提示用户该分类已存在
-					layer.open({
-						type : 1,
-						title : '提示',
-						skin : 'layui-layer-lan', //弹框主题
-						shade : 0,
-						area : '400px', //宽高
-						content : $('#categoriesAdd'),
-						btn : '确定',
-						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-							layer.close(index);
-						},
-						end : function() { // 弹出框销毁时清空表单
-							inputReset(); // 清空表单
-						}
-					});
+				/**
+				 * 1.添加子节点 2. 添加同级节点 3.修改 4.删除
+				 */
+				var typeName = $("#partsTypeName").val(); //输入框的名称
+				switch (operFlag) {
+				case 1:
+					addChildren(item.id, typeName,index);
+					break;
+				case 2:
+					addSameLevelNode(item.id, typeName,index);
+					break;
+				case 3:
+					//修改节点类型
+					updatePartType(item,index);
+					break;	
+				default:
+					alert("default");
+					break;
 				}
 			},
 			end : function() { // 弹出框销毁时清空表单
@@ -156,19 +158,34 @@ var layer = layui.layer, $ = layui.jquery, title;
 	 * @returns
 	 */
 
-	function addChildren(selectNodeId, typeName, index, addAndEditAndViewFlag) {
-		//把他的id当做 pid
-		//新增一个配件信息	
+	function addChildren(selectNodeId, typeName,layerIndex) {
 		/**
-		 * 加载节点树
-		 * @param level 1
-		 * @param flag 1:新增  2:编辑 3.查看
-		 * @returns
+		 * 检查新增的名称
 		 */
-		//function loadNodes(level,flag)
+		var result = addCheck(typeName,layerIndex);
+		if(result==true){
+			layer.open({
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', //弹框主题
+				shade : 0,
+				area : '400px', //宽高
+				content : $('#categoriesAdd'),
+				btn : '确定',
+				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+					layer.close(index);
+				},
+				end : function() { // 弹出框销毁时清空表单
+					inputReset(); // 清空表单
+				}
+			});
+			return ;
+		}
+		
 		var data = {
 			"partsTypeId" : selectNodeId,
-			"typeName" : typeName
+			"typeName" : typeName,
+			"partsType":$("#partsType").val()
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -179,16 +196,10 @@ var layer = layui.layer, $ = layui.jquery, title;
 			data : data,
 			success : function(data) {
 				layer.msg("子节点添加成功");
-				//layer.close(index);
-				//loadNodes(0,0);
-				if (addAndEditAndViewFlag == 1) { //1 新增
-					$('#addItemTree').html("");
-					loadNodes(0, 1);
-				} else if (addAndEditAndViewFlag == 2) { //2 编辑
-					$('#editItemTree').html("");
-					loadNodes(selectNodeId, 2); //根据选中的节点重新找到父级,重新加载
-				}
-
+				$("#viewItemTree").html("");
+				loadAddNodes(0,3);
+				//关闭弹框
+				layer.close(layerIndex);
 			},
 			error : function(data) {
 				layer.msg("子节点添加失败");
@@ -200,10 +211,34 @@ var layer = layui.layer, $ = layui.jquery, title;
 	 * 添加相同节点
 	 * @returns
 	 */
-	function addSameLevelNode(selectNodeId, typeName, index,addAndEditAndViewFlag) {
+	function addSameLevelNode(selectNodeId, typeName, layerIndex) {
+		/**
+		 * 检查新增的名称
+		 */
+		var result = addCheck(typeName,layerIndex);
+		if(result==true){
+			layer.open({
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', //弹框主题
+				shade : 0,
+				area : '400px', //宽高
+				content : $('#categoriesAdd'),
+				btn : '确定',
+				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+					layer.close(index);
+				},
+				end : function() { // 弹出框销毁时清空表单
+					inputReset(); // 清空表单
+				}
+			});
+			return ;
+		}
+		
 		var data = {
 			"partsTypeId" : selectNodeId,
-			"typeName" : typeName
+			"typeName" : typeName,
+			"partsType":$("#partsType").val()
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -213,28 +248,44 @@ var layer = layui.layer, $ = layui.jquery, title;
 			contentType : "application/json; charset=utf-8",
 			data : data,
 			success : function(data) {
-				layer.msg("添加同级几点成功");
-				if (addAndEditAndViewFlag == 1) { //1 新增
-					$('#addItemTree').html("");
-					loadNodes(0, 1);
-				} else if (addAndEditAndViewFlag == 2) { //2 编辑
-					$('#editItemTree').html("");
-					loadNodes(selectNodeId, 2); //根据选中的节点重新找到父级,重新加载
-				}
-				//layer.close(index);
+				layer.msg("添加同级节点成功");
+				$("#viewItemTree").html("");
+				loadAddNodes(0,3);
+				//关闭弹框
+				layer.close(layerIndex);
 			},
 			error : function(data) {
-				layer.msg("添加同级几点失败");
+				layer.msg("添加同级节点失败");
 			}
 		});
+	}
+	
+	//新增检查名称是否唯一
+	function addCheck(typeName, index) {
+		var result ;
+		$.ajax({
+			url : "/checkadd",
+			type : "get",
+			async : false,
+			data : {
+				"typeName" : typeName
+			},
+			success : function(data) {
+					result =  data.result
+			},
+			error : function(data) {
+				layer.msg("检查节点失败");
+			}
+		});
+		return result;
 	}
 
 	/**
 	 * 删除节点
 	 * @returns
 	 */
-	function del(selectNodeId, addAndEditAndViewFlag, level) {
-		//alert("addAndEditAndViewFlag:" + addAndEditAndViewFlag);
+	function del(selectItem, index) {
+		var selectNodeId = selectItem.id;
 		var data = {
 			"partsTypeId" : selectNodeId
 		};
@@ -243,18 +294,11 @@ var layer = layui.layer, $ = layui.jquery, title;
 			url : "/deletepartstype/?partTypeId=" + selectNodeId,
 			type : "DELETE",
 			async : false,
-			//contentType: "application/json; charset=utf-8",
-			//data : data,
 			success : function(data) {
-				layer.msg("删除成功" + addAndEditAndViewFlag);
-				if (addAndEditAndViewFlag == 1) { //1 新增
-					$('#addItemTree').html("");
-					loadNodes(0, 1);
-				} else if (addAndEditAndViewFlag == 2) { //2 编辑
-					$('#editItemTree').html("");
-					loadNodes(level, 2); //根据选中的节点重新找到父级,重新加载
-				}
-				//layer.close(index);
+				layer.msg("删除" + selectItem.name+"成功");
+				$("#viewItemTree").html("");
+				loadAddNodes(0,3);
+				layer.close(index);
 			},
 			error : function(data) {
 				layer.msg("删除失败");
@@ -270,23 +314,20 @@ var layer = layui.layer, $ = layui.jquery, title;
 	 * @param level 编辑的时候,查找等级
 	 * @returns
 	 */
-	function check(selectNodeId, index, addAndEditAndViewFlag, level) {
-		//    	var data = {"partsTypeId":selectNodeId};
-		//    	data = JSON.stringify(data);
+	function check(selectItem, index) {
+		var selectId = selectItem.id;
 		$.ajax({
 			url : "/checkdel",
 			type : "get",
 			async : false,
-			//contentType: "application/json; charset=utf-8",
 			data : {
-				"partTypeId" : selectNodeId
+				"partTypeId" : selectId
 			},
 			success : function(data) {
 				if (data.result == true) {
 					layer.msg("存在子集不可删除");
-					//					layer.close(index);
 				} else {
-					del(selectNodeId, addAndEditAndViewFlag, level);
+					del(selectItem,index);
 				}
 			},
 			error : function(data) {
@@ -295,6 +336,61 @@ var layer = layui.layer, $ = layui.jquery, title;
 		});
 	}
 	
+	/**
+	 * 修改前得查看
+	 * 修改配件类型 1.易损件  2. 车型件
+	 * @returns
+	 */
+	function viewPartType(item){
+		var selectNodeId = item.id;
+		$.ajax({
+			url : "/findparttypeobj",
+			type : "get",
+			async : false,
+			data : {
+				"partTypeId" : selectNodeId
+			},
+			success : function(data) {
+				alert(data.result.partsType);
+				$('#categoriesInfoEdit input').val(item.name); //配件类型名称
+				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
+				$('#categoriesInfoEdit select').val(data.result.partsType);
+			
+			},
+			error : function(data) {
+				layer.msg("检查节点失败");
+			}
+		});
+	}
 	
+	/**
+	 * 修改配件类型
+	 * @returns
+	 */
+	function updatePartType(item,index){
+		var selectNodeId = item.id;
+		var data = {
+				"partsTypeId" : selectNodeId,
+				"partsType":$("#partsType").val()
+			};
+		data = JSON.stringify(data);
+		$.ajax({
+			url : "/update",
+			type : "post",
+			async : false,
+			contentType : "application/json; charset=utf-8",
+			data : data,
+			success : function(data) {
+				layer.msg("修改成功");
+				$("#viewItemTree").html("");
+				loadAddNodes(0,3);
+				//关闭弹框
+				layer.close(index);
+			},
+			error : function(data) {
+				layer.msg("修改失败");
+			}
+		});
+	}
 });
 	
