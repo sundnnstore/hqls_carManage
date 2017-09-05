@@ -126,7 +126,7 @@ public class FinanceAppController {
 			@ApiImplicitParam(paramType = "query", name = "transactionNo", value = "汇款流水单号", dataType = "String") })
 	public ResponseEntity<RestModel<Integer>> audit(Integer storeId, Double changeMoney, String transactionNo) {
 		if(null != this.financeFlowService.findFlowByTransactionNo(transactionNo)){
-			RestModel.error(HttpStatus.NOT_ACCEPTABLE, ErrorStatus.EXISTS_DATA, "该汇款单号已存在！");
+			return RestModel.error(HttpStatus.NOT_ACCEPTABLE, ErrorStatus.EXISTS_DATA, "该汇款单号已存在！");
 		}
 		return this.financeFlowService.insertRemitFlow(storeId, changeMoney, transactionNo);
 	}
