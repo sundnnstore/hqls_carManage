@@ -22,13 +22,15 @@
 		<id column="parts_id" property="partsId"/>
 		<result column="buy_count" property="purchaseNum" />
 		<result column="buy_price" property="buyPrice"/>
+		<result property="partsBrandName" column="parts_brand_name"/>
 		<association column="parts_id" property="partsPic" select="com.sinoauto.dao.mapper.PartsPicMapper.getFirstUrlByPartsId"/>
 	</resultMap>
 	
 	<select id="findPartsListByTypeId" resultMap="desList">
 		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
-				parts.parts_spec, parts.cur_price
+				parts.parts_spec, parts.cur_price, brand.parts_brand_name
 		from hqls_parts as parts
+		left join hqls_parts_brand as brand on parts.parts_brand_id = brand.parts_brand_id 
 		where parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
 		<if test="condition != null and condition != ''">
 			and (parts.parts_name like CONCAT('%', #{condition} ,'%')
