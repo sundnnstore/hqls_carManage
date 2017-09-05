@@ -292,7 +292,7 @@ public class FinanceFlowService {
 			// 线下充值审核通过，增加余额
 			else if (changeType == 1 && 2 == checkStatus) {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
-				this.updateBalance(flow.getChangeMoney(), flow.getStoreId());
+				this.updateBalance(flow.getChangeMoney(), flow.getTransactionNo());
 			}
 
 			return RestModel.success(affectRows);
