@@ -891,7 +891,7 @@ zNodes.unshift({ id: 0, pId: -1, name: "全部", open: true });
 //alert(JSON.stringify(zNodes));
 // 配件树初始化
 $(document).ready(function() {
-    $.fn.zTree.init($("#commodityTree"), setting, zNodes);
+    $.fn.zTree.init($("#commodityTree"), settingQuery, zNodes);
     $.fn.zTree.init($("#cTree"), setting, zNodes);
 });
 // 配件树设置
@@ -906,10 +906,27 @@ var setting = {
         }
     },
     callback: {
-        //beforeClick: beforeClick, //检查
+        beforeClick: beforeClick, //检查
         onClick: onClick
     }
 };
+
+
+var settingQuery = {
+	    view: {
+	        dblClickExpand: false,
+	        autoCancelSelected: false
+	    },
+	    data: {
+	        simpleData: {
+	            enable: true
+	        }
+	    },
+	    callback: {
+	        //beforeClick: beforeClick, //检查
+	        onClick: onClick
+	    }
+	};
 
 
 // 配件树数据源
