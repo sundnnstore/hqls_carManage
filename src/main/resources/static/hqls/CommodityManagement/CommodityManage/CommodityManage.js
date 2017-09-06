@@ -51,11 +51,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         layer.msg(titleInfo);
                         return;
                     } else if (selectTreeId == 0) {
-                        titleInfo = '请选择配件分类，该项必填!';
-                        layer.msg(titleInfo);
-                        return;
-                    } else if (!$('#partsType').val()) {
-                        titleInfo = '请选择配件类型,该项必填!';
+                        titleInfo = '请选择配件分类11111，该项必填!';
                         layer.msg(titleInfo);
                         return;
                     } else if (!$('#partsSpec').val()) {
@@ -274,8 +270,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             trs += '<tr>' +
                 '<td>' + tr.partsName + '</td>' +
                 '<td>' + tr.partsTopType + '</td>' +
-                '<td>' + tr.pName + '</td>' +
-                '<td>' + tr.partsName + '</td>' +
+                '<td>' + tr.price + '</td>' +
+                '<td>' + tr.curPrice + '</td>' +
                 '<td>' + tr.partsCode + '</td>' +
                 '<td><button id="view" data-method="view" class="layui-btn view_c">查看</button>' +
                 '<button id="edit" data-method="edit" class="layui-btn layui-btn-normal edit_c">编辑</button>' +
@@ -629,7 +625,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsFactory\":\"" + $("#partsFactory").val() + "\"," +
             "\"partsSpec\":\"" + $("#partsSpec").val() + "\"," +
             //"\"partsTypeId\":\""+partsTypeId+"\"," +
-            "\"partsType\":\"" + $("#partsType").val() + "\"," +
+            //"\"partsType\":\"" + $("#partsType").val() + "\"," +
             "\"partsUnit\":\"" + $("#partsUnit").val() + "\"," +
             "\"partsTypeId\":\"" + selectTreeId + "\"," +
             //"\"pname\":\""+typeName+"\"," +
@@ -895,7 +891,7 @@ zNodes.unshift({ id: 0, pId: -1, name: "全部", open: true });
 //alert(JSON.stringify(zNodes));
 // 配件树初始化
 $(document).ready(function() {
-    $.fn.zTree.init($("#commodityTree"), setting, zNodes);
+    $.fn.zTree.init($("#commodityTree"), settingQuery, zNodes);
     $.fn.zTree.init($("#cTree"), setting, zNodes);
 });
 // 配件树设置
@@ -910,10 +906,27 @@ var setting = {
         }
     },
     callback: {
-        //beforeClick: beforeClick, //检查
+        beforeClick: beforeClick, //检查
         onClick: onClick
     }
 };
+
+
+var settingQuery = {
+	    view: {
+	        dblClickExpand: false,
+	        autoCancelSelected: false
+	    },
+	    data: {
+	        simpleData: {
+	            enable: true
+	        }
+	    },
+	    callback: {
+	        //beforeClick: beforeClick, //检查
+	        onClick: onClick
+	    }
+	};
 
 
 // 配件树数据源

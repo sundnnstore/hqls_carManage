@@ -45,7 +45,7 @@ public class PartsTypeService {
 			HqlsPartsType add=new HqlsPartsType();
 			add.setTypeName(hqlsPartsType.getTypeName());
 			add.setPid(hqlsPartsType.getPartsTypeId());
-			add.setPartsType(1); //通用配件
+			add.setPartsType(hqlsPartsType.getPartsType()); //通用配件
 			//创建一个配件类型
 			partsTypeMapper.insert(add);
 		} catch (Exception e) {
@@ -69,7 +69,7 @@ public class PartsTypeService {
 					HqlsPartsType add=new HqlsPartsType();
 					add.setTypeName(hqlsPartsType.getTypeName());
 					add.setPid(pid);
-					add.setPartsType(1); //通用配件
+					add.setPartsType(hqlsPartsType.getPartsType()); //通用配件
 					//创建一个配件类型
 					partsTypeMapper.insert(add);
 				}
@@ -98,6 +98,19 @@ public class PartsTypeService {
 	}
 	
 	/**
+	 * 检查是否可是新增
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Boolean>> checkIsCanbeAdd(String typeName){
+		Integer count = partsMapper.findPartsTypeListBytypeName(typeName);
+		if(count>0){
+			return RestModel.success(true);
+		}else{
+			return RestModel.success(false);
+		}
+	}
+	
+	/**
 	 * 删除配件类型
 	 * @param partsTypeId
 	 * @return
@@ -112,5 +125,43 @@ public class PartsTypeService {
 		
 	}
 	
+	/**
+	 *  根据配件类型id查询配件类型对象
+	 * 	@User liud
+	 * 	@Date 2017年9月4日下午12:54:56
+	 * 	@param partTypeId
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<HqlsPartsType>> findHqlsPartsTypeById(Integer partTypeId){
+		HqlsPartsType hqlsPartsType = null;
+		try {
+			hqlsPartsType=partsTypeMapper.findPartsTypeByPartsTypeId(partTypeId);
+			if(hqlsPartsType==null){
+				hqlsPartsType = new  HqlsPartsType();
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR,-1, "查询配件类型异常");
+		}
+		return RestModel.success(hqlsPartsType);
+	}
+	
+	
+	/**
+	 * 	修改节点树
+	 * 	@User liud
+	 * 	@Date 2017年9月4日下午1:06:34
+	 * 	@param pt
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<HqlsPartsType>> update(HqlsPartsType pt){
+		try {
+			partsTypeMapper.update(pt);
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR,-1, "修改配件类型异常");
+		}
+		return RestModel.success();
+	}
 }
 	

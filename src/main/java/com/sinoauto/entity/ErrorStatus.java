@@ -26,7 +26,9 @@ public enum ErrorStatus {
 	/** 无效的token */
 	INVALID_TOKEN(40008, "无效的token"),
 	/** 失效的token */
-	EXPIRED_TOKEN(40009, "失效的token");
+	EXPIRED_TOKEN(40009, "失效的token"),
+	/** 失效的token */
+	EXISTS_DATA(40010, "数据已存在");
 
 	/**
 	 * 返回码

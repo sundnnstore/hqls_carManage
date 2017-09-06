@@ -48,6 +48,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                 skin: 'layui-layer-lan', // 弹框主题
                 shade: 0,
                 area: '450px', // 宽高
+                offset: '120px',
                 content: $('#storeTreeBox') // 内容
             });
         } else if (method === 'isUse') {
@@ -333,12 +334,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     });
     
 	function findStore(pageIndex){
+		
 		$.ajax({
     	url : "/findstoreinfo",
 		type : "get",
 		async:false,
 		data : { "storeName":$("#storeName_search").val(),"userName":$("#userName_search").val(),
-				 "mobile":$("#mobile_search").val(), 
+				 "mobile":$("#mobile_search").val(),
+				 "reviewStatus":$("#reviewStatus").val(),
 				 "provinceId":$("#province_search").val(),
 				 "cityId":$("#city_search").val(),
 				 "countyId":$("#county_search").val(), 
@@ -378,13 +381,19 @@ function comboTable(res,pageIndex){
 						'<td>'+tr_html.address+'</td>'+
 						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
 						'<td>'+
-						'<button data-method="view" name="'+tr_html.storeId+'" class="layui-btn sshow" >查看</button> '+
-						'<button data-method="edit" name="'+tr_html.storeId+'" class="layui-btn sedit" >编辑</button> ';
+						'<button data-method="view" name="'+tr_html.storeId+'" class="layui-btn sshow" >查看</button> ';
+			if(tr_html.reviewStatus==1){
+				tb_html +='<button data-method="edit" name="'+tr_html.storeId+'" class="layui-btn layui-btn-normal sedit" >编辑</button> ';
 			if(tr_html.isUseable){
-				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-normal sea">'+status+'</button> </td></tr>';
+				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-warm sea">'+status+'</button></td></tr>';
 			}else{
-				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-primary sea">'+status+'</button> </td></tr>';
+				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-primary sea">'+status+'</button></td></tr>';
 			}
+			}else if(tr_html.reviewStatus == 0){
+				tb_html +='<button  name="'+tr_html.storeId+','+1+'"  class="layui-btn pass">通过</button>'+
+				'<button  name="'+tr_html.storeId+','+2+'"  class="layui-btn pass" >不通过</button> ';
+			}
+			
 		}
 		store_tb.html(tb_html);
 		initPage(res.totalCount,pageIndex);
@@ -476,7 +485,7 @@ $("body").on('click','.sea',function(){
 				obj.attr("class","layui-btn layui-btn-primary sea");
 				obj.text("启用");
 			}else{
-				obj.attr("class","layui-btn layui-btn-normal sea");
+				obj.attr("class","layui-btn layui-btn-warm sea");
 				obj.text("禁用");
 			}
     		},
@@ -486,6 +495,24 @@ $("body").on('click','.sea',function(){
     });
 });
 
+
+//通过、不通过
+$("body").on('click','.pass',function(){
+	var ids = $(this).attr("name");
+	var arr = new Array();
+	arr = ids.split(",");
+	var storeId = arr[0];
+	var reviewStatus = arr[1];
+	$.ajax({
+    	url : "/updatereviewstatus",
+		type : "post",
+		data : {"storeId":storeId,"reviewStatus":reviewStatus},
+    	success : function(data){
+    		layer.msg("审核成功！");
+    		window.location.reload();
+    		}
+    }); 
+})
 /**
  * 初始化分页 
  * @param totalCount 总页数
@@ -560,5 +587,7 @@ $("#dw").on('click',function(){
 	var dw = provinceName+cityName+countyName+address;
 	getlocation(dw,obj);
 });
+
+
 
 });

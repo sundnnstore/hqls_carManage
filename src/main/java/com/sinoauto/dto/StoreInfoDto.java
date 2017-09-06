@@ -40,7 +40,21 @@ public class StoreInfoDto {
 	private String backUrl;
 	@ApiModelProperty("是否启用")
 	private Boolean isUseable;
+	@ApiModelProperty("审核状态")
+	private Integer reviewStatus;
+	@ApiModelProperty("用户ID")
+	private Integer userId;
+	@ApiModelProperty("审核状态名称")
+	private String reviewDesc;
 	
+
+	public String getReviewDesc() {
+		return reviewDesc;
+	}
+
+	public void setReviewDesc(String reviewDesc) {
+		this.reviewDesc = reviewDesc;
+	}
 
 	public String getStoreName() {
 		return storeName;
@@ -184,6 +198,22 @@ public class StoreInfoDto {
 
 	public void setIsUseable(Boolean isUseable) {
 		this.isUseable = isUseable;
+	}
+
+	public Integer getReviewStatus() {
+		return reviewStatus;
+	}
+
+	public void setReviewStatus(Integer reviewStatus) {
+		this.reviewStatus = reviewStatus;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 

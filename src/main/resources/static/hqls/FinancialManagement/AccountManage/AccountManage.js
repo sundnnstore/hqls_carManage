@@ -53,7 +53,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var layer = layui.layer;
 	var laypage=layui.laypage;
 	var orderId;
-	var pageSize = 2;
+	var pageSize = 10;
 	var OrderParam = {};
 	
 	function generatorParam() {
@@ -120,7 +120,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					<td>${data[i].customerName}</td>
 					<td>${data[i].mobile}</td>
 					<td>${data[i].balance}</td>
-					<td><button class="layui-btn layui-btn-normal Accountcz">充值</button></td>
+					<td>${data[i].cashAble}</td>
+					<td>${data[i].cashDisable}</td>
 					</tr>`;
 		}
 		

@@ -39,7 +39,7 @@ public class FinanceFlowService {
 	private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
-			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer pageIndex, Integer pageSize) {
+			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
 		}
@@ -55,7 +55,7 @@ public class FinanceFlowService {
 			createTimeStr = sdf.format(createTime);
 		}
 		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName, mobile, createTimeStr, flowStatus,
-				checkStatus);
+				checkStatus, payType);
 
 		return RestModel.success(flowList, (int) flowList.getTotal());
 	}
@@ -273,14 +273,30 @@ public class FinanceFlowService {
 		}
 	}
 
-	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer checkStatus, String remark) {
+	/**
+	 * 
+	 * @param financeFlowId
+	 * @param changeType 1充值，2提现
+	 * @param checkStatus
+	 * @param remark
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark) {
 		try {
 			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark);
-			// 审核失败，返还给账户
-			if(3 == checkStatus) {
+			// 提现审核失败，返还给账户
+			if (changeType == 2 && 3 == checkStatus) {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
 				this.storeFinanceMapper.updateMoney(flow.getChangeMoney(), flow.getChangeMoney(), 0.0, flow.getStoreId());
 			}
+			// 线下充值审核通过，增加余额
+			else if (changeType == 1 && 2 == checkStatus) {
+
+				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
+				this.updateBalance(flow.getChangeMoney(), flow.getTransactionNo());
+				this.updateFlowStatus(flow.getTransactionNo(), 1);
+			}
+
 			return RestModel.success(affectRows);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -293,8 +309,6 @@ public class FinanceFlowService {
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney + backMoney, backMoney, changeMoney, storeId);
 	}
-	
-	
 
 	public Integer updateBalance(Double changeMoney, Integer storeId) {
 		return this.storeFinanceMapper.updateMoney(-changeMoney, -changeMoney, 0.0, storeId);

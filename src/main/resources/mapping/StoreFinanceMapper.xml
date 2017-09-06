@@ -43,22 +43,23 @@
 	<select id="findStoreFinanceistByContidion" resultType="com.sinoauto.dto.StoreFinanceDto">
 		SELECT
 			sf.*, u.store_name,
-			u.customer_name,
+			u.user_name as customer_name,
 			u.mobile
 		FROM
 			hqls_store_finance sf,
 			(
 				SELECT
-					c.customer_name,
+					c.user_name,
 					c.mobile,
 					s.store_id,
 					s.store_name
 				FROM
-					hqls_customer c,
+					hqls_user c,
 					hqls_store s,
-					hqls_customer_store cs
+					hqls_user_store cs
 				WHERE
-					c.customer_id = cs.customer_id
+				    cs.is_contact = 1 
+				AND	c.user_id = cs.user_id
 				AND s.store_id = cs.store_id
 			) u
 		WHERE
@@ -67,7 +68,7 @@
 			AND sf.store_id = #{storeId}
 		</if>
 		<if test="customerName != null and customerName != ''">
-			AND u.customer_name LIKE CONCAT('%', #{customerName}, '%')
+			AND u.user_name LIKE CONCAT('%', #{customerName}, '%')
 		</if>
 		<if test="mobile != null and mobile != ''">
 			AND u.mobile LIKE CONCAT('%', #{mobile}, '%')

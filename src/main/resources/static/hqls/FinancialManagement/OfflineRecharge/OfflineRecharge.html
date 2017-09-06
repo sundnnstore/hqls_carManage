@@ -1,0 +1,62 @@
+<link rel="stylesheet" type="text/css" href="FinancialManagement/OfflineRecharge/OfflineRecharge.css" />
+<div>
+	线下充值管理
+</div>
+<div>
+	<div class="layui-inline">
+		<label class="layui-form-label">状态</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select" id="checkStatus">
+				<option value="0">全部</option>
+				<option value="1">待审核</option>
+				<option value="2">审核通过</option>
+				<option value="3">审核不通过</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">门店</label>
+		<div class="layui-input-block">
+			<select name="interest" lay-filter="aihao" class="layui-select" id="store_id">
+			</select>
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">操作人</label>
+		<div class="layui-input-inline">
+			<input type="text" name="title" required lay-verify="required" placeholder="请输入操作人" autocomplete="off" class="layui-input">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<label class="layui-form-label">时间</label>
+		<div class="layui-input-inline">
+			<input class="layui-input" placeholder="" onclick="layui.laydate({elem: this, istime: true, format: 'YYYY-MM-DD'})" id="createTime">
+		</div>
+	</div>
+	<div class="layui-inline">
+		<button class="layui-btn" id='searchFlow'>搜索</button>
+	</div>
+</div>
+<div>
+	<table class="layui-table ">
+		<thead>
+			<tr>
+				<th>提现门店</th>
+				<th>门店联系人</th>
+				<th>联系人电话</th>
+				<th>提现金额</th>
+				<th>汇款单号</th>
+				<th>状态</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody id="log_tb">
+		</tbody>
+	</table>
+	<div id="pages" style="text-align: right;"></div>
+	<!-- <td class="operating">
+					<button class="layui-btn layui-btn-normal operating-btn">确认</button>
+					<button class="layui-btn layui-btn-danger operating-btn">拒绝</button>
+				</td> -->
+</div>
+<script type="text/javascript" src="FinancialManagement/OfflineRecharge/OfflineRecharge.js">

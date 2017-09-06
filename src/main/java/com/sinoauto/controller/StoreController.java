@@ -65,15 +65,15 @@ public class StoreController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeName", value = "门店名称", required = false, dataType = "String"),
 						 @ApiImplicitParam(paramType = "query", name = "userName", value = "联系人", required = false, dataType = "String"),
 						 @ApiImplicitParam(paramType = "query", name = "mobile", value = "联系人号码", required = false, dataType = "String"),
-						 @ApiImplicitParam(paramType = "query", name = "address", value = "地址", required = false, dataType = "String"),
+						 @ApiImplicitParam(paramType = "query", name = "reviewStatus", value = "审核状态", required = false, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "provinceId", value = "省份ID", required = false, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "cityId", value = "市ID", required = false, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "countyId", value = "区县ID", required = false, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页数", required = true, dataType = "int"),
 						 @ApiImplicitParam(paramType = "query", name = "pageSize", value = "个数", required = true, dataType = "int")})
 	@GetMapping("findstoreinfo")
-	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,String address,Integer provinceId,Integer cityId,Integer countyId,Integer pageIndex,Integer pageSize){
-		return storeService.findStore(storeName,userName,mobile,address,provinceId,cityId,countyId,pageIndex,pageSize);
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName,String userName,String mobile,Integer provinceId,Integer cityId,Integer countyId,int reviewStatus,Integer pageIndex,Integer pageSize){
+		return storeService.findStore(storeName,userName,mobile,reviewStatus,provinceId,cityId,countyId,pageIndex,pageSize);
 		
 	}
 
@@ -139,6 +139,40 @@ public class StoreController {
 		return storeService.changeStoreByStoreId(Authorization,storeInfoDto);
 	}
 	
+	@ApiOperation(value = "查询所有待审核的门店",notes = "tangrx")
+	@ApiImplicitParams({@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页数", required = true, dataType = "int"),
+		 @ApiImplicitParam(paramType = "query", name = "pageSize", value = "个数", required = true, dataType = "int")})
+	@GetMapping("findstorebyreviewstatus")
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStoreByReviewStatus(Integer pageIndex,Integer pageSize){
+		return storeService.findStoreByReviewStatus(pageIndex,pageSize);
+	}
 	
+	@ApiOperation(value = "修改门店审核状态",notes = "tangrx")
+	@PostMapping("updatereviewstatus")
+	public ResponseEntity<RestModel<String>> updateReviewStatus(@RequestParam(value = "storeId") Integer storeId,
+																 @RequestParam(value = "reviewStatus") Integer reviewStatus){
+		return storeService.updateReviewStatus(storeId,reviewStatus);
+	}
+	
+	@ApiOperation(value ="新增待审核门店信息",notes = "tangrx")
+	@PostMapping("addreviewstore")
+	public ResponseEntity<RestModel<Integer>> addReviewStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
+		return storeService.addReviewStore(Authorization,storeInfoDto);
+		
+	}
+	
+	@ApiOperation(value = "根据storeid查询门店列表",notes ="tangrx")
+	@GetMapping("findstoreinfobystoreid")
+	public ResponseEntity<RestModel<Object>> findStoreInfoByStoreId(@RequestParam(value ="storeId") Integer storeId){
+		return storeService.findStoreInfoByPid(storeId);
+		
+	}
+	
+	@ApiOperation(value = "根据storeId查询是否含有子类列表",notes = "tangrx")
+	@GetMapping("findchildstore")
+	public ResponseEntity<RestModel<Boolean>> findChildStore(@RequestParam(value = "storeId", required = true) Integer storeId){
+		return storeService.findChildStore(storeId);
+		
+	}
 	
 }

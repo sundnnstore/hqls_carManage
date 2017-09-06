@@ -64,12 +64,13 @@ public class FinanceController {
 			@ApiImplicitParam(paramType = "query", name = "createTime", value = "充值时间", dataType = "Date"),
 			@ApiImplicitParam(paramType = "query", name = "flowStatus", value = "流水状态(1成功；2失败)", dataType = "Integer"),
 			@ApiImplicitParam(paramType = "query", name = "checkStatus", value = "审核状态（1待审核；2审核通过；3审核不通过）", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "payType", value = "充值方式(1支付宝 2微信 3线下)", dataType = "Integer"),
 			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页面索引", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
-			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer pageIndex, Integer pageSize) {
-		return financeFlowService.findFlowListByContidion(changeType, storeId, customerName, mobile, createTime, flowStatus, checkStatus, pageIndex,
-				pageSize);
+			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
+		return financeFlowService.findFlowListByContidion(changeType, storeId, customerName, mobile, createTime, flowStatus, checkStatus, payType,
+				pageIndex, pageSize);
 	}
 
 	@GetMapping("findstorefinancelist")
@@ -93,7 +94,7 @@ public class FinanceController {
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
 	public ResponseEntity<RestModel<Page<CashBackDto>>> findCashBackListByContidion(Integer returnType, String operateUserName, Date createTime,
 			Integer pageIndex, Integer pageSize) {
-		return cashBackService.findFlowListByContidion(returnType, operateUserName, createTime, pageIndex, pageSize);
+		return cashBackService.findCashBackListByContidion(returnType, operateUserName, createTime, pageIndex, pageSize);
 	}
 
 	@ApiOperation(value = "新增返利规则", notes = "fujl")
@@ -112,10 +113,11 @@ public class FinanceController {
 	@ApiOperation(value = "更新审核状态", notes = "fujl")
 	@PostMapping("updatecheckstatus")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "financeFlowId", value = "流水ID", dataType = "Integer", required = true),
+			@ApiImplicitParam(paramType = "query", name = "changeType", value = "金额变动类型（1充值；2提现；3采购；4汽车维护服务）", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "checkStatus", value = "审核状态（1待审核；2审核通过；3审核不通过）", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "remark", value = "备注", dataType = "String", required = false) })
-	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer checkStatus, String remark) {
-		return this.financeFlowService.updateCheckStatus(financeFlowId, checkStatus, remark);
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark) {
+		return this.financeFlowService.updateCheckStatus(financeFlowId, changeType, checkStatus, remark);
 	}
 
 }
