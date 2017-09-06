@@ -1,6 +1,7 @@
 package com.sinoauto.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowListDto;
+import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.FinanceFlowService;
 
@@ -123,6 +125,9 @@ public class FinanceAppController {
 			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "汇款金额", dataType = "Double"),
 			@ApiImplicitParam(paramType = "query", name = "transactionNo", value = "汇款流水单号", dataType = "String") })
 	public ResponseEntity<RestModel<Integer>> audit(Integer storeId, Double changeMoney, String transactionNo) {
+		if(null != this.financeFlowService.findFlowByTransactionNo(transactionNo)){
+			return RestModel.error(HttpStatus.NOT_ACCEPTABLE, ErrorStatus.EXISTS_DATA, "该汇款单号已存在！");
+		}
 		return this.financeFlowService.insertRemitFlow(storeId, changeMoney, transactionNo);
 	}
 

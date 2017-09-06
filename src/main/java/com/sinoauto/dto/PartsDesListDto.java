@@ -20,6 +20,8 @@ public class PartsDesListDto {
 	private String partsUnit;
 	@ApiModelProperty("规格")
 	private String partsSpec;
+	@ApiModelProperty("配件品牌名称")
+	private String partsBrandName;
 	@ApiModelProperty("现价")
 	private Double curPrice;
 	@ApiModelProperty("原价")
@@ -141,6 +143,17 @@ public class PartsDesListDto {
 		if (isUsable != null) {
 			this.isUsable = isUsable;
 		}
+	}
+
+	public String getPartsBrandName() {
+		return partsBrandName;
+	}
+
+	public void setPartsBrandName(String partsBrandName) {
+		if(partsBrandName != null) {
+			this.partsBrandName = partsBrandName;
+		}
+		
 	}
 	
 }
