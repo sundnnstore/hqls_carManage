@@ -53,7 +53,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var layer = layui.layer;
 	var laypage=layui.laypage;
 	var orderId;
-	var pageSize = 2;
+	var pageSize = 10;
 	var OrderParam = {};
 	
 	function generatorParam() {
