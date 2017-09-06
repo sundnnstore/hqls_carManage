@@ -81,7 +81,7 @@ public interface StoreMapper {
 	
 	public int updateStoreInfo(StoreInfoDto storeInfoDto);
 	
-	
-	
+	@Select("select * from hqls_store")
+	public List<HqlsStore> findAllStoreList();
 
 }

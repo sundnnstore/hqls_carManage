@@ -88,4 +88,7 @@ public interface PurchaseOrderMapper {
 	
 	@Update("update hqls_purchase_order set order_status = 2 where order_no = #{1} and order_status <> 2")
 	public int updateOrderStatusForPay(String orderNo);
+	
+	@Select("select * from hqls_purchase_order where order_status = 4 and store_id = #{storeId} and dml_time between #{beginTime} and #{endTime}")
+	public List<HqlsPurchaseOrder> findAllCompletedOrder(@Param("storeId") Integer storeId, @Param("beginTime") String beginTime, @Param("endTime") String endTime);
 }
