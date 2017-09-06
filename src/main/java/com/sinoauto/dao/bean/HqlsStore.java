@@ -53,7 +53,15 @@ public class HqlsStore implements Serializable {
 	private Date createTime;
 	@ApiModelProperty("操作时间")
 	private Date dmlTime;
+	@ApiModelProperty("审核状态")
+	private Integer reviewStatus;//0：待审核 1：审核通过 2：审核失败
 	
+	public Integer getReviewStatus() {
+		return reviewStatus;
+	}
+	public void setReviewStatus(Integer reviewStatus) {
+		this.reviewStatus = reviewStatus;
+	}
 	/**
 	 * 设置门店ID
 	 * @param storeId 门店ID

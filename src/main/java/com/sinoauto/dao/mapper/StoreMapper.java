@@ -36,7 +36,8 @@ public interface StoreMapper {
 	
 	
 	public Page<StoreInfoDto> findStore(@Param("storeName") String storeName,@Param("userName") String userName,@Param("mobile") String mobile,
-										 @Param("address") String address,@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,@Param("countyId") Integer countyId);
+										 @Param("reviewStatus") int reviewStatus,@Param("provinceId") Integer provinceId,@Param("cityId") Integer cityId,
+										 @Param("countyId") Integer countyId);
 	
 	
 	
@@ -80,6 +81,22 @@ public interface StoreMapper {
 	public HqlsStore getStoreByStoreCode(String storeCode);
 	
 	public int updateStoreInfo(StoreInfoDto storeInfoDto);
+	
+	public Page<StoreInfoDto> findStoreByReviewStatus();
+	
+	public int updateReviewStatus(@Param("storeId") Integer storeId,@Param("reviewStatus") Integer reviewStatus);
+	
+	@Select("select count(1) from hqls_store where pid = #{storeId}")
+	public int findStoreByPid(@Param("storeId") Integer storeId);
+	
+	
+	@Select("select store_id as `key`, store_name as `value` from hqls_store where pid = #{storeId}")
+	public List<CommonDto> findChildStore(@Param("storeId") Integer storeId);
+	
+	@Select("select us.user_name as userName,sto.store_name as storeName,sto.address,sto.mobile as stoMobile,us.mobile as userMobile,sto.back_url as backUrl,sto.store_id as storeId,sto.is_useable as isUseable,us.user_id as userId,"
+			+ " sto.longitude,sto.latitude,sto.province_id as provinceId,sto.province_name as provinceName,sto.city_id as cityId,sto.city_name as cityName,sto.county_id as countyId,sto.county_name as countyName  from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
+			+ " where sto.store_id = #{storeId}")
+	public List<StoreInfoDto> findStoreById(@Param("storeId") Integer storeId);
 	
 	
 	

@@ -28,6 +28,7 @@ import com.sinoauto.dto.StoreDto;
 import com.sinoauto.dto.StoreInfoDto;
 import com.sinoauto.dto.StoreTreeDto;
 import com.sinoauto.entity.AuthUser;
+import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 
@@ -109,12 +110,12 @@ public class StoreService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName, String userName, String mobile, String address,
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStore(String storeName, String userName, String mobile,int reviewStatus,
 			Integer provinceId, Integer cityId, Integer countyId, Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);// 分页使用
 		}
-		Page<StoreInfoDto> storeList = storeMapper.findStore(storeName, userName, mobile, address, provinceId, cityId, countyId);
+		Page<StoreInfoDto> storeList = storeMapper.findStore(storeName, userName, mobile,reviewStatus, provinceId, cityId, countyId);
 		return RestModel.success(storeList, (int) storeList.getTotal());
 
 	}
@@ -197,6 +198,7 @@ public class StoreService {
 
 		store.setStoreCode(UUID.randomUUID().toString());
 		store.setStoreName(storeInfoDto.getStoreName());
+		store.setReviewStatus(1);//审核通过的门店
 
 		// 新增门店信息
 		storeMapper.insert(store);
@@ -292,6 +294,7 @@ public class StoreService {
 	 * @param address
 	 * @return
 	 */
+	@Transactional
 	public ResponseEntity<RestModel<Integer>> changeStoreByStoreId(String token, StoreInfoDto storeInfoDto) {
 		HqlsUser user = new HqlsUser();
 		String password = "123456";
@@ -360,5 +363,173 @@ public class StoreService {
 		storeMapper.updateStoreInfo(storeInfoDto);
 		return RestModel.success();
 
+	}
+	
+	/**
+	 * 查询所有待审核的门店
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<StoreInfoDto>>> findStoreByReviewStatus(Integer pageIndex,Integer pageSize){
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);// 分页使用
+		}
+		Page<StoreInfoDto> storeList = storeMapper.findStoreByReviewStatus();
+		if(storeList.size()> 0 && storeList != null){
+			return RestModel.success(storeList, (int) storeList.getTotal());
+		}else{
+			return RestModel.success(new ArrayList<>());
+		}
+	}
+	
+	/**
+	 * 修改门店审核状态
+	 * @param storeId
+	 * @param userId
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> updateReviewStatus(Integer storeId,Integer reviewStatus){
+		//修改门店审核状态
+		int storeCount = storeMapper.updateReviewStatus(storeId,reviewStatus);
+		//通过storeId获取userId
+		Integer userId = userStoreMapper.getUserIdByStoreId(storeId);
+		//修改用户信息是否启用为true
+		int userCount = userMapper.updateUserIsUseable(userId);
+		//修改门店审核状态和用户启用成功
+		
+		if(storeCount>0 && userCount >0 ){
+			if(reviewStatus ==1){
+				//新增门店财务表
+				HqlsStoreFinance hsf = new HqlsStoreFinance();
+				hsf.setStoreId(storeId);
+				hsf.setCreateTime(new Date());
+				hsf.setDmlTime(new Date());
+				storeFinanceMapper.insert(hsf);
+			}
+			return RestModel.success();
+		}else{
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST.getErrcode(),"修改门店审核状态失败！"); 
+		}
+		
+	}
+	
+	/**
+	 * 新增待审核门店信息
+	 * @param token
+	 * @param storeInfoDto
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> addReviewStore(String token,StoreInfoDto storeInfoDto){
+		HqlsUser user = new HqlsUser();
+		String mobile = storeInfoDto.getMobile();
+		String userName = storeInfoDto.getUserName();
+		String password = "123456";
+		user.setMobile(mobile);
+		user.setUserName(userName);
+		user.setPassword(password);
+		user.setIsUseable(false);//用户为不启用
+		user.setCreateTime(new Date());
+		user.setDmlTime(new Date());
+		HqlsStore store = new HqlsStore();
+		store.setAddress(storeInfoDto.getAddress());
+		store.setBackUrl(storeInfoDto.getBackUrl());
+		store.setCityId(storeInfoDto.getCityId());
+		store.setCityName(storeInfoDto.getCityName());
+		store.setCountyId(storeInfoDto.getCountyId());
+		store.setCountyName(storeInfoDto.getCountyName());
+		store.setIsUseable(storeInfoDto.getIsUseable());
+		store.setLatitude(storeInfoDto.getLatitude());
+		store.setLongitude(storeInfoDto.getLongitude());
+		store.setMobile(storeInfoDto.getMobile());
+		store.setPid(storeInfoDto.getPid());
+		store.setProvinceId(storeInfoDto.getProvinceId());
+		store.setProvinceName(storeInfoDto.getProvinceName());
+
+		store.setStoreCode(UUID.randomUUID().toString());
+		store.setStoreName(storeInfoDto.getStoreName());
+		store.setReviewStatus(0);//审核状态为待审核
+
+		// 新增门店信息
+		storeMapper.insert(store);
+		int stoId = store.getStoreId();
+		
+		
+		// 注册用户信息
+		RestModel<Integer> registerInfo = authService.register(mobile, password);
+		// 查询当前用户在系统中是否存在
+		HqlsUser hquser = userMapper.getUserInfoByMobile(mobile);
+		Integer globalUserId = null;
+		Integer userId = null;
+		if (registerInfo.getErrcode() == 0) {// 注册成功
+			logger.info("注册，新增用户。");
+			globalUserId = registerInfo.getResult(); // 用户中心的编号
+			user.setGlobalUserId(globalUserId);
+			if (hquser != null) {
+				userId = hquser.getUserId();
+			} else {
+				userMapper.insert(user);
+				userId = user.getUserId();
+			}
+			// 新增用户门店信息表
+			HqlsUserStore userStore = new HqlsUserStore();
+			userStore.setStoreId(stoId);
+			userStore.setUserId(userId);
+			userStore.setIsContact(true);
+			userStoreMapper.insert(userStore);
+
+		} else if (registerInfo.getErrcode() == 4006 || registerInfo.getErrmsg().contains("该用户已注册")) { // 用户已注册，则同步用户信息, 但是密码可能与用户输入的不一致！！！，需要优化！！！！
+			logger.info("用户已注册，则同步用户信息");
+			RestModel<AuthUser> uInfo = authService.getUserInfoByUserName(token, mobile);
+			if (uInfo.getErrcode() == 0) {
+				globalUserId = uInfo.getResult().getUserId();
+				user.setGlobalUserId(globalUserId);
+				if (hquser != null) {
+					userId = hquser.getUserId();
+				} else {
+					userMapper.insert(user);
+					userId = user.getUserId();
+				}
+				// 新增用户门店信息表
+				HqlsUserStore userStore = new HqlsUserStore();
+				userStore.setStoreId(stoId);
+				userStore.setUserId(userId);
+				userStore.setIsContact(true);
+				userStoreMapper.insert(userStore);
+			} else {
+				logger.info("注册失败.");
+				return RestModel.error(HttpStatus.BAD_REQUEST, uInfo.getErrcode(), uInfo.getErrmsg());
+			}
+		} else {
+			logger.info("注册失败....");
+			return RestModel.error(HttpStatus.BAD_REQUEST, registerInfo.getErrcode(), registerInfo.getErrmsg());
+
+		}
+		return RestModel.success();
+	}
+
+	@Transactional
+	public ResponseEntity<RestModel<Object>> findStoreInfoByPid(Integer storeId){
+		//查询该门店下子类个数
+		int count = storeMapper.findStoreByPid(storeId);
+		Object objList;
+		// 此类别下还有子类
+		if (count > 0) {
+			objList = storeMapper.findChildStore(storeId);
+		}else{
+			objList = storeMapper.findStoreById(storeId);
+		}
+		return RestModel.success(objList);
+	}
+	
+	
+	public ResponseEntity<RestModel<Boolean>> findChildStore(Integer storeId){
+		//查询该门店下子类个数
+		int count = storeMapper.findStoreByPid(storeId);
+		if(count>0){
+			return RestModel.success(true);
+		}else{
+			return RestModel.success(false);
+		}
 	}
 }
