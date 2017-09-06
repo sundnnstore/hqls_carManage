@@ -23,6 +23,8 @@ public class HqlsCashBack implements Serializable {
 	private Double discount;
 	@ApiModelProperty("返还金额")
 	private Double returnMoney;
+	@ApiModelProperty("返回周期(月)")
+	private Integer returnCycle;
 	@ApiModelProperty("返还类型（1返利率 2返还金额）")
 	private Integer returnType;
 	@ApiModelProperty("操作人ID")
@@ -149,9 +151,15 @@ public class HqlsCashBack implements Serializable {
 	}
 
 	public void setOperateUserId(Integer operateUserId) {
-		if (operateUserId != null) {
-			this.operateUserId = operateUserId;
-		}
+		this.operateUserId = operateUserId;
+	}
+
+	public Integer getReturnCycle() {
+		return returnCycle;
+	}
+
+	public void setReturnCycle(Integer returnCycle) {
+		this.returnCycle = returnCycle;
 	}
 
 }

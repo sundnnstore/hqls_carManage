@@ -22,6 +22,8 @@ public class CashBackDto {
 	private Double returnMoney;
 	@ApiModelProperty("返还类型（1返利率 2返还金额）")
 	private Integer returnType;
+	@ApiModelProperty("返还周期（月）")
+	private Integer returnCycle;
 	@ApiModelProperty("操作人ID")
 	private Integer operateUserId;
 	@ApiModelProperty("是否启用")
@@ -182,6 +184,16 @@ public class CashBackDto {
 	public void setOperateUserName(String operateUserName) {
 		if (operateUserName != null) {
 			this.operateUserName = operateUserName;
+		}
+	}
+
+	public Integer getReturnCycle() {
+		return returnCycle;
+	}
+
+	public void setReturnCycle(Integer returnCycle) {
+		if (returnCycle != null) {
+			this.returnCycle = returnCycle;
 		}
 	}
 
