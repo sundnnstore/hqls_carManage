@@ -46,7 +46,7 @@ public class CashBackService {
 		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增返利规则失败");
 	}
 
-	public ResponseEntity<RestModel<Page<CashBackDto>>> findFlowListByContidion(Integer returnType, String operateUserName, Date createTime,
+	public ResponseEntity<RestModel<Page<CashBackDto>>> findCashBackListByContidion(Integer returnType, String operateUserName, Date createTime,
 			Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);

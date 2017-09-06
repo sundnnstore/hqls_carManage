@@ -10,16 +10,16 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsCashBack" useGeneratedKeys="true" keyProperty="cashBackId">
 	    INSERT INTO hqls_cash_back (
-	        money, discount, return_money, return_type, operate_user_id, is_usable, create_time
+	        money, discount, return_money, return_type,return_cycle, operate_user_id, is_usable, create_time
 	    ) VALUES (
-	        #{money}, #{discount}, #{returnMoney}, #{returnType}, #{operateUserId}, #{isUsable}, #{createTime}        
+	        #{money}, #{discount}, #{returnMoney}, #{returnType}, #{returnCycle}, #{operateUserId}, #{isUsable}, #{createTime}        
 	    )
 	</insert>
 
 	<!-- 修改 -->
 	<update id="update" parameterType="HqlsCashBack">
 	   UPDATE hqls_cash_back SET
-		   money = #{money}, 
+		   money = #{money},
 		   discount = #{discount}, 
 		   return_money = #{returnMoney}, 
 		   return_type = #{returnType}, 
@@ -44,10 +44,10 @@
 		WHEN cb.return_type = 1 THEN
 			concat( '满', cb.money, '返', concat(cb.discount * 100, '%'))
 		WHEN return_type = 2 THEN
-			concat( '满', cb.money, '返', concat(cb.money, '%'))
+			concat( '满', cb.money, '返', cb.return_money)
 		ELSE
 			'不存在的类型'
-		END AS content
+		END AS content 
 		FROM
 			hqls_cash_back cb,
 			hqls_user user

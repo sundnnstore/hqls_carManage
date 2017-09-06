@@ -20,11 +20,14 @@ public interface UserStoreMapper {
 	@Select("select * from hqls_user_store where user_id=#{userId} and store_id =#{storeId}")
 	public List<HqlsUserStore> findUserStore(@Param("userId") Integer userId,@Param("storeId") Integer storeId);
 	
-	@Update("UPDATE hqls_user_store set is_contact where user_id=#{userId} and store_id=#{storeId}")
+	@Update("UPDATE hqls_user_store set is_contact=true where user_id=#{userId} and store_id=#{storeId}")
 	public int updateIsContant(@Param("userId") Integer userId,@Param("storeId") Integer storeId);
 	
 	@Delete("delete from hqls_user_store where user_id=#{userId} and store_id=#{storeId}")
 	public int deleteByStoreIdAndUserId(@Param("storeId") Integer storeId,@Param("userId") Integer userId);
+	
+	@Select("select user_id as userId from hqls_user_store where store_id = #{storeId}")
+	public Integer getUserIdByStoreId(@Param("storeId") Integer storeId);
 	
 
 }

@@ -84,6 +84,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			html += `<tr>`;
 			html += `<td>${data[i].returnTypeDesc}</td>
 					<td>${data[i].content}</td>
+					<td>${data[i].returnCycle}个月</td>
 					<td>${data[i].operateUserName}</td>
 					<td>${data[i].createTime}</td>
 					</tr>`;
@@ -124,7 +125,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			title: '添加返利规则',
 			content: $('#addRebatepage'), //弹出框的内容
 			skin: 'layui-layer-lan', //弹框主题
-			area: '800px', //宽高
+			area: ['1050px', '200px'], //宽高
 			btn: ['确定', '取消'],
 			yes: function(index, layero) {
 				//确定的回调
@@ -150,10 +151,11 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
     	Param.returnType = $("#returnType").val();
     	Param.money = $('input[name=money]').val();
     	Param.returnMoney = $('input[name=returnMoney]').val();
+    	Param.returnCycle = $('input[name=returnCycle]').val();
     	Param.operateUserId = localStorage.userId;
     	var cashBack = JSON.stringify(Param);
     	$.ajax({
-    		url: "http://127.0.0.1:8881/addcashback",
+    		url: "/addcashback",
     		type: 'POST',
     		contentType: "application/json; charset=utf-8",
     		data: cashBack,

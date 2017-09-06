@@ -27,7 +27,7 @@
     margin-left: 82px;
 }
 
-.head>div:nth-child(4)>div {
+.head>div:nth-child(5)>div {
     margin-left: 40px;
 }
 
@@ -161,6 +161,9 @@
 	width: 100%;
 }
 
+.layui-layer-content{
+	max-height: 550px;
+}
 .layui-layer-btn {
     text-align: center !important;
 }

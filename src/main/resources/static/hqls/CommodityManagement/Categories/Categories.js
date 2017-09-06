@@ -63,6 +63,9 @@ var layer = layui.layer, $ = layui.jquery, title;
 						layer.close(index);
 					}
 				});
+			},
+			end:function(){
+				$('#categoriesLocate').css("display","none");
 			}
 		});
 	}
@@ -99,6 +102,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 				}
 			},
 			end : function() { // 弹出框销毁时清空表单
+				$('#categoriesInfoEdit').css("display","none");
 				inputReset(); // 清空表单
 			}
 		});
@@ -176,6 +180,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 					layer.close(index);
 				},
 				end : function() { // 弹出框销毁时清空表单
+					$('#categoriesAdd').css("display","none");
 					inputReset(); // 清空表单
 				}
 			});
@@ -229,6 +234,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 					layer.close(index);
 				},
 				end : function() { // 弹出框销毁时清空表单
+					$('#categoriesAdd').css("display","none");
 					inputReset(); // 清空表单
 				}
 			});

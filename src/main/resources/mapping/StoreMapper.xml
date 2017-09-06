@@ -10,9 +10,9 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="storeId">
 	    INSERT INTO hqls_store (
-	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
+	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status, create_time, dml_time
 	    ) VALUES (
-	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable}, now(), now()        
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable},#{reviewStatus}, now(), now()        
 	    )
 	</insert>
 
@@ -108,7 +108,9 @@
 		sto.latitude,
 		sto.province_name as provinceName,
 		sto.city_name as cityName,
-		sto.county_id as countyId
+		sto.county_id as countyId,
+		sto.review_status as reviewStatus,
+		hqus.user_id as userId
 		FROM
 		hqls_store sto
 		LEFT JOIN
@@ -119,14 +121,15 @@
 		hqls_user hqus
 		on
 		hqus.user_id = usto.user_id
-		where usto.is_contact=1 
+		where usto.is_contact=1
 		<if test="storeName !=null and storeName != '' "> and sto.store_name like concat('%',#{storeName},'%')</if>
 		<if test="userName != null and userName != '' "> and hqus.user_name like concat('%',#{userName},'%')</if>
 		<if test="mobile != null and mobile != '' "> and hqus.mobile like concat('%',#{mobile},'%')</if>
-		<if test="address != null and address !='' " > and sto.address like concat('%',#{address},'%')</if>
+		<if test="reviewStatus >=0 "> and sto.review_status =#{reviewStatus}</if>
 		<if test="provinceId != null and provinceId != '' "> and sto.province_id = #{provinceId}</if>
 		<if test="cityId != null and cityId != '' "> and sto.city_id =#{cityId}</if>
 		<if test="countyId != null and countyId != '' "> and sto.county_id =#{countyId}</if>
+		
 	</select>
 	
 	<update id="updateStoreByStoreId">
@@ -142,5 +145,43 @@
 		where store_id=#{storeId}
 	</update>
 	
+	<!-- 查询所有待审核门店信息列表 -->
+	<select id="findStoreByReviewStatus" resultType="com.sinoauto.dto.StoreInfoDto">
+		select 
+		hqus.user_name as userName,
+		hqus.mobile ,
+		sto.address,
+		sto.back_url,
+		sto.is_useable as isUseable,
+		sto.store_name as storeName,
+		sto.store_id as storeId,
+		sto.longitude,
+		sto.latitude,
+		sto.province_name as provinceName,
+		sto.city_name as cityName,
+		sto.county_id as countyId,
+		sto.review_status as reviewStatus,
+		hqus.user_id as userId
+		FROM
+		hqls_store sto
+		LEFT JOIN
+		hqls_user_store usto
+		ON
+		sto.store_id=usto.store_id
+		LEFT JOIN 
+		hqls_user hqus
+		on
+		hqus.user_id = usto.user_id
+		where sto.review_status=0
 	
+	</select>
+	
+	
+	<!-- 修改门店审核状态 -->
+	<update id="updateReviewStatus" parameterType="int">
+		UPDATE hqls_store SET
+		review_status=#{reviewStatus}
+	   	WHERE 
+		store_id = #{storeId}
+	</update>
 </mapper>

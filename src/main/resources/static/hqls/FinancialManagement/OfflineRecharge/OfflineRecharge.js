@@ -1,35 +1,3 @@
-/*layui.use(['layer', 'jquery'], function() {
-	var $ = layui.jquery;
-	var layer = layui.layer;
-	$('.operating-btn').on('click', function() {
-		if($(this).text() == '拒绝') {
-			layer.open({
-				type: 1, //添加一个模板
-				title: '拒绝理由',
-				content: `
-						<div class="layui-form-item layui-form-text mylayui-item ">
-							<label class="layui-form-label">拒绝理由</label>
-							<div class="layui-input-block">
-								<textarea placeholder="请输入内容" class="layui-textarea"></textarea>
-							</div>
-						</div>
-						<div class="layui-form-item layui-form-text shipbox">
-							<button class="layui-btn">拒绝</button>
-						</div>
-			`, //弹出框的内容
-				skin: 'layui-layer-lan', //弹框主题
-				area: '800px', //宽高
-				cancel: function() {
-					//右上角关闭的回调
-				},
-				shade: 0
-			})
-		}else{
-			layer.msg('同意')
-		}
-	})
-})*/
-
 layui.use(['jquery', 'laypage', 'layer'], function() {
 	
 	var $ = layui.jquery;
@@ -86,7 +54,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			async : false,
 			data:{
 				"financeFlowId":id,
-				"changeType":2,
+				"changeType":1,
 				"checkStatus":3,
 				"remark":remark
 			},
@@ -104,7 +72,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 		laypage({
 			cont: 'pages',
 			pages: Math.ceil(totalCount/pageSize), // 总的分页数
-			groups: 10, // 展示的页数
+			groups: 5, // 展示的页数
 			first: 1,
 			last: Math.ceil(totalCount/pageSize),
 			skip: true,
@@ -145,7 +113,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					refuseBtnClick(id,$("#remarkTextArea").val());
 				});
 			}else{
-				layer.confirm('是否确定该笔提现审核通过？', {
+				layer.confirm('是否确定该笔线下充值审核通过？', {
 					btn: ['是','否'] // 按钮
 				}, function(){
 					$.ajax({
@@ -154,7 +122,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 						async : false,
 						data:{
 							"financeFlowId":id,
-							"changeType":2,
+							"changeType":1,
 							"checkStatus":2,
 							"remark":"审核通过"
 						},
@@ -183,9 +151,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					<td>${data[i].customerName}</td>
 					<td>${data[i].mobile}</td>
 					<td>${data[i].changeMoney}</td>
-					<td>${data[i].bank}</td>
-					<td>${data[i].account}</td>
-					<td>${data[i].openBank}</td>
+					<td>${data[i].transactionNo}</td>
 					<td>${data[i].checkStatusDesc}</td>
 					<td class="operating">`
 			if(data[i].checkStatus == 1) {
@@ -205,7 +171,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	getFlowList(1);
 	function getFlowList(pageIndex) {
 		$.ajax({
-			url: "/findflowlistbycontidion?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&changeType=2",
+			url: "/findflowlistbycontidion?pageIndex=" + pageIndex + "&pageSize=" + pageSize + "&changeType=1" + "&payType=3",
 			type: "GET",
 			async : false,
 			data: OrderParam,
