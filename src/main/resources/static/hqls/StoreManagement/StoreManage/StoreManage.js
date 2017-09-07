@@ -121,10 +121,68 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btn: temp == 'view' ? '确定' : '提交',
             btnAlign: 'c', // 按钮居中
             yes: function(index, layero) {// 当前层索引参数（index）、当前层的DOM对象（layero）
-            	if(flag ==0 ){            		
+            	if(flag ==0 ){
+            		if(temp !='view'){
+            			if($("#storeName").val()==null || $("#storeName").val()==''){
+                			layer.msg('门店名称不能为空！');
+                			return;
+                		}
+                    	if($("#city").find("option:selected").val() == '' || $("#city").find("option:selected").val() == null){
+                    		layer.msg('城市不能为空！');
+                    		return;
+                    	}
+                    	if($("#province").find("option:selected").val() == '' || $("#province").find("option:selected").val() == null){
+                    		layer.msg('省份不能为空！');
+                    		return;
+                    	}
+                    	if($("#county").find("option:selected").val() == '' || $("#county").find("option:selected").val() == null){
+                    		layer.msg('区县不能为空！');
+                    		return;
+                    	}
+                    	if($("#address").val() == '' || $("#address").val() == null){
+                    		layer.msg('详细地址不能为空！');
+                    		return;
+                    	}
+                    	if($("#slng").val() =='' || $("#slat").val() == ''){
+                    		layer.msg('请点击定位按钮');
+                    		return;
+                    	}
+                    	if(!(/^1[34578]\d{9}$/.test($("#mobile").val()))){ 
+                            layer.msg('联系人电话有误，请重填');
+                            return;
+                    	}
+                    	if($("#mobile").val() ==''  || $("#mobile").val() == null){
+                    		layer.msg('联系人电话不能为空！');
+                    		return;
+                    	}
+                    	
+                    	if($("#userName").val() ==''  || $("#userName").val() == null){
+                    		layer.msg('门店联系人不能为空！');
+                    		return;
+                    	}
+                    	if($("#storeImgUrl").attr("src") ==''  || $("#storeImgUrl").attr("src") == null){
+                    		layer.msg('图片不能为空！');
+                    		return;
+                    	}
+                    	
+                		if(	$("#edit_storeLevel").find("option:selected").val()<=0){
+                			layer.msg('门店级别不能为空！');
+                			return ;
+                		}
+                		if($("#edit_storeClass").find("option:selected").val()<=0){
+                			layer.msg('门店分类不能为空！');
+                			return;
+                		}
+            		}
             		if(temp == 'addStore'){// 添加门店
             			addStore(pid,index);
             		}else if(temp == 'edit'){
+            			var uname = $("#userName").attr("name");
+            	    	var mob = $("#mobile").attr("name");
+            			if(($("#mobile").val() == mob) && $("#storeName").val() != uname){
+                		layer.msg("未修改联系人电话，不可修改门店联系人！");
+                		return;
+            			}
             			editStore(index);// 门店编辑
             		}else if(temp == 'view'){
             			layer.close(index);
@@ -173,61 +231,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
     	storeInfoDto.storeId = storeId;
-    	var uname = $("#userName").attr("name");
-    	var mob = $("#mobile").attr("name");
-    	if((storeInfoDto.mobile == mob) && storeInfoDto.userName != uname){
-    		layer.msg("未修改联系人电话，不可修改门店联系人！");
-    		return;
-    	}
-    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
-    		layer.msg('城市不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
-    		layer.msg('省份不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
-    		layer.msg('区县不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
-    		layer.msg('详细地址不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
-    		layer.msg('请点击定位按钮');
-    		return;
-    	}
-    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
-            layer.msg('联系人电话有误，请重填');
-            return;
-    	}
-    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
-    		layer.msg('联系人电话不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
-    		layer.msg('门店名称不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
-    		layer.msg('门店联系人不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
-    		layer.msg('图片不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeLevel <=0){
-    		layer.msg("门店级别不能为空！");
-    		return;
-    	}
-    	if(storeInfoDto.storeClass <=0){
-    		layer.msg("门店分类不能为空！");
-    		return;
-    	}
-    	
 		$.ajax({
 			url : "/changestorebystoreid",
 			type : "post",
@@ -258,58 +261,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addStore(pid,index){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
-    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
-    		layer.msg('城市不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
-    		layer.msg('省份不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
-    		layer.msg('区县不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
-    		layer.msg('详细地址不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
-    		layer.msg('请点击定位按钮');
-    		return;
-    	}
-    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
-            layer.msg('联系人电话有误，请重填');
-            return;
-    	}
-    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
-    		layer.msg('联系人电话不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
-    		layer.msg('门店名称不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
-    		layer.msg('门店联系人不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
-    		layer.msg('图片不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.isUseable != true && storeInfoDto.isUseable != false){
-    		layer.msg('是否启用不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeLevel <=0){
-    		layer.msg("门店级别不能为空！");
-    		return;
-    	}
-    	if(storeInfoDto.storeClass <=0){
-    		layer.msg("门店分类不能为空！");
-    		return;
-    	}
 		$.ajax({
 			url : "/insertstore",
 			type : "post",
