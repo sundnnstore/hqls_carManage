@@ -243,8 +243,20 @@ public class PurchaseOrderService {
 	 * 	@param orderStatus
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus) {
-		return RestModel.success( purchaseOrderMapper.findOrder(storeId, orderStatus));
+	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus,Integer pageIndex,Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<PurchaseOrderParamDto> purchaseOrders =null;
+		Page<PurchaseOrderParamDto> purchaseOrdersPage = new Page<>();
+		try {
+			purchaseOrders = purchaseOrderMapper.findOrder(storeId, orderStatus);
+			if(purchaseOrders==null){
+				purchaseOrders = new ArrayList<>();	
+			}
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "按状态查询错误");
+		}
+		purchaseOrdersPage = (Page<PurchaseOrderParamDto>) purchaseOrders;
+		return RestModel.success(purchaseOrdersPage,4);
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> getOrderByOrderId(Integer orderId) {
