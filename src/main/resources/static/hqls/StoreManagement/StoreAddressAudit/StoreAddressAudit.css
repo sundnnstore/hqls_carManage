@@ -1,0 +1,39 @@
+.storeAddress {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.head>div {
+    margin: 5px 20px 0 0;
+}
+
+.head>div>label {
+    width: inherit;
+    padding: 9px 0;
+    text-align: left;
+}
+
+.head>div>div {
+    margin-left: 68px;
+}
+
+.head>div:nth-child(2)>div {
+    margin-left: 54px;
+}
+
+.head>div:nth-child(3)>div {
+    margin-left: 82px;
+}
+
+.head>button {
+    width: 90px;
+    border-radius: 4px;
+    margin: 5px 5px 0 5px !important;
+}
+
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 10px;
+}

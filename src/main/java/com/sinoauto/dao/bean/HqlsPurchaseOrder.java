@@ -21,7 +21,7 @@ public class HqlsPurchaseOrder implements Serializable {
 	private Integer purchaseOrderId;
 	@ApiModelProperty("订单号")
 	private String orderNo;
-	@ApiModelProperty("订单状态（1.待支付；2.待发货；3.待收货；4.已完成）")
+	@ApiModelProperty("订单状态（1.待支付；2.待发货；3.待收货；4.已完成； 5.已取消）")
 	private Integer orderStatus;
 	@ApiModelProperty("收货地址ID")
 	private Integer shipAddressId;
@@ -79,15 +79,15 @@ public class HqlsPurchaseOrder implements Serializable {
 		return this.orderNo;
 	}
 	/**
-	 * 设置订单状态（1.待支付；2.待发货；3.待收货；4.已完成）
-	 * @param orderStatus 订单状态（1.待支付；2.待发货；3.待收货；4.已完成）
+	 * 设置订单状态（1.待支付；2.待发货；3.待收货；4.已完成；5.已取消）
+	 * @param orderStatus 订单状态（1.待支付；2.待发货；3.待收货；4.已完成；5.已取消）
 	 */
 	public void setOrderStatus(Integer orderStatus) {
 		this.orderStatus = orderStatus;
 	}
 	/**
-	 * 获取订单状态（1.待支付；2.待发货；3.待收货；4.已完成）
-	 * @return 订单状态（1.待支付；2.待发货；3.待收货；4.已完成）
+	 * 获取订单状态（1.待支付；2.待发货；3.待收货；4.已完成；5.已取消）
+	 * @return 订单状态（1.待支付；2.待发货；3.待收货；4.已完成；5.已取消）
 	 */
 	public Integer getOrderStatus() {
 		return this.orderStatus;

@@ -6,7 +6,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 
 	//定义搜索参数
 	var OrderParam = {};
-	var pageSize = 1;
+	var pageSize = 10;
 	//订单详情
 	$('body').on('click', '.detail', function() {
 		orderId = $(this).val();
@@ -19,7 +19,18 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		//查询所有物流公司
 		allLogisticsCompany();
 		orderId = $(this).val();
+		//清空弹出页
+		$('input[name=logistics_no]').val('');
+		$('#remark').val('');
 		AlertDiaog('发货信息',$('#shipPage'),'800px')
+	})
+	
+	//添加物流备注信息
+	$('body').on('click', '.logisticsRemark', function() {
+		event.stopPropagation();
+		orderId = $(this).val();
+		$('#remark_only').val('');
+		AlertDiaog('备注信息',$('#logisticsRemark'),'800px')
 	})
 	
 	function AlertDiaog(title, id, area) {
@@ -139,13 +150,12 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	}
 	
 	function comboTable(res, pageIndex) {
-		console.log(res);
 		var data = res.result;
 		var html = "";
 		for (var i = 0; i < data.length; i++) {
 			html += `<tr>`;
 			html += `<td>${data[i].orderNo}</td>
-					<td>${data[0].orderStatusName}</td>
+					<td>${data[i].orderStatusName}</td>
 					<td>${data[i].createTime}</td>
 					<td>${data[i].address}</td>
 					<td>${data[i].userName}</td>
@@ -154,9 +164,11 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 					<td>${data[i].totalFee}</td>
 					<td>`;
 			if (data[i].orderStatus == 2) {
+				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn cancel">取消</button>`;
 				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal ship">发货</button>`;
 			}
 			else if (data[i].orderStatus == 3) {
+				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal logisticsRemark">备注</button>`;
 				html += `<button value="${data[i].purchaseOrderId}" class="layui-btn layui-btn-normal logisticsInfo">物流</button>`;
 			}
 			html += `<button value="${data[i].purchaseOrderId}" class="layui-btn detail">详情</button>`;
@@ -290,7 +302,60 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			}
 		}
 		$('#logisticsInfoPage').html(html);
-		
 	}
+	
+	//取消订单
+	$('body').on('click','.cancel', function(event) {
+		event.stopPropagation();
+		orderId = $(this).val();
+		$.ajax({
+			url: '/cancelorder?orderId=' + orderId,
+			type: 'GET',
+			async: false,
+			headers: {
+				'Authorization': localStorage.token
+			},
+			success: function (data) {
+				if (data.errcode == 0) {
+					layer.msg("订单取消成功！");
+					reqOrderList(1);
+				} else {
+					layer.msg("订单取消失败！");
+				}
+			},
+			error: function () {
+				layer.msg("订单取消失败！");
+			}
+		});
+	});
+	
+	//添加物流备注信息
+	$('#confirm_logistics_remark').on('click', function(event) {
+		event.stopPropagation();
+		var remark = $('#remark_only').val();
+		if (!remark || remark == "") {
+			layer.msg('请先输入要添加的内容');
+			return;
+		}
+		$.ajax({
+			url: '/addlogisticsremark',
+			type: 'GET',
+			async: false,
+			data: {'orderId': orderId, 'remark': remark},
+			success: function (data) {
+				if (data.errcode == 0) {
+					layer.msg("添加成功！");
+					setTimeout(() => {
+						layer.closeAll();
+					}, 500);
+				} else {
+					layer.msg("添加失败！");
+				}
+			},
+			error: function () {
+				layer.msg("添加失败！");
+			}
+		});
+	});
 	
 })

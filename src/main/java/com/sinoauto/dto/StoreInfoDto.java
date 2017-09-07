@@ -46,6 +46,10 @@ public class StoreInfoDto {
 	private Integer userId;
 	@ApiModelProperty("审核状态名称")
 	private String reviewDesc;
+	@ApiModelProperty("门店级别")
+	private Integer storeLevel;
+	@ApiModelProperty("门店分类")
+	private Integer storeClass;
 	
 
 	public String getReviewDesc() {
@@ -214,6 +218,22 @@ public class StoreInfoDto {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Integer getStoreLevel() {
+		return storeLevel;
+	}
+
+	public void setStoreLevel(Integer storeLevel) {
+		this.storeLevel = storeLevel;
+	}
+
+	public Integer getStoreClass() {
+		return storeClass;
+	}
+
+	public void setStoreClass(Integer storeClass) {
+		this.storeClass = storeClass;
 	}
 
 

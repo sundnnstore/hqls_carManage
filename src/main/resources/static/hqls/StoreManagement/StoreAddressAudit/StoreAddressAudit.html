@@ -1,0 +1,50 @@
+<link rel="stylesheet" type="text/css" href="StoreManagement/StoreAddressAudit/StoreAddressAudit.css" />
+<div class="store">
+	用户加盟门店信息
+	<!-- 门店信息搜索 && 添加门店 -->
+	<div class="head">
+		<div class="layui-input-inline">
+			<label for="first_title" class="layui-form-label">门店名称</label>
+			<div class="layui-input-block">
+				<input type="text" id="storeName" class="layui-input" />
+			</div>
+		</div>
+		<div class="layui-input-inline">
+			<label for="" class="layui-form-label">联系人</label>
+			<div class="layui-input-block">
+				<input type="text" id="contactName" class="layui-input" />
+			</div>
+		</div>
+		<div class="layui-input-inline">
+			<label for="" class="layui-form-label">联系人号码</label>
+			<div class="layui-input-block">
+				<input type="text" id="contactMobile" class="layui-input"
+					onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" />
+			</div>
+		</div>
+		
+		<button id="searchStoreInfo" class="layui-btn">搜索</button>
+		</div>
+    <!-- 门店信息展示 -->
+   <!-- 门店信息展示 -->
+	<div class="content">
+		<div class="tableContainer">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>门店名称</th>
+						<th>联系人</th>
+						<th>联系人号码</th>
+						<th>门店地址</th>
+						<th>加盟原因</th>
+					</tr>
+				</thead>
+				<tbody id="store_tb">
+				</tbody>
+			</table>
+		</div>
+		<!-- 分页 -->
+		<div id="pages" style="text-align: right;"></div>
+</div>
+</div>
+<script src="StoreManagement/StoreAddressAudit/StoreAddressAudit.js"></script>

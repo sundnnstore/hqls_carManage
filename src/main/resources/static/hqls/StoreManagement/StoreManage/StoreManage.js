@@ -41,6 +41,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			$("#province").val("");
     		$("#city").val("");
     		$("#county").val("");
+    		$("#edit_storeLevel").val("-1");
+    		$("#edit_storeClass").val("-1");
 			
             layer.open({
                 type: 1,
@@ -119,10 +121,68 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             btn: temp == 'view' ? '确定' : '提交',
             btnAlign: 'c', // 按钮居中
             yes: function(index, layero) {// 当前层索引参数（index）、当前层的DOM对象（layero）
-            	if(flag ==0 ){            		
+            	if(flag ==0 ){
+            		if(temp !='view'){
+            			if($("#storeName").val()==null || $("#storeName").val()==''){
+                			layer.msg('门店名称不能为空！');
+                			return;
+                		}
+                    	if($("#city").find("option:selected").val() == '' || $("#city").find("option:selected").val() == null){
+                    		layer.msg('城市不能为空！');
+                    		return;
+                    	}
+                    	if($("#province").find("option:selected").val() == '' || $("#province").find("option:selected").val() == null){
+                    		layer.msg('省份不能为空！');
+                    		return;
+                    	}
+                    	if($("#county").find("option:selected").val() == '' || $("#county").find("option:selected").val() == null){
+                    		layer.msg('区县不能为空！');
+                    		return;
+                    	}
+                    	if($("#address").val() == '' || $("#address").val() == null){
+                    		layer.msg('详细地址不能为空！');
+                    		return;
+                    	}
+                    	if($("#slng").val() =='' || $("#slat").val() == ''){
+                    		layer.msg('请点击定位按钮');
+                    		return;
+                    	}
+                    	if(!(/^1[34578]\d{9}$/.test($("#mobile").val()))){ 
+                            layer.msg('联系人电话有误，请重填');
+                            return;
+                    	}
+                    	if($("#mobile").val() ==''  || $("#mobile").val() == null){
+                    		layer.msg('联系人电话不能为空！');
+                    		return;
+                    	}
+                    	
+                    	if($("#userName").val() ==''  || $("#userName").val() == null){
+                    		layer.msg('门店联系人不能为空！');
+                    		return;
+                    	}
+                    	if($("#storeImgUrl").attr("src") ==''  || $("#storeImgUrl").attr("src") == null){
+                    		layer.msg('图片不能为空！');
+                    		return;
+                    	}
+                    	
+                		if(	$("#edit_storeLevel").find("option:selected").val()<=0){
+                			layer.msg('门店级别不能为空！');
+                			return ;
+                		}
+                		if($("#edit_storeClass").find("option:selected").val()<=0){
+                			layer.msg('门店分类不能为空！');
+                			return;
+                		}
+            		}
             		if(temp == 'addStore'){// 添加门店
             			addStore(pid,index);
             		}else if(temp == 'edit'){
+            			var uname = $("#userName").attr("name");
+            	    	var mob = $("#mobile").attr("name");
+            			if(($("#mobile").val() == mob) && ($("#userName").val() != uname)){
+                		layer.msg("未修改联系人电话，不可修改门店联系人！");
+                		return;
+            			}
             			editStore(index);// 门店编辑
             		}else if(temp == 'view'){
             			layer.close(index);
@@ -154,6 +214,10 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		storeInfoDto.backUrl = $("#storeImgUrl").attr("src");
 		storeInfoDto.longitude = $("#slng").val(); 
 		storeInfoDto.latitude =$("#slat").val(); 
+		storeInfoDto.storeLevel = $("#edit_storeLevel").find("option:selected").val();
+		storeInfoDto.storeClass = $("#edit_storeClass").find("option:selected").val();
+		
+		
 		if(isUseable == 1){
 			storeInfoDto.isUseable =true;
 		}else{
@@ -167,54 +231,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
     	storeInfoDto.storeId = storeId;
-    	var uname = $("#userName").attr("name");
-    	var mob = $("#mobile").attr("name");
-    	if((storeInfoDto.mobile == mob) && storeInfoDto.userName != uname){
-    		layer.msg("未修改联系人电话，不可修改门店联系人！");
-    		return;
-    	}
-    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
-    		layer.msg('城市不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
-    		layer.msg('省份不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
-    		layer.msg('区县不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
-    		layer.msg('详细地址不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
-    		layer.msg('请点击定位按钮');
-    		return;
-    	}
-    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
-            layer.msg('联系人电话有误，请重填');
-            return;
-    	}
-    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
-    		layer.msg('联系人电话不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
-    		layer.msg('门店名称不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
-    		layer.msg('门店联系人不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
-    		layer.msg('图片不能为空！');
-    		return;
-    	}
-    	
-    	
 		$.ajax({
 			url : "/changestorebystoreid",
 			type : "post",
@@ -245,50 +261,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     function addStore(pid,index){
     	var storeInfoDto =getStoreInfo();
     	storeInfoDto.pid = pid;
-    	if(storeInfoDto.cityId == '' || storeInfoDto.cityId == null){
-    		layer.msg('城市不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.provinceId == '' || storeInfoDto.provinceId == null){
-    		layer.msg('省份不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.countyId == '' || storeInfoDto.countyId == null){
-    		layer.msg('区县不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.address == '' || storeInfoDto.address == null){
-    		layer.msg('详细地址不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.longitude =='' || storeInfoDto.latitude == ''){
-    		layer.msg('请点击定位按钮');
-    		return;
-    	}
-    	if(!(/^1[34578]\d{9}$/.test(storeInfoDto.mobile))){ 
-            layer.msg('联系人电话有误，请重填');
-            return;
-    	}
-    	if(storeInfoDto.mobile ==''  || storeInfoDto.mobile == null){
-    		layer.msg('联系人电话不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.storeName ==''  || storeInfoDto.storeName == null){
-    		layer.msg('门店名称不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.userName ==''  || storeInfoDto.userName == null){
-    		layer.msg('门店联系人不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.backUrl ==''  || storeInfoDto.backUrl == null){
-    		layer.msg('图片不能为空！');
-    		return;
-    	}
-    	if(storeInfoDto.isUseable != true && storeInfoDto.isUseable != false){
-    		layer.msg('是否启用不能为空！');
-    		return;
-    	}
 		$.ajax({
 			url : "/insertstore",
 			type : "post",
@@ -341,7 +313,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		async:false,
 		data : { "storeName":$("#storeName_search").val(),"userName":$("#userName_search").val(),
 				 "mobile":$("#mobile_search").val(),
-				 "reviewStatus":$("#reviewStatus").val(),
+				 "storeLevel":$("#storeLevel").val(),
+				 "storeClass":$("#storeClass").val(),
 				 "provinceId":$("#province_search").val(),
 				 "cityId":$("#city_search").val(),
 				 "countyId":$("#county_search").val(), 
@@ -382,16 +355,12 @@ function comboTable(res,pageIndex){
 						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
 						'<td>'+
 						'<button data-method="view" name="'+tr_html.storeId+'" class="layui-btn sshow" >查看</button> ';
-			if(tr_html.reviewStatus==1){
 				tb_html +='<button data-method="edit" name="'+tr_html.storeId+'" class="layui-btn layui-btn-normal sedit" >编辑</button> ';
+				
 			if(tr_html.isUseable){
 				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-warm sea">'+status+'</button></td></tr>';
 			}else{
 				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-primary sea">'+status+'</button></td></tr>';
-			}
-			}else if(tr_html.reviewStatus == 0){
-				tb_html +='<button  name="'+tr_html.storeId+','+1+'"  class="layui-btn pass">通过</button>'+
-				'<button  name="'+tr_html.storeId+','+2+'"  class="layui-btn pass" >不通过</button> ';
 			}
 			
 		}
@@ -424,6 +393,7 @@ $("body").on('click','.sedit',function(){
     		$("#storeImgUrl").attr("src",result.backUrl);
     		$("#slat").val(result.latitude);
     		$("#slng").val(result.longitude);
+    		
     		var h = "";
     		
     		if(result.isUseable){
@@ -433,7 +403,23 @@ $("body").on('click','.sedit',function(){
     			h ='<input type="radio" name="isEnable" value="1" >是'+
                 '<input type="radio" name="isEnable" value="0" checked="checked" >否';
     		}
+    		
+    		var option = $("#edit_storeLevel").find("option");
+        	for (var i = 0; i < option.length; i++) {
+        		if(result.storeLevel==option[i].text){
+        			option[i].selected = true;
+        		}
+    			
+    		}
+        	var option = $("#edit_storeClass").find("option");
+        	for (var i = 0; i < option.length; i++) {
+        		if(result.storeClass==option[i].text){
+        			option[i].selected = true;
+        		}
+    			
+    		}
     		$("#state_s").html(h);
+    		
     		
     		}
 		
@@ -450,6 +436,7 @@ $("body").on('click','.sshow',function(){
 		data : {"storeId":$(this).attr("name")},
     	success : function(data){
     		var result = data.result;
+    		console.log(result);
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
     		$("#mobile_show").html(result.userMobile);
@@ -462,6 +449,8 @@ $("body").on('click','.sshow',function(){
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
     		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);
+    		$("#store_level").html(result.storeLevel);
+    		$("#store_class").html(result.storeClass);
     		if(result.isUseable){
     			$("#isuse_show").html("是")
     		}else{
@@ -496,23 +485,6 @@ $("body").on('click','.sea',function(){
 });
 
 
-//通过、不通过
-$("body").on('click','.pass',function(){
-	var ids = $(this).attr("name");
-	var arr = new Array();
-	arr = ids.split(",");
-	var storeId = arr[0];
-	var reviewStatus = arr[1];
-	$.ajax({
-    	url : "/updatereviewstatus",
-		type : "post",
-		data : {"storeId":storeId,"reviewStatus":reviewStatus},
-    	success : function(data){
-    		layer.msg("审核成功！");
-    		window.location.reload();
-    		}
-    }); 
-})
 /**
  * 初始化分页 
  * @param totalCount 总页数
