@@ -179,7 +179,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             		}else if(temp == 'edit'){
             			var uname = $("#userName").attr("name");
             	    	var mob = $("#mobile").attr("name");
-            			if(($("#mobile").val() == mob) && $("#storeName").val() != uname){
+            			if(($("#mobile").val() == mob) && ($("#userName").val() != uname)){
                 		layer.msg("未修改联系人电话，不可修改门店联系人！");
                 		return;
             			}
