@@ -34,4 +34,7 @@ public interface FinanceFlowMapper {
 	@Update("update hqls_finance_flow set check_status = #{checkStatus},remark = #{remark} where finance_flow_id = #{financeFlowId}")
 	public int updateCheckStatus(@Param("financeFlowId") Integer financeFlowId, @Param("checkStatus") Integer checkStatus,@Param("remark") String remark);
 
+	@Update("update hqls_finance_flow set remark = #{remark} where order_no = #{orderNo} and store_id = #{storeId}")
+	public int updateOrderRemark(@Param("storeId") Integer storeId, @Param("orderNo") String orderNo, @Param("remark") String remark);
+	
 }

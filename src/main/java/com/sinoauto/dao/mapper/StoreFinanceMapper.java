@@ -33,5 +33,8 @@ public interface StoreFinanceMapper {
 	@Update("UPDATE hqls_store_finance SET balance = #{balance}+balance, cash_able = #{cashAble}+cash_able,cash_disable = #{cashDisable}+cash_disable, dml_time = now() WHERE store_id = #{storeId}")
 	public int updateMoney(@Param("balance") Double balance, @Param("cashAble") Double cashAble, @Param("cashDisable") Double cash_disable,
 			@Param("storeId") Integer storeId);
+	
+	@Update("update hqls_store_finance set balance=balance+#{money}, dml_time = now() where store_id = #{storeId}")
+	public int updateStoreBalance(@Param("storeId") Integer storeId, @Param("money") Double money);
 
 }

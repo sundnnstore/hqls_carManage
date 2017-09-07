@@ -203,5 +203,19 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByOrderId(@RequestParam(value = "orderId", required = true) Integer orderId) {
 		return purchaseOrderService.getPartsByOrderId(orderId);
 	}
+	
+	@ApiOperation(value = "取消订单", notes = "wuxiao")
+	@GetMapping("cancelorder")
+	public ResponseEntity<RestModel<String>> cancelOrder(@RequestParam(value = "orderId", required = true) Integer orderId,
+			 @RequestHeader(value="Authorization") String Authorization) {
+		 return purchaseOrderService.cancelOrder(orderId, Authorization);
+	}
+	
+	@ApiOperation(value = "添加物流备注", notes = "wuxiao")
+	@GetMapping("addlogisticsremark")
+	public ResponseEntity<RestModel<String>> addLogisticsRemark(@RequestParam(value = "orderId", required = true) Integer orderId,
+			@RequestParam(value = "remark", required = true) String remark) {
+		return purchaseOrderService.addLogisticsRemark(orderId, remark);
+	}
 
 }
