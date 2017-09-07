@@ -75,7 +75,7 @@ public interface PurchaseOrderMapper {
 	 * @param order
 	 * @author wuxiao
 	 */
-	@Update("update hqls_purchase_order poo set poo.order_status = #{orderStatus} where poo.purchase_order_id=#{purchaseOrderId}")
+	@Update("update hqls_purchase_order poo set poo.order_status = #{orderStatus},dml_time = now() where poo.purchase_order_id=#{purchaseOrderId}")
 	public void confirmReceipt(HqlsPurchaseOrder order);
 	
 	@Update("update hqls_purchase_order set order_status = #{orderStatus}, dml_time = now() where purchase_order_id = #{purchaseOrderId}")
