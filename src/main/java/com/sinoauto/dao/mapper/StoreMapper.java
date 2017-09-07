@@ -72,7 +72,10 @@ public interface StoreMapper {
 	public HqlsStore getStoreByStoreCode(String storeCode);
 
 	public int updateStoreInfo(StoreInfoDto storeInfoDto);
-
+	
+	@Select("select * from hqls_store")
+	public List<HqlsStore> findAllStoreList();
+	
 	public Page<StoreInfoDto> findStoreByReviewStatus();
 
 

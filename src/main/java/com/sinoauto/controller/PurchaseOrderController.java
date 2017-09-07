@@ -121,12 +121,12 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "按订单状态查询", notes = "wuxiao")
 	@GetMapping("findorderbystoreidandstatus")
-	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
+	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
 			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
 			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
-		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
+		return purchaseOrderService.findOrderByStatus(storeId, orderStatus,pageIndex,pageSize);
 	}
 	
 	@ApiOperation(value = "按订单Id查询", notes = "wuxiao")
