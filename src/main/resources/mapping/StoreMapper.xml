@@ -79,7 +79,9 @@
 		sto.store_code as storeCode,
 		sto.province_name as provinceName,
 		sto.city_name as cityName,
-		sto.county_name as countyName
+		sto.county_name as countyName,
+		sto.store_level as storeLevel,
+		sto.store_class as storeClass
 		FROM
 		hqls_store sto
 		LEFT JOIN 

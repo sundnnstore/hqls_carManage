@@ -219,7 +219,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		layer.msg('图片不能为空！');
     		return;
     	}
-    	
+    	if(storeInfoDto.storeLevel <=0){
+    		layer.msg("门店级别不能为空！");
+    		return;
+    	}
+    	if(storeInfoDto.storeClass <=0){
+    		layer.msg("门店分类不能为空！");
+    		return;
+    	}
     	
 		$.ajax({
 			url : "/changestorebystoreid",
@@ -293,6 +300,14 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	}
     	if(storeInfoDto.isUseable != true && storeInfoDto.isUseable != false){
     		layer.msg('是否启用不能为空！');
+    		return;
+    	}
+    	if(storeInfoDto.storeLevel <=0){
+    		layer.msg("门店级别不能为空！");
+    		return;
+    	}
+    	if(storeInfoDto.storeClass <=0){
+    		layer.msg("门店分类不能为空！");
     		return;
     	}
 		$.ajax({
