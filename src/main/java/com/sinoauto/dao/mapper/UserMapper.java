@@ -54,7 +54,5 @@ public interface UserMapper {
 	@Select("select * from hqls_user where mobile = #{1}")
 	public HqlsUser getUserByMobile(String mobile);
 	
-	@Update("update hqls_user set is_useable=true where user_id = #{userId}")
-	public int updateUserIsUseable(@Param("userId") Integer userId);
 
 }

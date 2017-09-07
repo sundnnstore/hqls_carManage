@@ -154,6 +154,10 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		storeInfoDto.backUrl = $("#storeImgUrl").attr("src");
 		storeInfoDto.longitude = $("#slng").val(); 
 		storeInfoDto.latitude =$("#slat").val(); 
+		storeInfoDto.storeLevel = $("#edit_storeLevel").find("option:selected").val();
+		storeInfoDto.storeClass = $("#edit_storeClass").find("option:selected").val();
+		
+		
 		if(isUseable == 1){
 			storeInfoDto.isUseable =true;
 		}else{
@@ -341,7 +345,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		async:false,
 		data : { "storeName":$("#storeName_search").val(),"userName":$("#userName_search").val(),
 				 "mobile":$("#mobile_search").val(),
-				 "reviewStatus":$("#reviewStatus").val(),
+				 "storeLevel":$("#storeLevel").val(),
+				 "storeClass":$("#storeClass").val(),
 				 "provinceId":$("#province_search").val(),
 				 "cityId":$("#city_search").val(),
 				 "countyId":$("#county_search").val(), 
@@ -382,16 +387,12 @@ function comboTable(res,pageIndex){
 						'<td>('+tr_html.longitude+','+tr_html.latitude+')</td>'+
 						'<td>'+
 						'<button data-method="view" name="'+tr_html.storeId+'" class="layui-btn sshow" >查看</button> ';
-			if(tr_html.reviewStatus==1){
 				tb_html +='<button data-method="edit" name="'+tr_html.storeId+'" class="layui-btn layui-btn-normal sedit" >编辑</button> ';
+				
 			if(tr_html.isUseable){
 				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-warm sea">'+status+'</button></td></tr>';
 			}else{
 				tb_html +='<button  name="'+tr_html.storeId+'" class="layui-btn layui-btn-primary sea">'+status+'</button></td></tr>';
-			}
-			}else if(tr_html.reviewStatus == 0){
-				tb_html +='<button  name="'+tr_html.storeId+','+1+'"  class="layui-btn pass">通过</button>'+
-				'<button  name="'+tr_html.storeId+','+2+'"  class="layui-btn pass" >不通过</button> ';
 			}
 			
 		}
@@ -424,6 +425,7 @@ $("body").on('click','.sedit',function(){
     		$("#storeImgUrl").attr("src",result.backUrl);
     		$("#slat").val(result.latitude);
     		$("#slng").val(result.longitude);
+    		
     		var h = "";
     		
     		if(result.isUseable){
@@ -433,7 +435,23 @@ $("body").on('click','.sedit',function(){
     			h ='<input type="radio" name="isEnable" value="1" >是'+
                 '<input type="radio" name="isEnable" value="0" checked="checked" >否';
     		}
+    		
+    		var option = $("#edit_storeLevel").find("option");
+        	for (var i = 0; i < option.length; i++) {
+        		if(result.storeLevel==option[i].text){
+        			option[i].selected = true;
+        		}
+    			
+    		}
+        	var option = $("#edit_storeClass").find("option");
+        	for (var i = 0; i < option.length; i++) {
+        		if(result.storeClass==option[i].text){
+        			option[i].selected = true;
+        		}
+    			
+    		}
     		$("#state_s").html(h);
+    		
     		
     		}
 		
@@ -450,6 +468,7 @@ $("body").on('click','.sshow',function(){
 		data : {"storeId":$(this).attr("name")},
     	success : function(data){
     		var result = data.result;
+    		console.log(result);
     		$("#storeName_shows").html(result.storeName);
     		$("#userName_show").html(result.userName);
     		$("#mobile_show").html(result.userMobile);
@@ -462,6 +481,8 @@ $("body").on('click','.sshow',function(){
     		$("#address_show").html(result.provinceName+result.cityName+result.countyName+result.address);
     		$("#jwd_show").html("("+result.latitude+","+result.longitude+")");
     		$("#img_show").attr("src",result.backUrl);
+    		$("#store_level").html(result.storeLevel);
+    		$("#store_class").html(result.storeClass);
     		if(result.isUseable){
     			$("#isuse_show").html("是")
     		}else{
