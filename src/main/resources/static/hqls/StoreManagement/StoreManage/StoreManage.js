@@ -260,6 +260,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     
     function addStore(pid,index){
     	var storeInfoDto =getStoreInfo();
+    	debugger;
     	storeInfoDto.pid = pid;
 		$.ajax({
 			url : "/insertstore",

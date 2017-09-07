@@ -4,15 +4,15 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class,temporary_address,review_address_status, create_time, dml_time
+        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class, create_time, dml_time
 	</sql>
 
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="storeId">
 	    INSERT INTO hqls_store (
-	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class,temporary_address,review_address_status, create_time, dml_time
+	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class, create_time, dml_time
 	    ) VALUES (
-	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable},#{reviewStatus},#{storeLevel},#{storeClass},#{temporary_address},#{review_address_status}, now(), now()        
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable},#{reviewStatus},#{storeLevel},#{storeClass}, now(), now()        
 	    )
 	</insert>
 
