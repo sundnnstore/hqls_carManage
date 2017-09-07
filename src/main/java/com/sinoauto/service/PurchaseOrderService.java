@@ -256,7 +256,7 @@ public class PurchaseOrderService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "按状态查询错误");
 		}
 		purchaseOrdersPage = (Page<PurchaseOrderParamDto>) purchaseOrders;
-		return RestModel.success(purchaseOrdersPage,4);
+		return RestModel.success(purchaseOrdersPage,(int)purchaseOrdersPage.getTotal());
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> getOrderByOrderId(Integer orderId) {
