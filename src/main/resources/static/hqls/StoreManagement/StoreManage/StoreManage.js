@@ -41,6 +41,8 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 			$("#province").val("");
     		$("#city").val("");
     		$("#county").val("");
+    		$("#edit_storeLevel").val("-1");
+    		$("#edit_storeClass").val("-1");
 			
             layer.open({
                 type: 1,
@@ -517,23 +519,6 @@ $("body").on('click','.sea',function(){
 });
 
 
-//通过、不通过
-$("body").on('click','.pass',function(){
-	var ids = $(this).attr("name");
-	var arr = new Array();
-	arr = ids.split(",");
-	var storeId = arr[0];
-	var reviewStatus = arr[1];
-	$.ajax({
-    	url : "/updatereviewstatus",
-		type : "post",
-		data : {"storeId":storeId,"reviewStatus":reviewStatus},
-    	success : function(data){
-    		layer.msg("审核成功！");
-    		window.location.reload();
-    		}
-    }); 
-})
 /**
  * 初始化分页 
  * @param totalCount 总页数
