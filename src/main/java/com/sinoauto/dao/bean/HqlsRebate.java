@@ -6,24 +6,25 @@ import java.util.Date;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * 返利表
- * @author wuxiao
+ * 返利调度表
+ * @author fujl
  * @version 1.0
- * @date 2017-09-06 16:12:25
+ * @date 2017-09-08 14:59:33
  */
+
 public class HqlsRebate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty("返利Id")
+	@ApiModelProperty("返利ID")
 	private Integer rebateId;
-	@ApiModelProperty("门店Id")
+	@ApiModelProperty("门店ID")
 	private Integer storeId;
 	@ApiModelProperty("返利金额")
 	private Double rebateMoney;
 	@ApiModelProperty("当前返利期数")
 	private Integer rebatePeriod;
-	@ApiModelProperty("是否已返利（1-是；0-否）")
+	@ApiModelProperty("是否已返利（1-是，0-否）")
 	private Boolean isRebate;
 	@ApiModelProperty("操作时间")
 	private Date dmlTime;

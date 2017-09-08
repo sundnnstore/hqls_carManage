@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css"
 	href="StoreManagement/StoreManage/StoreManage.css" />
-<div class="store">
+<div class="store" id="myContent">
 	门店管理
 	<!-- 门店信息搜索 && 添加门店 -->
 	<div class="head">
@@ -82,7 +82,7 @@
 			</div>
 		</div>
 		<button id="searchStore" class="layui-btn">搜索</button>
-		<button id="addStore" data-method="addStore" class="layui-btn">新增</button>
+		<button id="addStore" data-method="addStore" class="layui-btn sadd">新增</button>
 	</div>
 	<!-- 门店信息展示 -->
 	<div class="content">
@@ -256,6 +256,6 @@
 	<!-- 为看效果图片路径暂定死，更改后请删除 -->
 	<img src="" alt="门店图片" id="img_show">
 </div>
-
+<div id="cover" style="display:none; position: absolute; top: 0px; z-index: 50;"></div>
 <script src="StoreManagement/StoreManage/StoreManage.js"></script>
 
