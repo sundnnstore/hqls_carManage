@@ -272,7 +272,7 @@ public class ServiceOrderService {
 				extraOrderMapper.updateExtraOrderPayStatus(extraOrderNo);
 				// 修改服务订单的金额
 				serviceOrderMapper.updateTotalAmount(orders.get(0).getServiceOrderId(), orders.get(0).getOrderAmount());
-				//修改门店余额
+				// 修改门店余额
 				HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(orders.get(0).getServiceOrderId());
 				int result = storeFinanceMapper.getStoreFinanceByStoreId(order.getStoreId());
 				if (result == 0) {// 插入余额记录
@@ -293,7 +293,7 @@ public class ServiceOrderService {
 				financeFlow.setOrderNo(orders.get(0).getExtraOrderNo());
 				financeFlow.setIsDelete(0);
 				financeFlowMapper.insert(financeFlow);
-				//推送信息给b端门店
+				// 推送信息给b端门店
 				HqlsUser user = userMapper.getUserByStoreId(order.getStoreId());
 				if (user != null) {
 					PushAction pa = new PushAction("ServiceOrder", 0, false, "");
@@ -306,7 +306,7 @@ public class ServiceOrderService {
 					String title = "服务款";
 					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 					// 推送给安卓APP端
-					if(clientIds != null && clientIds.size() > 0){
+					if (clientIds != null && clientIds.size() > 0) {
 						GeTuiUtil.pushToAndroid(clientIds, title, text, "money", "服务款");
 					}
 				}
