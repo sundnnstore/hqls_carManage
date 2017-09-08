@@ -29,8 +29,7 @@ public interface StoreMapper {
 	public int changeStoreUrl(@Param("backUrl") String backUrl, @Param("storeId") Integer storeId);
 
 	public Page<StoreInfoDto> findStore(@Param("storeName") String storeName, @Param("userName") String userName,
-			@Param("mobile") String mobile,
-			@Param("storeLevel") int storeLevel, @Param("storeClass") int storeClass,
+			@Param("mobile") String mobile, @Param("storeLevel") int storeLevel, @Param("storeClass") int storeClass,
 			@Param("provinceId") Integer provinceId, @Param("cityId") Integer cityId,
 			@Param("countyId") Integer countyId);
 
@@ -74,12 +73,11 @@ public interface StoreMapper {
 	public HqlsStore getStoreByStoreCode(String storeCode);
 
 	public int updateStoreInfo(StoreInfoDto storeInfoDto);
-	
+
 	@Select("select * from hqls_store")
 	public List<HqlsStore> findAllStoreList();
-	
-	public Page<StoreInfoDto> findStoreByReviewStatus();
 
+	public Page<StoreInfoDto> findStoreByReviewStatus();
 
 	@Select("select store_id as `key`, store_name as `value` from hqls_store where pid = #{storeId}")
 	public List<CommonDto> findChildStore(@Param("storeId") Integer storeId);
@@ -88,7 +86,7 @@ public interface StoreMapper {
 			+ " sto.longitude,sto.latitude,sto.province_id as provinceId,sto.province_name as provinceName,sto.city_id as cityId,sto.city_name as cityName,sto.county_id as countyId,sto.county_name as countyName  from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
 			+ " where sto.store_id = #{storeId}")
 	public List<StoreInfoDto> findStoreById(@Param("storeId") Integer storeId);
-	
+
 	@Select("select pid from hqls_store where countyId = #{countyId}")
 	public List<Integer> getPidByCountyId(@Param("countyId") Integer countyId);
 }
