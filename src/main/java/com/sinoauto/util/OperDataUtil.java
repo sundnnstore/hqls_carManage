@@ -107,14 +107,14 @@ public class OperDataUtil {
 		return geo;
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		Map<String, Object> params = new HashMap<>();
 		params.put("address", "吉林省松原市电业小区(富强街199号)");
 		params.put("key", "f66d4d2a8397352b3da15c7015fd327e");
 		RespEntity result = HttpUtil.request("GET", "https://restapi.amap.com/v3/geocode/geo", null, params, null);
 		JSONObject jo = JSONObject.parseObject(result.getResult());
 		System.err.println(jo.toString());
-	}
+	}*/
 	
 	public static String[] getPosition(String xq){
 		Map<String, Object> params = new HashMap<>();
