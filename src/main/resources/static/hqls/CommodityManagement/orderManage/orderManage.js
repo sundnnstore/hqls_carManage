@@ -7,10 +7,22 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 	//定义搜索参数
 	var OrderParam = {};
 	var pageSize = 10;
+	function showCover() {
+		$('#cover').width($('#myContent').width());
+		$('#cover').height($('#myContent').height());
+		$('#cover').css('display', 'block');
+	}
+	
+	window.onresize = function () {
+		$('#cover').width($('#myContent').width());
+		$('#cover').height($('#myContent').height() + 30);
+	}
+	
 	//订单详情
 	$('body').on('click', '.detail', function() {
 		orderId = $(this).val();
 		comboGoodsTable(orderId);
+		showCover();
 		AlertDiaog('订单详情',$('#orderdetailPage'),'800px')
 	})
 	//发货点击事件
@@ -22,6 +34,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		//清空弹出页
 		$('input[name=logistics_no]').val('');
 		$('#remark').val('');
+		showCover();
 		AlertDiaog('发货信息',$('#shipPage'),'800px')
 	})
 	
@@ -30,6 +43,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		event.stopPropagation();
 		orderId = $(this).val();
 		$('#remark_only').val('');
+		showCover();
 		AlertDiaog('备注信息',$('#logisticsRemark'),'800px')
 	})
 	
@@ -42,6 +56,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			area: area, //宽高
 			cancel: function() {
 				//右上角关闭的回调
+				$('#cover').css('display', 'none');
 			},
 			shade: 0
 		})
@@ -200,6 +215,10 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		var logisticsId = $('select[name=company]').val();
 		var logisticsNo = $('input[name=logistics_no]').val();
 		var remark = $('#remark').val();
+		if ((!logisticsId && !logisticsNo) || !remark) {
+			layer.msg('请填写物流信息或备注信息');
+			return ;
+		}
 		url += "&logisticsId=" + logisticsId;
 		url += "&logisticsNo=" + logisticsNo;
 		url += "&remark=" + remark;
@@ -211,6 +230,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 				if (data.errcode == 0) {
 					layer.msg("发货完成！");
 					layer.closeAll();
+					$('#cover').css('display', 'none');
 					reqOrderList(1);
 				}
 			},
@@ -347,6 +367,7 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 					layer.msg("添加成功！");
 					setTimeout(() => {
 						layer.closeAll();
+						$('#cover').css('display', 'none');
 					}, 500);
 				} else {
 					layer.msg("添加失败！");
