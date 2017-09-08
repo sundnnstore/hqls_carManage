@@ -25,7 +25,16 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     	comboChlidren('city','county');
     });
     
-   
+    function showCover() {
+		$('#cover').width($('#myContent').width());
+		$('#cover').height($('#myContent').height());
+		$('#cover').css('display', 'block');
+	}
+	
+	window.onresize = function () {
+		$('#cover').width($('#myContent').width());
+		$('#cover').height($('#myContent').height() + 30);
+	}
     
     // 门店节点弹框触发事件
     $('#myContent').on('click', 'button', function() {
@@ -43,8 +52,12 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		$("#county").val("");
     		$("#edit_storeLevel").val("-1");
     		$("#edit_storeClass").val("-1");
-			
+    		showCover();
             layer.open({
+            	cancel: function() {
+    				//右上角关闭的回调
+    			$('#cover').css('display', 'none');
+    			},
                 type: 1,
                 title: '新增', // 标题
                 skin: 'layui-layer-lan', // 弹框主题
@@ -55,7 +68,12 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             });
         } else if (method === 'isUse') {
             $('#chooseState').text($(this).text());
+            showCover();
             layer.open({
+            	cancel: function() {
+    				//右上角关闭的回调
+            		$('#cover').css('display', 'none');
+    			},
                 type: 1,
                 title: '提示', // 标题
                 skin: 'layui-layer-lan', // 弹框主题
@@ -68,12 +86,15 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                     // 禁用或启用操作。。。
 
                     layer.close(index);
+                    $('#cover').css('display', 'none');
                 },
                 btn2: function(index, layero) {
                     layer.close(index);
+                    $('#cover').css('display', 'none');
                 }
             });
         } else if (method != null) {
+        	showCover();
             store(-1,method); // 门店详细信息
         }
     });
@@ -104,6 +125,10 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                 	store(item.pid,"addStore"); // 调用store方法
                     layer.close(index);
                 },
+                cancel: function() {
+    				//右上角关闭的回调
+            		$('#cover').css('display', 'none');
+    			}
             });
         },
         nodes: getNodes()
@@ -174,7 +199,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                 			return;
                 		}
             		}
-            		if(temp == 'addStore'){// 添加门店
+            		if(temp == 'addStore'){
             			addStore(pid,index);
             		}else if(temp == 'edit'){
             			var uname = $("#userName").attr("name");
@@ -186,11 +211,17 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             			editStore(index);// 门店编辑
             		}else if(temp == 'view'){
             			layer.close(index);
+            			$('#cover').css('display', 'none');
+            			
             		}
             		inputReset();// 清空表单
             		flag = 1;
             	}
             },
+            cancel: function() {
+				//右上角关闭的回调
+        		$('#cover').css('display', 'none');
+			},
             end: function(){
             	flag=0;
             }
@@ -245,6 +276,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	    		if(0 == data.errcode){
 	    			layer.msg("编辑成功！");
 	    			layer.close(index);
+	    			$('#cover').css('display', 'none');
 	    			window.location.reload();
 	    		}
 	    		
@@ -273,6 +305,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 	    	success : function(data){
 	    		layer.msg("添加成功!");
 	    		layer.close(index);
+	    		$('#cover').css('display', 'none');
 	    		window.location.reload();
 	    	},
 	    	error : function(data){
@@ -292,7 +325,11 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		content: $('#storeImage'),
     		success: function(layero, index) {
     		$(layero).find('.layui-layer-content').css('max-height', '500px').css('max-width', '700px');
-    		}
+    		},
+    		cancel: function() {
+				//右上角关闭的回调
+        		$('#cover').css('display', 'none');
+			}
     		});
     });
     // 清空表单
@@ -559,7 +596,6 @@ $("#dw").on('click',function(){
 	var dw = provinceName+cityName+countyName+address;
 	getlocation(dw,obj);
 });
-
 
 
 });
