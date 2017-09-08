@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css"
 	href="StoreManagement/StoreManage/StoreManage.css" />
-<div class="store">
+<div class="store" id="myContent">
 	门店管理
 	<!-- 门店信息搜索 && 添加门店 -->
 	<div class="head">
@@ -76,11 +76,13 @@
 					<option value="-1">请选择分类</option>
 					<option value="1">加盟</option>
 					<option value="2">直营</option>
+					<option value="3">控股</option>
+					<option value="4">合作</option>
 				</select>
 			</div>
 		</div>
 		<button id="searchStore" class="layui-btn">搜索</button>
-		<button id="addStore" data-method="addStore" class="layui-btn">新增</button>
+		<button id="addStore" data-method="addStore" class="layui-btn sadd">新增</button>
 	</div>
 	<!-- 门店信息展示 -->
 	<div class="content">
@@ -151,6 +153,8 @@
 				<option value="-1">请选择分类</option>
 						<option value="1">加盟</option>
 						<option value="2">直营</option>
+						<option value="3">控股</option>
+						<option value="4">合作</option>
 				</select></td>
 			</tr>
 			<tr>
@@ -192,7 +196,7 @@
 				<td>是否启用</td>
 				<td class="state" id="state_s">
 					<!-- 单选框的value的值请根据需要重新设置 --> <input type="radio" name="isEnable"
-					value="1">是 <input type="radio" name="isEnable" value="0">否
+					value="1" checked="checked">是 <input type="radio" name="isEnable" value="0">否
 				</td>
 			</tr>
 		</tbody>
@@ -252,6 +256,6 @@
 	<!-- 为看效果图片路径暂定死，更改后请删除 -->
 	<img src="" alt="门店图片" id="img_show">
 </div>
-
+<div id="cover" style="display:none; position: absolute; top: 0px; z-index: 50;"></div>
 <script src="StoreManagement/StoreManage/StoreManage.js"></script>
 

@@ -22,7 +22,8 @@
 			<if test="typeName!=null">type_name = #{typeName},</if>
 			<if test="pid!=null"> pid = #{pid}, </if>
 			<if test="pname!=null"> pname = #{pname}, </if>
-			<if test="partsType!=null"> parts_type = #{partsType} </if>
+			<if test="partsType!=null"> parts_type = #{partsType}, </if>
+			oper_time =now()
 		<!-- 暂时写成这样，这里本来应该有一个操作时间，防止出错 -->
 		WHERE
 		parts_type_id = #{partsTypeId}

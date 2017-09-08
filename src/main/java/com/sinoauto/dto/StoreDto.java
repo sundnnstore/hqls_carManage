@@ -42,6 +42,10 @@ public class StoreDto {
 	private String storeLevel;
 	@ApiModelProperty("门店分类")
 	private String storeClass;
+	@ApiModelProperty("余额")
+	private double balance;
+	@ApiModelProperty("服务订单数")
+	private Integer orderCount;
 	
 	
 
@@ -196,6 +200,22 @@ public class StoreDto {
 
 	public void setStoreClass(String storeClass) {
 		this.storeClass = storeClass;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
 	}
 
 	
