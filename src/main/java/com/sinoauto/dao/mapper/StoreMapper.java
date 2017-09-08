@@ -54,11 +54,12 @@ public interface StoreMapper {
 	public List<CommonDto> findAllStore();
 
 	@Select("select us.user_name as userName,sto.store_name as storeName,sto.address,sto.mobile as stoMobile,us.mobile as userMobile,sto.back_url as backUrl,sto.store_id as storeId,"
-			+ " sto.is_useable as isUseable,us.user_id as userId,hsf.balance,"
+			+ " sto.is_useable as isUseable,us.user_id as userId,hsf.balance,count(hso.service_order_id) as orderCount,"
 			+ " sto.longitude,sto.latitude,sto.province_id as provinceId,sto.province_name as provinceName,sto.city_id as cityId,sto.city_name as cityName,"
 			+ " sto.county_id as countyId,sto.county_name as countyName , CASE sto.store_level when 1 then 'A' when 2 then 'B' when 3 then 'C' when 4 then 'D' ELSE '' END as storeLevel,CASE sto.store_class when 1 then '加盟' when 2 then '直营' when 3 then '控股' when 4 then '合作'  ELSE '' END as storeClass "
 			+ " from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
 			+ " left join hqls_store_finance hsf on sto.store_id = hsf.store_id "
+			+ " left join hqls_service_order hso on sto.store_id = hso.store_id"
 			+ " where sto.store_id = #{storeId} and hqus.is_contact=1")
 	public StoreDto getStoreInfoByStoreId(@Param("storeId") Integer storeId);
 
