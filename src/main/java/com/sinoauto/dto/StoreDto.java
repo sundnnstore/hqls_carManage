@@ -38,6 +38,14 @@ public class StoreDto {
 	private String countyName;
 	@ApiModelProperty("门店联系人")
 	private String userName;
+	@ApiModelProperty("门店级别")
+	private String storeLevel;
+	@ApiModelProperty("门店分类")
+	private String storeClass;
+	@ApiModelProperty("余额")
+	private double balance;
+	@ApiModelProperty("服务订单数")
+	private Integer orderCount;
 	
 	
 
@@ -177,6 +185,40 @@ public class StoreDto {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
+	public String getStoreLevel() {
+		return storeLevel;
+	}
+
+	public void setStoreLevel(String storeLevel) {
+		this.storeLevel = storeLevel;
+	}
+
+	public String getStoreClass() {
+		return storeClass;
+	}
+
+	public void setStoreClass(String storeClass) {
+		this.storeClass = storeClass;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	public Integer getOrderCount() {
+		return orderCount;
+	}
+
+	public void setOrderCount(Integer orderCount) {
+		this.orderCount = orderCount;
+	}
+
+	
 
 	
 	

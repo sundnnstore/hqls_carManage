@@ -12,6 +12,7 @@
 				<option value="2">待发货</option>
 				<option value="3">待收货</option>
 				<option value="4">已完成</option>
+				<option value="5">已取消</option>
 			</select>
 		</div>
 	</div>
@@ -51,7 +52,7 @@
 				<th>联系电话</th>
 				<th>门店</th>
 				<th>金额总计</th>
-				<th>操作</th>
+				<th style="width: 17%">操作</th>
 			</tr>
 		</thead>
 		<tbody id="order_tb">
@@ -77,6 +78,18 @@
 
 		</tbody>
 	</table>
+</div>
+<div id="logisticsRemark" style="display: none;">
+	<br>
+	<div class="layui-form-item layui-form-text mylayui-item ">
+		<label class="layui-form-label">添加物流备注</label>
+		<div class="layui-input-block">
+			<textarea placeholder="请输入" id="remark_only" class="layui-textarea"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item layui-form-text shipbox">
+		<button id="confirm_logistics_remark" class="layui-btn">确认添加</button>
+	</div>
 </div>
 <div id="shipPage" style="display: none;">
 	<div class="layui-form-item mylayui-item ">
@@ -107,4 +120,5 @@
 <div id="logisticsInfoPage" style="display: none;">
 	
 </div>
+<div id="cover" style="display:none; position: absolute; top: 0px; z-index: 50;"></div>
 <script src="CommodityManagement/orderManage/orderManage.js" type="text/javascript" charset="utf-8"></script>

@@ -243,8 +243,20 @@ public class PurchaseOrderService {
 	 * 	@param orderStatus
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus) {
-		return RestModel.success( purchaseOrderMapper.findOrder(storeId, orderStatus));
+	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus,Integer pageIndex,Integer pageSize) {
+		PageHelper.startPage(pageIndex, pageSize);
+		List<PurchaseOrderParamDto> purchaseOrders =null;
+		Page<PurchaseOrderParamDto> purchaseOrdersPage = new Page<>();
+		try {
+			purchaseOrders = purchaseOrderMapper.findOrder(storeId, orderStatus);
+			if(purchaseOrders==null){
+				purchaseOrders = new ArrayList<>();	
+			}
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "按状态查询错误");
+		}
+		purchaseOrdersPage = (Page<PurchaseOrderParamDto>) purchaseOrders;
+		return RestModel.success(purchaseOrdersPage,(int)purchaseOrdersPage.getTotal());
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> getOrderByOrderId(Integer orderId) {
@@ -281,13 +293,11 @@ public class PurchaseOrderService {
 			if (param.getPayType() == 0) {
 				// 从财务余额中扣掉支付金额
 				HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(param.getStoreId());
-				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
-				if (returnMoney != null) {
-					finance.setBalance(returnMoney[0]);
-					finance.setCashDisable(returnMoney[1]);
-					finance.setCashAble(returnMoney[2]);
-					storeFinanceMapper.updateBalance(finance);
-				}
+//				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
+				BigDecimal balance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(param.getPayMoney()));
+				balance.setScale(2, RoundingMode.HALF_UP);
+				finance.setBalance(balance.doubleValue());
+				storeFinanceMapper.updateBalance(finance);
 				
 				// 修改订单
 				order.setOrderStatus(2);
@@ -348,8 +358,12 @@ public class PurchaseOrderService {
 	}
 	
 	/**
-	 * 计算门店财务余额
+	 * 因不可用提现和可用提现暂时搁置。此段代码暂时不用
+	 * 
+	 * 用余额支付订单时计算门店余额中可用提现和不可用提现的扣除
+	 * @deprecated
 	 * @return Double[余额，不可用提现，可用提现]
+	 * @author wuxiao
 	 */
 	public Double[] calculationBalance(HqlsStoreFinance finance, Double payMoney) {
 		// 余额减去支付金额
@@ -547,6 +561,78 @@ public class PurchaseOrderService {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	/**
+	 * 取消订单
+	 * @param orderId
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> cancelOrder(Integer orderId, String token) {
+		// 获取当前用户
+		RestModel<TokenModel> rest = authService.validToken(token);
+		if (rest.getErrcode() != 0) {// 解析token失败
+			return RestModel.error(HttpStatus.BAD_REQUEST, rest.getErrcode(), rest.getErrmsg());
+		}
+		Integer userId = rest.getResult().getUserId();// 当前登录人的userid
+		HqlsUser user = userMapper.getUserByGloabUserId(userId);
+		if (user == null) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "用户不存在");
+		}
+		try {
+			// 修改订单状态为已取消
+			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+			if (order == null) {
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "订单不存在");
+			}
+			order.setOrderStatus(5);
+			purchaseOrderMapper.updateOrderStatus(order);
+			// 将支付金额退还至门店
+			storeFinanceMapper.updateStoreBalance(order.getStoreId(), order.getPayFee());
+			// 修改财务流水备注
+			String remark = "订单已取消，支付金额返还至门店余额！";
+			financeFlowMapper.updateOrderRemark(order.getStoreId(), order.getOrderNo(), remark);
+			// 添加财务流水
+			HqlsFinanceFlow flow = new HqlsFinanceFlow();
+			flow.setChangeMoney(order.getPayFee());
+			flow.setChangeType(3);
+			flow.setChargeType(1);
+			flow.setIsDelete(0);
+			flow.setOperPerson(user.getUserName());
+			flow.setOrderNo(order.getOrderNo());
+			flow.setStoreId(order.getStoreId());
+			flow.setFlowStatus(1);
+			flow.setRemark("订单取消退还金额");
+			financeFlowMapper.insert(flow);
+			
+			return RestModel.success("订单取消成功");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+	}
+	
+	/**
+	 * 添加物流日志
+	 * @param orderId
+	 * @param remark
+	 * @return
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<String>> addLogisticsRemark(Integer orderId, String remark) {
+		try {
+			HqlsLogisticsLog log = new HqlsLogisticsLog();
+			log.setPurchaseOrderId(orderId);
+			log.setRemark(remark);
+			logisticsLogMapper.insert(log);
+			return RestModel.success("添加成功");
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
 	}
 	
 }

@@ -55,6 +55,10 @@ public class HqlsStore implements Serializable {
 	private Date dmlTime;
 	@ApiModelProperty("审核状态")
 	private Integer reviewStatus;//0：待审核 1：审核通过 2：审核失败
+	@ApiModelProperty("门店级别")
+	private Integer storeLevel;//门店级别（1.A /2.B /3.C /4.D）
+	@ApiModelProperty("门店分类")
+	private Integer storeClass;//门店分类（1.加盟 /2.直营）
 	
 	public Integer getReviewStatus() {
 		return reviewStatus;
@@ -293,6 +297,18 @@ public class HqlsStore implements Serializable {
 	}
 	public void setCountyName(String countyName) {
 		this.countyName = countyName;
+	}
+	public Integer getStoreLevel() {
+		return storeLevel;
+	}
+	public void setStoreLevel(Integer storeLevel) {
+		this.storeLevel = storeLevel;
+	}
+	public Integer getStoreClass() {
+		return storeClass;
+	}
+	public void setStoreClass(Integer storeClass) {
+		this.storeClass = storeClass;
 	}
 	
 }

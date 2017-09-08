@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.UserJoinMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+		user_join_id,store_name,address,contact_name,contact_mobile,remark,create_time,
+		dml_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="HqlsUserJoin"
+		useGeneratedKeys="true" keyProperty="userJoinId">
+		INSERT INTO hqls_user_join (
+		store_name,address,contact_name,contact_mobile,remark,create_time,
+		dml_time
+		) VALUES (
+		#{storeName},#{address},#{contactName},#{contactMobile},#{remark},
+		now(), now()
+		)
+	</insert>
+
+	<select id="findUserJoinInfo" resultType="com.sinoauto.dao.bean.HqlsUserJoin">
+
+		select store_name as storeName,contact_name as contactName,
+		contact_mobile as contactMobile,remark ,address from hqls_user_join
+		where 1=1
+		<if test="storeName !=null and storeName !='' ">and store_name like concat('%',#{storeName},'%')</if>
+		<if test="contactName != null and contactName != '' ">and contact_name like concat('%',#{contactName},'%') </if>
+		<if test="contactMobile != null and contactMobile != '' "> and contact_mobile like concat('%',#{contactMobile},'%')</if>
+	</select>
+</mapper>

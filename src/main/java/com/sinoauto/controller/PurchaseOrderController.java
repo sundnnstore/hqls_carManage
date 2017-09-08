@@ -121,12 +121,12 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "按订单状态查询", notes = "wuxiao")
 	@GetMapping("findorderbystoreidandstatus")
-	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
+	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
 			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
 			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
-		return purchaseOrderService.findOrderByStatus(storeId, orderStatus);
+		return purchaseOrderService.findOrderByStatus(storeId, orderStatus,pageIndex,pageSize);
 	}
 	
 	@ApiOperation(value = "按订单Id查询", notes = "wuxiao")
@@ -202,6 +202,20 @@ public class PurchaseOrderController {
 	@GetMapping("getpartsbyorderid")
 	public ResponseEntity<RestModel<List<PartsDesListDto>>> getPartsByOrderId(@RequestParam(value = "orderId", required = true) Integer orderId) {
 		return purchaseOrderService.getPartsByOrderId(orderId);
+	}
+	
+	@ApiOperation(value = "取消订单", notes = "wuxiao")
+	@GetMapping("cancelorder")
+	public ResponseEntity<RestModel<String>> cancelOrder(@RequestParam(value = "orderId", required = true) Integer orderId,
+			 @RequestHeader(value="Authorization") String Authorization) {
+		 return purchaseOrderService.cancelOrder(orderId, Authorization);
+	}
+	
+	@ApiOperation(value = "添加物流备注", notes = "wuxiao")
+	@GetMapping("addlogisticsremark")
+	public ResponseEntity<RestModel<String>> addLogisticsRemark(@RequestParam(value = "orderId", required = true) Integer orderId,
+			@RequestParam(value = "remark", required = true) String remark) {
+		return purchaseOrderService.addLogisticsRemark(orderId, remark);
 	}
 
 }
