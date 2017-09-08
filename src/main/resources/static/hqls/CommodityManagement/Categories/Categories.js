@@ -31,6 +31,8 @@ var layer = layui.layer, $ = layui.jquery, title;
 //				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
 //				layer.close(index);
 				//展示树形结构数据
+				var s = $(item).parent().parent().children("ul").html();
+				alert(s);
 				viewPartType(item);
 				categoriesEditCommon(item,3);  
 			},
@@ -97,7 +99,7 @@ var layer = layui.layer, $ = layui.jquery, title;
 					updatePartType(item,index);
 					break;	
 				default:
-					alert("default");
+					layer.msg("default");
 					break;
 				}
 			},
@@ -134,7 +136,7 @@ var layer = layui.layer, $ = layui.jquery, title;
             	viewTree(res); //显示新增数据		
             },
             error: function(res) {
-                alert('查询树形菜单失败');
+            	layer.msg('查询树形菜单失败');
             }
         });
     }
@@ -148,6 +150,8 @@ var layer = layui.layer, $ = layui.jquery, title;
 		 layui.tree({
 	            elem: '#viewItemTree', //'#storeTree',//;'#categoriesTreeBox':新增, categoriesTreeView：编辑 //指定元素
 	            click: function(item) { //点击节点回调
+//	            	alert(item);
+	            	console.log(item);
 	                categoriesEdit(item);
 	            },
 	            nodes: data
@@ -357,11 +361,10 @@ var layer = layui.layer, $ = layui.jquery, title;
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				alert(data.result.partsType);
 				$('#categoriesInfoEdit input').val(item.name); //配件类型名称
-				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
+//				$('#categoriesInfoEdit input').attr('disabled', 'disabled');
 				$('#categoriesInfoEdit select').val(data.result.partsType);
-			
+				$('#categoriesInfoEdit select').attr('disabled', 'disabled');
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
