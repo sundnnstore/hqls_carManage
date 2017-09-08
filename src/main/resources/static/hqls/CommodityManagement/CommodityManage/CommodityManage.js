@@ -721,16 +721,16 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".add_c").attr("disabled", true);
         $(".isUse_c").attr("disabled", true);
         $("#searchCommodity").attr("disabled", true);
-        $("#addOption").hide();
+//        $("#addOption").css("display", "none");
     }
-    //清除按钮禁用
+    //按钮启用
     function clearButtonForbidden() {
         $(".view_c").attr("disabled", false);
         $(".edit_c").attr("disabled", false);
         $(".add_c").attr("disabled", false);
         $(".isUse_c").attr("disabled", false);
         $("#searchCommodity").attr("disabled", false);
-        $("#addOption").show();
+//        $("#addOption").css("display", "block");
     }
 });
 

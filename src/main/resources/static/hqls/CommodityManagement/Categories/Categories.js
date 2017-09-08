@@ -32,7 +32,6 @@ var layer = layui.layer, $ = layui.jquery, title;
 //				layer.close(index);
 				//展示树形结构数据
 				var s = $(item).parent().parent().children("ul").html();
-				alert(s);
 				viewPartType(item);
 				categoriesEditCommon(item,3);  
 			},
