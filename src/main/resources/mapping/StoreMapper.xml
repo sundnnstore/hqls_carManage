@@ -4,15 +4,15 @@
 
 	<!-- 用于select查询公用抽取的列 -->
 	<sql id="allColumns">
-        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable, create_time, dml_time
+        store_id, pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class, create_time, dml_time
 	</sql>
 
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsStore" useGeneratedKeys="true" keyProperty="storeId">
 	    INSERT INTO hqls_store (
-	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status, create_time, dml_time
+	        pid, store_name, mobile, longitude, latitude, store_code, province_id, city_id, county_id, province_name, city_name, county_name, address, back_url, is_useable,review_status,store_level,store_class, create_time, dml_time
 	    ) VALUES (
-	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable},#{reviewStatus}, now(), now()        
+	        #{pid}, #{storeName}, #{mobile}, #{longitude}, #{latitude}, #{storeCode}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{backUrl}, #{isUseable},#{reviewStatus},#{storeLevel},#{storeClass}, now(), now()        
 	    )
 	</insert>
 
@@ -53,7 +53,9 @@
 		   county_name = #{countyName}, 
 		   address = #{address}, 
 		   back_url = #{backUrl}, 
-		   is_useable = #{isUseable}, 
+		   is_useable = #{isUseable},
+		   store_level =#{storeLevel},
+		   store_class = #{storeClass},
 		   dml_time = now()
 	   		WHERE 
 		   store_id = #{storeId}
@@ -77,7 +79,9 @@
 		sto.store_code as storeCode,
 		sto.province_name as provinceName,
 		sto.city_name as cityName,
-		sto.county_name as countyName
+		sto.county_name as countyName,
+		sto.store_level as storeLevel,
+		sto.store_class as storeClass
 		FROM
 		hqls_store sto
 		LEFT JOIN 
@@ -110,7 +114,9 @@
 		sto.city_name as cityName,
 		sto.county_id as countyId,
 		sto.review_status as reviewStatus,
-		hqus.user_id as userId
+		hqus.user_id as userId,
+		sto.store_level as storeLevel,
+		sto.store_class as storeClass
 		FROM
 		hqls_store sto
 		LEFT JOIN
@@ -125,7 +131,8 @@
 		<if test="storeName !=null and storeName != '' "> and sto.store_name like concat('%',#{storeName},'%')</if>
 		<if test="userName != null and userName != '' "> and hqus.user_name like concat('%',#{userName},'%')</if>
 		<if test="mobile != null and mobile != '' "> and hqus.mobile like concat('%',#{mobile},'%')</if>
-		<if test="reviewStatus >=0 "> and sto.review_status =#{reviewStatus}</if>
+		<if test="storeLevel >=0"> and sto.store_level=#{storeLevel}</if>
+		<if test="storeClass >=0"> and sto.store_class =#{storeClass}</if>
 		<if test="provinceId != null and provinceId != '' "> and sto.province_id = #{provinceId}</if>
 		<if test="cityId != null and cityId != '' "> and sto.city_id =#{cityId}</if>
 		<if test="countyId != null and countyId != '' "> and sto.county_id =#{countyId}</if>
@@ -176,12 +183,4 @@
 	
 	</select>
 	
-	
-	<!-- 修改门店审核状态 -->
-	<update id="updateReviewStatus" parameterType="int">
-		UPDATE hqls_store SET
-		review_status=#{reviewStatus}
-	   	WHERE 
-		store_id = #{storeId}
-	</update>
 </mapper>
