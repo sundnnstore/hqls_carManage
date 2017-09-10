@@ -35,17 +35,18 @@ public class PartsTypeService {
 	}
 	
 	/**
-	 *  新增节点树
+	 *  新增子节点
 	 * 	@User liud
 	 * 	@Date 2017年8月24日下午4:03:34
 	 * 	@return
 	 */
 	public ResponseEntity<RestModel<Integer>> insert(HqlsPartsType hqlsPartsType){
 		try {
+			HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(hqlsPartsType.getPartsTypeId());
 			HqlsPartsType add=new HqlsPartsType();
 			add.setTypeName(hqlsPartsType.getTypeName());
 			add.setPid(hqlsPartsType.getPartsTypeId());
-			add.setPartsType(hqlsPartsType.getPartsType()); //通用配件
+			add.setPartsType(parent.getPartsType()); //配件类型
 			//创建一个配件类型
 			partsTypeMapper.insert(add);
 		} catch (Exception e) {
@@ -66,10 +67,13 @@ public class PartsTypeService {
 				//查询出当前partstypeid的pid
 				Integer pid = partsTypeMapper.findPidByPartsTypeId(hqlsPartsType.getPartsTypeId());
 				if(pid!=null){
+					//查询父级对象
+					HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(pid);
 					HqlsPartsType add=new HqlsPartsType();
 					add.setTypeName(hqlsPartsType.getTypeName());
 					add.setPid(pid);
-					add.setPartsType(hqlsPartsType.getPartsType()); //通用配件
+					//add.setPartsType(hqlsPartsType.getPartsType());
+					add.setPartsType(parent.getPartsType());
 					//创建一个配件类型
 					partsTypeMapper.insert(add);
 				}
@@ -148,7 +152,7 @@ public class PartsTypeService {
 	
 	
 	/**
-	 * 	修改节点树
+	 * 	修改节点树,只能修改当前节点的名称
 	 * 	@User liud
 	 * 	@Date 2017年9月4日下午1:06:34
 	 * 	@param pt
