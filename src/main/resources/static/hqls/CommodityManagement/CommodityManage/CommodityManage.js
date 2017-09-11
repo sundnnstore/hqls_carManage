@@ -720,8 +720,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".edit_c").attr("disabled", true);
         $(".add_c").attr("disabled", true);
         $(".isUse_c").attr("disabled", true);
-        $("#searchCommodity").attr("disabled", true);
-//        $("#addOption").css("display", "none");
+        $("#searchCommodity").attr("disabled", true); 
+//        $("#addOption").attr("disabled", true);
     }
     //按钮启用
     function clearButtonForbidden() {
@@ -730,7 +730,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".add_c").attr("disabled", false);
         $(".isUse_c").attr("disabled", false);
         $("#searchCommodity").attr("disabled", false);
-//        $("#addOption").css("display", "block");
+//        $("#addOption").attr("disabled", false);
     }
 });
 
