@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsCustomer;
+import com.sinoauto.dao.bean.HqlsExtraOrder;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.sinoauto.dao.bean.HqlsServiceOrder;
 import com.sinoauto.dao.bean.HqlsServiceType;
@@ -24,6 +26,7 @@ import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
 import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.CustomerMapper;
+import com.sinoauto.dao.mapper.ExtraOrderMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.ServiceOrderMapper;
 import com.sinoauto.dao.mapper.ServiceTypeMapper;
@@ -62,6 +65,8 @@ public class ServiceOrderService {
 	private StoreMapper storeMapper;
 	@Autowired
 	private ClientInfoMapper clientInfoMapper;
+	@Autowired
+	private ExtraOrderMapper extraOrderMapper;
 
 	public ResponseEntity<RestModel<List<ServiceOrderDto>>> findServiceOrdersByOrderStatus(Integer orderStatus, Integer storeId, Integer pageIndex,
 			Integer pageSize) {
@@ -250,6 +255,66 @@ public class ServiceOrderService {
 		params.put("Code", code);
 		RespEntity res = HttpUtil.request("GET", url, null, params, null);
 		return res.getResult();
+	}
+
+	public ResponseEntity<RestModel<String>> createExtraOrder(HqlsExtraOrder order) {
+		order.setExtraOrderNo(UUID.randomUUID().toString());
+		extraOrderMapper.insertExtraOrder(order);
+		return RestModel.success("增加成功！");
+	}
+
+	@Transactional
+	public ResponseEntity<RestModel<String>> orderPayBack(String extraOrderNo, Boolean isPay) {
+		List<HqlsExtraOrder> orders = extraOrderMapper.getExtraOrderCountByExtraOrderNo(extraOrderNo);
+		if (orders != null && orders.size() == 1) {
+			if (isPay) {
+				// 修改增项支付状态
+				extraOrderMapper.updateExtraOrderPayStatus(extraOrderNo);
+				// 修改服务订单的金额
+				serviceOrderMapper.updateTotalAmount(orders.get(0).getServiceOrderId(), orders.get(0).getOrderAmount());
+				// 修改门店余额
+				HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(orders.get(0).getServiceOrderId());
+				int result = storeFinanceMapper.getStoreFinanceByStoreId(order.getStoreId());
+				if (result == 0) {// 插入余额记录
+					HqlsStoreFinance finance = new HqlsStoreFinance();
+					finance.setStoreId(order.getStoreId());
+					finance.setRemark("");
+					storeFinanceMapper.insert(finance);
+				}
+				storeFinanceMapper.addCash(order.getStoreId(), orders.get(0).getOrderAmount());
+				// 增加账单流水
+				HqlsFinanceFlow financeFlow = new HqlsFinanceFlow();
+				financeFlow.setStoreId(order.getStoreId());
+				financeFlow.setTransactionNo("ZX" + order.getStoreId() + System.currentTimeMillis());
+				financeFlow.setChangeType(4);
+				financeFlow.setChangeMoney(orders.get(0).getOrderAmount());
+				financeFlow.setChargeType(1);
+				financeFlow.setOperPerson("服务增项金额");
+				financeFlow.setOrderNo(orders.get(0).getExtraOrderNo());
+				financeFlow.setIsDelete(0);
+				financeFlowMapper.insert(financeFlow);
+				// 推送信息给b端门店
+				HqlsUser user = userMapper.getUserByStoreId(order.getStoreId());
+				if (user != null) {
+					PushAction pa = new PushAction("ServiceOrder", 0, false, "");
+					List<PushAction> action = new ArrayList<>();
+					action.add(pa);
+					String text = "您收到一笔新的服务款";
+					// 推送给IOSAPP端
+					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
+					PushUtil.push2IOSByAPNS(parms);
+					String title = "服务款";
+					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
+					// 推送给安卓APP端
+					if (clientIds != null && clientIds.size() > 0) {
+						GeTuiUtil.pushToAndroid(clientIds, title, text, "money", "服务款");
+					}
+				}
+			}
+		} else {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "增项订单号不正确!");
+		}
+		return RestModel.success("修改订单状态成功！");
 	}
 
 }

@@ -18,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
+import com.sinoauto.dao.mapper.RebateMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowDto;
@@ -34,6 +35,9 @@ public class FinanceFlowService {
 
 	@Autowired
 	private StoreFinanceMapper storeFinanceMapper;
+
+	@Autowired
+	private RebateMapper rebateMapper;
 
 	@Autowired
 	private CashBackService cashBackService;
@@ -183,6 +187,8 @@ public class FinanceFlowService {
 				flowDto.setContent("采购");
 			} else if (orginal.getChangeType() == 4) {
 				flowDto.setContent("服务订单");
+			} else if (orginal.getChangeType() == 5) {
+				flowDto.setContent("消费返现");
 			} else {
 				flowDto.setContent("未知流水");
 			}
@@ -191,12 +197,28 @@ public class FinanceFlowService {
 		FlowListDto flowListDto = new FlowListDto();
 		flowListDto.setFlowList(flowDtoList);
 		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
+
+		Double currentHaveReturned = this.rebateMapper.getCurrentReturnedMoney(storeId);
+		Double[] rebateMoney = this.rebateMapper.getRebateMoney(storeId);
+
+		if (null == currentHaveReturned) {
+			flowListDto.setCurrentReturned(0.0);
+		} else {
+			flowListDto.setCurrentReturned(currentHaveReturned);
+		}
+
+		if (null == rebateMoney) {
+			flowListDto.setRemainingReturned(0.0);
+			flowListDto.setSumReturned(0.0);
+		} else {
+			flowListDto.setRemainingReturned(rebateMoney[0] == null ? 0.0 : rebateMoney[0]);
+			flowListDto.setSumReturned(rebateMoney[1] == null ? 0.0 : rebateMoney[1]);
+		}
+
 		if (storeFinance == null) {
 			flowListDto.setBalance(0.0);
-			flowListDto.setCashAble(0.0);
 		} else {
 			flowListDto.setBalance(storeFinance.getBalance() == null ? 0.0 : storeFinance.getBalance());
-			flowListDto.setCashAble(storeFinance.getCashAble() == null ? 0.0 : storeFinance.getCashAble());
 		}
 		return RestModel.success(flowListDto, (int) orginalList.getTotal());
 	}
@@ -229,6 +251,8 @@ public class FinanceFlowService {
 			flowDto.setFlowTypeDesc("采购交易".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 4) {
 			flowDto.setFlowTypeDesc("服务订单交易".concat(flowStatusDesc));
+		} else if (hqlsFlow.getChangeType() == 5) {
+			flowDto.setFlowTypeDesc("消费返现".concat(flowStatusDesc));
 		} else {
 			flowDto.setFlowTypeDesc("未知");
 		}

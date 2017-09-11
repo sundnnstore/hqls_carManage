@@ -48,6 +48,8 @@ public class ServiceOrderDto {
 	private Date finishTime;
 	@ApiModelProperty("核销码")
 	private String code;
+	@ApiModelProperty("是否使用年卡")
+	private Boolean isCard;
 
 	public Integer getServiceOrderId() {
 		return serviceOrderId;
@@ -66,6 +68,16 @@ public class ServiceOrderDto {
 	public void setOrderNo(String orderNo) {
 		if (orderNo != null) {
 			this.orderNo = orderNo;
+		}
+	}
+
+	public Boolean getIsCard() {
+		return isCard;
+	}
+
+	public void setIsCard(Boolean isCard) {
+		if (isCard != null) {
+			this.isCard = isCard;
 		}
 	}
 
@@ -256,7 +268,5 @@ public class ServiceOrderDto {
 			this.code = code;
 		}
 	}
-	
-	
 
 }

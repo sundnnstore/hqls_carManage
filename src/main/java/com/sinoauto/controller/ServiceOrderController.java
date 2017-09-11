@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sinoauto.dao.bean.HqlsExtraOrder;
 import com.sinoauto.dao.bean.HqlsServiceType;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -180,6 +181,33 @@ public class ServiceOrderController {
 		order.setOrderType(2);
 		order.setOrderAmount(0.0);
 		return serviceOrderService.createOrder(order);
+	}
+	
+	@ApiOperation(value = "创建增项订单接口", notes = "tangwt")
+	@PostMapping("createextraorder")
+	public ResponseEntity<RestModel<String>> createExtraOrder(@RequestBody HqlsExtraOrder order){
+		if(StringUtils.isEmpty(order.getServiceOrderId())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务订单ID不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getOrderNo())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务订单号不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getExtraProjectDesc())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务项目不能为空！");
+		}
+		if(StringUtils.isEmpty(order.getOrderAmount())){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务金额不能为空！");
+		}
+		return serviceOrderService.createExtraOrder(order);
+	}
+	
+	@ApiOperation(value = "增项订单支付回调接口", notes = "tangwt")
+	@PostMapping("orderpayback")
+	public ResponseEntity<RestModel<String>> orderPayBack(@RequestParam("extraOrderNo")String extraOrderNo,@RequestParam("isPay")Boolean isPay ){
+		if(StringUtils.isEmpty(extraOrderNo)){
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"增项订单号不能为空！");
+		}
+		return serviceOrderService.orderPayBack(extraOrderNo, isPay);
 	}
 	
 	
