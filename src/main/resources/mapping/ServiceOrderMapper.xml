@@ -52,7 +52,8 @@
 		hso.finish_time,
 		hc.avatar_url,
 		hso.order_type,
-		hso.fault_desc
+		hso.fault_desc,
+		hso.is_card
 		FROM hqls_service_order hso
 		LEFT JOIN hqls_customer hc
 		ON hso.customer_id = hc.customer_id

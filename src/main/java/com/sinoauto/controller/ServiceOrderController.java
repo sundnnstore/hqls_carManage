@@ -123,9 +123,6 @@ public class ServiceOrderController {
 		if(StringUtils.isEmpty(order.getServiceType())){
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"服务项目不能为空！");
 		}
-		if(StringUtils.isEmpty(order.getStoreCode())){
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"门店编码不能为空！");
-		}
 		if(StringUtils.isEmpty(order.getCarModel())){
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"车型不能为空！");
 		}
@@ -179,6 +176,7 @@ public class ServiceOrderController {
 			}
 		}
 		order.setOrderType(2);
+		order.setIsCard(false);
 		order.setOrderAmount(0.0);
 		return serviceOrderService.createOrder(order);
 	}
