@@ -187,6 +187,8 @@ public class FinanceFlowService {
 				flowDto.setContent("采购");
 			} else if (orginal.getChangeType() == 4) {
 				flowDto.setContent("服务订单");
+			} else if (orginal.getChangeType() == 5) {
+				flowDto.setContent("消费返现");
 			} else {
 				flowDto.setContent("未知流水");
 			}
@@ -249,6 +251,8 @@ public class FinanceFlowService {
 			flowDto.setFlowTypeDesc("采购交易".concat(flowStatusDesc));
 		} else if (hqlsFlow.getChangeType() == 4) {
 			flowDto.setFlowTypeDesc("服务订单交易".concat(flowStatusDesc));
+		} else if (hqlsFlow.getChangeType() == 5) {
+			flowDto.setFlowTypeDesc("消费返现".concat(flowStatusDesc));
 		} else {
 			flowDto.setFlowTypeDesc("未知");
 		}

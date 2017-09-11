@@ -61,8 +61,8 @@ public class PartsController {
 	@ApiOperation(value = "查询所有配件列表", notes = "wuxiao")
 	@GetMapping(value = "findallparts")
 	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(
-			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
-			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		
 		return partsService.findAllParts(pageIndex, pageSize);
 	}

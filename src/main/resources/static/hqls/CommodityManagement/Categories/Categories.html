@@ -1,9 +1,10 @@
+<link rel="stylesheet" href="common/zTree/css/zTreeStyle.css" type="text/css">
 <link rel="stylesheet" type="text/css" href="CommodityManagement/Categories/Categories.css" />
-
+<link href="common/zTree/css/zTreeStyle.css"></link>
 <div class="categories">
     商品分类
-    <div id="viewTree" class="categoriesTreeBox">
-        <ul id="viewItemTree"></ul>
+    <div id="viewTree" class="categoriesTreeBox" style="height:100%;width:100%;position:absolute; left:30%; top:10%; ">
+        <ul id="viewItemTree" class="ztree" style="margin:0 auto;"></ul>
     </div>
     <!--  弹框一：询问商品分类添加位置 -->
     <div id="categoriesLocate" class="categoriesLocate">
@@ -18,7 +19,7 @@
                     <input type="text" name="" id="partsTypeName" class="layui-input" placeholder="请输入分类名称" />
                 </div>
             </div>
-            <div class="layui-input-inline">
+            <div class="layui-input-inline" id="partsType-div">
                 <label for="" class="layui-form-label">类型</label>
                 <div class="layui-input-block">
                     <select class="layui-select" id="partsType">
@@ -43,4 +44,6 @@
         	该数据已存在，请确认后再添加!
     </div>
 </div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="common/zTree/js/jquery.ztree.core.js"></script>
 <script src="CommodityManagement/Categories/Categories.js"></script>

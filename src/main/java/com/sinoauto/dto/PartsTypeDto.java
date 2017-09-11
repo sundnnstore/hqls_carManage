@@ -15,6 +15,11 @@ public class PartsTypeDto {
 	private String name;
 	@ApiModelProperty("父级ID")
 	private Integer pId;
+	
+	private String iconOpen = "../../images/checkbox_0.gif";
+	
+	private String iconClose= "../../images/checkbox_1.gif";
+	
 	public Integer getId() {
 		return id;
 	}
@@ -32,6 +37,18 @@ public class PartsTypeDto {
 	}
 	public void setpId(Integer pId) {
 		this.pId = pId;
+	}
+	public String getIconOpen() {
+		return iconOpen;
+	}
+	public void setIconOpen(String iconOpen) {
+		this.iconOpen = iconOpen;
+	}
+	public String getIconClose() {
+		return iconClose;
+	}
+	public void setIconClose(String iconClose) {
+		this.iconClose = iconClose;
 	}
 	
 }

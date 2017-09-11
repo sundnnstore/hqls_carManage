@@ -11,6 +11,7 @@ import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.sinoauto.dao.bean.HqlsDict;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.sinoauto.dao.bean.HqlsLogisticsCompany;
 import com.sinoauto.dao.bean.HqlsLogisticsLog;
@@ -22,6 +23,7 @@ import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.DictMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
 import com.sinoauto.dao.mapper.LogisticsLogMapper;
@@ -70,6 +72,8 @@ public class PurchaseOrderService {
 	private LogisticsCompanyMapper logisticsCompanyMapper;
 	@Autowired
 	private LogisticsLogMapper logisticsLogMapper;
+	@Autowired
+	private DictMapper dictMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -630,6 +634,26 @@ public class PurchaseOrderService {
 			return RestModel.success("添加成功");
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+	}
+	
+	/**
+	 * 获取物流费用
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Double>> getLogisticsFee() {
+		try {
+			Double otherFee = 0.00;
+			String dictKey = "other_fee";
+			List<HqlsDict> dict = dictMapper.findDictByKey(dictKey);
+			if (!dict.isEmpty()) {
+				otherFee = Double.parseDouble(dict.get(0).getDictValue());
+			}
+			return RestModel.success(otherFee);
+			
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);

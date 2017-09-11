@@ -1,0 +1,386 @@
+[{
+    "title": "保险单证管理",
+    "icon": "icon-baoxianjingjiguanli",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "投保单管理",
+        "icon": "",
+        "href": "page/InsuranceManagement/InsuranceSlip/InsuranceSlip.html",
+        "spread": false
+    }, {
+        "title": "车险保单管理",
+        "icon": "",
+        "href": "page/InsuranceManagement/CarInsurancePolicy/CarInsurancePolicy.html",
+        "spread": false
+    }, {
+        "title": "非车险保单管理",
+        "icon": "",
+        "href": "page/InsuranceManagement/NonCarInsurancePolicy/NonCarInsurancePolicy.html",
+        "spread": false
+    }, {
+        "title": "寿险保单管理",
+        "icon": "",
+        "href": "page/InsuranceManagement/LifeInsurancePolicy/LifeInsurancePolicy.html",
+        "spread": false
+    }, {
+        "title": "健康险保单管理",
+        "icon": "",
+        "href": "page/InsuranceManagement/HealthInsurancePolicy/HealthInsurancePolicy.html",
+        "spread": false
+    }]
+}, {
+    "title": "非车险类",
+    "icon": "icon-memberbaoxiandingdan",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "企业财产险",
+        "icon": "",
+        "href": "page/NonAutoInsurance/EnterpriseRisk/.html",
+        "spread": false
+    }, {
+        "title": "家庭财产险",
+        "icon": "",
+        "href": "page/NonAutoInsurance/FamilyRisk/.html",
+        "spread": false
+    }, {
+        "title": "人意险",
+        "icon": "",
+        "href": "page/NonAutoInsurance/CasualtyRisk/.html",
+        "spread": false
+    }, {
+        "title": "建工险",
+        "icon": "",
+        "href": "page/NonAutoInsurance/ConstructionRisk/.html",
+        "spread": false
+    }]
+}, {
+    "title": "车险类",
+    "icon": "icon-chexianguanli",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "商业险",
+        "icon": "",
+        "href": "page/AutoInsurance/BusinessRisks/BusinessRisks.html",
+        "spread": false
+    }, {
+        "title": "强制险",
+        "icon": "",
+        "href": "page/AutoInsurance/CompulsoryRisks/CompulsoryRisks.html",
+        "spread": false
+    }]
+}, {
+    "title": "寿险类",
+    "icon": "icon-unif020",
+    "href": "page/LifeInsurance/LifeInsurance.html",
+    "spread": false
+}, {
+    "title": "健康险类",
+    "icon": "icon-jiankangxian",
+    "href": "page/HealthInsurance/HealthInsurance.html",
+    "spread": false
+}, {
+    "title": "客户信息管理",
+    "icon": "icon-kehuxinxi",
+    "href": "page/CustomerManagement/CustomerManagement.html",
+    "spread": false
+}, {
+    "title": "消息推送管理",
+    "icon": "icon-xiaoxituisong",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "保单到期提醒",
+        "icon": "",
+        "href": "page/MessageManagement/DueToRemind/DueToRemind.html",
+        "spread": false
+    }, {
+        "title": "保单配送提醒",
+        "icon": "",
+        "href": "page/MessageManagement/DistributionToRemind/.html",
+        "spread": false
+    }]
+}, {
+    "title": "业务费用管理",
+    "icon": "icon-yewu",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "保费导入",
+        "icon": "",
+        "href": "page/BusinessManagement/PremiumImport/.html",
+        "spread": false
+    }, {
+        "title": "保费分析",
+        "icon": "",
+        "href": "page/BusinessManagement/PremiumAnalysis/.html",
+        "spread": false
+    }, {
+        "title": "业务费用分发查询",
+        "icon": "",
+        "href": "page/BusinessManagement/BusinessQuery/.html",
+        "spread": false
+    }]
+}, {
+    "title": "业务费用结算",
+    "icon": "icon-fix_money_apply",
+    "href": "page/BusinessSettlement/BusinessSettlement.html",
+    "spread": false
+}, {
+    "title": "业务报表管理",
+    "icon": "icon-yewubaobiao",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "机构业务报表管理",
+        "icon": "",
+        "href": "page/BusinessReportManagement/BusinessReport/BusinessReport.html",
+        "spread": false
+    }, {
+        "title": "业务员报表管理",
+        "icon": "",
+        "href": "page/BusinessReportManagement/SalesReport/SalesReport.html",
+        "spread": false
+    }, {
+        "title": "中介业务报表管理",
+        "icon": "",
+        "href": "page/BusinessReportManagement/MediationStatements/MediationStatements.html",
+        "spread": false
+    }]
+}, {
+    "title": "一键报案",
+    "icon": "icon-yijianbaoan",
+    "href": "page/OneKeyReport/OneKeyReport.html",
+    "spread": false
+}, {
+    "title": "理赔催办",
+    "icon": "icon-peifu",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "全部催办",
+        "icon": "",
+        "href": "page/ClaimRminders/AllReminders/AllReminders.html",
+        "spread": false
+    }, {
+        "title": "待办中",
+        "icon": "",
+        "href": "page/ClaimRminders/NotCompleted/NotCompleted.html",
+        "spread": false
+    }, {
+        "title": "已结案",
+        "icon": "",
+        "href": "page/ClaimRminders/Completed/Completed.html",
+        "spread": false
+    }]
+}, {
+    "title": "疑问答复",
+    "icon": "icon-yiwen",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "保险咨询",
+        "icon": "",
+        "href": "page/QuestionAnswer/InsuranceConsulting/InsuranceConsulting.html",
+        "spread": false
+    }, {
+        "title": "理赔咨询",
+        "icon": "",
+        "href": "page/QuestionAnswer/ClaimsConsulting/Claims consulting.html",
+        "spread": false
+    }]
+}, {
+    "title": "积分管理",
+    "icon": "icon-jifenguanli",
+    "href": "page/IntegralManagement/IntegralManagement.html",
+    "spread": false
+}, {
+    "title": "增值服务",
+    "icon": "icon-zengzhifuwu",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "代驾服务",
+        "icon": "",
+        "href": "page/AppreciationService/DrivingService/DrivingService.html",
+        "spread": false
+    }, {
+        "title": "车辆代办年检",
+        "icon": "",
+        "href": "page/AppreciationService/VehicleInspection/VehicleInspection.html",
+        "spread": false
+    }, {
+        "title": "车辆送修服务",
+        "icon": "",
+        "href": "page/AppreciationService/RepairingService/RepairingService.html",
+        "spread": false
+    }]
+}, {
+    "title": "保险报价",
+    "icon": "icon-baoxianbaojia",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "在线投保",
+        "icon": "",
+        "href": "page/InsuranceQuotation/OnlineInsurance/OnlineInsurance.html",
+        "spread": false
+    }]
+}, {
+    "title": "权限管理",
+    "icon": "icon-Paas_icon-",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "查询权限",
+        "icon": "",
+        "href": "page/PrivilegeManagement/QueryPermissions/QueryPermissions.html",
+        "spread": false
+    }, {
+        "title": "业务使用权限",
+        "icon": "",
+        "href": "page/PrivilegeManagement/BusinessPermissions/BusinessPermissions.html",
+        "spread": false
+    }, {
+        "title": "分支机构权限管理",
+        "icon": "",
+        "href": "page/PrivilegeManagement/BranchPermissions/BranchPermissions.html",
+        "spread": false
+    }, {
+        "title": "操作员权限管理",
+        "icon": "",
+        "href": "page/PrivilegeManagement/OperationPermissions/OperationPermissions.html",
+        "spread": false
+    }]
+}, {
+    "title": "保险公司管理",
+    "icon": "icon-baoxiangongsishezhi",
+    "href": "page/InsuranceCompanyManagement/InsuranceCompanyManagement.html",
+    "spread": false
+}, {
+    "title": "分支和渠道管理",
+    "icon": "icon-fenzhi",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "分支机构管理",
+        "icon": "",
+        "href": "page/BranchChannelManagement/BranchManagement/BranchManagement.html",
+        "spread": false
+    }, {
+        "title": "品牌管理",
+        "icon": "",
+        "href": "page/BranchChannelManagement/BrandManagement/BrandManagement.html",
+        "spread": false
+    }, {
+        "title": "业务员管理",
+        "icon": "",
+        "href": "page/BranchChannelManagement/SalesmanManagement/SalesmanManagement.html",
+        "spread": false
+    }]
+}, {
+    "title": "保险公司",
+    "icon": "icon-enterprise-insurance",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "人保",
+        "icon": "",
+        "href": "page/InsuranceCompany/RenMinInsurance/RenMinInsurance.html",
+        "spread": false
+    }, {
+        "title": "太平洋",
+        "icon": "",
+        "href": "page/InsuranceCompany/TaiPingYangInsurance/TaiPingYangInsurance.html",
+        "spread": false
+    }, {
+        "title": "平安",
+        "icon": "",
+        "href": "page/InsuranceCompany/PingAnInsurance/PingAnInsurance.html",
+        "spread": false
+    }]
+}, {
+    "title": "保险类别",
+    "icon": "icon-leibie",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "商业车险",
+        "icon": "",
+        "href": "page/InsuranceCategory/CarInsurance/CarInsurance.html",
+        "spread": false
+    }, {
+        "title": "强制险",
+        "icon": "",
+        "href": "page/InsuranceCategory/CompulsoryInsurance/CompulsoryInsurance.html",
+        "spread": false
+    }, {
+        "title": "非车险",
+        "icon": "",
+        "href": "page/InsuranceCategory/NonAutoInsurance/NonAutoInsurance.html",
+        "spread": false
+    }, {
+        "title": "寿险类",
+        "icon": "",
+        "href": "page/InsuranceCategory/LifeInsurance/LifeInsurance.html",
+        "spread": false
+    }, {
+        "title": "健康险类",
+        "icon": "",
+        "href": "page/InsuranceCategory/HealthInsurance/HealthInsurance.html",
+        "spread": false
+    }]
+}, {
+    "title": "基本险种",
+    "icon": "icon-shangpinzhonglei",
+    "href": "",
+    "spread": false,
+    "children": [{
+        "title": "车损险",
+        "icon": "",
+        "href": "page/BasicInsurance/CarDamageRisks/CarDamageRisks.html",
+        "spread": false
+    }, {
+        "title": "三责险",
+        "icon": "",
+        "href": "page/BasicInsurance/PrincipalRisks/PrincipalRisks.html",
+        "spread": false
+    }, {
+        "title": "不计责免赔险",
+        "icon": "",
+        "href": "page/BasicInsurance/FranchiseRisk/FranchiseRisk.html",
+        "spread": false
+    }, {
+        "title": "座位险",
+        "icon": "",
+        "href": "page/BasicInsurance/SeatRisks/SeatRisks.html",
+        "spread": false
+    }, {
+        "title": "自燃险",
+        "icon": "",
+        "href": "page/BasicInsurance/AutoignitionRisk/AutoignitionRisk.html",
+        "spread": false
+    }, {
+        "title": "学平险",
+        "icon": "",
+        "href": "page/BasicInsurance/StudentRisks/StudentRisks.html",
+        "spread": false
+    }, {
+        "title": "航空延误险",
+        "icon": "",
+        "href": "page/BasicInsurance/AviationDelayRisk/AviationDelayRisk.html",
+        "spread": false
+    }, {
+        "title": "财产一切险",
+        "icon": "",
+        "href": "page/BasicInsurance/PropertyRisk/PropertyRisk.html",
+        "spread": false
+    }, {
+        "title": "建筑工程险",
+        "icon": "",
+        "href": "page/BasicInsurance/ConstructionRisk/ConstructionRisk.html",
+        "spread": false
+    }]
+}]
