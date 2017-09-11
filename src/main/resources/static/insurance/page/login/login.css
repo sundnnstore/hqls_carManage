@@ -1,0 +1,47 @@
+.content {
+    width: 700px;
+    text-align: center;
+    margin: auto;
+}
+
+.header img {
+    width: 500px;
+}
+
+.header p {
+    font-size: 48px;
+}
+
+.main {
+    margin-top: 80px;
+    padding: 0 40px 0 20px;
+}
+
+.main label {
+    width: 42px;
+}
+
+.main .layui-input-block {
+    margin-left: 72px;
+}
+
+.loginBtnBox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px 0 0 15px !important;
+}
+
+.layui-form-checkbox {
+    margin-top: 0 !important;
+}
+
+.loginBtn {
+    width: 110px;
+    border-radius: 4px;
+}
+
+.forgetPwd {
+    color: #339ABE;
+    text-decoration: underline
+}

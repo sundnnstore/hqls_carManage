@@ -1,0 +1,19 @@
+body {
+    user-select: none;
+}
+
+.menuContent {
+    display: none;
+    border: 1px solid #eee;
+    background: #fff;
+    position: absolute;
+    top: 37px;
+    left: 110px;
+    z-index: 2;
+}
+
+.layui-input-inline {
+    float: left;
+    width: 190px;
+    margin-right: 10px;
+}
