@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../../common/layui/css/layui.css">
+    <link rel="stylesheet" href="../../../common/zTree/css/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/common.css">
+</head>
+
+<body>
+    <div class="search">
+        <form class="layui-form">
+            <div class="layui-inline">
+                <label class="layui-form-label">业务员</label>
+                <div class="layui-input-block">
+                    <ul>
+                        <li class="title">
+                            <input type="text" id="commodityName" class="layui-input" placeholder="按下 Ctrl 或 Cmd 键可多选" onclick="showMenu()" readonly/>
+                        </li>
+                    </ul>
+                </div>
+                <div id="menuContent" class="menuContent">
+                    <ul id="personTree" class="ztree" style="margin-top:0; width:160px;"></ul>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">车牌</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">报价日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="date_start" id="date_start" class="layui-input">
+                </div>
+                <div class="layui-form-mid">-</div>
+                <div class="layui-input-inline">
+                    <input type="text" name="date_end" id="date_end" class="layui-input">
+                </div>
+            </div>
+        </form>
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>车牌号码</th>
+                    <th>报价日期</th>
+                    <th>保额</th>
+                    <th>险种方案</th>
+                    <th>业务员</th>
+                    <th>报价公司</th>
+                    <th>保费总计</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3">苏A3TJ38</td>
+                    <td rowspan="3">2017-06-22</td>
+                    <td rowspan="3">
+                        <span>三责险:￥500000</span>
+                        <span>司机责任险:￥10000</span>
+                        <span>乘客责任险:￥10000</span>
+                        <span>划痕险:￥0</span>
+                    </td>
+                    <td rowspan="3">险种列表:交强险 车船税 车损险 不计免赔车损险 三责险 不计免赔三责险 司机责任险 不计免赔司机责任险 乘客责任险 不计免赔乘客责任险</td>
+                    <td rowspan="3">牙齿矫正-泰州分公司</td>
+                    <td>安诚保险</td>
+                    <td width="80">￥2,658.64</td>
+                    <td width="120" style="text-align: center">
+                        <button class="layui-btn layui-btn-primary" disabled>确认于 2017-06-26 14:02</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>信达保险</td>
+                    <td width="80">￥4,045.08</td>
+                    <td width="120" style="text-align: center"></td>
+                </tr>
+                <tr>
+                    <td>中国人保</td>
+                    <td width="80">￥2,658.64</td>
+                    <td width="120" style="text-align: center"></td>
+                </tr>
+                <tr>
+                    <td rowspan="3">苏A6CD98</td>
+                    <td rowspan="3">2017-06-27</td>
+                    <td rowspan="3">
+                        <span>三责险:￥500000</span>
+                        <span>司机责任险:￥10000</span>
+                        <span>乘客责任险:￥10000</span>
+                        <span>划痕险:￥0</span>
+                    </td>
+                    <td rowspan="3">险种列表:交强险 车船税 车损险 不计免赔车损险 三责险 不计免赔三责险 司机责任险 不计免赔司机责任险 乘客责任险 不计免赔乘客责任险</td>
+                    <td rowspan="3">扬州-南京总公司</td>
+                    <td>平安保险</td>
+                    <td width="80">￥2,641.54</td>
+                    <td width="120" style="text-align: center">
+                        <button class="layui-btn layui-btn-warm">投保确认</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>中华联合保险</td>
+                    <td width="80">￥4,045.08</td>
+                    <td width="120" style="text-align: center">
+                        <button class="layui-btn layui-btn-warm">投保确认</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>大地保险</td>
+                    <td width="80">￥2,641.58</td>
+                    <td width="120" style="text-align: center">
+                        <button class="layui-btn layui-btn-warm">投保确认</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="../../../common/layui/layui.js"></script>
+    <script src="../../../common/zTree/js/jquery-1.4.4.min.js"></script>
+    <script src="../../../common/zTree/js/jquery.ztree.core.js"></script>
+    <script>
+        layui.use(['form', 'laydate', 'tree'], function() {
+            var form = layui.form(),
+                laydate = layui.laydate;
+
+            var start = {
+                min: laydate.now(),
+                max: '2099-06-16 23:59:59',
+                istoday: false,
+                choose: function(datas) {
+                    end.min = datas; //开始日选好后，重置结束日的最小日期
+                    end.start = datas //将结束日的初始值设定为开始日
+                }
+            };
+            var end = {
+                min: laydate.now(),
+                max: '2099-06-16 23:59:59',
+                istoday: false,
+                choose: function(datas) {
+                    start.max = datas; //结束日选好后，重置开始日的最大日期
+                }
+            };
+            document.getElementById('date_start').onclick = function() {
+                start.elem = this;
+                laydate(start);
+            }
+            document.getElementById('date_end').onclick = function() {
+                end.elem = this
+                laydate(end);
+            }
+        });
+
+        function onClick(e, treeId, treeNode) {
+            var nodes = $.fn.zTree.getZTreeObj(treeId).getSelectedNodes();
+            var text = [];
+            for (var item of nodes) {
+                text.push(item.name);
+            }
+            $("#commodityName").val(text.join(' '));
+        }
+
+        // 角色树展示与收缩        
+        function showMenu() {
+            $("#menuContent").css({
+                left: "110px",
+                top: "37px"
+            }).slideDown("fast");
+            $("body").bind("mousedown", onBodyDown);
+        }
+
+        function hideMenu() {
+            $("#menuContent").fadeOut("fast");
+            $("body").unbind("mousedown", onBodyDown);
+        }
+
+        function onBodyDown(event) {
+            if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
+                hideMenu();
+            }
+        }
+
+        // 角色树初始化
+        $(document).ready(function() {
+            $.fn.zTree.init($("#personTree"), setting, zNodes);
+        });
+        // 角色树设置
+        var setting = {
+            view: {
+                showIcon: false
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onClick: onClick
+            }
+        };
+        // 角色树数据源
+        var zNodes = [{
+            "id": 1,
+            "name": "东泰财险",
+            "pId": 0
+        }, {
+            "id": 2,
+            "name": "南京总公司",
+            "pId": 1
+        }, {
+            "id": 3,
+            "name": "泰州公公司",
+            "pId": 1
+        }, {
+            "id": 4,
+            "name": "张柏芝",
+            "pId": 1
+        }, {
+            "id": 5,
+            "name": "严慧",
+            "pId": 2
+        }, {
+            "id": 6,
+            "name": "余本流",
+            "pId": 2
+        }, {
+            "id": 7,
+            "name": "张超",
+            "pId": 2
+        }, {
+
+            "id": 8,
+            "name": "张庭",
+            "pId": 2
+        }, {
+            "id": 9,
+            "name": "程敏",
+            "pId": 2
+        }, {
+            "id": 10,
+            "name": "周保治",
+            "pId": 2
+        }, {
+            "id": 11,
+            "name": "周茉",
+            "pId": 2
+        }, {
+            "id": 12,
+            "name": "李旺",
+            "pId": 3
+        }, {
+            "id": 13,
+            "name": "李磊",
+            "pId": 3
+        }, {
+            "id": 14,
+            "name": "张小彬",
+            "pId": 3
+        }];
+    </script>
+</body>
+
+</html>

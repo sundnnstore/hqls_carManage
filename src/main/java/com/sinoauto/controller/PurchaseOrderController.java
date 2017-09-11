@@ -217,5 +217,11 @@ public class PurchaseOrderController {
 			@RequestParam(value = "remark", required = true) String remark) {
 		return purchaseOrderService.addLogisticsRemark(orderId, remark);
 	}
+	
+	@ApiOperation(value = "获取物流费用", notes = "wuxiao")
+	@GetMapping("getlogisticsfee")
+	public ResponseEntity<RestModel<Double>> getLogisticsFee() {
+		return purchaseOrderService.getLogisticsFee();
+	}
 
 }

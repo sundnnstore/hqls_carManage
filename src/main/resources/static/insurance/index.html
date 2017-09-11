@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华汽保险中介管理系统</title>
+    <link rel="icon" href="./images/hq.ico">
+    <link rel="stylesheet" href="./common/layui/css/layui.css">
+    <link rel="stylesheet" href="./common/layui/css/iconfonts.css">
+    <link rel="stylesheet" href="./common/index.css">
+</head>
+
+<body class="main_body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部 -->
+        <div class="layui-header header">
+            <div class="layui-main">
+                <div class="logo">
+                    <img src="./images/hq.png" alt="">
+                </div>
+                <!-- 显示/隐藏主菜单 -->
+                <a href="javascript:;" class="iconfont hideMenu icon-menu1">
+                    <i class="iconfonts icon-leibie" data-icon="icon-leibie"></i>
+                </a>
+                <!-- 顶部右侧菜单 -->
+                <ul class="layui-nav top_menu">
+                    <li class="layui-nav-item" pc>
+                        <a href="javascript:;">
+                            <img src="images/face.jpg" class="layui-circle" width="35" height="35">
+                            <cite>admin</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="page/login/login.html" class="signOut"><i class="iconfont icon-loginout"></i><cite>退出</cite></a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 左侧导航 -->
+        <div class="layui-side layui-bg-black">
+            <div class="navBar layui-side-scroll"></div>
+        </div>
+        <!-- 右侧内容 -->
+        <div class="layui-body layui-form">
+            <div class="layui-tab marg0" lay-filter="bodyTab" id="top_tabs_box">
+                <ul class="layui-tab-title top_tab" id="top_tabs">
+                    <li class="layui-this" lay-id=""><i class="iconfont icon-computer"></i> <cite>首页</cite></li>
+                </ul>
+                <ul class="layui-nav closeBox">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><i class="iconfont icon-caozuo"></i> 页面操作</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" class="refresh refreshThis"><i class="layui-icon">&#x1002;</i> 刷新当前</a></dd>
+                            <dd><a href="javascript:;" class="closePageOther"><i class="iconfont icon-prohibit"></i> 关闭其他</a></dd>
+                            <dd><a href="javascript:;" class="closePageAll"><i class="iconfont icon-guanbi"></i> 关闭全部</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+                <div class="layui-tab-content clildFrame">
+                    <div class="layui-tab-item layui-show">
+                        <iframe src="page/home/home.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 移动导航 -->
+    <div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
+    <div class="site-mobile-shade"></div>
+
+    <script src="./common/layui/layui.js"></script>
+    <script src="./common/js/leftNav.js"></script>
+    <script src="./common/index.js"></script>
+</body>
+
+</html>

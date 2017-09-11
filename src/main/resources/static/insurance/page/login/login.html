@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="../../common/layui/css/layui.css">
+    <link rel="stylesheet" href="./login.css">
+</head>
+
+<body>
+    <div class="content">
+        <div class="header">
+            <img src="../../images/hq.png" alt="">
+            <p>华汽保险中介管理系统</p>
+        </div>
+        <form class="layui-form main">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block loginBtnBox">
+                    <input type="checkbox" name="savePwd" title="记住密码" lay-skin="primary">
+                    <button class="layui-btn loginBtn" lay-submit lay-filter="login">登录</button>
+                    <a href="javascirpt:;" class="forgetPwd">忘记密码？</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="../../common/layui/layui.js"></script>
+    <script src="./login.js"></script>
+</body>
+
+</html>
