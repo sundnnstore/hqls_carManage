@@ -1,134 +1,147 @@
 package com.sinoauto.service;
+
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dao.mapper.PartsMapper;
 import com.sinoauto.dao.mapper.PartsTypeMapper;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.PartsTreeRecursionDto;
 import com.sinoauto.dto.PartsTypeDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 
-
 @Service
 public class PartsTypeService {
 	@Autowired
-	private PartsTypeMapper partsTypeMapper; 
-	
+	private PartsTypeMapper partsTypeMapper;
+
 	@Autowired
 	private PartsMapper partsMapper;
-	
+
 	/**
 	 * 	配件类型
 	 * 	@User liud
 	 * 	@Date 2017年8月23日下午12:13:21
 	 * 	@return
 	 */
-	public List<PartsTypeDto> partsTypes(){
-		List<PartsTypeDto> partsType=partsTypeMapper.partsType();
-		if(partsType==null){partsType=new ArrayList<>();};
+	public List<PartsTypeDto> partsTypes() {
+		List<PartsTypeDto> partsType = partsTypeMapper.partsType();
+		if (partsType == null) {
+			partsType = new ArrayList<>();
+		}
+		;
 		return partsType;
 	}
-	
+
 	/**
 	 *  新增子节点
 	 * 	@User liud
 	 * 	@Date 2017年8月24日下午4:03:34
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<Integer>> insert(HqlsPartsType hqlsPartsType){
+	public ResponseEntity<RestModel<Integer>> insert(HqlsPartsType hqlsPartsType) {
+		Integer partsType = null;
 		try {
-			HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(hqlsPartsType.getPartsTypeId());
-			HqlsPartsType add=new HqlsPartsType();
+			if(hqlsPartsType.getPartsTypeId()==0){ //新增一级菜单
+				partsType = hqlsPartsType.getPartsType();
+			}else{
+				HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(hqlsPartsType.getPartsTypeId());
+				partsType = parent.getPartsType();
+			}
+			HqlsPartsType add = new HqlsPartsType();
 			add.setTypeName(hqlsPartsType.getTypeName());
 			add.setPid(hqlsPartsType.getPartsTypeId());
-			add.setPartsType(parent.getPartsType()); //配件类型
-			//创建一个配件类型
+			add.setPartsType(partsType); // 配件类型
+			// 创建一个配件类型
 			partsTypeMapper.insert(add);
 		} catch (Exception e) {
 			System.out.println(e);
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"新增节点树失败");
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增节点树失败");
 		}
 		return RestModel.success();
 	}
-	
+
 	/**
 	 * 新增同级
 	 * @param hqlsPartsType
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> addSameLevel(HqlsPartsType hqlsPartsType){
+	public ResponseEntity<RestModel<Integer>> addSameLevel(HqlsPartsType hqlsPartsType) {
 		try {
-			if(hqlsPartsType.getPartsTypeId()!=null){
-				//查询出当前partstypeid的pid
+			if (hqlsPartsType.getPartsTypeId() != null) {
+				// 查询出当前partstypeid的pid
 				Integer pid = partsTypeMapper.findPidByPartsTypeId(hqlsPartsType.getPartsTypeId());
-				if(pid!=null){
-					//查询父级对象
+				if (pid != null) {
+					// 查询父级对象
 					HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(pid);
-					HqlsPartsType add=new HqlsPartsType();
+					HqlsPartsType add = new HqlsPartsType();
 					add.setTypeName(hqlsPartsType.getTypeName());
 					add.setPid(pid);
-					//add.setPartsType(hqlsPartsType.getPartsType());
+					// add.setPartsType(hqlsPartsType.getPartsType());
 					add.setPartsType(parent.getPartsType());
-					//创建一个配件类型
+					// 创建一个配件类型
 					partsTypeMapper.insert(add);
 				}
-				
-			}else{
-				return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"配件类型id不能为空");
+
+			} else {
+				return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "配件类型id不能为空");
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(),"新增节点树失败");
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增节点树失败");
 		}
 		return RestModel.success();
 	}
-	
+
 	/**
 	 * 检查是否可是删除
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(Integer partsTypeId){
+	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(Integer partsTypeId) {
 		List<CommonDto> exitChildren = partsMapper.findPartsTypeListByPid(partsTypeId);
-		if(!exitChildren.isEmpty()){
+		if (!exitChildren.isEmpty()) {
 			return RestModel.success(true);
-		}else{
+		} else {
 			return RestModel.success(false);
 		}
 	}
-	
+
 	/**
 	 * 检查是否可是新增
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Boolean>> checkIsCanbeAdd(String typeName){
+	public ResponseEntity<RestModel<Boolean>> checkIsCanbeAdd(String typeName) {
 		Integer count = partsMapper.findPartsTypeListBytypeName(typeName);
-		if(count>0){
+		if (count > 0) {
 			return RestModel.success(true);
-		}else{
+		} else {
 			return RestModel.success(false);
 		}
 	}
-	
+
 	/**
 	 * 删除配件类型
 	 * @param partsTypeId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Boolean>> delete(Integer partsTypeId){
+	public ResponseEntity<RestModel<Boolean>> delete(Integer partsTypeId) {
 		try {
 			partsTypeMapper.delete(partsTypeId);
 		} catch (Exception e) {
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR,-1, "删除配件类型异常");
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, -1, "删除配件类型异常");
 		}
 		return RestModel.success();
-		
+
 	}
-	
+
 	/**
 	 *  根据配件类型id查询配件类型对象
 	 * 	@User liud
@@ -136,21 +149,20 @@ public class PartsTypeService {
 	 * 	@param partTypeId
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<HqlsPartsType>> findHqlsPartsTypeById(Integer partTypeId){
+	public ResponseEntity<RestModel<HqlsPartsType>> findHqlsPartsTypeById(Integer partTypeId) {
 		HqlsPartsType hqlsPartsType = null;
 		try {
-			hqlsPartsType=partsTypeMapper.findPartsTypeByPartsTypeId(partTypeId);
-			if(hqlsPartsType==null){
-				hqlsPartsType = new  HqlsPartsType();
+			hqlsPartsType = partsTypeMapper.findPartsTypeByPartsTypeId(partTypeId);
+			if (hqlsPartsType == null) {
+				hqlsPartsType = new HqlsPartsType();
 			}
 		} catch (Exception e) {
 			System.out.println(e);
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR,-1, "查询配件类型异常");
+			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, -1, "查询配件类型异常");
 		}
 		return RestModel.success(hqlsPartsType);
 	}
-	
-	
+
 	/**
 	 * 	修改节点树,只能修改当前节点的名称
 	 * 	@User liud
@@ -158,14 +170,47 @@ public class PartsTypeService {
 	 * 	@param pt
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<HqlsPartsType>> update(HqlsPartsType pt){
+	@Transactional
+	public ResponseEntity<RestModel<HqlsPartsType>> update(HqlsPartsType pt) {
 		try {
-			partsTypeMapper.update(pt);
+			// 1.如果只修改当前节点的名称
+			if (pt.getTypeName() != null || !pt.getTypeName().equals("undefined")) {
+				partsTypeMapper.update(pt);
+			}
+
+			// 如果配件类型不为空,根据pid修改所有配件类型的类型
+			if (pt.getPartsType() != null || !pt.getPartsType().equals("")) {
+				//partsTypeMapper.updatePartsType(pt);
+				updateByRecursion(pt.getPartsTypeId(),pt.getPartsType());
+			}
+			return RestModel.success();
 		} catch (Exception e) {
 			System.out.println(e);
-			return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR,-1, "修改配件类型异常");
+			// 事物处理
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
-		return RestModel.success();
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, -1, "修改配件类型异常");
+		
+	}
+	
+	/**
+	 *  递归更新
+	 * 	@User liud
+	 * 	@Date 2017年9月11日下午2:01:53
+	 * 	@param partsTypeId
+	 */
+	public void updateByRecursion(Integer partsTypeId,Integer partsType){
+		List<PartsTreeRecursionDto> childTree = partsMapper.partsChildTreeByPid(partsTypeId);
+		//更新所有子节点
+		if (childTree != null) {
+			for (PartsTreeRecursionDto child : childTree) {		
+				updateByRecursion(child.getId(),partsType);
+				HqlsPartsType pt  = new HqlsPartsType();
+				pt.setPartsTypeId(child.getId());
+				pt.setPartsType(partsType);
+				System.out.println("跳出来子节点的名称:"+child.getName()+"\nID:"+child.getId());
+				partsTypeMapper.update(pt);
+			}
+		}
 	}
 }
-	

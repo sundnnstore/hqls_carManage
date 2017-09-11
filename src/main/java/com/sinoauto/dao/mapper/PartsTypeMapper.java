@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.PartsTypeDto;
@@ -37,6 +38,14 @@ public interface PartsTypeMapper {
 	 */
 	public void update(HqlsPartsType pt);
 	
+	/**
+	 *  当父节点树修改,则子节点配件类型统统改变
+	 * 	@User liud
+	 * 	@Date 2017年9月11日上午11:20:08
+	 * 	@param pt
+	 */
+	@Update("update hqls_parts_type set parts_type =#{partsType},oper_time =now() where pid=#{pid} ")
+	public void updatePartsType(HqlsPartsType pt);
 	/**
 	 * 查询配件类型父类
 	 * @param partsTypeId
