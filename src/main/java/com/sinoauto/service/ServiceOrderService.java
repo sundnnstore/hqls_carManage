@@ -33,6 +33,7 @@ import com.sinoauto.dao.mapper.ServiceTypeMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.StoreMapper;
 import com.sinoauto.dao.mapper.UserMapper;
+import com.sinoauto.dto.CustomerInfoDto;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RespEntity;
@@ -190,13 +191,19 @@ public class ServiceOrderService {
 			if (serviceType == null) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务项目未正确匹配");
 			}
+			if(order.getIsCard() == null){//非年卡洗车服务，门店编码必传
+				order.setIsCard(false);//设置非年卡标志
+			}
+			order.setServiceTypeId(serviceType.getServiceTypeId());
+			if(StringUtils.isEmpty(order.getStoreCode())){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"门店编码不能为空！");
+			}
 			// 根据门店编码获取门店ID
 			HqlsStore store = storeMapper.getStoreByStoreCode(order.getStoreCode());
 			if (store == null) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "门店编码未正确匹配");
 			}
 			order.setStoreId(store.getStoreId());
-			order.setServiceTypeId(serviceType.getServiceTypeId());
 			// 新增一条客户信息(先判断客户是否存在)
 			HqlsCustomer customer = customerMapper.getCustomerByMobile(order.getCustomerMobile());
 			if (customer == null) {
@@ -315,6 +322,31 @@ public class ServiceOrderService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "增项订单号不正确!");
 		}
 		return RestModel.success("修改订单状态成功！");
+	}
+	
+	public ResponseEntity<RestModel<CustomerInfoDto>> getCustomerInfo(Integer serviceOrderId ){
+		HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(serviceOrderId);
+		if(order != null){
+			CustomerInfoDto customer = serviceOrderMapper.getCustomerInfoByServiceOrderId(serviceOrderId);
+			if(customer != null){
+				StringBuffer sb = new StringBuffer("");
+				List<String> serviceTypes = serviceOrderMapper.getServiceTypesByCustomerIdAndStoreId(customer.getStoreId(), customer.getCustomerId());
+				if(serviceTypes!=null && serviceTypes.size() >0){
+					for(int i=0;i<serviceTypes.size();i++){
+						sb.append(serviceTypes.get(i));
+						if(i < serviceTypes.size() -1){
+							sb.append(".");
+						}
+					}
+				}
+				customer.setLastService(sb.toString());
+				return RestModel.success(customer);
+			}else{
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "错误的订单号！");
+			}
+		}else{
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"错误的订单号！");
+		}
 	}
 
 }

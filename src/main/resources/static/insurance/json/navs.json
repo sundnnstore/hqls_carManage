@@ -37,22 +37,22 @@
     "children": [{
         "title": "企业财产险",
         "icon": "",
-        "href": "page/NonAutoInsurance/EnterpriseRisk/.html",
+        "href": "page/NonAutoInsurance/EnterpriseRisk/EnterpriseRisk.html",
         "spread": false
     }, {
         "title": "家庭财产险",
         "icon": "",
-        "href": "page/NonAutoInsurance/FamilyRisk/.html",
+        "href": "page/NonAutoInsurance/FamilyRisk/FamilyRisk.html",
         "spread": false
     }, {
         "title": "人意险",
         "icon": "",
-        "href": "page/NonAutoInsurance/CasualtyRisk/.html",
+        "href": "page/NonAutoInsurance/CasualtyRisk/CasualtyRisk.html",
         "spread": false
     }, {
         "title": "建工险",
         "icon": "",
-        "href": "page/NonAutoInsurance/ConstructionRisk/.html",
+        "href": "page/NonAutoInsurance/ConstructionRisk/ConstructionRisk.html",
         "spread": false
     }]
 }, {
@@ -99,7 +99,7 @@
     }, {
         "title": "保单配送提醒",
         "icon": "",
-        "href": "page/MessageManagement/DistributionToRemind/.html",
+        "href": "page/MessageManagement/DistributionToRemind/DistributionToRemind.html",
         "spread": false
     }]
 }, {
@@ -110,17 +110,17 @@
     "children": [{
         "title": "保费导入",
         "icon": "",
-        "href": "page/BusinessManagement/PremiumImport/.html",
+        "href": "page/BusinessManagement/PremiumImport/PremiumImport.html",
         "spread": false
     }, {
         "title": "保费分析",
         "icon": "",
-        "href": "page/BusinessManagement/PremiumAnalysis/.html",
+        "href": "page/BusinessManagement/PremiumAnalysis/PremiumAnalysis.html",
         "spread": false
     }, {
         "title": "业务费用分发查询",
         "icon": "",
-        "href": "page/BusinessManagement/BusinessQuery/.html",
+        "href": "page/BusinessManagement/BusinessQuery/BusinessQuery.html",
         "spread": false
     }]
 }, {
