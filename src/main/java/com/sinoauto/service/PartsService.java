@@ -72,9 +72,15 @@ public class PartsService {
 	}
 
 	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(Integer pageIndex, Integer pageSize) {
-		PageHelper.startPage(pageIndex, pageSize);
+		// 查询所有易损件
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);
+		}
 		Page<CommonDto> page1 = partsMapper.findPartsTypeListByType(1);
-		PageHelper.startPage(pageIndex, pageSize);
+		// 查询所有通用件
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);
+		}
 		Page<CommonDto> page2 = partsMapper.findPartsTypeListByType(2);
 		Map<String, Object> map = new HashMap<>();
 		map.put("obj1", page1);
