@@ -12,7 +12,7 @@
 	    INSERT INTO hqls_ship_address (
 	        store_id, recipient, mobile, province_id, city_id, county_id, province_name, city_name, county_name, address, is_default, create_time
 	    ) VALUES (
-	        #{storeId}, #{recipient}, #{mobile}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, #{isDefault}, now()       
+	        #{storeId}, #{recipient}, #{mobile}, #{provinceId}, #{cityId}, #{countyId}, #{provinceName}, #{cityName}, #{countyName}, #{address}, 0, now()       
 	    )
 	</insert>
 
@@ -28,8 +28,7 @@
 		   province_name = #{provinceName}, 
 		   city_name = #{cityName}, 
 		   county_name = #{countyName},
-		   address = #{address}, 
-		   is_default = #{isDefault}
+		   address = #{address}
 	   WHERE 
 		   ship_address_id = #{shipAddressId}
 	</update>

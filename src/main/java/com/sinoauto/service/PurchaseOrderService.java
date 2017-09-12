@@ -23,6 +23,7 @@ import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.DictMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
@@ -45,6 +46,10 @@ import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 import com.sinoauto.util.KdniaoTrackQueryAPI;
+import com.sinoauto.util.push.GeTuiUtil;
+import com.sinoauto.util.push.PushAction;
+import com.sinoauto.util.push.PushParms;
+import com.sinoauto.util.push.PushUtil;
 
 import cn.jiguang.common.utils.StringUtils;
 
@@ -74,6 +79,8 @@ public class PurchaseOrderService {
 	private LogisticsLogMapper logisticsLogMapper;
 	@Autowired
 	private DictMapper dictMapper;
+	@Autowired
+	private ClientInfoMapper clientInfoMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -196,9 +203,13 @@ public class PurchaseOrderService {
 				partsList.add(partsDesc);
 			}
 			// 默认地址获取
-			
+			HqlsShipAddress address = shipAddressMapper.getDefaultAddressByStoreId(orderParamDto.getStoreId());
+			if (address == null) {
+				address = shipAddressMapper.getAddressByStoreId(orderParamDto.getStoreId());
+			}
 			// 组装返回数据
 			ShopCartInfoDto order = new ShopCartInfoDto();
+			order.setAddress(address);
 			order.setPartsDesList(partsList);
 			order.setTotalAmount(calculationAmount(partsList));
 			// 获取门店余额
@@ -300,6 +311,9 @@ public class PurchaseOrderService {
 //				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
 				BigDecimal balance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(param.getPayMoney()));
 				balance.setScale(2, RoundingMode.HALF_UP);
+				if (balance.doubleValue() < 0) {
+					return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "余额不足");
+				}
 				finance.setBalance(balance.doubleValue());
 				storeFinanceMapper.updateBalance(finance);
 				
@@ -609,6 +623,24 @@ public class PurchaseOrderService {
 			flow.setFlowStatus(1);
 			flow.setRemark("订单取消退还金额");
 			financeFlowMapper.insert(flow);
+			
+			// 推送给门店的联系人
+			// 通过门店ID查找门店的联系人
+			HqlsUser storeUser = userMapper.getUserByStoreId(order.getStoreId());
+			if (user != null) {
+				PushAction pa = new PushAction("PurchaseOrder", 0, true, "");
+				List<PushAction> action = new ArrayList<>();
+				action.add(pa);
+				String text = "您有一条采购订单被取消";
+				
+				// 推送给IOSAPP端
+				PushParms parms = PushUtil.comboPushParms(storeUser.getMobile(), action, null, text, "", null, 0);
+				PushUtil.push2IOSByAPNS(parms);
+				String title = "订单提醒";
+				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(storeUser.getUserId());
+				// 推送给安卓APP端
+				GeTuiUtil.pushToAndroid(clientIds, title, text, "purchase_order", "采购订单");
+			}
 			
 			return RestModel.success("订单取消成功");
 		} catch (Exception e) {
