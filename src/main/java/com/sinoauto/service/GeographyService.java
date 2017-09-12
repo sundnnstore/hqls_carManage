@@ -26,7 +26,17 @@ public class GeographyService {
 	private DistrictMapper districtMapper;
 
 	public ResponseEntity<RestModel<List<HqlsGeography>>> findCustomers(String lat, String lng,Integer distance) {
-		return RestModel.success(geographyMapper.findCustomersByLatAndLng(Double.parseDouble(lat), Double.parseDouble(lng),distance));
+		List<HqlsGeography> res = geographyMapper.findCustomersByLatAndLng(Double.parseDouble(lat), Double.parseDouble(lng),distance);
+		for(HqlsGeography geo :res){
+			geo.setCarNo(geo.getCarNo().substring(0, 3)+"****");
+			String customerName = geo.getCustomerName();
+			StringBuffer name = new StringBuffer(customerName.substring(0, 1));
+			for(int i=0;i<customerName.length()-1;i++){
+				name.append("*");
+			}
+			geo.setCustomerName(name.toString());
+		}
+		return RestModel.success(res);
 	}
 
 	public ResponseEntity<RestModel<List<CountyDto>>> findCountys(String cityName, Integer isCounty) {
