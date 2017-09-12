@@ -265,7 +265,8 @@ public class ServiceOrderService {
 	}
 
 	public ResponseEntity<RestModel<String>> createExtraOrder(HqlsExtraOrder order) {
-		order.setExtraOrderNo(UUID.randomUUID().toString());
+		String extraOrderNo = UUID.randomUUID().toString();
+		order.setExtraOrderNo(extraOrderNo);
 		extraOrderMapper.insertExtraOrder(order);
 		return RestModel.success("增加成功！");
 	}
