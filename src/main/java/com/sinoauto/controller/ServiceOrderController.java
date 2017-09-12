@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dao.bean.HqlsExtraOrder;
 import com.sinoauto.dao.bean.HqlsServiceType;
+import com.sinoauto.dto.CustomerInfoDto;
 import com.sinoauto.dto.ServiceOrderDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
@@ -207,6 +208,14 @@ public class ServiceOrderController {
 		}
 		return serviceOrderService.orderPayBack(extraOrderNo, isPay);
 	}
+	
+	@ApiOperation(value = "获取客户详情", notes = "tangwt")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "serviceOrderId", value = "服务订单ID", required = true, dataType = "int") })
+	@GetMapping("getcustomerinfo")
+	public ResponseEntity<RestModel<CustomerInfoDto>> getCustomerInfo(Integer serviceOrderId ){
+		return serviceOrderService.getCustomerInfo(serviceOrderId);
+	}
+	
 	
 	
 
