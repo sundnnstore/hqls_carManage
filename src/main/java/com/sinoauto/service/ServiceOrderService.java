@@ -307,7 +307,7 @@ public class ServiceOrderService {
 					PushAction pa = new PushAction("ServiceOrder", 0, false, "");
 					List<PushAction> action = new ArrayList<>();
 					action.add(pa);
-					String text = "您收到一笔新的服务款";
+					String text = "您收到一笔金额为("+orders.get(0).getOrderAmount()+")的服务款";
 					// 推送给IOSAPP端
 					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 					PushUtil.push2IOSByAPNS(parms);

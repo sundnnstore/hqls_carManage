@@ -199,21 +199,12 @@ public class FinanceFlowService {
 		HqlsStoreFinance storeFinance = this.storeFinanceMapper.findStoreFinance(storeId);
 
 		Double currentHaveReturned = this.rebateMapper.getCurrentReturnedMoney(storeId);
-		Double[] rebateMoney = this.rebateMapper.getRebateMoney(storeId);
+		Double sumReturned = this.rebateMapper.getHaveReturned(storeId);
+		Double sumRemainingReturned = this.rebateMapper.getRemainingReturned(storeId);
 
-		if (null == currentHaveReturned) {
-			flowListDto.setCurrentReturned(0.0);
-		} else {
-			flowListDto.setCurrentReturned(currentHaveReturned);
-		}
-
-		if (null == rebateMoney) {
-			flowListDto.setRemainingReturned(0.0);
-			flowListDto.setSumReturned(0.0);
-		} else {
-			flowListDto.setRemainingReturned(rebateMoney[0] == null ? 0.0 : rebateMoney[0]);
-			flowListDto.setSumReturned(rebateMoney[1] == null ? 0.0 : rebateMoney[1]);
-		}
+		flowListDto.setCurrentReturned(currentHaveReturned == null ? 0.0 : currentHaveReturned);
+		flowListDto.setSumReturned(sumReturned == null ? 0.0 : sumReturned);
+		flowListDto.setRemainingReturned(sumRemainingReturned == null ? 0.0 : sumRemainingReturned);
 
 		if (storeFinance == null) {
 			flowListDto.setBalance(0.0);
