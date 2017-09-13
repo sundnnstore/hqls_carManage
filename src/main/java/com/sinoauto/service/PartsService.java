@@ -102,17 +102,26 @@ public class PartsService {
 	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
 		// 查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
+		// 返回类型
 		Object objList;
-		// PageHelper.startPage(pageIndex, pageSize);
+		// 总记录数
+		int totalCount;
+		if (pageIndex != null && pageSize != null) {
+			PageHelper.startPage(pageIndex, pageSize);
+		}
 		// 此类别下还有子类
 		if (count > 0) {
-			objList = partsMapper.findPartsTypeListByPid(partsTypeId);
+			Page<CommonDto> page = partsMapper.findPartsTypeListByPid(partsTypeId);
+			objList = page;
+			totalCount = (int) page.getTotal();
 		}
 		// 此类别下没有子类，展示商品列表
 		else {
-			objList = partsMapper.findPartsListByTypeId(partsTypeId, null);
+			Page<PartsDesListDto> page = partsMapper.findPartsListByTypeId(partsTypeId, null);
+			objList = page;
+			totalCount = (int) page.getTotal();
 		}
-		return RestModel.success(objList);
+		return RestModel.success(objList, totalCount);
 	}
 
 	public ResponseEntity<RestModel<List<PartsDesListDto>>> findPartsByConditon(Integer partsTypeId, String condition) {
