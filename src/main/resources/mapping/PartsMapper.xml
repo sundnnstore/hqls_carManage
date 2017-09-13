@@ -49,9 +49,10 @@
 	<select id="findPartsListByOrderId" parameterType="Integer" resultMap="desList">
 		select detail.buy_count, detail.buy_price,
 				parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
-				parts.parts_spec, parts.cur_price, parts.is_usable, parts.price
+				parts.parts_spec, parts.cur_price, parts.is_usable, parts.price,hqb.parts_brand_name
 		from hqls_order_detail as detail
 		left join hqls_parts as parts on detail.parts_id = parts.parts_id
+		left join hqls_parts_brand hqb on hqb.parts_brand_id = parts.parts_brand_id
 		where detail.purchase_order_id = #{orderId}
 	</select>
 	
