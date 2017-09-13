@@ -102,7 +102,9 @@ public class PartsService {
 	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
 		// 查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
+		// 返回类型
 		Object objList;
+		// 总记录数
 		int totalCount;
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
