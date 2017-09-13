@@ -40,7 +40,7 @@ public class FinanceFlowService {
 	private RebateMapper rebateMapper;
 
 	@Autowired
-	// private CashBackService cashBackService;
+	private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
 			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
@@ -320,7 +320,7 @@ public class FinanceFlowService {
 	}
 
 	public Integer updateBalance(Double changeMoney, String transactionNo) {
-		/// Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
+		///Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney, changeMoney, 0.0, storeId);
 	}
