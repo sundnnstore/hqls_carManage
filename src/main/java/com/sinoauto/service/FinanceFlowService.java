@@ -39,8 +39,8 @@ public class FinanceFlowService {
 	@Autowired
 	private RebateMapper rebateMapper;
 
-	@Autowired
-	private CashBackService cashBackService;
+//	@Autowired
+//	private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
 			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
