@@ -653,16 +653,10 @@ $(document).ready(function() {
 
 // 配件树展示与收缩
 function showMenu(obj) {
-	$("#cTree li:first ul:first")
-//	if(){ //如果显示就隐藏
-//		
-//	}else{ //如果隐藏就显示
-//		
-//	}
 	$("#modelContent").css({
 		left : 20,
 		top : "37px"
-	}).slideDown("fast");
+	}).slideToggle("fast");
 	$("body").bind("mousedown", onBodyDown);
 }
 
