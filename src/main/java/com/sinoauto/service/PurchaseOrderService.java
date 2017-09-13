@@ -259,10 +259,12 @@ public class PurchaseOrderService {
 	 * 	@return
 	 */
 	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus,Integer pageIndex,Integer pageSize) {
-		PageHelper.startPage(pageIndex, pageSize);
 		List<PurchaseOrderParamDto> purchaseOrders =null;
 		Page<PurchaseOrderParamDto> purchaseOrdersPage = new Page<>();
 		try {
+			if (pageIndex != null && pageSize != null) {
+				PageHelper.startPage(pageIndex, pageSize);
+			}
 			purchaseOrders = purchaseOrderMapper.findOrder(storeId, orderStatus);
 			if(purchaseOrders==null){
 				purchaseOrders = new ArrayList<>();	

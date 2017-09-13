@@ -124,8 +124,8 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
-			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
-			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		return purchaseOrderService.findOrderByStatus(storeId, orderStatus,pageIndex,pageSize);
 	}
 	
