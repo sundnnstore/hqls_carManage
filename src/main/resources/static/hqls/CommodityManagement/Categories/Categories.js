@@ -34,7 +34,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				}
 			});
 
-		} else if(item.level==1){
+		} else if (item.level == 1) {
 			$("#partsType-div").hide();
 			layer.open({ // 弹框询问门店添加位置
 				type : 1,
@@ -98,11 +98,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 					$('#categoriesLocate').css("display", "none");
 				}
 			});
-			
-		}else{
+
+		} else {
 			$("#partsType-div").hide();
 		}
-		
+
 		layer.open({ // 弹框询问门店添加位置
 			type : 1,
 			title : '提示',
@@ -215,8 +215,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * 节点树
 	 */
 	// loadAddNodes(0, 3);
-	loadNodeTree();
-
+	// loadNodeTree();
 	/**
 	 * 添加子节点
 	 * 
@@ -328,7 +327,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				$("#viewItemTree").html("");
 				// 页面刷新
 				location.reload();
-				
+
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -440,7 +439,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				// $('#categoriesInfoEdit
 				// input').attr('disabled', 'disabled');
 				$('#categoriesInfoEdit select').val(data.result.partsType);
-// $('#categoriesInfoEdit select').attr('disabled', 'disabled');
+				// $('#categoriesInfoEdit select').attr('disabled', 'disabled');
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
@@ -486,97 +485,92 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		});
 	}
 
-	/**
-	 * ztree
-	 */
-
-	var treeTemp;
-	/**
-	 * 配件树数据源
-	 * 
-	 * @returns
-	 */
-	function zNodes() {
-		var node;
-		$.ajax({
-			url : "/findpartstype",
-			type : "get",
-			async : false,
-			success : function(data) {
-				node = data;
-			},
-			error : function(data) {
-				layer.msg("页面查询失败");
-			}
-		});
-		return node;
-	}
-
-	var zNodes = zNodes();
-
-	zNodes.unshift({
-		id : 0,
-		pId : -1,
-		name : "全部",
-		open : true,
-		iconOpen : '../../images/checkbox_0.gif',
-		iconClose : '../../images/checkbox_1.gif',
-		iconSkin : "diy03"
-	});
-	
-	
-	function onRemove() {
-		alert("abv");
-		location.reload();
-	}
-	
-	// 配件树设置
-	var setting = {
-		view : {
-			dblClickExpand : false,
-			autoCancelSelected : false
-		},
-		data : {
-			simpleData : {
-				enable : true
-			}
-		},
-		callback : {
-			// beforeClick : beforeClick, // 选择前的检查
-			onClick : onClick,
-			onRemove : onRemove,
-			onRename : loadNodeTree
-		}
-	};
-	
-	function beforeClick(treeId, treeNode) {
-		var check = (treeNode && !treeNode.isParent);
-		if (!check) {
-			layer.msg("该项不可选择！");
-		}
-		return check;
-	}
-
-	/**
-	 * 
-	 * @param e
-	 *            当前元素
-	 * @param treeId
-	 *            id="cTree"
-	 * @param treeNode
-	 *            当前节点
-	 * @returns
-	 */
-	function onClick(e, treeId, treeNode) {
-		console.log("e:", e, "treeId:", treeId, "treeNode:", treeNode);
-		categoriesEdit(treeNode);
-	}
-
-	function loadNodeTree() {
-		$(function() {
-			$.fn.zTree.init($("#viewItemTree"), setting, zNodes);
-		});
-	}
+	// var treeTemp;
+	// /**
+	// * 配件树数据源
+	// *
+	// * @returns
+	// */
+	// function zNodes() {
+	// var node;
+	// $.ajax({
+	// url : "/findpartstype",
+	// type : "get",
+	// async : false,
+	// success : function(data) {
+	// node = data;
+	// },
+	// error : function(data) {
+	// layer.msg("页面查询失败");
+	// }
+	// });
+	// return node;
+	// }
+	//
+	// var zNodes = zNodes();
+	//
+	// zNodes.unshift({
+	// id : 0,
+	// pId : -1,
+	// name : "全部",
+	// open : true,
+	// iconOpen : '../../images/checkbox_0.gif',
+	// iconClose : '../../images/checkbox_1.gif',
+	// iconSkin : "diy03"
+	// });
+	//
+	// function onRemove() {
+	// alert("abv");
+	// location.reload();
+	// }
+	//
+	// // 配件树设置
+	// var setting = {
+	// view : {
+	// dblClickExpand : false,
+	// autoCancelSelected : false
+	// },
+	// data : {
+	// simpleData : {
+	// enable : true
+	// }
+	// },
+	// callback : {
+	// // beforeClick : beforeClick, // 选择前的检查
+	// onClick : onClick,
+	// onRemove : onRemove,
+	// onRename : loadNodeTree
+	// }
+	// };
+	//
+	// function beforeClick(treeId, treeNode) {
+	// var check = (treeNode && !treeNode.isParent);
+	// if (!check) {
+	// layer.msg("该项不可选择！");
+	// }
+	// return check;
+	// }
+	//
+	// /**
+	// *
+	// * @param e
+	// * 当前元素
+	// * @param treeId
+	// * id="cTree"
+	// * @param treeNode
+	// * 当前节点
+	// * @returns
+	// */
+	// function onClick(e, treeId, treeNode) {
+	// console.log("e:", e, "treeId:", treeId, "treeNode:", treeNode);
+	// categoriesEdit(treeNode);
+	// }
+	//
+	// function loadNodeTree() {
+	// $(function() {
+	// $.fn.zTree.init($("#viewItemTree"), setting, zNodes);
+	// });
+	// }
 
 	/**
 	 * layui trees
@@ -621,3 +615,142 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	}
 
 });
+
+var treeTemp;
+/**
+ * 配件树数据源
+ * 
+ * @returns
+ */
+function zNodes() {
+	var node;
+	$.ajax({
+		url : "/findpartstype",
+		type : "get",
+		async : false,
+		success : function(data) {
+			node = data;
+		},
+		error : function(data) {
+			layer.msg("页面查询失败");
+		}
+	});
+	return node;
+}
+
+var zNodes = zNodes();
+zNodes.unshift({
+	id : 0,
+	pId : -1,
+	name : "全部",
+	open : true
+});
+
+// 配件树初始化
+$(document).ready(function() {
+	$.fn.zTree.init($("#cTree"), setting, zNodes);
+});
+
+// 配件树展示与收缩
+function showMenu(obj) {
+	$("#cTree li:first ul:first")
+//	if(){ //如果显示就隐藏
+//		
+//	}else{ //如果隐藏就显示
+//		
+//	}
+	$("#modelContent").css({
+		left : 20,
+		top : "37px"
+	}).slideDown("fast");
+	$("body").bind("mousedown", onBodyDown);
+}
+
+function hideMenu() {
+	if (treeTemp == 'model') {
+		$("#modelContent").fadeOut("fast");
+	} else if (treeTemp == 'main') {
+		$("#menuContent").fadeOut("fast");
+	}
+	$("body").unbind("mousedown", onBodyDown);
+}
+
+function onBodyDown(event) {
+	if (treeTemp == 'model') {
+		if (!(event.target.id == "menuBtn" || event.target.id == "modelContent" || $(
+				event.target).parents("#modelContent").length > 0)) {
+			hideMenu();
+		} else {
+
+		}
+	}
+}
+
+/**
+ * ztree 绑定到input元素中
+ */
+function beforeClick(treeId, treeNode) {
+	var check = (treeNode && !treeNode.isParent);
+	if (!check) {
+		layer.msg("该项不可选择！");
+	}
+	return check;
+}
+
+/**
+ * 
+ * @param e
+ *            当前元素
+ * @param treeId
+ *            id="cTree"
+ * @param treeNode
+ *            当前节点
+ * @returns
+ */
+function onClick(e, treeId, treeNode) {
+	$(e.target).parents('li').siblings('li').find('.curSelectedNode')
+			.removeClass('curSelectedNode');
+	if (treeId == 'commodityTree') {
+		// 保存id
+		selectTreeId = treeNode.id;
+		console.log("onClick--->" + treeNode.id);
+		$("#commodityName").val(treeNode.name);
+	} else {
+		// 保存id
+		selectTreeId = treeNode.id;
+		$("#cName").val(treeNode.name);
+	}
+}
+
+// 配件树设置
+var setting = {
+	view : {
+		dblClickExpand : false,
+		autoCancelSelected : false
+	},
+	data : {
+		simpleData : {
+			enable : true
+		}
+	},
+	callback : {
+		beforeClick : beforeClick, // 检查
+		onClick : onClick
+	}
+};
+
+var settingQuery = {
+	view : {
+		dblClickExpand : false,
+		autoCancelSelected : false
+	},
+	data : {
+		simpleData : {
+			enable : true
+		}
+	},
+	callback : {
+		//beforeClick: beforeClick, //检查
+		onClick : onClick
+	}
+};
