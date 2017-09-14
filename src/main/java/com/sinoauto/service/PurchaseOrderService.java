@@ -174,7 +174,8 @@ public class PurchaseOrderService {
 			order.setAddress(address);
 			order.setPartsDesList(partsList);
 			Double total = calculationAmount(partsList);
-			Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+//			Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+			Double otherFee = 0.00;
 			order.setTotalAmount(new BigDecimal(total).add(new BigDecimal(otherFee)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 			// 获取门店余额
 			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(orderParamDto.getStoreId());
@@ -239,7 +240,8 @@ public class PurchaseOrderService {
 		//计算总费用
 		ShopCartInfoDto order = purchaseOrderMapper.getOrderByOrderId(orderId);
 		BigDecimal totalFee = new BigDecimal(calculationAmount(order.getPartsDesList()));
-		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
+		// 加上运输费用
+//		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
 		order.setTotalAmount(totalFee.setScale(2, RoundingMode.HALF_UP).doubleValue());
 		order.setIsEnough(order.getBalance() > order.getTotalAmount());
 		
@@ -273,7 +275,8 @@ public class PurchaseOrderService {
 		order.setOrderStatus(1);
 		order.setShipAddressId(orderParamDto.getAddressId());
 		order.setStoreId(orderParamDto.getStoreId());
-		Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+//		Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+		Double otherFee = 0.00;
 		order.setOtherFee(otherFee);
 		order.setTotalFee(new BigDecimal(totalAmount).add(new BigDecimal(otherFee)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 		purchaseOrderMapper.insert(order);
