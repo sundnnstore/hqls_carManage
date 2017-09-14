@@ -3,6 +3,17 @@
     -webkit-user-select: none;
     user-select: none;
 }
+.menuContent{
+	display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    z-index: 10;
+}
+.menuContent ul {
+    margin-top: 0;
+    width: 160px;
+}
 
 .categoriesTreeBox {
     padding: 15px 20px;

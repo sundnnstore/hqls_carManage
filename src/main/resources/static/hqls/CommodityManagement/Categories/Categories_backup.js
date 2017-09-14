@@ -276,7 +276,6 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                         break;
                 }
 
-
                 layer.close(index); //如果设定了yes回调，需进行手工关闭
                 inputReset(); // 清空表单
                 // 在新增的情况下，如果要添加的的内容已存在，则提示用户已存在

@@ -808,7 +808,9 @@ function delImg(obj) {
 function beforeClick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
     if (!check) {
-        layer.msg("该项不可选择！");
+    	//展开子类
+    	treeNode.expandFlag(true);
+        layer.msg("存在子类不可选！");
     }
     return check;
 }
@@ -841,31 +843,9 @@ var treeTemp;
 function showMenu(temp) {
     treeTemp = temp;
     if (treeTemp == 'model') {
-        $("#modelContent").css({ left: 0, top: "37px" }).slideDown("fast");
+        $("#modelContent").css({ left: 0, top: "37px" }).slideToggle("fast");
     } else if (treeTemp == 'main') {
-        $("#menuContent").css({ left: 0, top: "37px" }).slideDown("fast");
-    }
-    $("body").bind("mousedown", onBodyDown);
-}
-
-function hideMenu() {
-    if (treeTemp == 'model') {
-        $("#modelContent").fadeOut("fast");
-    } else if (treeTemp == 'main') {
-        $("#menuContent").fadeOut("fast");
-    }
-    $("body").unbind("mousedown", onBodyDown);
-}
-
-function onBodyDown(event) {
-    if (treeTemp == 'model') {
-        if (!(event.target.id == "menuBtn" || event.target.id == "modelContent" || $(event.target).parents("#modelContent").length > 0)) {
-            hideMenu();
-        }
-    } else if (treeTemp == 'main') {
-        if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length > 0)) {
-            hideMenu();
-        }
+        $("#menuContent").css({ left: 0, top: "37px" }).slideToggle("fast");
     }
 }
 
@@ -891,7 +871,7 @@ function zNodes() {
 }
 var zNodes = zNodes();
 zNodes.unshift({ id: 0, pId: -1, name: "全部", open: true });
-//alert(JSON.stringify(zNodes));
+
 // 配件树初始化
 $(document).ready(function() {
     $.fn.zTree.init($("#commodityTree"), settingQuery, zNodes);

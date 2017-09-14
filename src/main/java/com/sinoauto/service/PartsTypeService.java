@@ -76,21 +76,22 @@ public class PartsTypeService {
 	 */
 	public ResponseEntity<RestModel<Integer>> addSameLevel(HqlsPartsType hqlsPartsType) {
 		try {
+			Integer partsType = 0;
 			if (hqlsPartsType.getPartsTypeId() != null) {
 				// 查询出当前partstypeid的pid
 				Integer pid = partsTypeMapper.findPidByPartsTypeId(hqlsPartsType.getPartsTypeId());
-				if (pid != null) {
+				if (pid != null&&pid==0) {
+					partsType = hqlsPartsType.getPartsType();
+				}else{
 					// 查询父级对象
 					HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(pid);
-					HqlsPartsType add = new HqlsPartsType();
-					add.setTypeName(hqlsPartsType.getTypeName());
-					add.setPid(pid);
-					// add.setPartsType(hqlsPartsType.getPartsType());
-					add.setPartsType(parent.getPartsType());
-					// 创建一个配件类型
-					partsTypeMapper.insert(add);
+					partsType =parent.getPartsType();
 				}
-
+				HqlsPartsType add = new HqlsPartsType();
+				add.setTypeName(hqlsPartsType.getTypeName());
+				add.setPid(pid);
+				add.setPartsType(partsType);
+				partsTypeMapper.insert(add);
 			} else {
 				return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "配件类型id不能为空");
 			}
