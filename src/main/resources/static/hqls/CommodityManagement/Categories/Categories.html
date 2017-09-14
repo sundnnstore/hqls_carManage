@@ -1,6 +1,9 @@
-<link rel="stylesheet" href="common/zTree/css/zTreeStyle.css" type="text/css">
-<link rel="stylesheet" type="text/css" href="CommodityManagement/Categories/Categories.css" />
-<link rel="stylesheet" href="CommodityManagement/CommodityManage/CommodityManage.css">
+<link rel="stylesheet" href="common/zTree/css/zTreeStyle.css"
+	type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="CommodityManagement/Categories/Categories.css" />
+<link rel="stylesheet"
+	href="CommodityManagement/CommodityManage/CommodityManage.css">
 <link href="common/zTree/css/zTreeStyle.css"></link>
 <div class="categories">
 	<!-- 商品分类
@@ -12,36 +15,36 @@
 		<label for="" class="layui-form-label">配件分类</label>
 		<div class="layui-input-block">
 			<ul>
-				<li class="title">
-					<input type="text" id="cName" class="layui-input" placeholder="请选择分类" onclick="showMenu()" readonly />
-				</li>
+				<li class="title"><input type="text" id="cName"
+					class="layui-input" placeholder="请选择分类" onclick="showMenu()"
+					readonly /></li>
 			</ul>
 		</div>
 		<div id="modelContent" class="menuContent">
 			<ul id="cTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
 		</div>
 	</div>
-	
+
 	<!-- 商品分类信息展示 -->
-    <div class="content">
-        <div class="tableContainer">
-            <table class="layui-table">
-                <thead>
-                    <tr>
-                        <th>配件名称</th>
-                        <th>父级名称</th>
-                        <th>操作</th>
-                    </tr>
-                </thead>
-                <tbody class="parts_type">
-                </tbody>
-            </table>
-        </div>
-        <div id="pages" style="text-align: right;"></div>
-    </div>
-	
-	
-	
+	<div class="content">
+		<div class="tableContainer">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>配件名称</th>
+						<th>父级名称</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class="parts_type">
+				</tbody>
+			</table>
+		</div>
+		<div id="pages" style="text-align: right;"></div>
+	</div>
+
+
+
 	<!--  弹框一：询问商品分类添加位置 -->
 	<div id="categoriesLocate" class="categoriesLocate">
 		您当前选中的分类是：<span id="categoriesName"></span>
@@ -53,7 +56,7 @@
 				<label for="first_title" class="layui-form-label">分类名称</label>
 				<div class="layui-input-block">
 					<input type="text" name="" id="partsTypeName" class="layui-input"
-						placeholder="请输入分类名称" />
+						placeholder="请选择分类" />
 				</div>
 			</div>
 			<div class="layui-input-inline" id="partsType-div">
