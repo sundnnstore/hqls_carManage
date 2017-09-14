@@ -10,9 +10,9 @@
 	<!-- 新增 -->
 	<insert id="insert" parameterType="HqlsPartsType" useGeneratedKeys="true" keyProperty="partsTypeId">
 	    INSERT INTO hqls_parts_type (
-	        type_name, pid, parts_type
+	        type_name, pid, parts_type,icon
 	    ) VALUES (
-	        #{typeName}, #{pid}, #{partsType}        
+	        #{typeName}, #{pid}, #{partsType} ,#{icon}      
 	    )
 	</insert>
 
@@ -23,6 +23,7 @@
 			<if test="pid!=null"> pid = #{pid}, </if>
 			<if test="pname!=null"> pname = #{pname}, </if>
 			<if test="partsType!=null"> parts_type = #{partsType}, </if>
+			<if test="icon!=null"> icon = #{icon}, </if>
 			oper_time =now()
 		<!-- 暂时写成这样，这里本来应该有一个操作时间，防止出错 -->
 		WHERE

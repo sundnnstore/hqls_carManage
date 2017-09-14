@@ -426,11 +426,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("#partsFactory").val(data.result.partsFactory);
         $("#shelfLife").val(data.result.shelfLife);
         $("#partsUnit").val(data.result.partsUnit);
-
-
-        //$("#partsBrandName").val(data.result.partsBrandName);
-        //清空图片和扩展属性
-        //$(".uploadImg").html(""); //清空图片上传div
         $(".attrExtra").html(""); //清空动态扩展属性的div
         for (var i = 0; i < piclen; i++) {
             pics += `
@@ -505,10 +500,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          */
         //    	$("#partsType").val(data.result.partsType);
         if (data.result.partsType == 1) {
-            //alert("配件类型1");
             $("#partsType").find("option[value='1']").prop("selected", true);
         } else if (data.result.partsType == 2) {
-            //alert("配件类型2");
             $("#partsType").find("option[value='2']").prop("selected", true);
         }
 
@@ -683,9 +676,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         //将编辑按钮变为可用
         $("#edit").removeAttr("disabled");
         //清空
-        //    	$(this).removeAttr("disabled");
-        //      $(":input:radio").removeAttr("disabled");
-        //      $("#cName").val(""); //清空树形菜单数据
 
     }
 
@@ -704,8 +694,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         //将查看按钮变为可用
         $("#view").removeAttr("disabled");
         selectTreeId = 0; //清空树形菜单id
-        //    	$('.closeBtn').css('display', 'none');
-        //    	$(":input:radio").removeAttr("disabled");
     }
 
     //查看的时候禁用元素
@@ -724,7 +712,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".add_c").attr("disabled", true);
         $(".isUse_c").attr("disabled", true);
         $("#searchCommodity").attr("disabled", true); 
-//        $("#addOption").attr("disabled", true);
     }
     //按钮启用
     function clearButtonForbidden() {
@@ -733,7 +720,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".add_c").attr("disabled", false);
         $(".isUse_c").attr("disabled", false);
         $("#searchCommodity").attr("disabled", false);
-//        $("#addOption").attr("disabled", false);
     }
 });
 
@@ -806,13 +792,17 @@ function delImg(obj) {
 }
 //在配件树中选中配件后写入input中
 function beforeClick(treeId, treeNode) {
-    var check = (treeNode && !treeNode.isParent);
-    if (!check) {
-    	//展开子类
-    	treeNode.expandFlag(true);
-        layer.msg("存在子类不可选！");
-    }
-    return check;
+	var treeObj = $.fn.zTree.getZTreeObj(treeNode);
+	console.log(treeObj);
+	treeObj.expandAll(true);
+//    var check = (treeNode && !treeNode.isParent);
+//    if (!check) {
+//    	console.log(treeNode);
+//    	//展开子类
+//    	treeNode.expandAll(true);
+//        layer.msg("存在子类不可选！");
+//    }
+//    return check;
 }
 
 /**
@@ -823,8 +813,6 @@ function beforeClick(treeId, treeNode) {
  * @returns
  */
 function onClick(e, treeId, treeNode) {
-    //console.log("e:",e,"\ntreeId:",treeId,"\ntreeNode:",treeNode);
-    //var nodes = $.fn.zTree.getZTreeObj(treeId).getSelectedNodes();
     $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
     if (treeId == 'commodityTree') {
         // 保存id
@@ -860,7 +848,6 @@ function zNodes() {
         type: "get",
         async: false,
         success: function(data) {
-            //node =JSON.stringify(data);
             node = data;
         },
         error: function(data) {
@@ -910,27 +897,3 @@ var settingQuery = {
 	        onClick: onClick
 	    }
 	};
-
-
-// 配件树数据源
-//var zNodes = [
-//    { id: 1, pId: 0, name: "北京" },
-//    { id: 2, pId: 0, name: "天津" },
-//    { id: 3, pId: 0, name: "上海" },
-//    { id: 6, pId: 0, name: "重庆" },
-//    { id: 4, pId: 0, name: "河北省", open: true },
-//    { id: 41, pId: 4, name: "石家庄" },
-//    { id: 42, pId: 4, name: "保定" },
-//    { id: 43, pId: 4, name: "邯郸" },
-//    { id: 44, pId: 4, name: "承德" },
-//    { id: 5, pId: 0, name: "广东省", open: true },
-//    { id: 51, pId: 5, name: "广州" },
-//    { id: 52, pId: 5, name: "深圳" },
-//    { id: 53, pId: 5, name: "东莞" },
-//    { id: 54, pId: 5, name: "佛山" },
-//    { id: 6, pId: 0, name: "福建省", open: true },
-//    { id: 61, pId: 6, name: "福州" },
-//    { id: 62, pId: 6, name: "厦门" },
-//    { id: 63, pId: 6, name: "泉州" },
-//    { id: 64, pId: 6, name: "三明" }
-//];
