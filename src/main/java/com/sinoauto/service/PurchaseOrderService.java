@@ -11,6 +11,7 @@ import com.sinoauto.dao.mapper.PurchaseOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import com.sinoauto.dao.bean.HqlsDict;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.sinoauto.dao.bean.HqlsLogisticsCompany;
 import com.sinoauto.dao.bean.HqlsLogisticsLog;
@@ -22,6 +23,8 @@ import com.sinoauto.dao.bean.HqlsPurchaseOrder;
 import com.sinoauto.dao.bean.HqlsShipAddress;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
 import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.ClientInfoMapper;
+import com.sinoauto.dao.mapper.DictMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.LogisticsCompanyMapper;
 import com.sinoauto.dao.mapper.LogisticsLogMapper;
@@ -43,6 +46,10 @@ import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.entity.TokenModel;
 import com.sinoauto.util.KdniaoTrackQueryAPI;
+import com.sinoauto.util.push.GeTuiUtil;
+import com.sinoauto.util.push.PushAction;
+import com.sinoauto.util.push.PushParms;
+import com.sinoauto.util.push.PushUtil;
 
 import cn.jiguang.common.utils.StringUtils;
 
@@ -70,6 +77,10 @@ public class PurchaseOrderService {
 	private LogisticsCompanyMapper logisticsCompanyMapper;
 	@Autowired
 	private LogisticsLogMapper logisticsLogMapper;
+	@Autowired
+	private DictMapper dictMapper;
+	@Autowired
+	private ClientInfoMapper clientInfoMapper;
 	
 	@Transactional
 	public ResponseEntity<RestModel<String>> addShipAddress(HqlsShipAddress shipAddress) {
@@ -146,13 +157,9 @@ public class PurchaseOrderService {
 		// 生成订单
 		HqlsPurchaseOrder order = new HqlsPurchaseOrder();
 		order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
+		Double totalAmount = totalAmount(orderParamDto.getPartsList());
 		BigDecimal result = new BigDecimal(0.00);
-		for (ShopCartParamDto p: parts) {
-			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
-			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
-			result = result.add(eachOrderPrice);
-		}
-		Double discount = result.subtract(new BigDecimal(orderParamDto.getPayMoney())).setScale(2, RoundingMode.HALF_UP).doubleValue();
+		Double discount = result.subtract(new BigDecimal(totalAmount)).setScale(2, RoundingMode.HALF_UP).doubleValue();
 		order.setDiscountFee(discount);
 		order.setOrderStatus(1);
 		order.setShipAddressId(orderParamDto.getAddressId());
@@ -165,7 +172,7 @@ public class PurchaseOrderService {
 		for (ShopCartParamDto partDesc: parts) {
 			HqlsOrderDetail detail = new HqlsOrderDetail();
 			detail.setBuyCount(partDesc.getNum());
-			detail.setBuyPrice(partDesc.getBuyPrice());
+			detail.setBuyPrice(partsMapper.getCurPriceById(partDesc.getPartsId()));
 			detail.setPartsId(partDesc.getPartsId());
 			detail.setDiscountPrice(0.00);
 			detail.setPurchaseOrderId(order.getPurchaseOrderId());
@@ -192,9 +199,13 @@ public class PurchaseOrderService {
 				partsList.add(partsDesc);
 			}
 			// 默认地址获取
-			
+			HqlsShipAddress address = shipAddressMapper.getDefaultAddressByStoreId(orderParamDto.getStoreId());
+			if (address == null) {
+				address = shipAddressMapper.getAddressByStoreId(orderParamDto.getStoreId());
+			}
 			// 组装返回数据
 			ShopCartInfoDto order = new ShopCartInfoDto();
+			order.setAddress(address);
 			order.setPartsDesList(partsList);
 			order.setTotalAmount(calculationAmount(partsList));
 			// 获取门店余额
@@ -243,20 +254,17 @@ public class PurchaseOrderService {
 	 * 	@param orderStatus
 	 * 	@return
 	 */
-	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus,Integer pageIndex,Integer pageSize) {
-		PageHelper.startPage(pageIndex, pageSize);
-		List<PurchaseOrderParamDto> purchaseOrders =null;
-		Page<PurchaseOrderParamDto> purchaseOrdersPage = new Page<>();
+	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStatus(Integer storeId, Integer orderStatus,Integer pageIndex,Integer pageSize) {
 		try {
-			purchaseOrders = purchaseOrderMapper.findOrder(storeId, orderStatus);
-			if(purchaseOrders==null){
-				purchaseOrders = new ArrayList<>();	
+			if (pageIndex != null && pageSize != null) {
+				PageHelper.startPage(pageIndex, pageSize);
 			}
+			Page<PurchaseOrderParamDto> purchaseOrders = purchaseOrderMapper.findOrder(storeId, orderStatus);
+			return RestModel.success(purchaseOrders, (int) purchaseOrders.getTotal());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "按状态查询错误");
 		}
-		purchaseOrdersPage = (Page<PurchaseOrderParamDto>) purchaseOrders;
-		return RestModel.success(purchaseOrdersPage,(int)purchaseOrdersPage.getTotal());
 	}
 	
 	public ResponseEntity<RestModel<ShopCartInfoDto>> getOrderByOrderId(Integer orderId) {
@@ -287,6 +295,8 @@ public class PurchaseOrderService {
 			// 生成待支付订单
 			Integer orderId = param.getOrderId() == null ? generatorPurchaseOrder(param) : param.getOrderId();
 			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
+			// 待支付商品总价
+			Double totalAmount = totalAmount(param.getPartsList());
 			/*
 			 *  余额支付方式
 			 */
@@ -294,20 +304,23 @@ public class PurchaseOrderService {
 				// 从财务余额中扣掉支付金额
 				HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(param.getStoreId());
 //				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
-				BigDecimal balance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(param.getPayMoney()));
+				BigDecimal balance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(totalAmount));
 				balance.setScale(2, RoundingMode.HALF_UP);
+				if (balance.doubleValue() < 0) {
+					return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.DATA_NOT_EXIST, "余额不足");
+				}
 				finance.setBalance(balance.doubleValue());
 				storeFinanceMapper.updateBalance(finance);
 				
 				// 修改订单
 				order.setOrderStatus(2);
-				order.setPayFee(param.getPayMoney());
+				order.setPayFee(totalAmount);
 				order.setPayType(param.getPayType());
 				purchaseOrderMapper.payOperation(order);
 				
 				// 添加财务流水
 				HqlsFinanceFlow flow = new HqlsFinanceFlow();
-				flow.setChangeMoney(param.getPayMoney());
+				flow.setChangeMoney(totalAmount);
 				flow.setChangeType(3);
 				flow.setChargeType(2);
 				flow.setIsDelete(0);
@@ -321,7 +334,7 @@ public class PurchaseOrderService {
 			} else if (param.getPayType() == 1) { // 支付宝支付
 				PayReturnParamDto pay = new PayReturnParamDto();
 				pay.setChangeType(3);// 采购
-				pay.setMoney(param.getPayMoney());
+				pay.setMoney(totalAmount);
 				pay.setOrderNo(order.getOrderNo());
 				pay.setStoreId(order.getStoreId());
 				return RestModel.success(pay);
@@ -404,6 +417,17 @@ public class PurchaseOrderService {
 		for (PartsDesListDto p: parts) {
 			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
+			result = result.add(eachOrderPrice);
+		}
+		result.setScale(2, RoundingMode.HALF_UP);
+		return result.doubleValue();
+	}
+	
+	public Double totalAmount(List<ShopCartParamDto> partsList) {
+		BigDecimal result = new BigDecimal(0.00);
+		for (ShopCartParamDto p: partsList) {
+			HqlsParts hqpart = partsMapper.getPartsByPartsId(p.getPartsId());
+			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
 			result = result.add(eachOrderPrice);
 		}
 		result.setScale(2, RoundingMode.HALF_UP);
@@ -606,6 +630,24 @@ public class PurchaseOrderService {
 			flow.setRemark("订单取消退还金额");
 			financeFlowMapper.insert(flow);
 			
+			// 推送给门店的联系人
+			// 通过门店ID查找门店的联系人
+			HqlsUser storeUser = userMapper.getUserByStoreId(order.getStoreId());
+			if (user != null) {
+				PushAction pa = new PushAction("PurchaseOrder", 0, true, "");
+				List<PushAction> action = new ArrayList<>();
+				action.add(pa);
+				String text = "您有一条采购订单被取消";
+				
+				// 推送给IOSAPP端
+				PushParms parms = PushUtil.comboPushParms(storeUser.getMobile(), action, null, text, "", null, 0);
+				PushUtil.push2IOSByAPNS(parms);
+				String title = "订单提醒";
+				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(storeUser.getUserId());
+				// 推送给安卓APP端
+				GeTuiUtil.pushToAndroid(clientIds, title, text, "purchase_order", "采购订单");
+			}
+			
 			return RestModel.success("订单取消成功");
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -630,6 +672,26 @@ public class PurchaseOrderService {
 			return RestModel.success("添加成功");
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+	}
+	
+	/**
+	 * 获取物流费用
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Double>> getLogisticsFee() {
+		try {
+			Double otherFee = 0.00;
+			String dictKey = "other_fee";
+			List<HqlsDict> dict = dictMapper.findDictByKey(dictKey);
+			if (!dict.isEmpty()) {
+				otherFee = Double.parseDouble(dict.get(0).getDictValue());
+			}
+			return RestModel.success(otherFee);
+			
+		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		}
 		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);

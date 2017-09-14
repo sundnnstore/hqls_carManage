@@ -1,46 +1,86 @@
-<link rel="stylesheet" type="text/css" href="CommodityManagement/Categories/Categories.css" />
-
+<link rel="stylesheet" href="common/zTree/css/zTreeStyle.css"
+	type="text/css">
+<link rel="stylesheet" type="text/css"
+	href="CommodityManagement/Categories/Categories.css" />
+<link rel="stylesheet"
+	href="CommodityManagement/CommodityManage/CommodityManage.css">
+<link href="common/zTree/css/zTreeStyle.css"></link>
 <div class="categories">
-    商品分类
-    <div id="viewTree" class="categoriesTreeBox">
-        <ul id="viewItemTree"></ul>
-    </div>
-    <!--  弹框一：询问商品分类添加位置 -->
-    <div id="categoriesLocate" class="categoriesLocate">
-        您当前选中的分类是：<span id="categoriesName"></span>
-    </div>
-    <!-- 弹框二：商品分类信息添加与编辑的结果提示 -->
-    <div id="categoriesInfoEdit" class="categoriesInfo">
-        <form>
-            <div class="layui-input-inline">
-                <label for="first_title" class="layui-form-label">分类名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="" id="partsTypeName" class="layui-input" placeholder="请输入分类名称" />
-                </div>
-            </div>
-            <div class="layui-input-inline">
-                <label for="" class="layui-form-label">类型</label>
-                <div class="layui-input-block">
-                    <select class="layui-select" id="partsType">
-                    <option value="1" selected>易损件</option>
-                    <option value="2">通用件</option>
-                </select>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- 弹框三：商品分类信息添加与编辑的结果提示 -->
-    <div id="categoriesDelete" class="categoriesLocate">
-        是否确认删除数据？
-    </div>
-    <!-- 弹框四：商品分类信息添加与编辑的结果提示 -->
-    <div id="categoriesNotDel" class="categoriesLocate">
-        <p>该数据下存在关联数据，不可删除！</p>
-        <p>关联数据可能为下属分类，也可能是该分类下有产品信息</p>
-    </div>
-    <!-- 弹框五：商品分类信息添加与编辑的结果提示 -->
-    <div id="categoriesAdd" class="categoriesLocate">
-        	该数据已存在，请确认后再添加!
-    </div>
+	<!-- 商品分类
+	<div id="viewTree" class="categoriesTreeBox" style="height:100%;width:100%;position:absolute; left:30%; top:10%; ">
+        <ul id="viewItemTree" class="ztree" style="margin:0 auto;"></ul>
+    </div> -->
+
+	<div class="layui-input-inline">
+		<label for="" class="layui-form-label">配件分类</label>
+		<div class="layui-input-block">
+			<ul>
+				<li class="title"><input type="text" id="cName"
+					class="layui-input" placeholder="请选择分类" onclick="showMenu()"
+					readonly /></li>
+			</ul>
+		</div>
+		<div id="modelContent" class="menuContent">
+			<ul id="cTree" class="ztree" style="margin-top: 0; width: 160px;"></ul>
+		</div>
+	</div>
+
+	<!-- 商品分类信息展示 -->
+	<div class="content">
+		<div class="tableContainer">
+			<table class="layui-table">
+				<thead>
+					<tr>
+						<th>配件名称</th>
+						<th>父级名称</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class="parts_type">
+				</tbody>
+			</table>
+		</div>
+		<div id="pages" style="text-align: right;"></div>
+	</div>
+
+
+
+	<!--  弹框一：询问商品分类添加位置 -->
+	<div id="categoriesLocate" class="categoriesLocate">
+		您当前选中的分类是：<span id="categoriesName"></span>
+	</div>
+	<!-- 弹框二：商品分类信息添加与编辑的结果提示 -->
+	<div id="categoriesInfoEdit" class="categoriesInfo">
+		<form>
+			<div class="layui-input-inline">
+				<label for="first_title" class="layui-form-label">分类名称</label>
+				<div class="layui-input-block">
+					<input type="text" name="" id="partsTypeName" class="layui-input"
+						placeholder="请选择分类" />
+				</div>
+			</div>
+			<div class="layui-input-inline" id="partsType-div">
+				<label for="" class="layui-form-label">类型</label>
+				<div class="layui-input-block">
+					<select class="layui-select" id="partsType">
+						<option value="1" selected>易损件</option>
+						<option value="2">通用件</option>
+					</select>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 弹框三：商品分类信息添加与编辑的结果提示 -->
+	<div id="categoriesDelete" class="categoriesLocate">是否确认删除数据？</div>
+	<!-- 弹框四：商品分类信息添加与编辑的结果提示 -->
+	<div id="categoriesNotDel" class="categoriesLocate">
+		<p>该数据下存在关联数据，不可删除！</p>
+		<p>关联数据可能为下属分类，也可能是该分类下有产品信息</p>
+	</div>
+	<!-- 弹框五：商品分类信息添加与编辑的结果提示 -->
+	<div id="categoriesAdd" class="categoriesLocate">该数据已存在，请确认后再添加!
+	</div>
 </div>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="common/zTree/js/jquery.ztree.core.js"></script>
 <script src="CommodityManagement/Categories/Categories.js"></script>

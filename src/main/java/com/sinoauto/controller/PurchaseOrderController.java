@@ -121,11 +121,11 @@ public class PurchaseOrderController {
 	
 	@ApiOperation(value = "按订单状态查询", notes = "wuxiao")
 	@GetMapping("findorderbystoreidandstatus")
-	public ResponseEntity<RestModel<Page<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
+	public ResponseEntity<RestModel<List<PurchaseOrderParamDto>>> findOrderByStoreIdAndStatus(
 			@RequestParam(value = "storeId", required = true) Integer storeId,
 			@RequestParam(value = "orderStatus", required = false) Integer orderStatus,
-			@RequestParam(value = "pageIndex", required = true) Integer pageIndex,
-			@RequestParam(value = "pageSize", required = true) Integer pageSize) {
+			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		return purchaseOrderService.findOrderByStatus(storeId, orderStatus,pageIndex,pageSize);
 	}
 	
@@ -216,6 +216,12 @@ public class PurchaseOrderController {
 	public ResponseEntity<RestModel<String>> addLogisticsRemark(@RequestParam(value = "orderId", required = true) Integer orderId,
 			@RequestParam(value = "remark", required = true) String remark) {
 		return purchaseOrderService.addLogisticsRemark(orderId, remark);
+	}
+	
+	@ApiOperation(value = "获取物流费用", notes = "wuxiao")
+	@GetMapping("getlogisticsfee")
+	public ResponseEntity<RestModel<Double>> getLogisticsFee() {
+		return purchaseOrderService.getLogisticsFee();
 	}
 
 }

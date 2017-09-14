@@ -35,7 +35,7 @@ public interface PurchaseOrderMapper {
 	 * @param orderStatus
 	 * @return
 	 */
-	public List<PurchaseOrderParamDto> findOrder(@Param("storeId") Integer storeId, @Param("orderStatus") Integer orderStatus);
+	public Page<PurchaseOrderParamDto> findOrder(@Param("storeId") Integer storeId, @Param("orderStatus") Integer orderStatus);
 	
 	/**
 	 * 查询订单进入待支付页面

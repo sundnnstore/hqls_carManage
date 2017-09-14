@@ -24,6 +24,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             Detailview($(this).parent().find("#partsId").val());
             forbidden(); //禁用元素
             ButtonForbidden(); //禁用其他按钮
+            $('#addOption').css("display", "none"); //隐藏
         } else if (method == 'edit') {
             title = '编辑';
             var partsId = $(this).parent().find("#partsId").val();
@@ -131,6 +132,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	                     </div>`;
                 $(".uploadImg").html(picAppend);
                 $('#commodityBox').css("display", "none"); //隐藏
+                $('#addOption').css("display", "block"); //新增按钮显示
+                $(".attrExtra").html("");//清空
                 clearButtonForbidden(); //启用按钮
                 layer.close(index); //关闭弹框
             }
@@ -720,8 +723,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".edit_c").attr("disabled", true);
         $(".add_c").attr("disabled", true);
         $(".isUse_c").attr("disabled", true);
-        $("#searchCommodity").attr("disabled", true);
-//        $("#addOption").css("display", "none");
+        $("#searchCommodity").attr("disabled", true); 
+//        $("#addOption").attr("disabled", true);
     }
     //按钮启用
     function clearButtonForbidden() {
@@ -730,7 +733,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".add_c").attr("disabled", false);
         $(".isUse_c").attr("disabled", false);
         $("#searchCommodity").attr("disabled", false);
-//        $("#addOption").css("display", "block");
+//        $("#addOption").attr("disabled", false);
     }
 });
 
