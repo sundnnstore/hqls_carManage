@@ -172,7 +172,7 @@ public class PurchaseOrderService {
 		for (ShopCartParamDto partDesc: parts) {
 			HqlsOrderDetail detail = new HqlsOrderDetail();
 			detail.setBuyCount(partDesc.getNum());
-			detail.setBuyPrice(partDesc.getBuyPrice());
+			detail.setBuyPrice(partsMapper.getCurPriceById(partDesc.getPartsId()));
 			detail.setPartsId(partDesc.getPartsId());
 			detail.setDiscountPrice(0.00);
 			detail.setPurchaseOrderId(order.getPurchaseOrderId());
