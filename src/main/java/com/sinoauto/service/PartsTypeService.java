@@ -60,6 +60,7 @@ public class PartsTypeService {
 			add.setTypeName(hqlsPartsType.getTypeName());
 			add.setPid(hqlsPartsType.getPartsTypeId());
 			add.setPartsType(partsType); // 配件类型
+			add.setIcon(hqlsPartsType.getIcon());
 			// 创建一个配件类型
 			partsTypeMapper.insert(add);
 		} catch (Exception e) {
@@ -91,6 +92,7 @@ public class PartsTypeService {
 				add.setTypeName(hqlsPartsType.getTypeName());
 				add.setPid(pid);
 				add.setPartsType(partsType);
+				add.setIcon(hqlsPartsType.getIcon());
 				partsTypeMapper.insert(add);
 			} else {
 				return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "配件类型id不能为空");
@@ -106,12 +108,18 @@ public class PartsTypeService {
 	 * 检查是否可是删除
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(Integer partsTypeId) {
+	public ResponseEntity<RestModel<CommonDto>> checkIsCanbeDel(Integer partsTypeId) {
+		//查询图片
+		HqlsPartsType partsType = partsTypeMapper.findPartsTypeByPartsTypeId(partsTypeId);
+		CommonDto common = new CommonDto();
+		common.setValue(partsType.getIcon());
 		List<CommonDto> exitChildren = partsMapper.findPartsTypeListByPid(partsTypeId);
 		if (!exitChildren.isEmpty()) {
-			return RestModel.success(true);
+			common.setKey(1);
+			return RestModel.success(common);
 		} else {
-			return RestModel.success(false);
+			common.setKey(0);
+			return RestModel.success(common);
 		}
 	}
 
