@@ -55,7 +55,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		showCover();
             layer.open({
             	cancel: function() {
-    				//右上角关闭的回调
+    				// 右上角关闭的回调
     			$('#cover').css('display', 'none');
     			},
                 type: 1,
@@ -71,7 +71,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             showCover();
             layer.open({
             	cancel: function() {
-    				//右上角关闭的回调
+    				// 右上角关闭的回调
             		$('#cover').css('display', 'none');
     			},
                 type: 1,
@@ -126,7 +126,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
                     layer.close(index);
                 },
                 cancel: function() {
-    				//右上角关闭的回调
+    				// 右上角关闭的回调
             		$('#cover').css('display', 'none');
     			}
             });
@@ -134,7 +134,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
         nodes: getNodes()
     });
     // 弹框：门店详细信息
-    var flag=0; //判断是否第一次提交或确定
+    var flag=0; // 判断是否第一次提交或确定
     function store(pid,temp) {
         layer.open({
             type: 1,
@@ -219,7 +219,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
             	}
             },
             cancel: function() {
-				//右上角关闭的回调
+				// 右上角关闭的回调
         		$('#cover').css('display', 'none');
 			},
             end: function(){
@@ -257,7 +257,7 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
 		return storeInfoDto;
     }
     
-    //编辑用户
+    // 编辑用户
     function editStore(index){
     	var storeInfoDto =getStoreInfo();
     	var storeId = $("#storeId").val();
@@ -321,13 +321,13 @@ layui.use(['layer', 'tree', 'form', 'laypage'], function() {
     		title: false, // 标题
     		shade: 0,
     		id:'pic',
-    		skin: 'layui-layer-nobg', //没有背景色
+    		skin: 'layui-layer-nobg', // 没有背景色
     		content: $('#storeImage'),
     		success: function(layero, index) {
     		$(layero).find('.layui-layer-content').css('max-height', '500px').css('max-width', '700px');
     		},
     		cancel: function() {
-				//右上角关闭的回调
+				// 右上角关闭的回调
         		$('#cover').css('display', 'none');
 			}
     		});
@@ -523,9 +523,12 @@ $("body").on('click','.sea',function(){
 
 
 /**
- * 初始化分页 
- * @param totalCount 总页数
- * @param pageIndex  页面索引
+ * 初始化分页
+ * 
+ * @param totalCount
+ *            总页数
+ * @param pageIndex
+ *            页面索引
  * @returns
  */
 function initPage(totalCount,pageIndex){
@@ -567,7 +570,7 @@ function getNodes(){
 function getlocation(adder,obj){
 	AMap.plugin('AMap.Geocoder',function() {
 		var geocoder = new AMap.Geocoder({
-			city: "全国", //城市，默认：“全国”
+			city: "全国", // 城市，默认：“全国”
 			radius:500
 		});
 		

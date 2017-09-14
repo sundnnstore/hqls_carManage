@@ -299,12 +299,14 @@ public class ServiceOrderService {
 				financeFlow.setChargeType(1);
 				financeFlow.setOperPerson("服务增项金额");
 				financeFlow.setOrderNo(orders.get(0).getExtraOrderNo());
+				financeFlow.setFlowStatus(1);
+				financeFlow.setPayType(1);
 				financeFlow.setIsDelete(0);
 				financeFlowMapper.insert(financeFlow);
 				// 推送信息给b端门店
 				HqlsUser user = userMapper.getUserByStoreId(order.getStoreId());
 				if (user != null) {
-					PushAction pa = new PushAction("ServiceOrder", 0, false, "");
+					PushAction pa = new PushAction("extraOrder", 0, false, "");
 					List<PushAction> action = new ArrayList<>();
 					action.add(pa);
 					String text = "您收到一笔金额为("+orders.get(0).getOrderAmount()+")的服务款";
