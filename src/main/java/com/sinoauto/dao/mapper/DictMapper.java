@@ -19,4 +19,12 @@ public interface DictMapper {
 	
 	@Select("select * from hqls_dict where dict_key = #{1}")
 	public List<HqlsDict> findDictByKey(String dictKey);
+	
+	/**
+	 * 获取物流费用
+	 * @param dictKey = "other_fee"
+	 * @return
+	 */
+	@Select("select dict_value from hqls_dict where dict_key = #{1}")
+	public String getOtherFee(String dictKey);
 }

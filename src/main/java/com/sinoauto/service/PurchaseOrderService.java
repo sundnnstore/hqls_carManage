@@ -148,40 +148,6 @@ public class PurchaseOrderService {
 	}
 	
 	/**
-	 * 生成结算订单
-	 * @param orderParamDto
-	 */
-	public Integer generatorPurchaseOrder(SettlementOperationParamDto orderParamDto) {
-		// 获取商品列表
-		List<ShopCartParamDto> parts = orderParamDto.getPartsList();
-		// 生成订单
-		HqlsPurchaseOrder order = new HqlsPurchaseOrder();
-		order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
-		Double totalAmount = totalAmount(orderParamDto.getPartsList());
-		BigDecimal result = new BigDecimal(0.00);
-		Double discount = result.subtract(new BigDecimal(totalAmount)).setScale(2, RoundingMode.HALF_UP).doubleValue();
-		order.setDiscountFee(discount);
-		order.setOrderStatus(1);
-		order.setShipAddressId(orderParamDto.getAddressId());
-		order.setStoreId(orderParamDto.getStoreId());
-		order.setOtherFee(orderParamDto.getOtherFee());
-		order.setTotalFee(result.setScale(2, RoundingMode.HALF_UP).doubleValue());
-		purchaseOrderMapper.insert(order);
-		
-		// 生成订单详情表
-		for (ShopCartParamDto partDesc: parts) {
-			HqlsOrderDetail detail = new HqlsOrderDetail();
-			detail.setBuyCount(partDesc.getNum());
-			detail.setBuyPrice(partsMapper.getCurPriceById(partDesc.getPartsId()));
-			detail.setPartsId(partDesc.getPartsId());
-			detail.setDiscountPrice(0.00);
-			detail.setPurchaseOrderId(order.getPurchaseOrderId());
-			orderDetailMapper.insert(detail);
-		}
-		return order.getPurchaseOrderId();
-	}
-	
-	/**
 	 * 进入结算页
 	 * @return
 	 */
@@ -207,7 +173,10 @@ public class PurchaseOrderService {
 			ShopCartInfoDto order = new ShopCartInfoDto();
 			order.setAddress(address);
 			order.setPartsDesList(partsList);
-			order.setTotalAmount(calculationAmount(partsList));
+			Double total = calculationAmount(partsList);
+//			Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+			Double otherFee = 0.00;
+			order.setTotalAmount(new BigDecimal(total).add(new BigDecimal(otherFee)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 			// 获取门店余额
 			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(orderParamDto.getStoreId());
 			order.setBalance(finance.getBalance());
@@ -271,11 +240,58 @@ public class PurchaseOrderService {
 		//计算总费用
 		ShopCartInfoDto order = purchaseOrderMapper.getOrderByOrderId(orderId);
 		BigDecimal totalFee = new BigDecimal(calculationAmount(order.getPartsDesList()));
-		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
+		// 加上运输费用
+//		totalFee = totalFee.add(new BigDecimal(order.getOtherFee()));
 		order.setTotalAmount(totalFee.setScale(2, RoundingMode.HALF_UP).doubleValue());
 		order.setIsEnough(order.getBalance() > order.getTotalAmount());
 		
 		return RestModel.success(order);
+	}
+	
+	/**
+	 * 生成结算订单
+	 * @param orderParamDto
+	 */
+	@Transactional
+	public ResponseEntity<RestModel<Integer>> generatorPurchaseOrder(SettlementOperationParamDto orderParamDto) {
+		try {
+			return RestModel.success(getOrderByCondition(orderParamDto));
+		} catch (NumberFormatException e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION, "生成订单异常");
+	}
+	
+	public Integer getOrderByCondition(SettlementOperationParamDto orderParamDto) {
+		// 获取商品列表
+		List<ShopCartParamDto> parts = orderParamDto.getPartsList();
+		// 生成订单
+		HqlsPurchaseOrder order = new HqlsPurchaseOrder();
+		order.setOrderNo("HQ" + orderParamDto.getStoreId() + System.currentTimeMillis());
+		Double totalAmount = totalAmount(orderParamDto.getPartsList());
+		//设置优惠价默认0
+		order.setDiscountFee(0.00);
+		order.setOrderStatus(1);
+		order.setShipAddressId(orderParamDto.getAddressId());
+		order.setStoreId(orderParamDto.getStoreId());
+//		Double otherFee = Double.valueOf(dictMapper.getOtherFee("other_fee"));
+		Double otherFee = 0.00;
+		order.setOtherFee(otherFee);
+		order.setTotalFee(new BigDecimal(totalAmount).add(new BigDecimal(otherFee)).setScale(2, RoundingMode.HALF_UP).doubleValue());
+		purchaseOrderMapper.insert(order);
+		
+		// 生成订单详情表
+		for (ShopCartParamDto partDesc: parts) {
+			HqlsOrderDetail detail = new HqlsOrderDetail();
+			detail.setBuyCount(partDesc.getNum());
+			detail.setBuyPrice(partsMapper.getCurPriceById(partDesc.getPartsId()));
+			detail.setPartsId(partDesc.getPartsId());
+			detail.setDiscountPrice(0.00);
+			detail.setPurchaseOrderId(order.getPurchaseOrderId());
+			orderDetailMapper.insert(detail);
+		}
+		return order.getPurchaseOrderId();
 	}
 	
 	@Transactional
@@ -290,20 +306,18 @@ public class PurchaseOrderService {
 		if (user == null) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA, "用户不存在");
 		}
-		
+				
 		try {
-			// 生成待支付订单
-			Integer orderId = param.getOrderId() == null ? generatorPurchaseOrder(param) : param.getOrderId();
+			Integer orderId = param.getOrderId() == null ? getOrderByCondition(param) : param.getOrderId();
 			HqlsPurchaseOrder order = purchaseOrderMapper.getOrderById(orderId);
-			// 待支付商品总价
-			Double totalAmount = totalAmount(param.getPartsList());
+			List<PartsDesListDto> partsDes = partsMapper.findPartsListByOrderId(orderId);
+			Double totalAmount = calculationAmount(partsDes);
 			/*
 			 *  余额支付方式
 			 */
 			if (param.getPayType() == 0) {
 				// 从财务余额中扣掉支付金额
-				HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(param.getStoreId());
-//				Double[] returnMoney = calculationBalance(finance, param.getPayMoney());
+				HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(order.getStoreId());
 				BigDecimal balance = new BigDecimal(finance.getBalance()).subtract(new BigDecimal(totalAmount));
 				balance.setScale(2, RoundingMode.HALF_UP);
 				if (balance.doubleValue() < 0) {
@@ -313,9 +327,11 @@ public class PurchaseOrderService {
 				storeFinanceMapper.updateBalance(finance);
 				
 				// 修改订单
-				order.setOrderStatus(2);
+				Double originPrice = order.getTotalFee();
 				order.setPayFee(totalAmount);
-				order.setPayType(param.getPayType());
+				order.setOrderStatus(2);
+				order.setTotalFee(new BigDecimal(totalAmount).add(new BigDecimal(order.getOtherFee())).setScale(2, RoundingMode.HALF_UP).doubleValue());
+				order.setDiscountFee(new BigDecimal(order.getTotalFee()).subtract(new BigDecimal(originPrice)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 				purchaseOrderMapper.payOperation(order);
 				
 				// 添加财务流水
@@ -326,7 +342,7 @@ public class PurchaseOrderService {
 				flow.setIsDelete(0);
 				flow.setOperPerson(user.getUserName());
 				flow.setOrderNo(order.getOrderNo());
-				flow.setStoreId(param.getStoreId());
+				flow.setStoreId(order.getStoreId());
 				flow.setFlowStatus(1);
 				financeFlowMapper.insert(flow);
 				return RestModel.success();
