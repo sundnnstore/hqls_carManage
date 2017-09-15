@@ -4,6 +4,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	var selectItem;
 	/**
 	 * 商品分类具体操作
+	 * 
 	 * @param item
 	 * @param operFlag
 	 * @returns
@@ -48,7 +49,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				$('#categoriesInfoEdit').css("display", "none");
 				$('#categoriesDelete').css("display", "none");
 				$('#partsTypeName').val("");
-//				inputReset(); // 清空表单
+// inputReset(); // 清空表单
 			}
 		});
 	}
@@ -56,6 +57,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	
 	/**
 	 * 弹框
+	 * 
 	 * @param obj
 	 * @returns
 	 */
@@ -67,8 +69,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		item.level=$(this).parent().parent().find(".level").val();
 		$("button").attr("disabled",true);
 		$("#categoriesName").text(item.name);
-		
-		if(item.level==0){
+		if(item.level==1){
 			layer.open({ 
 				type : 1,
 				title : '提示',
@@ -76,93 +77,125 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				shade : 0,
 				area : [ '300px', '260px' ], 
 				content : $('#categoriesLocate'),
-				btn : [ '添加子节点', '修改'],
+				btn : [ '添加同级节点', '修改','删除'],
 				btnAlign : 'c', 
 				yes : function(index, layero) { 
 					title = '添加';
 					appendimg();
-					categoriesEditCommon(item, 1);
+					categoriesEditCommon(item, 2);
+					return false;
 				},
 				btn2 : function(index, layero) { // 修改
 					title = '编辑';
-					//清空
+					// 清空
 					$("#commodityImgUrl").attr("src","");
 					
 					// 修改前的显示
 					viewPartType(item);
 					// 修改
 					categoriesEditCommon(item, 3);
+					return false;
+				},
+				btn3 : function(index, layero) { // 选中删除的回调
+					var temp = 'del';
+					/*
+					 * 删除操作。。。
+					 * 
+					 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
+					 */
+					layer.open({
+						type : 1,
+						title : temp == 'del' ? '删除' : '提示',
+						skin : 'layui-layer-lan', // 弹框主题
+						shade : 0,
+						area : '400px', // 宽高
+						content : temp === 'del' ? $('#categoriesDelete')
+								: $('#categoriesNotDel'),
+						btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
+						btnAlign : 'c', // 按钮居中
+						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+							check(item, index);
+						},
+						btn2 : function(index, layero) {
+							layer.close(index);
+						},
+						end : function() {
+							$('#categoriesDelete').css("display", "none");
+							$('#categoriesNotDel').css("display", "none");
+						}
+					});
+					return false;
 				},
 				end : function() {
 					$("button").attr("disabled",false);
 					$('#categoriesLocate').css("display","none");
 				}
 			});
+		}else{
+			layer.open({
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', // 弹框主题
+				shade : 0,
+				area : [ '300px', '260px' ], // 宽高
+				content : $('#categoriesLocate'),
+				btn : [ '添加子节点', '添加同级节点', '修改', '删除' ],
+				btnAlign : 'c', // 按钮居中
+				yes : function(index, layero) { // 添加子节点
+					title = '添加';
+					appendimg();
+					categoriesEditCommon(item, 1);
+				},
+				btn2 : function(index, layero) { // 添加同级节点
+					title = '添加';
+					appendimg();
+					categoriesEditCommon(item, 2);
+					return false;
+				},
+				btn3 : function(index, layero) { // 修改
+					title = '编辑';
+					viewPartType(item);
+					categoriesEditCommon(item, 3);
+					return false;
+				},
+				btn4 : function(index, layero) { // 选中删除的回调
+					var temp = 'del';
+					/*
+					 * 删除操作。。。
+					 * 
+					 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
+					 */
+					layer.open({
+						type : 1,
+						title : temp == 'del' ? '删除' : '提示',
+						skin : 'layui-layer-lan', // 弹框主题
+						shade : 0,
+						area : '400px', // 宽高
+						content : temp === 'del' ? $('#categoriesDelete')
+								: $('#categoriesNotDel'),
+						btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
+						btnAlign : 'c', // 按钮居中
+						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+							check(item, index);
+						},
+						btn2 : function(index, layero) {
+							layer.close(index);
+						},
+						end : function() {
+							$('#categoriesDelete').css("display", "none");
+							$('#categoriesNotDel').css("display", "none");
+						}
+					});
+					return false;
+				},
+				end : function() {
+					$("button").attr("disabled",false);
+					$('#categoriesLocate').css("display", "none");
+				}
+			});
 		}
-		layer.open({
-			type : 1,
-			title : '提示',
-			skin : 'layui-layer-lan', // 弹框主题
-			shade : 0,
-			area : [ '300px', '260px' ], // 宽高
-			content : $('#categoriesLocate'),
-			btn : [ '添加子节点', '添加同级节点', '修改', '删除' ],
-			btnAlign : 'c', // 按钮居中
-			yes : function(index, layero) { // 添加子节点
-				title = '添加';
-				appendimg();
-				categoriesEditCommon(item, 1);
-			},
-			btn2 : function(index, layero) { // 添加同级节点
-				title = '添加';
-				appendimg();
-				categoriesEditCommon(item, 2);
-				return false;
-			},
-			btn3 : function(index, layero) { // 修改
-				title = '编辑';
-				viewPartType(item);
-				categoriesEditCommon(item, 3);
-				return false;
-			},
-			btn4 : function(index, layero) { // 选中删除的回调
-				var temp = 'del';
-				/*
-				 * 删除操作。。。
-				 * 
-				 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
-				 */
-				layer.open({
-					type : 1,
-					title : temp == 'del' ? '删除' : '提示',
-					skin : 'layui-layer-lan', // 弹框主题
-					shade : 0,
-					area : '400px', // 宽高
-					content : temp === 'del' ? $('#categoriesDelete')
-							: $('#categoriesNotDel'),
-					btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
-					btnAlign : 'c', // 按钮居中
-					yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-						check(item, index);
-					},
-					btn2 : function(index, layero) {
-						layer.close(index);
-					},
-					end : function() {
-						$('#categoriesDelete').css("display", "none");
-						$('#categoriesNotDel').css("display", "none");
-					}
-				});
-				return false;
-			},
-			end : function() {
-				$("button").attr("disabled",false);
-				$('#categoriesLocate').css("display", "none");
-			}
-		});
+		
 	 });
-	
-	
 	
 	/**
 	 * 添加子节点
@@ -191,7 +224,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-//					layer.close(index);
+					layer.close(index);
 				},
 				end : function() { // 弹出框销毁时清空表单
 					$('#categoriesAdd').css("display", "none");
@@ -221,11 +254,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("子节点添加成功");
 				$("#viewItemTree").html("");
-				//重载树
+				// 重载树
 				initZtree();
 				
-				//重新加载table
-				showTreeNodeInfo(selectItem);
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -255,7 +286,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-//					layer.close(index);
+					layer.close(index);
 				},
 				end : function() { 
 					$('#categoriesAdd').css("display", "none");
@@ -285,10 +316,10 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("添加同级节点成功");
 				$("#viewItemTree").html("");
-				//重载树
+				// 重载树
 				initZtree();
 				
-				//重新加载table
+				// 重新加载table
 				showTreeNodeInfo(selectItem);
 				
 				// 关闭弹框
@@ -338,11 +369,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("删除" + selectItem.name + "成功");
 				$("#viewItemTree").html("");
-				//重载树
+				// 重载树
 				initZtree();
 				
-				//重新加载table
-				showTreeNodeInfo(selectItem);
+				//remvoe当前行
+				
 				
 				layer.close(index);
 			},
@@ -378,7 +409,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				if (data.result.key == 1) {
 					layer.msg("存在子集不可删除");
 				} else {
-					//删除图片
+					// 删除图片
 					if(data.result.value!=null){
 						delFile(data.result.value); 
 					}
@@ -407,7 +438,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			},
 			success : function(data) {
 				$('#partsTypeName').val(item.name); // 配件类型名称
-				//$('#categoriesInfoEdit').find("input").attr("placeholder",item.name);
+				// $('#categoriesInfoEdit').find("input").attr("placeholder",item.name);
 				$('#categoriesInfoEdit select').val(data.result.partsType);
 				if(data.result.icon!=null){
 					$("#commodityImgUrl").attr("src",data.result.icon);
@@ -450,13 +481,20 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			contentType : "application/json; charset=utf-8",
 			data : data,
 			success : function(data) {
-				layer.msg("修改成功");
+				
 				$("#viewItemTree").html("");
 				initZtree();
-				//重新加载table
+
+				// 重新加载table
+				selectItem.name = typeName;
+				$("#categoriesName").html(typeName);
+				$("#partsTypeName").attr("aaa");
 				showTreeNodeInfo(selectItem);
+
+				
+				layer.msg("修改成功");
 				layer.close(index);
-			},
+ 			},
 			error : function(data) {
 				layer.msg("修改失败");
 			}
@@ -466,6 +504,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	
 	/**
 	 * zTree input
+	 * 
 	 * @param obj
 	 * @returns
 	 */
@@ -493,12 +532,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	}
 
 	var zNodes = zNodes();
-	zNodes.unshift({
-		id : 0,
-		pId : -1,
-		name : "全部",
-		open : true
-	});
 
 	// 配件树初始化
 	$(document).ready(function() {
@@ -513,7 +546,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		showTreeNodeInfo(selectItem);
 	}
 	
-	//显示在table
+	// 显示在table
 	function showTreeNodeInfo(treeNode){
 		var parent = treeNode.getParentNode();
 		var pname = "无";
@@ -605,7 +638,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		}
 	};
 	
-	//初始化树
+	// 初始化树
 	function initZtree(){
 		$.ajax({
 			url : "/findpartstype",
@@ -613,12 +646,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			async : false,
 			success : function(data) {
 				node = data;
-				node.unshift({
-					id : 0,
-					pId : -1,
-					name : "全部",
-					open : true
-				});
 				$.fn.zTree.init($("#cTree"), setting, node);
 			},
 			error : function(data) {
@@ -630,7 +657,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 });
 
 
-//配件树展示与收缩
+// 配件树展示与收缩
 function showMenu(obj) {
 	$("#modelContent").css({
 		left : "110px",
@@ -640,15 +667,17 @@ function showMenu(obj) {
 
 /**
  * 图片上传
- * @param obj 图片对象
+ * 
+ * @param obj
+ *            图片对象
  * @returns
  */
 function change(obj) {
 	 var form = $("#form");
 	 var imgUrl = uploadImg(form, obj);
-	 if (imgUrl != "") { //如果上传文件成功
+	 if (imgUrl != "") { // 如果上传文件成功
 	        $(obj).parent().parent().find("img").attr("src", imgUrl);
-	        //禁用上传按钮
+	        // 禁用上传按钮
 	        $(obj).attr("disabled", true);
 	 }
 
@@ -656,7 +685,9 @@ function change(obj) {
 
 /**
  * 删除图片
- * @param obj 删除按钮
+ * 
+ * @param obj
+ *            删除按钮
  * @returns
  */
 function delImg(obj) {

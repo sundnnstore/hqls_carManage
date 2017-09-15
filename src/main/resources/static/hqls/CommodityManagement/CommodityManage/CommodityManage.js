@@ -792,17 +792,12 @@ function delImg(obj) {
 }
 //在配件树中选中配件后写入input中
 function beforeClick(treeId, treeNode) {
-	var treeObj = $.fn.zTree.getZTreeObj(treeNode);
-	console.log(treeObj);
-	treeObj.expandAll(true);
-//    var check = (treeNode && !treeNode.isParent);
-//    if (!check) {
-//    	console.log(treeNode);
-//    	//展开子类
-//    	treeNode.expandAll(true);
-//        layer.msg("存在子类不可选！");
-//    }
-//    return check;
+    var check = (treeNode && !treeNode.isParent);
+    if (!check) {
+    	console.log(treeNode);
+        layer.msg("存在子类不可选！");
+    }
+    return check;
 }
 
 /**
