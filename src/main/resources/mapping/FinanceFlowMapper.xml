@@ -92,6 +92,9 @@
 		<if test="customerName != null and customerName != ''">
 			AND u.user_name LIKE CONCAT('%', #{customerName}, '%')
 		</if>
+		<if test="operPerson != null and operPerson != ''">
+			AND f.oper_person LIKE CONCAT('%', #{operPerson}, '%')
+		</if>
 		<if test="mobile != null and mobile != ''">
 			AND u.mobile LIKE CONCAT('%', #{mobile}, '%')
 		</if>

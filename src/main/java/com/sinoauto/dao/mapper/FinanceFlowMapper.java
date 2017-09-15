@@ -15,8 +15,9 @@ public interface FinanceFlowMapper {
 	public int insert(HqlsFinanceFlow financeFlow);
 
 	public Page<RechargeDto> findFlowListByContidion(@Param("changeType") Integer changeType, @Param("storeId") Integer storeId,
-			@Param("customerName") String customerName, @Param("mobile") String mobile, @Param("createTime") String createTime,
-			@Param("flowStatus") Integer flowStatus, @Param("checkStatus") Integer checkStatus, @Param("payType") Integer payType);
+			@Param("customerName") String customerName, @Param("operPerson") String operPerson, @Param("mobile") String mobile,
+			@Param("createTime") String createTime, @Param("flowStatus") Integer flowStatus, @Param("checkStatus") Integer checkStatus,
+			@Param("payType") Integer payType);
 
 	public Page<HqlsFinanceFlow> findFlowList(@Param("storeId") Integer storeId);
 
