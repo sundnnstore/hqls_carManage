@@ -1,172 +1,19 @@
+
 layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	var layer = layui.layer, $ = layui.jquery, title;
-
-	// 弹框：以何种方式添加商品分类及删除提示
-	function categoriesEdit(item) {
-		$('#categoriesName').text(item.name); // 提示当前选中分类
-		// 如果不是第一级菜单，将配件类型下拉隐藏
-		if (item.level == 0) { // 如果不是一级菜单,将下拉隐藏
-			// //
+	var selectItem;
+	/**
+	 * 商品分类具体操作
+	 * @param item
+	 * @param operFlag
+	 * @returns
+	 */
+	function categoriesEditCommon(item, operFlag) {
+		if(item.level==0&&operFlag==1){
 			$("#partsType-div").show();
-			layer.open({ // 弹框询问门店添加位置
-				type : 1,
-				title : '提示',
-				skin : 'layui-layer-lan', // 弹框主题
-				shade : 0,
-				area : [ '300px', '260px' ], // 宽高
-				content : $('#categoriesLocate'),
-				btn : [ '添加子节点', '修改' ],
-				btnAlign : 'c', // 按钮居中
-				yes : function(index, layero) { // 添加子节点
-					title = '添加子节点';
-					categoriesEditCommon(item, 1);
-					layer.close(index);
-				},
-				btn3 : function(index, layero) { // 修改
-					title = '编辑';
-					// 修改前的显示
-					viewPartType(item);
-					// 展示树形结构数据
-					categoriesEditCommon(item, 3);
-				},
-				end : function() {
-					$('#categoriesLocate').css("display", "none");
-				}
-			});
-
-		} else if(item.level==1){
-			$("#partsType-div").hide();
-			layer.open({ // 弹框询问门店添加位置
-				type : 1,
-				title : '提示',
-				skin : 'layui-layer-lan', // 弹框主题
-				shade : 0,
-				area : [ '300px', '260px' ], // 宽高
-				content : $('#categoriesLocate'),
-				btn : [ '添加子节点', '添加同级节点', '修改', '删除' ],
-				btnAlign : 'c', // 按钮居中
-				yes : function(index, layero) { // 添加子节点
-					title = '添加';
-					categoriesEditCommon(item, 1);
-					layer.close(index);
-				},
-				btn2 : function(index, layero) { // 添加同级节点
-					title = '添加';
-					layer.close(index);
-					categoriesEditCommon(item, 2);
-				},
-				btn3 : function(index, layero) { // 修改
-					title = '编辑';
-					// 修改前的显示
-					viewPartType(item);
-					$("#partsType-div").show();
-					// 展示树形结构数据
-					categoriesEditCommon(item, 3);
-				},
-				btn4 : function(index, layero) { // 选中删除的回调
-					layer.close(index);
-					var temp = 'del';
-					/*
-					 * 删除操作。。。
-					 * 
-					 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
-					 */
-					layer.open({
-						type : 1,
-						title : temp == 'del' ? '删除' : '提示',
-						skin : 'layui-layer-lan', // 弹框主题
-						shade : 0,
-						area : '400px', // 宽高
-						content : temp === 'del' ? $('#categoriesDelete')
-								: $('#categoriesNotDel'),
-						btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
-						btnAlign : 'c', // 按钮居中
-						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-							// console.log(layero);
-							check(item, index);
-						},
-						btn2 : function(index, layero) {
-							// console.log(index);
-							layer.close(index);
-						},
-						end : function() {
-							$('#categoriesLocate').css("display", "none");
-						}
-					});
-				},
-				end : function() {
-					$('#categoriesLocate').css("display", "none");
-				}
-			});
-			
 		}else{
 			$("#partsType-div").hide();
 		}
-		
-		layer.open({ // 弹框询问门店添加位置
-			type : 1,
-			title : '提示',
-			skin : 'layui-layer-lan', // 弹框主题
-			shade : 0,
-			area : [ '300px', '260px' ], // 宽高
-			content : $('#categoriesLocate'),
-			btn : [ '添加子节点', '添加同级节点', '修改', '删除' ],
-			btnAlign : 'c', // 按钮居中
-			yes : function(index, layero) { // 添加子节点
-				title = '添加';
-				categoriesEditCommon(item, 1);
-				layer.close(index);
-			},
-			btn2 : function(index, layero) { // 添加同级节点
-				title = '添加';
-				layer.close(index);
-				categoriesEditCommon(item, 2);
-			},
-			btn3 : function(index, layero) { // 修改
-				title = '编辑';
-				// 修改前的显示
-				viewPartType(item);
-				// 展示树形结构数据
-				categoriesEditCommon(item, 3);
-			},
-			btn4 : function(index, layero) { // 选中删除的回调
-				layer.close(index);
-				var temp = 'del';
-				/*
-				 * 删除操作。。。
-				 * 
-				 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
-				 */
-				layer.open({
-					type : 1,
-					title : temp == 'del' ? '删除' : '提示',
-					skin : 'layui-layer-lan', // 弹框主题
-					shade : 0,
-					area : '400px', // 宽高
-					content : temp === 'del' ? $('#categoriesDelete')
-							: $('#categoriesNotDel'),
-					btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
-					btnAlign : 'c', // 按钮居中
-					yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-						// console.log(layero);
-						check(item, index);
-					},
-					btn2 : function(index, layero) {
-						// console.log(index);
-						layer.close(index);
-					},
-					end : function() {
-						$('#categoriesLocate').css("display", "none");
-					}
-				});
-			},
-			end : function() {
-				$('#categoriesLocate').css("display", "none");
-			}
-		});
-	}
-	// 商品分类详细信息
-	function categoriesEditCommon(item, operFlag) {
 		layer.open({
 			type : 1,
 			title : title,
@@ -176,8 +23,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			content : $('#categoriesInfoEdit'),
 			btn : [ '提交', '取消' ],
 			yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-				// layer.close(index);
-				// //如果设定了yes回调，需进行手工关闭
 				/**
 				 * 1.添加子节点 2. 添加同级节点 3.修改 4.删除
 				 */
@@ -199,24 +44,126 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				}
 			},
 			end : function() { // 弹出框销毁时清空表单
+				$("button").attr("disabled",false);
 				$('#categoriesInfoEdit').css("display", "none");
 				$('#categoriesDelete').css("display", "none");
-				inputReset(); // 清空表单
+				$('#partsTypeName').val("");
+//				inputReset(); // 清空表单
 			}
 		});
 	}
-	// 重置表单输入框
-	function inputReset() {
-		$('#categoriesInfoEdit>form')[0].reset();
-		$('#categoriesInfoEdit input').removeAttr('disabled');
-	}
-
+	
+	
 	/**
-	 * 节点树
+	 * 弹框
+	 * @param obj
+	 * @returns
 	 */
-	// loadAddNodes(0, 3);
-	loadNodeTree();
-
+	$('.parts_type').on('click', 'button', function() {
+		var item ={};
+		item.id = $(this).parent().parent().find(".childId").val();
+		item.parentId =$(this).parent().parent().find(".parentId").val();
+		item.name=$(this).parent().parent().find(":first").text();
+		item.level=$(this).parent().parent().find(".level").val();
+		$("button").attr("disabled",true);
+		$("#categoriesName").text(item.name);
+		
+		if(item.level==0){
+			layer.open({ 
+				type : 1,
+				title : '提示',
+				skin : 'layui-layer-lan', 
+				shade : 0,
+				area : [ '300px', '260px' ], 
+				content : $('#categoriesLocate'),
+				btn : [ '添加子节点', '修改'],
+				btnAlign : 'c', 
+				yes : function(index, layero) { 
+					title = '添加';
+					appendimg();
+					categoriesEditCommon(item, 1);
+				},
+				btn2 : function(index, layero) { // 修改
+					title = '编辑';
+					//清空
+					$("#commodityImgUrl").attr("src","");
+					
+					// 修改前的显示
+					viewPartType(item);
+					// 修改
+					categoriesEditCommon(item, 3);
+				},
+				end : function() {
+					$("button").attr("disabled",false);
+					$('#categoriesLocate').css("display","none");
+				}
+			});
+		}
+		layer.open({
+			type : 1,
+			title : '提示',
+			skin : 'layui-layer-lan', // 弹框主题
+			shade : 0,
+			area : [ '300px', '260px' ], // 宽高
+			content : $('#categoriesLocate'),
+			btn : [ '添加子节点', '添加同级节点', '修改', '删除' ],
+			btnAlign : 'c', // 按钮居中
+			yes : function(index, layero) { // 添加子节点
+				title = '添加';
+				appendimg();
+				categoriesEditCommon(item, 1);
+			},
+			btn2 : function(index, layero) { // 添加同级节点
+				title = '添加';
+				appendimg();
+				categoriesEditCommon(item, 2);
+				return false;
+			},
+			btn3 : function(index, layero) { // 修改
+				title = '编辑';
+				viewPartType(item);
+				categoriesEditCommon(item, 3);
+				return false;
+			},
+			btn4 : function(index, layero) { // 选中删除的回调
+				var temp = 'del';
+				/*
+				 * 删除操作。。。
+				 * 
+				 * 是否可以删除？ 是 temp='del'，为测试效果默认可以删除 否 temp=''
+				 */
+				layer.open({
+					type : 1,
+					title : temp == 'del' ? '删除' : '提示',
+					skin : 'layui-layer-lan', // 弹框主题
+					shade : 0,
+					area : '400px', // 宽高
+					content : temp === 'del' ? $('#categoriesDelete')
+							: $('#categoriesNotDel'),
+					btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
+					btnAlign : 'c', // 按钮居中
+					yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
+						check(item, index);
+					},
+					btn2 : function(index, layero) {
+						layer.close(index);
+					},
+					end : function() {
+						$('#categoriesDelete').css("display", "none");
+						$('#categoriesNotDel').css("display", "none");
+					}
+				});
+				return false;
+			},
+			end : function() {
+				$("button").attr("disabled",false);
+				$('#categoriesLocate').css("display", "none");
+			}
+		});
+	 });
+	
+	
+	
 	/**
 	 * 添加子节点
 	 * 
@@ -244,7 +191,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-					layer.close(index);
+//					layer.close(index);
 				},
 				end : function() { // 弹出框销毁时清空表单
 					$('#categoriesAdd').css("display", "none");
@@ -253,11 +200,16 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -269,9 +221,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("子节点添加成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
-				loadNodeTree();
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -295,26 +249,31 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			layer.open({
 				type : 1,
 				title : '提示',
-				skin : 'layui-layer-lan', // 弹框主题
+				skin : 'layui-layer-lan', 
 				shade : 0,
 				area : '400px', // 宽高
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-					layer.close(index);
+//					layer.close(index);
 				},
-				end : function() { // 弹出框销毁时清空表单
+				end : function() { 
 					$('#categoriesAdd').css("display", "none");
 					inputReset(); // 清空表单
 				}
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -326,8 +285,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("添加同级节点成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
 				
 				// 关闭弹框
 				layer.close(layerIndex);
@@ -376,8 +338,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("删除" + selectItem.name + "成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
+				
 				layer.close(index);
 			},
 			error : function(data) {
@@ -409,9 +375,13 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectId
 			},
 			success : function(data) {
-				if (data.result == true) {
+				if (data.result.key == 1) {
 					layer.msg("存在子集不可删除");
 				} else {
+					//删除图片
+					if(data.result.value!=null){
+						delFile(data.result.value); 
+					}
 					del(selectItem, index);
 				}
 			},
@@ -436,11 +406,13 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				$('#categoriesInfoEdit input').val(item.name); // 配件类型名称
-				// $('#categoriesInfoEdit
-				// input').attr('disabled', 'disabled');
+				$('#partsTypeName').val(item.name); // 配件类型名称
+				//$('#categoriesInfoEdit').find("input").attr("placeholder",item.name);
 				$('#categoriesInfoEdit select').val(data.result.partsType);
-// $('#categoriesInfoEdit select').attr('disabled', 'disabled');
+				if(data.result.icon!=null){
+					$("#commodityImgUrl").attr("src",data.result.icon);
+				}
+				
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
@@ -460,10 +432,15 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			layer.msg("修改的名称不能为空");
 			return;
 		}
+		var imgSrc = $("#commodityImgUrl").attr("src");
+		if(imgSrc==undefined||imgSrc.length<0||imgSrc==""){
+			layer.msg("请上传图片");
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgSrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -475,9 +452,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("修改成功");
 				$("#viewItemTree").html("");
-				// loadAddNodes(0, 3);
-				loadNodeTree();
-				// 关闭弹框
+				initZtree();
+				//重新加载table
+				showTreeNodeInfo(selectItem);
 				layer.close(index);
 			},
 			error : function(data) {
@@ -486,8 +463,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		});
 	}
 
+	
 	/**
-	 * ztree
+	 * zTree input
+	 * @param obj
+	 * @returns
 	 */
 
 	var treeTemp;
@@ -513,23 +493,101 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	}
 
 	var zNodes = zNodes();
-
 	zNodes.unshift({
 		id : 0,
 		pId : -1,
 		name : "全部",
-		open : true,
-		iconOpen : '../../images/checkbox_0.gif',
-		iconClose : '../../images/checkbox_1.gif',
-		iconSkin : "diy03"
+		open : true
 	});
-	
-	
-	function onRemove() {
-		alert("abv");
-		location.reload();
+
+	// 配件树初始化
+	$(document).ready(function() {
+		$.fn.zTree.init($("#cTree"), setting, zNodes);
+	});
+
+	/**
+	 * ztree 绑定到input元素中
+	 */
+	function beforeClick(treeId, treeNode) {
+		selectItem = treeNode;
+		showTreeNodeInfo(selectItem);
 	}
 	
+	//显示在table
+	function showTreeNodeInfo(treeNode){
+		var parent = treeNode.getParentNode();
+		var pname = "无";
+		var pid = -1;
+		var child = treeNode.children;
+		var parentTrs = "";
+		var childTrs = "";
+		if (treeNode != undefined) {
+			if (parent != null && parent != undefined) {
+				pname = treeNode.getParentNode().name;
+				pid = treeNode.getParentNode().id;
+			}
+
+			parentTrs += '<tr>'
+				+ '<td>'
+				+ treeNode.name
+				+ '<input type="hidden" value='+treeNode.id+' class="childId"/>'
+				+ '<input type="hidden" value='+treeNode.level+' class="level"/>'
+				+ '</td>'
+				+ '<td>'
+				+ pname
+				+ '<input type="hidden" value='+pid+' class="parentId"/>'
+				+ '</td>'
+				+ '<td>'
+				+ '<button id="edit" data-method="del" class="layui-btn layui-btn-normal edit_c">操作节点</button>'
+				+ '</td></tr>';
+			$(".parts_type").html(parentTrs);
+		}
+
+		// 子类
+		if (child != null) {
+			for (var i = 0; i < child.length; i++) {
+				childTrs += '<tr>'
+						+ '<td>'
+						+ treeNode.children[i].name
+						+ '<input type="hidden" value='+treeNode.children[i].id+' class="childId"/>'
+						+ '<input type="hidden" value='+treeNode.children[i].level+' class="level"/>'
+						+ '</td>'
+						+ '<td>'
+						+ treeNode.children[i].getParentNode().name
+						+ '<input type="hidden" value='+treeNode.children[i].getParentNode().id+' class="parentId"/>'
+						+ '</td>'
+						+ '<td>'
+						+ '<button id="edit" data-method="del" class="layui-btn layui-btn-normal edit_c">操作节点</button>'
+						+ '</td></tr>';
+			}
+			$(".parts_type").append(childTrs);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param e
+	 *            当前元素
+	 * @param treeId
+	 *            id="cTree"
+	 * @param treeNode
+	 *            当前节点
+	 * @returns
+	 */
+	function onClick(e, treeId, treeNode) {
+		var display = $("#cTree li:first ul:first").css("display");
+		if(display=="block"){
+			$("#modelContent").hide();
+		}
+		$(e.target).parents('li').siblings('li').find('.curSelectedNode')
+				.removeClass('curSelectedNode');
+		// 保存id
+		selectTreeId = treeNode.id;
+		$("#cName").val(treeNode.name);
+
+		
+	}
+
 	// 配件树设置
 	var setting = {
 		view : {
@@ -542,82 +600,82 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			}
 		},
 		callback : {
-			// beforeClick : beforeClick, // 选择前的检查
-			onClick : onClick,
-			onRemove : onRemove,
-			onRename : loadNodeTree
+			beforeClick : beforeClick, // 检查
+			onClick : onClick
 		}
 	};
 	
-	function beforeClick(treeId, treeNode) {
-		var check = (treeNode && !treeNode.isParent);
-		if (!check) {
-			layer.msg("该项不可选择！");
-		}
-		return check;
-	}
-
-	/**
-	 * 
-	 * @param e
-	 *            当前元素
-	 * @param treeId
-	 *            id="cTree"
-	 * @param treeNode
-	 *            当前节点
-	 * @returns
-	 */
-	function onClick(e, treeId, treeNode) {
-		console.log("e:", e, "treeId:", treeId, "treeNode:", treeNode);
-		categoriesEdit(treeNode);
-	}
-
-	function loadNodeTree() {
-		$(function() {
-			$.fn.zTree.init($("#viewItemTree"), setting, zNodes);
-		});
-	}
-
-	/**
-	 * layui trees
-	 * 
-	 * @param level
-	 * @param flag
-	 * @returns
-	 */
-	function loadAddNodes(level, flag) {
+	//初始化树
+	function initZtree(){
 		$.ajax({
-			url : "/partstreeofadded", // 这个是新增显示的数据
+			url : "/findpartstype",
 			type : "get",
 			async : false,
-			data : {
-				"pid" : level,
-				"operflag" : 3
+			success : function(data) {
+				node = data;
+				node.unshift({
+					id : 0,
+					pId : -1,
+					name : "全部",
+					open : true
+				});
+				$.fn.zTree.init($("#cTree"), setting, node);
 			},
-			success : function(res) {
-				viewTree(res); // 显示新增数据
-			},
-			error : function(res) {
-				layer.msg('查询树形菜单失败');
+			error : function(data) {
+				layer.msg("页面查询失败");
 			}
 		});
 	}
-
-	/**
-	 * 查看树
-	 * 
-	 * @param res
-	 * @returns
-	 */
-	function viewTree(data) {
-		layui.tree({
-			elem : '#viewItemTree', // '#storeTree',//;'#categoriesTreeBox':新增,
-			// categoriesTreeView：编辑 //指定元素
-			click : function(item) { // 点击节点回调
-				categoriesEdit(item);
-			},
-			nodes : data
-		});
-	}
-
+	
 });
+
+
+//配件树展示与收缩
+function showMenu(obj) {
+	$("#modelContent").css({
+		left : "110px",
+		top : "37px"
+	}).slideToggle("fast");
+}
+
+/**
+ * 图片上传
+ * @param obj 图片对象
+ * @returns
+ */
+function change(obj) {
+	 var form = $("#form");
+	 var imgUrl = uploadImg(form, obj);
+	 if (imgUrl != "") { //如果上传文件成功
+	        $(obj).parent().parent().find("img").attr("src", imgUrl);
+	        //禁用上传按钮
+	        $(obj).attr("disabled", true);
+	 }
+
+}
+
+/**
+ * 删除图片
+ * @param obj 删除按钮
+ * @returns
+ */
+function delImg(obj) {
+    var url = $(obj).parent().find("img").attr("src");
+    delFile(url);
+    appendimg();
+    
+}
+
+function appendimg(){
+	$(".siteUpload").html("");
+	var img = `
+		<img id="commodityImgUrl" src>
+		<div class="layui-box layui-upload-button">
+			<input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
+			<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+		</div>
+		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>`;
+    $(".siteUpload").html(img);
+}
+
+

@@ -81,9 +81,7 @@
 		sto.city_name as cityName,
 		sto.county_name as countyName,
 		sto.store_level as storeLevel,
-		sto.store_class as storeClass,
-		hsf.balance,
-		count(hso.service_order_id) as orderCount
+		sto.store_class as storeClass
 		FROM
 		hqls_store sto
 		LEFT JOIN 
@@ -93,10 +91,6 @@
 		left join
 		hqls_user users
 		on users.user_id = usto.user_id
-		left join hqls_store_finance hsf
-		on sto.store_id = hsf.store_id
-		left join hqls_service_order hso
-		on sto.store_id = hso.store_id
 		WHERE
 		users.user_id=#{userId}
 		and sto.is_useable=1

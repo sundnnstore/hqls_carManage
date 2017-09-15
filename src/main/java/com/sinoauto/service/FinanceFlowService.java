@@ -17,15 +17,22 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
 import com.sinoauto.dao.bean.HqlsStoreFinance;
+import com.sinoauto.dao.bean.HqlsUser;
+import com.sinoauto.dao.mapper.ClientInfoMapper;
 import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.RebateMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
+import com.sinoauto.dao.mapper.UserMapper;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowDto;
 import com.sinoauto.dto.FlowListDto;
 import com.sinoauto.dto.RechargeDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.util.push.GeTuiUtil;
+import com.sinoauto.util.push.PushAction;
+import com.sinoauto.util.push.PushParms;
+import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class FinanceFlowService {
@@ -39,8 +46,14 @@ public class FinanceFlowService {
 	@Autowired
 	private RebateMapper rebateMapper;
 
-//	@Autowired
-//	private CashBackService cashBackService;
+	@Autowired
+	private UserMapper userMapper;
+
+	@Autowired
+	private ClientInfoMapper clientInfoMapper;
+
+	// @Autowired
+	// private CashBackService cashBackService;
 
 	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
 			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
@@ -113,7 +126,7 @@ public class FinanceFlowService {
 			flow.setOperPerson("");
 			flow.setPayType(1);// 支付宝
 			flow.setCreateTime(new Date());
-			flow.setRemark("remark");
+			flow.setRemark("线上充值");
 			flow.setDmlTime(new Date());
 			flow.setIsDelete(0);
 			return RestModel.success(financeFlowMapper.insert(flow));
@@ -265,7 +278,9 @@ public class FinanceFlowService {
 			flowDto.setPayType("微信");
 		} else if (hqlsFlow.getPayType() == 3) {
 			flowDto.setPayType("线下");
-		} else {
+		} else if(hqlsFlow.getPayType() == 0){
+			flowDto.setPayType("余额支付");
+		}else {
 			flowDto.setPayType("未知");
 		}
 
@@ -310,6 +325,21 @@ public class FinanceFlowService {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
 				this.updateBalance(flow.getChangeMoney(), flow.getTransactionNo());
 				this.updateFlowStatus(flow.getTransactionNo(), 1);
+				// 推送消息给B端
+				HqlsUser user = userMapper.getUserByStoreId(flow.getStoreId());
+				if (user != null) {
+					PushAction pa = new PushAction("finance", 0, true, "");
+					List<PushAction> action = new ArrayList<>();
+					action.add(pa);
+					String text = "您有一笔线下充值通过审核";
+					// 推送给IOSAPP端
+					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
+					PushUtil.push2IOSByAPNS(parms);
+					String title = "线下充值";
+					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
+					// 推送给安卓APP端
+					GeTuiUtil.pushToAndroid(clientIds, title, text, "finance", "线下充值");
+				}
 			}
 
 			return RestModel.success(affectRows);
@@ -320,7 +350,7 @@ public class FinanceFlowService {
 	}
 
 	public Integer updateBalance(Double changeMoney, String transactionNo) {
-		///Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
+		/// Double backMoney = this.cashBackService.calcBackMoney(changeMoney);
 		Integer storeId = this.financeFlowMapper.getStoreIdByTransactionNo(transactionNo);
 		return this.storeFinanceMapper.updateMoney(changeMoney, changeMoney, 0.0, storeId);
 	}
