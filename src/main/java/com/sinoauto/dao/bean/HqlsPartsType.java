@@ -26,6 +26,8 @@ public class HqlsPartsType implements Serializable {
 	private String pname;
 	@ApiModelProperty("配件类型（1易损件 2通用件）")
 	private Integer partsType;
+	@ApiModelProperty("类型图标")
+	private String icon;
 	
 	/**
 	 * 设置类别ID
@@ -88,6 +90,12 @@ public class HqlsPartsType implements Serializable {
 	}
 	public void setPname(String pname) {
 		this.pname = pname;
+	}
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 	
 

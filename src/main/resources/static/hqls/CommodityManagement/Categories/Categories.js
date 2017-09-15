@@ -1,7 +1,7 @@
 
 layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	var layer = layui.layer, $ = layui.jquery, title;
-	
+	var selectItem;
 	/**
 	 * 商品分类具体操作
 	 * @param item
@@ -9,13 +9,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function categoriesEditCommon(item, operFlag) {
-
-		if(item.level==1){
+		if(item.level==0&&operFlag==1){
 			$("#partsType-div").show();
 		}else{
 			$("#partsType-div").hide();
 		}
-		
 		layer.open({
 			type : 1,
 			title : title,
@@ -25,8 +23,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			content : $('#categoriesInfoEdit'),
 			btn : [ '提交', '取消' ],
 			yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-				// layer.close(index);
-				// //如果设定了yes回调，需进行手工关闭
 				/**
 				 * 1.添加子节点 2. 添加同级节点 3.修改 4.删除
 				 */
@@ -51,7 +47,8 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				$("button").attr("disabled",false);
 				$('#categoriesInfoEdit').css("display", "none");
 				$('#categoriesDelete').css("display", "none");
-				inputReset(); // 清空表单
+				$('#partsTypeName').val("");
+//				inputReset(); // 清空表单
 			}
 		});
 	}
@@ -72,34 +69,34 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		$("#categoriesName").text(item.name);
 		
 		if(item.level==0){
-			layer.open({ // 弹框询问门店添加位置
+			layer.open({ 
 				type : 1,
 				title : '提示',
-				skin : 'layui-layer-lan', // 弹框主题
+				skin : 'layui-layer-lan', 
 				shade : 0,
-				area : [ '300px', '260px' ], // 宽高
+				area : [ '300px', '260px' ], 
 				content : $('#categoriesLocate'),
 				btn : [ '添加子节点', '修改'],
-				btnAlign : 'c', // 按钮居中
-				yes : function(index, layero) { // 添加子节点
+				btnAlign : 'c', 
+				yes : function(index, layero) { 
 					title = '添加';
+					appendimg();
 					categoriesEditCommon(item, 1);
-					layer.close(index);
 				},
-				btn3 : function(index, layero) { // 修改
+				btn2 : function(index, layero) { // 修改
 					title = '编辑';
 					// 修改前的显示
 					viewPartType(item);
-					$("#partsType-div").show();
 					// 修改
 					categoriesEditCommon(item, 3);
 				},
 				end : function() {
 					$("button").attr("disabled",false);
+					$('#categoriesLocate').css("display","none");
 				}
 			});
 		}
-		layer.open({ // 弹框询问门店添加位置
+		layer.open({
 			type : 1,
 			title : '提示',
 			skin : 'layui-layer-lan', // 弹框主题
@@ -110,24 +107,22 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			btnAlign : 'c', // 按钮居中
 			yes : function(index, layero) { // 添加子节点
 				title = '添加';
+				appendimg();
 				categoriesEditCommon(item, 1);
-				layer.close(index);
 			},
 			btn2 : function(index, layero) { // 添加同级节点
 				title = '添加';
-				layer.close(index);
+				appendimg();
 				categoriesEditCommon(item, 2);
+				return false;
 			},
 			btn3 : function(index, layero) { // 修改
 				title = '编辑';
-				// 修改前的显示
 				viewPartType(item);
-				$("#partsType-div").show();
-				// 修改
 				categoriesEditCommon(item, 3);
+				return false;
 			},
 			btn4 : function(index, layero) { // 选中删除的回调
-				layer.close(index);
 				var temp = 'del';
 				/*
 				 * 删除操作。。。
@@ -145,17 +140,17 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 					btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
 					btnAlign : 'c', // 按钮居中
 					yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-						// console.log(layero);
 						check(item, index);
 					},
 					btn2 : function(index, layero) {
-						// console.log(index);
 						layer.close(index);
 					},
 					end : function() {
-						$('#categoriesLocate').css("display", "none");
+						$('#categoriesDelete').css("display", "none");
+						$('#categoriesNotDel').css("display", "none");
 					}
 				});
+				return false;
 			},
 			end : function() {
 				$("button").attr("disabled",false);
@@ -193,7 +188,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-					layer.close(index);
+//					layer.close(index);
 				},
 				end : function() { // 弹出框销毁时清空表单
 					$('#categoriesAdd').css("display", "none");
@@ -202,11 +197,16 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -218,9 +218,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("子节点添加成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
-				loadNodeTree();
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -236,6 +238,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function addSameLevelNode(selectNodeId, typeName, layerIndex) {
+		
+		if(true){
+			alert($("#commodityImgUrl").attr("src"));
+			return ;
+		}
 		/**
 		 * 检查新增的名称
 		 */
@@ -244,26 +251,31 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			layer.open({
 				type : 1,
 				title : '提示',
-				skin : 'layui-layer-lan', // 弹框主题
+				skin : 'layui-layer-lan', 
 				shade : 0,
 				area : '400px', // 宽高
 				content : $('#categoriesAdd'),
 				btn : '确定',
 				yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-					layer.close(index);
+//					layer.close(index);
 				},
-				end : function() { // 弹出框销毁时清空表单
+				end : function() { 
 					$('#categoriesAdd').css("display", "none");
 					inputReset(); // 清空表单
 				}
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -275,9 +287,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("添加同级节点成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
-
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
+				
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -325,8 +340,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("删除" + selectItem.name + "成功");
 				$("#viewItemTree").html("");
-				// 页面刷新
-				location.reload();
+				//重载树
+				initZtree();
+				
+				//重新加载table
+				showTreeNodeInfo(selectItem);
+				
 				layer.close(index);
 			},
 			error : function(data) {
@@ -358,9 +377,13 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectId
 			},
 			success : function(data) {
-				if (data.result == true) {
+				if (data.result.key == 1) {
 					layer.msg("存在子集不可删除");
 				} else {
+					//删除图片
+					if(data.result.value!=null){
+						delFile(data.result.value); 
+					}
 					del(selectItem, index);
 				}
 			},
@@ -376,6 +399,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function viewPartType(item) {
+		alert("编辑查看");
 		var selectNodeId = item.id;
 		$.ajax({
 			url : "/findparttypeobj",
@@ -385,8 +409,14 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				$('#categoriesInfoEdit input').val(item.name); // 配件类型名称
+				//$('#categoriesInfoEdit').find("input").val(item.name); // 配件类型名称
 				$('#categoriesInfoEdit select').val(data.result.partsType);
+				if(data.result.icon!=null){
+					console.log(1);
+					$("#commodityImgUrl").attr("src",data.result.icon);
+				}
+				alert(data.result.icon);
+				
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
@@ -406,10 +436,15 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			layer.msg("修改的名称不能为空");
 			return;
 		}
+		var imgSrc = $("#commodityImgUrl").attr("src");
+		if(imgSrc==undefined||imgSrc.length<0){
+			layer.msg("图片修改出现错误");
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgSrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -421,9 +456,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			success : function(data) {
 				layer.msg("修改成功");
 				$("#viewItemTree").html("");
-				// loadAddNodes(0, 3);
-				loadNodeTree();
-				// 关闭弹框
+				initZtree();
+				//重新加载table
+				showTreeNodeInfo(selectItem);
 				layer.close(index);
 			},
 			error : function(data) {
@@ -478,6 +513,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * ztree 绑定到input元素中
 	 */
 	function beforeClick(treeId, treeNode) {
+		selectItem = treeNode;
+		showTreeNodeInfo(selectItem);
+	}
+	
+	//显示在table
+	function showTreeNodeInfo(treeNode){
 		var parent = treeNode.getParentNode();
 		var pname = "无";
 		var pid = -1;
@@ -501,10 +542,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				+ '<input type="hidden" value='+pid+' class="parentId"/>'
 				+ '</td>'
 				+ '<td>'
-//					+ '<button id="view" data-method="addChild" class="layui-btn view_c" >添加子集</button>'
-//					+ '<button id="edit" data-method="addSame" class="layui-btn layui-btn-normal edit_c">添加同级</button>'
-//					+ '<button id="edit" data-method="update" class="layui-btn layui-btn-normal edit_c">修改</button>'
-//					+ '<button id="edit" data-method="del" class="layui-btn layui-btn-normal edit_c">删除</button>'
 				+ '<button id="edit" data-method="del" class="layui-btn layui-btn-normal edit_c">操作节点</button>'
 				+ '</td></tr>';
 			$(".parts_type").html(parentTrs);
@@ -530,7 +567,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			$(".parts_type").append(childTrs);
 		}
 	}
-
+	
 	/**
 	 * 
 	 * @param e
@@ -572,6 +609,27 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 		}
 	};
 	
+	//初始化树
+	function initZtree(){
+		$.ajax({
+			url : "/findpartstype",
+			type : "get",
+			async : false,
+			success : function(data) {
+				node = data;
+				node.unshift({
+					id : 0,
+					pId : -1,
+					name : "全部",
+					open : true
+				});
+				$.fn.zTree.init($("#cTree"), setting, node);
+			},
+			error : function(data) {
+				layer.msg("页面查询失败");
+			}
+		});
+	}
 	
 });
 
@@ -579,9 +637,49 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 //配件树展示与收缩
 function showMenu(obj) {
 	$("#modelContent").css({
-		left : 20,
+		left : "110px",
 		top : "37px"
 	}).slideToggle("fast");
+}
+
+/**
+ * 图片上传
+ * @param obj 图片对象
+ * @returns
+ */
+function change(obj) {
+	 var form = $("#form");
+	 var imgUrl = uploadImg(form, obj);
+	 if (imgUrl != "") { //如果上传文件成功
+	        $(obj).parent().parent().find("img").attr("src", imgUrl);
+	        //禁用上传按钮
+	        $(obj).attr("disabled", true);
+	 }
+
+}
+
+/**
+ * 删除图片
+ * @param obj 删除按钮
+ * @returns
+ */
+function delImg(obj) {
+    var url = $(obj).parent().find("img").attr("src");
+    delFile(url);
+    appendimg();
+    
+}
+
+function appendimg(){
+	$(".siteUpload").html("");
+	var img = `
+		<img id="commodityImgUrl" src>
+		<div class="layui-box layui-upload-button">
+			<input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
+			<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+		</div>
+		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>`;
+    $(".siteUpload").html(img);
 }
 
 

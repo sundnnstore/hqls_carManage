@@ -60,6 +60,7 @@ public class PartsTypeService {
 			add.setTypeName(hqlsPartsType.getTypeName());
 			add.setPid(hqlsPartsType.getPartsTypeId());
 			add.setPartsType(partsType); // 配件类型
+			add.setIcon(hqlsPartsType.getIcon());
 			// 创建一个配件类型
 			partsTypeMapper.insert(add);
 		} catch (Exception e) {
@@ -76,21 +77,23 @@ public class PartsTypeService {
 	 */
 	public ResponseEntity<RestModel<Integer>> addSameLevel(HqlsPartsType hqlsPartsType) {
 		try {
+			Integer partsType = 0;
 			if (hqlsPartsType.getPartsTypeId() != null) {
 				// 查询出当前partstypeid的pid
 				Integer pid = partsTypeMapper.findPidByPartsTypeId(hqlsPartsType.getPartsTypeId());
-				if (pid != null) {
+				if (pid != null&&pid==0) {
+					partsType = hqlsPartsType.getPartsType();
+				}else{
 					// 查询父级对象
 					HqlsPartsType parent = partsTypeMapper.findPartsTypeByPartsTypeId(pid);
-					HqlsPartsType add = new HqlsPartsType();
-					add.setTypeName(hqlsPartsType.getTypeName());
-					add.setPid(pid);
-					// add.setPartsType(hqlsPartsType.getPartsType());
-					add.setPartsType(parent.getPartsType());
-					// 创建一个配件类型
-					partsTypeMapper.insert(add);
+					partsType =parent.getPartsType();
 				}
-
+				HqlsPartsType add = new HqlsPartsType();
+				add.setTypeName(hqlsPartsType.getTypeName());
+				add.setPid(pid);
+				add.setPartsType(partsType);
+				add.setIcon(hqlsPartsType.getIcon());
+				partsTypeMapper.insert(add);
 			} else {
 				return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "配件类型id不能为空");
 			}
@@ -105,12 +108,18 @@ public class PartsTypeService {
 	 * 检查是否可是删除
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(Integer partsTypeId) {
+	public ResponseEntity<RestModel<CommonDto>> checkIsCanbeDel(Integer partsTypeId) {
+		//查询图片
+		HqlsPartsType partsType = partsTypeMapper.findPartsTypeByPartsTypeId(partsTypeId);
+		CommonDto common = new CommonDto();
+		common.setValue(partsType.getIcon());
 		List<CommonDto> exitChildren = partsMapper.findPartsTypeListByPid(partsTypeId);
 		if (!exitChildren.isEmpty()) {
-			return RestModel.success(true);
+			common.setKey(1);
+			return RestModel.success(common);
 		} else {
-			return RestModel.success(false);
+			common.setKey(0);
+			return RestModel.success(common);
 		}
 	}
 

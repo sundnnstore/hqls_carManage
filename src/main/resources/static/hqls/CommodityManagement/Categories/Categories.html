@@ -2,9 +2,8 @@
 	type="text/css">
 <link rel="stylesheet" type="text/css"
 	href="CommodityManagement/Categories/Categories.css" />
-<link rel="stylesheet"
-	href="CommodityManagement/CommodityManage/CommodityManage.css">
 <link href="common/zTree/css/zTreeStyle.css"></link>
+<script src="js/upload.js"></script>
 <div class="categories">
 	<!-- 商品分类
 	<div id="viewTree" class="categoriesTreeBox" style="height:100%;width:100%;position:absolute; left:30%; top:10%; ">
@@ -32,7 +31,7 @@
 				<thead>
 					<tr>
 						<th>配件名称</th>
-						<th>父级名称</th>
+						<th>上级节点</th>
 						<th>操作</th>
 					</tr>
 				</thead>
@@ -68,6 +67,20 @@
 					</select>
 				</div>
 			</div>
+			<!-- 图片上传 -->
+			<p class="uploadImgTitle layui-input-inline">上传图片</p>
+			<div class="uploadImg layui-input-inline">
+				<div class="siteUpload">
+					<img id="commodityImgUrl" src="">
+					<div class="layui-box layui-upload-button">
+						<input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
+						<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+					</div>
+					<span class="closeBtn" onclick="delImg(this)"><i
+						class="layui-icon">&#x1006;</i></span>
+				</div>
+			</div>
+
 		</form>
 	</div>
 	<!-- 弹框三：商品分类信息添加与编辑的结果提示 -->

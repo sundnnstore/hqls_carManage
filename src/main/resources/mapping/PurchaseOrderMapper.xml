@@ -28,8 +28,9 @@
 		from hqls_purchase_order 
 		where store_id = #{storeId}
 		<if test="orderStatus != null">
-			and order_status = #{orderStatus}
+			and order_status = #{orderStatus}  
 		</if>
+		 order by create_time desc
 	</select>
 	
 	<select id="getOrderByOrderId" parameterType="Integer" resultMap="shopCartInfo">

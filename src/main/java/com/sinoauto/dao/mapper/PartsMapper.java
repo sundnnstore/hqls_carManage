@@ -37,7 +37,7 @@ public interface PartsMapper {
 	 * @param partsType（1，易损件；2通用件）
 	 * @return
 	 */
-	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where parts_type = #{1} and pid = 0")
+	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id`, icon as `name` from hqls_parts_type where parts_type = #{1} and pid = 0")
 	public Page<CommonDto> findPartsTypeListByType(Integer partsType);
 	
 	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where pid = 0")
