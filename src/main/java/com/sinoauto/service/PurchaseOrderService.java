@@ -178,13 +178,13 @@ public class PurchaseOrderService {
 			Double otherFee = 0.00;
 			order.setTotalAmount(new BigDecimal(total).add(new BigDecimal(otherFee)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 			// 获取门店余额
-			HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(orderParamDto.getStoreId());
+			/*HqlsStoreFinance finance = storeFinanceMapper.getStoreFinance(orderParamDto.getStoreId());
 			order.setBalance(finance.getBalance());
 			if (finance.getBalance() != null) {
 				order.setIsEnough(finance.getBalance() > order.getTotalAmount());
 			} else {
 				order.setIsEnough(false);
-			}
+			}*/
 			return RestModel.success(order);
 		} catch (Exception e) {
 			e.printStackTrace();
