@@ -62,7 +62,7 @@ public class StoreController {
 	}
 	
 	
-	@ApiOperation(value = "根据门店名称/联系人/联系人电话/地址 分页查询门店信息",notes = "tangrx")
+	@ApiOperation(value = "根据门店名称/联系人/联系人电话/地址/门店级别/门店分类  分页查询门店信息",notes = "tangrx")
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeName", value = "门店名称", required = false, dataType = "String"),
 						 @ApiImplicitParam(paramType = "query", name = "userName", value = "联系人", required = false, dataType = "String"),
 						 @ApiImplicitParam(paramType = "query", name = "mobile", value = "联系人号码", required = false, dataType = "String"),
@@ -109,7 +109,7 @@ public class StoreController {
 	
 	@ApiOperation(value = "新增门店信息",notes = "tangrx")
 	@PostMapping("insertstore")
-	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){
+	public ResponseEntity<RestModel<Integer>> insertStore(@RequestHeader(value = "Authorization") String Authorization,@RequestBody StoreInfoDto storeInfoDto){ 
 		return storeService.insertStore(Authorization,storeInfoDto);
 		
 	}
