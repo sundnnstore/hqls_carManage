@@ -311,9 +311,9 @@ public class FinanceFlowService {
 	 * @param remark
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark) {
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark,String operateUserName) {
 		try {
-			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark);
+			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark,operateUserName);
 			// 提现审核失败，返还给账户
 			if (changeType == 2 && 3 == checkStatus) {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
