@@ -278,7 +278,9 @@ public class FinanceFlowService {
 			flowDto.setPayType("微信");
 		} else if (hqlsFlow.getPayType() == 3) {
 			flowDto.setPayType("线下");
-		} else {
+		} else if(hqlsFlow.getPayType() == 0){
+			flowDto.setPayType("余额支付");
+		}else {
 			flowDto.setPayType("未知");
 		}
 
