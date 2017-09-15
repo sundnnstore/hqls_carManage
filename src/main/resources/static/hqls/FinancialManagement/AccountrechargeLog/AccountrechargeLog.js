@@ -78,7 +78,6 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					<td>${data[i].transactionNo}</td>
 					<td>${data[i].changeMoney}</td>
 					<td>${data[i].flowStatusDesc}</td>
-					<td>${data[i].operPerson}</td>
 					<td>${data[i].createTime}</td></tr>`;
 		}
 		
