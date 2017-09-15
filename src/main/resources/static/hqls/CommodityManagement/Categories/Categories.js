@@ -85,6 +85,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				},
 				btn2 : function(index, layero) { // 修改
 					title = '编辑';
+					//清空
+					$("#commodityImgUrl").attr("src","");
+					
 					// 修改前的显示
 					viewPartType(item);
 					// 修改
@@ -238,11 +241,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function addSameLevelNode(selectNodeId, typeName, layerIndex) {
-		
-		if(true){
-			alert($("#commodityImgUrl").attr("src"));
-			return ;
-		}
 		/**
 		 * 检查新增的名称
 		 */
@@ -399,7 +397,6 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function viewPartType(item) {
-		alert("编辑查看");
 		var selectNodeId = item.id;
 		$.ajax({
 			url : "/findparttypeobj",
@@ -409,13 +406,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				//$('#categoriesInfoEdit').find("input").val(item.name); // 配件类型名称
+				$('#partsTypeName').val(item.name); // 配件类型名称
+				//$('#categoriesInfoEdit').find("input").attr("placeholder",item.name);
 				$('#categoriesInfoEdit select').val(data.result.partsType);
 				if(data.result.icon!=null){
-					console.log(1);
 					$("#commodityImgUrl").attr("src",data.result.icon);
 				}
-				alert(data.result.icon);
 				
 			},
 			error : function(data) {
@@ -437,8 +433,8 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			return;
 		}
 		var imgSrc = $("#commodityImgUrl").attr("src");
-		if(imgSrc==undefined||imgSrc.length<0){
-			layer.msg("图片修改出现错误");
+		if(imgSrc==undefined||imgSrc.length<0||imgSrc==""){
+			layer.msg("请上传图片");
 		}
 		var data = {
 			"partsTypeId" : selectNodeId,
