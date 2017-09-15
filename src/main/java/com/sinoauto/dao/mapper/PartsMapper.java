@@ -37,13 +37,9 @@ public interface PartsMapper {
 	 * @param partsType（1，易损件；2通用件）
 	 * @return
 	 */
-	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where parts_type = #{1} and pid = 0")
+	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id`, icon as `name` from hqls_parts_type where parts_type = #{1} and pid = 0")
 	public Page<CommonDto> findPartsTypeListByType(Integer partsType);
 	
-	/**
-	 * 
-	 * @return
-	 */
 	@Select("select parts_type_id as `key`, type_name as `value`, parts_type as `id` from hqls_parts_type where pid = 0")
 	public Page<CommonDto> findAllParts();
 	
@@ -198,11 +194,5 @@ public interface PartsMapper {
 	
 	@Select("select cur_price from hqls_parts where parts_id = #{1}")
 	public Double getCurPriceById(Integer partsId);
-	
-	
-	//@Select("SELECT parts_id FROM hqls_parts WHERE left(parts_code, 10)=#{1}")
-	//@Select("SELECT parts_id FROM hqls_parts WHERE parts_code=#{1}")
-	@Select("SELECT parts_id FROM hqls_parts WHERE parts_model=#{1}")
-	public Integer[] findPartsIdByCode(String partsCode);
 	
 }
