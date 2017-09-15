@@ -113,7 +113,7 @@ public class FinanceFlowService {
 			flow.setOperPerson("");
 			flow.setPayType(1);// 支付宝
 			flow.setCreateTime(new Date());
-			flow.setRemark("remark");
+			flow.setRemark("线上充值");
 			flow.setDmlTime(new Date());
 			flow.setIsDelete(0);
 			return RestModel.success(financeFlowMapper.insert(flow));
