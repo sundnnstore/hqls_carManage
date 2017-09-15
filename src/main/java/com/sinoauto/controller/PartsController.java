@@ -207,7 +207,7 @@ public class PartsController {
 	
 	@ApiOperation(value = "检查是否可以删除", notes = "liud")
 	@GetMapping("checkdel")
-	public ResponseEntity<RestModel<Boolean>> checkIsCanbeDel(@RequestParam("partTypeId") Integer partsTypeId){
+	public ResponseEntity<RestModel<CommonDto>> checkIsCanbeDel(@RequestParam("partTypeId") Integer partsTypeId){
 		return partsTypeService.checkIsCanbeDel(partsTypeId);
 	}
 	

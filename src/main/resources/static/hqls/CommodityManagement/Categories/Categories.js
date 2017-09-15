@@ -80,6 +80,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				btnAlign : 'c', 
 				yes : function(index, layero) { 
 					title = '添加';
+					appendimg();
 					categoriesEditCommon(item, 1);
 				},
 				btn2 : function(index, layero) { // 修改
@@ -106,10 +107,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			btnAlign : 'c', // 按钮居中
 			yes : function(index, layero) { // 添加子节点
 				title = '添加';
+				appendimg();
 				categoriesEditCommon(item, 1);
 			},
 			btn2 : function(index, layero) { // 添加同级节点
 				title = '添加';
+				appendimg();
 				categoriesEditCommon(item, 2);
 				return false;
 			},
@@ -194,11 +197,16 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -230,6 +238,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function addSameLevelNode(selectNodeId, typeName, layerIndex) {
+		
+		if(true){
+			alert($("#commodityImgUrl").attr("src"));
+			return ;
+		}
 		/**
 		 * 检查新增的名称
 		 */
@@ -253,11 +266,16 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			});
 			return;
 		}
-
+		var imgsrc = $("#commodityImgUrl").attr("src");
+		if(imgsrc.length<0||imgsrc==undefined){
+			layer.msg("请上传图片");
+			return;
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgsrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -359,9 +377,13 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectId
 			},
 			success : function(data) {
-				if (data.result == true) {
+				if (data.result.key == 1) {
 					layer.msg("存在子集不可删除");
 				} else {
+					//删除图片
+					if(data.result.value!=null){
+						delFile(data.result.value); 
+					}
 					del(selectItem, index);
 				}
 			},
@@ -377,6 +399,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function viewPartType(item) {
+		alert("编辑查看");
 		var selectNodeId = item.id;
 		$.ajax({
 			url : "/findparttypeobj",
@@ -386,8 +409,14 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				$('#categoriesInfoEdit input').val(item.name); // 配件类型名称
+				//$('#categoriesInfoEdit').find("input").val(item.name); // 配件类型名称
 				$('#categoriesInfoEdit select').val(data.result.partsType);
+				if(data.result.icon!=null){
+					console.log(1);
+					$("#commodityImgUrl").attr("src",data.result.icon);
+				}
+				alert(data.result.icon);
+				
 			},
 			error : function(data) {
 				layer.msg("检查节点失败");
@@ -407,10 +436,15 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			layer.msg("修改的名称不能为空");
 			return;
 		}
+		var imgSrc = $("#commodityImgUrl").attr("src");
+		if(imgSrc==undefined||imgSrc.length<0){
+			layer.msg("图片修改出现错误");
+		}
 		var data = {
 			"partsTypeId" : selectNodeId,
 			"typeName" : typeName,
-			"partsType" : $("#partsType").val()
+			"partsType" : $("#partsType").val(),
+			"icon":imgSrc
 		};
 		data = JSON.stringify(data);
 		$.ajax({
@@ -606,6 +640,46 @@ function showMenu(obj) {
 		left : "110px",
 		top : "37px"
 	}).slideToggle("fast");
+}
+
+/**
+ * 图片上传
+ * @param obj 图片对象
+ * @returns
+ */
+function change(obj) {
+	 var form = $("#form");
+	 var imgUrl = uploadImg(form, obj);
+	 if (imgUrl != "") { //如果上传文件成功
+	        $(obj).parent().parent().find("img").attr("src", imgUrl);
+	        //禁用上传按钮
+	        $(obj).attr("disabled", true);
+	 }
+
+}
+
+/**
+ * 删除图片
+ * @param obj 删除按钮
+ * @returns
+ */
+function delImg(obj) {
+    var url = $(obj).parent().find("img").attr("src");
+    delFile(url);
+    appendimg();
+    
+}
+
+function appendimg(){
+	$(".siteUpload").html("");
+	var img = `
+		<img id="commodityImgUrl" src>
+		<div class="layui-box layui-upload-button">
+			<input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
+			<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+		</div>
+		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>`;
+    $(".siteUpload").html(img);
 }
 
 

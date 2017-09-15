@@ -137,11 +137,20 @@ public class PurchaseOrderController {
 		return purchaseOrderService.getOrderByOrderId(orderId);
 	}
 	
+	@ApiOperation(value = "支付操作-生成订单", notes = "wuxiao")
+	@PostMapping("generatororder")
+	public ResponseEntity<RestModel<Integer>> generatorOrder(@RequestBody SettlementOperationParamDto param) {
+		
+		return purchaseOrderService.generatorPurchaseOrder(param);
+	}
+	
 	@ApiOperation(value = "支付操作", notes = "wuxiao")
 	@PostMapping("payoperation")
-	public ResponseEntity<RestModel<PayReturnParamDto>> payOperation(@RequestBody SettlementOperationParamDto param, @RequestHeader(value="Authorization") String Authorization) {
+	public ResponseEntity<RestModel<PayReturnParamDto>> payOperation(
+			@RequestBody SettlementOperationParamDto settlementParam,
+			@RequestHeader(value="Authorization") String Authorization) {
 		
-		return purchaseOrderService.payOperation(param, Authorization);
+		return purchaseOrderService.payOperation(settlementParam, Authorization);
 	}
 	
 	@ApiOperation(value = "查询门店余额", notes = "wuxiao")
