@@ -48,7 +48,7 @@ public interface PartsMapper {
 	 * @param pid
 	 * @return
 	 */
-	@Select("select parts_type_id as `key`, type_name as `value` from hqls_parts_type where pid = #{1}")
+	@Select("select parts_type_id as `key`, type_name as `value`, icon as `name` from hqls_parts_type where pid = #{1}")
 	public Page<CommonDto> findPartsTypeListByPid(Integer pid);
 	
 	@Select("select count(*) from hqls_parts_type where type_name = #{1}")
