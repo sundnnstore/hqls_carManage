@@ -214,8 +214,8 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 		var url = "/shipoperation?orderId=" + orderId;
 		var logisticsId = $('select[name=company]').val();
 		var logisticsNo = $('input[name=logistics_no]').val();
-		var remark = $('#remark').val();
-		if ((!logisticsId && !logisticsNo) || !remark) {
+		var remark = $('#remark').val;
+		if ((logisticsId == '' && logisticsNo == '') && remark == '') {
 			layer.msg('请填写物流信息或备注信息');
 			return ;
 		}
@@ -228,10 +228,10 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			async: false,
 			success: function(data) {
 				if (data.errcode == 0) {
-					layer.msg("发货完成！");
 					layer.closeAll();
 					$('#cover').css('display', 'none');
 					reqOrderList(1);
+					layer.msg("发货完成！");
 				}
 			},
 			error: function() {
@@ -364,11 +364,9 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 			data: {'orderId': orderId, 'remark': remark},
 			success: function (data) {
 				if (data.errcode == 0) {
+					layer.closeAll();
+					$('#cover').css('display', 'none');
 					layer.msg("添加成功！");
-					setTimeout(() => {
-						layer.closeAll();
-						$('#cover').css('display', 'none');
-					}, 500);
 				} else {
 					layer.msg("添加失败！");
 				}
