@@ -16,7 +16,7 @@ public interface FinanceFlowMapper {
 
 	public Page<RechargeDto> findFlowListByContidion(@Param("changeType") Integer changeType, @Param("storeId") Integer storeId,
 			@Param("customerName") String customerName, @Param("mobile") String mobile, @Param("createTime") String createTime,
-			@Param("flowStatus") Integer flowStatus,@Param("checkStatus") Integer checkStatus,@Param("payType") Integer payType);
+			@Param("flowStatus") Integer flowStatus, @Param("checkStatus") Integer checkStatus, @Param("payType") Integer payType);
 
 	public Page<HqlsFinanceFlow> findFlowList(@Param("storeId") Integer storeId);
 
@@ -31,10 +31,11 @@ public interface FinanceFlowMapper {
 	@Select("select * from hqls_finance_flow where transaction_no = #{transactionNo} ")
 	public HqlsFinanceFlow getFlowByTransactionNo(@Param("transactionNo") String transactionNo);
 
-	@Update("update hqls_finance_flow set check_status = #{checkStatus},remark = #{remark} where finance_flow_id = #{financeFlowId}")
-	public int updateCheckStatus(@Param("financeFlowId") Integer financeFlowId, @Param("checkStatus") Integer checkStatus,@Param("remark") String remark);
+	@Update("update hqls_finance_flow set check_status = #{checkStatus},remark = #{remark},oper_person = #{operPerson} where finance_flow_id = #{financeFlowId}")
+	public int updateCheckStatus(@Param("financeFlowId") Integer financeFlowId, @Param("checkStatus") Integer checkStatus,
+			@Param("remark") String remark, @Param("operPerson") String operPerson);
 
 	@Update("update hqls_finance_flow set remark = #{remark} where order_no = #{orderNo} and store_id = #{storeId}")
 	public int updateOrderRemark(@Param("storeId") Integer storeId, @Param("orderNo") String orderNo, @Param("remark") String remark);
-	
+
 }
