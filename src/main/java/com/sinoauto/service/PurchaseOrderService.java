@@ -336,6 +336,7 @@ public class PurchaseOrderService {
 				
 				// 添加财务流水
 				HqlsFinanceFlow flow = new HqlsFinanceFlow();
+				flow.setPayType(0);//余额支付
 				flow.setChangeMoney(totalAmount);
 				flow.setChangeType(3);
 				flow.setChargeType(2);
@@ -344,6 +345,7 @@ public class PurchaseOrderService {
 				flow.setOrderNo(order.getOrderNo());
 				flow.setStoreId(order.getStoreId());
 				flow.setFlowStatus(1);
+				flow.setTransactionNo("YE"+order.getStoreId()+System.currentTimeMillis());
 				financeFlowMapper.insert(flow);
 				return RestModel.success();
 				
