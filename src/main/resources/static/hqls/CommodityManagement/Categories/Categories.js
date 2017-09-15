@@ -409,11 +409,13 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				"partTypeId" : selectNodeId
 			},
 			success : function(data) {
-				$('#categoriesInfoEdit input').val(item.name); // 配件类型名称
+				//$('#categoriesInfoEdit').find("input").val(item.name); // 配件类型名称
 				$('#categoriesInfoEdit select').val(data.result.partsType);
 				if(data.result.icon!=null){
+					console.log(1);
 					$("#commodityImgUrl").attr("src",data.result.icon);
 				}
+				alert(data.result.icon);
 				
 			},
 			error : function(data) {
