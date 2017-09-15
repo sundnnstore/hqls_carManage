@@ -130,7 +130,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 									<textarea placeholder="请输入内容" class="layui-textarea" id="remarkTextArea"></textarea>
 								</div>
 							</div>
-							<div class="layui-form-item layui-form-text shipbox">
+							<div class="layui-form-item layui-form-text shipbox" style="text-align:center;">
 								<button class="layui-btn" align="center" id="refuseBtn">拒绝</button>
 							</div>
 				`, //弹出框的内容

@@ -192,4 +192,9 @@ public interface PartsMapper {
 	@Select("select * from hqls_parts_type where parts_type_id=#{partsTypeId}")
 	public HqlsPartsType findPidByPtId(@Param("partsTypeId")Integer partsTypeId);
 	
+	//@Select("SELECT parts_id FROM hqls_parts WHERE left(parts_code, 10)=#{1}")
+	//@Select("SELECT parts_id FROM hqls_parts WHERE parts_code=#{1}")
+	@Select("SELECT parts_id FROM hqls_parts WHERE parts_model=#{1}")
+	public Integer[] findPartsIdByCode(String partsCode);
+	
 }
