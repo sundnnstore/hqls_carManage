@@ -88,7 +88,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 				"financeFlowId":id,
 				"changeType":2,
 				"checkStatus":3,
-				"remark":remark
+				"remark":remark,
+				"operateUserName":localStorage.userName
 			},
 			success: function (data) {
 				console.log(data.result);
@@ -156,7 +157,8 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 							"financeFlowId":id,
 							"changeType":2,
 							"checkStatus":2,
-							"remark":"审核通过"
+							"remark":"审核通过",
+							"operateUserName":localStorage.userName
 						},
 						success: function (data) {
 							console.log(data.result);
@@ -187,6 +189,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 					<td>${data[i].account}</td>
 					<td>${data[i].openBank}</td>
 					<td>${data[i].checkStatusDesc}</td>
+					<td>${data[i].operPerson}</td>
 					<td class="operating">`
 			if(data[i].checkStatus == 1) {
 				html+= `	<button class="layui-btn layui-btn-normal operating-btn" id="${data[i].financeFlowId}">确认</button>

@@ -116,8 +116,9 @@ public class FinanceController {
 			@ApiImplicitParam(paramType = "query", name = "changeType", value = "金额变动类型（1充值；2提现；3采购；4汽车维护服务）", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "checkStatus", value = "审核状态（1待审核；2审核通过；3审核不通过）", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "remark", value = "备注", dataType = "String", required = false) })
-	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark) {
-		return this.financeFlowService.updateCheckStatus(financeFlowId, changeType, checkStatus, remark);
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark,
+			String operateUserName) {
+		return this.financeFlowService.updateCheckStatus(financeFlowId, changeType, checkStatus, remark, operateUserName);
 	}
 
 }
