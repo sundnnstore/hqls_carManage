@@ -49,6 +49,8 @@ public class HqlsServiceOrder implements Serializable {
 	private Date finishTime;
 	@ApiModelProperty("操作时间")
 	private Date dmlTime;
+	@ApiModelProperty("是否为年卡")
+	private Boolean isCard;
 
 	/**
 	 * 设置服务订单ID
@@ -277,6 +279,16 @@ public class HqlsServiceOrder implements Serializable {
 	public void setCode(String code) {
 		if (code != null) {
 			this.code = code;
+		}
+	}
+
+	public Boolean getIsCard() {
+		return isCard;
+	}
+
+	public void setIsCard(Boolean isCard) {
+		if (isCard != null) {
+			this.isCard = isCard;
 		}
 	}
 

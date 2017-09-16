@@ -89,4 +89,7 @@ public interface StoreMapper {
 
 	@Select("select pid from hqls_store where countyId = #{countyId}")
 	public List<Integer> getPidByCountyId(@Param("countyId") Integer countyId);
+	
+	@Select("select store_code from hqls_store where store_id = #{1}")
+	public String getStoreCodeByStoreId(@Param("storeId")Integer storeId);
 }
