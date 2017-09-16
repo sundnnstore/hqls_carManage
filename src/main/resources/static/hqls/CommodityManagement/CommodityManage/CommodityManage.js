@@ -852,8 +852,8 @@ function zNodes() {
     });
     return node;
 }
+
 var zNodes = zNodes();
-zNodes.unshift({ id: 0, pId: -1, name: "全部", open: true });
 
 // 配件树初始化
 $(document).ready(function() {

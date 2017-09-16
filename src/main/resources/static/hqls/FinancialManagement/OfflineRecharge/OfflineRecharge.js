@@ -8,7 +8,7 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 	var OrderParam = {};
 	
 	function generatorParam() {
-		OrderParam.customerName = $("#customer_name").val();
+		OrderParam.operPerson = $("#oper_person").val();
 		OrderParam.mobile = $("#mobile").val();
 		OrderParam.storeId = $("#store_id").val() == 0 ? null :$("#store_id").val();
 		OrderParam.createTime = $("#createTime").val();

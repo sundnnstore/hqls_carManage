@@ -72,13 +72,14 @@ layui.use(['jquery', 'laypage', 'layer'], function() {
 			html += `<td>${data[i].storeName}</td>
 					<td>${data[i].customerName}</td>
 					<td>${data[i].mobile}</td>
-					<td>${data[i].bank}</td>
-					<td>${data[i].account}</td>
-					<td>${data[i].openBank}</td>
 					<td>${data[i].transactionNo}</td>
 					<td>${data[i].changeMoney}</td>
 					<td>${data[i].flowStatusDesc}</td>
 					<td>${data[i].createTime}</td></tr>`;
+			
+			/*<td>${data[i].bank}</td>
+			<td>${data[i].account}</td>
+			<td>${data[i].openBank}</td>*/
 		}
 		
 		$("#log_tb").html(html);
