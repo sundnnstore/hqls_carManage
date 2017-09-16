@@ -3,7 +3,7 @@
     "Android":{
     	"version":"1.1.2",
     	"title":"华汽连锁版本更新",
-    	"note":"新增测试",
+    	"note":"修复几个已知BUG",
     	"url":"http://b.sinoauto.com/version/hqls.apk"
     }
 }
