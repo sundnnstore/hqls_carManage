@@ -826,11 +826,19 @@ function beforeClick(treeId, treeNode) {
 function onClick(e, treeId, treeNode) {
     $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
     if (treeId == 'commodityTree') {
+    	var display = $("#menuContent").css("display");
+		if(display=="block"){
+			$("#menuContent").hide();
+		}
         // 保存id
         selectTreeId = treeNode.id;
         console.log("onClick--->" + treeNode.id);
         $("#commodityName").val(treeNode.name);
     } else {
+    	var display = $("#modelContent").css("display");
+		if(display=="block"){
+			$("#modelContent").hide();
+		}
         // 保存id
         selectTreeId = treeNode.id;
         $("#cName").val(treeNode.name);

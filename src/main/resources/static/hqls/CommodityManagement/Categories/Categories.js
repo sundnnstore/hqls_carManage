@@ -10,7 +10,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function categoriesEditCommon(item, operFlag,firstIndex) {
-		if(item.level==0&&operFlag==1){
+		if((item.level==0&&operFlag==2)||(item.level==0&&operFlag==3)){
 			$("#partsType-div").show();
 		}else{
 			$("#partsType-div").hide();
@@ -40,6 +40,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				case 3:
 					// 修改节点类型
 					updatePartType(item, index);
+					layer.close(firstIndex);
+					break;
+				case 4:
 					layer.close(firstIndex);
 					break;
 				default:
@@ -99,7 +102,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 					categoriesEditCommon(item, 3,index);
 					return false;
 				},
-				btn3 : function(index, layero) { // 选中删除的回调
+				btn3 : function(firstIndex, layero) { // 选中删除的回调
 					var temp = 'del';
 					/*
 					 * 删除操作。。。
@@ -117,7 +120,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 						btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
 						btnAlign : 'c', // 按钮居中
 						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-							check(item, index);
+							check(item, index,firstIndex);
 						},
 						btn2 : function(index, layero) {
 							layer.close(index);
@@ -179,8 +182,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 						btn : temp === 'del' ? [ '确定', '取消' ] : '确定',
 						btnAlign : 'c', // 按钮居中
 						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
-							check(item, index);
-							layer.close(firtsIndex);
+							check(item, index,firtsIndex);
 						},
 						btn2 : function(index, layero) {
 							layer.close(index);
@@ -258,12 +260,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			data : data,
 			success : function(data) {
 				layer.msg("子节点添加成功");
-				$("#viewItemTree").html("");
-				// 重载树
-				initZtree();
 				
 				//清空table
-				$(".parts_type").html("");
+				initTable();
+				
+				//重载树
+				initZtree();
 				
 				// 关闭弹框
 				layer.close(layerIndex);
@@ -323,12 +325,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			data : data,
 			success : function(data) {
 				layer.msg("添加同级节点成功");
-				$("#viewItemTree").html("");
-				// 重载树
-				initZtree();
 				
 				//清空table
-				$(".parts_type").html("");
+				initTable();
+				
+				//重载树
+				initZtree();
 				
 				// 关闭弹框
 				layer.close(layerIndex);
@@ -364,7 +366,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * 
 	 * @returns
 	 */
-	function del(selectItem, index) {
+	function del(selectItem, index,firstIndex) {
 		var selectNodeId = selectItem.id;
 		var data = {
 			"partsTypeId" : selectNodeId
@@ -375,16 +377,18 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			type : "DELETE",
 			async : false,
 			success : function(data) {
+				
 				layer.msg("删除" + selectItem.name + "成功");
-				$("#viewItemTree").html("");
-				// 重载树
-				initZtree();
 				
 				//清空table
-				$(".parts_type").html("");
+				initTable();
 				
+				//重载树
+				initZtree();
 				
 				layer.close(index);
+				layer.close(firstIndex);
+
 			},
 			error : function(data) {
 				layer.msg("删除失败");
@@ -405,7 +409,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 *            编辑的时候,查找等级
 	 * @returns
 	 */
-	function check(selectItem, index) {
+	function check(selectItem, index,firtsIndex) {
 		var selectId = selectItem.id;
 		$.ajax({
 			url : "/checkdel",
@@ -422,7 +426,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 					if(data.result.value!=null){
 						delFile(data.result.value); 
 					}
-					del(selectItem, index);
+					del(selectItem, index,firtsIndex);
 				}
 			},
 			error : function(data) {
@@ -491,17 +495,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			data : data,
 			success : function(data) {
 				
-				$("#viewItemTree").html("");
+				//清空table
+				initTable();
+				
+				//重载树
 				initZtree();
 
-				// 重新加载table
-//				selectItem.name = typeName;
-//				$("#categoriesName").html(typeName);
-//				$("#partsTypeName").attr("aaa");
-//				showTreeNodeInfo(selectItem);
-				//清空table
-				$(".parts_type").html("");
-				
 				layer.msg("修改成功");
 				layer.close(index);
  			},
@@ -510,7 +509,19 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			}
 		});
 	}
-
+	
+	
+	function initTable(){
+		//清空原来的
+		$("#viewItemTree").html("");
+		
+		//清空table
+		$(".parts_type").html("");
+		
+		//清空输入框
+		$('#cName').val("");
+		$('#cName').attr("placeholder","请选择分类");
+	}
 	
 	/**
 	 * zTree input
@@ -618,7 +629,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @returns
 	 */
 	function onClick(e, treeId, treeNode) {
-		var display = $("#cTree li:first ul:first").css("display");
+		var display = $("#modelContent").css("display");
 		if(display=="block"){
 			$("#modelContent").hide();
 		}
