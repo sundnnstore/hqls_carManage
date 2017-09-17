@@ -58,13 +58,11 @@ function uploadImg(formObj,imgObj){
 		},
 		url : url,
 		success : function(data) {
-			//alert(data.result);
 			returnResult =data.result.fileUrl;
-			//displayImg(imgObj,returnResult); //显示图片
 		},
 		error : function(e) {
 			e = JSON.stringify(e);
-			alert(e);
+			layer.msg(e);
 		}
 	}); 
 	return returnResult;
@@ -88,10 +86,10 @@ function delFile(imgUrl){
 		data:imgUrl,
 		url : fileurl+"/?url="+imgUrl,
 		success : function(data) {
-			alert("删除图片成功");
+			layer.msg("删除图片成功");
 		},
 		error : function(e) {
-			alert("删除图片失败");
+			layer.msg("删除图片失败");
 		}
 	}); 
 }
