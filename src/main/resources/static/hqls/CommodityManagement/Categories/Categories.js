@@ -9,7 +9,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 	 * @param operFlag
 	 * @returns
 	 */
-	function categoriesEditCommon(item, operFlag) {
+	function categoriesEditCommon(item, operFlag,firstIndex) {
 		if(item.level==0&&operFlag==1){
 			$("#partsType-div").show();
 		}else{
@@ -31,13 +31,16 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				switch (operFlag) {
 				case 1:
 					addChildren(item.id, typeName, index);
+					layer.close(firstIndex);
 					break;
 				case 2:
 					addSameLevelNode(item.id, typeName, index);
+					layer.close(firstIndex);
 					break;
 				case 3:
 					// 修改节点类型
 					updatePartType(item, index);
+					layer.close(firstIndex);
 					break;
 				default:
 					layer.msg("default");
@@ -82,7 +85,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				yes : function(index, layero) { 
 					title = '添加';
 					appendimg();
-					categoriesEditCommon(item, 2);
+					categoriesEditCommon(item, 2,index);
 					return false;
 				},
 				btn2 : function(index, layero) { // 修改
@@ -93,7 +96,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 					// 修改前的显示
 					viewPartType(item);
 					// 修改
-					categoriesEditCommon(item, 3);
+					categoriesEditCommon(item, 3,index);
 					return false;
 				},
 				btn3 : function(index, layero) { // 选中删除的回调
@@ -144,21 +147,21 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				yes : function(index, layero) { // 添加子节点
 					title = '添加';
 					appendimg();
-					categoriesEditCommon(item, 1);
+					categoriesEditCommon(item, 1,index);
 				},
 				btn2 : function(index, layero) { // 添加同级节点
 					title = '添加';
 					appendimg();
-					categoriesEditCommon(item, 2);
+					categoriesEditCommon(item, 2,index);
 					return false;
 				},
 				btn3 : function(index, layero) { // 修改
 					title = '编辑';
 					viewPartType(item);
-					categoriesEditCommon(item, 3);
+					categoriesEditCommon(item, 3,index);
 					return false;
 				},
-				btn4 : function(index, layero) { // 选中删除的回调
+				btn4 : function(firtsIndex, layero) { // 选中删除的回调
 					var temp = 'del';
 					/*
 					 * 删除操作。。。
@@ -177,9 +180,11 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 						btnAlign : 'c', // 按钮居中
 						yes : function(index, layero) { // 当前层索引参数（index）、当前层的DOM对象（layero）
 							check(item, index);
+							layer.close(firtsIndex);
 						},
 						btn2 : function(index, layero) {
 							layer.close(index);
+							
 						},
 						end : function() {
 							$('#categoriesDelete').css("display", "none");
@@ -257,6 +262,9 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				// 重载树
 				initZtree();
 				
+				//清空table
+				$(".parts_type").html("");
+				
 				// 关闭弹框
 				layer.close(layerIndex);
 			},
@@ -319,8 +327,8 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				// 重载树
 				initZtree();
 				
-				// 重新加载table
-				showTreeNodeInfo(selectItem);
+				//清空table
+				$(".parts_type").html("");
 				
 				// 关闭弹框
 				layer.close(layerIndex);
@@ -372,7 +380,8 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				// 重载树
 				initZtree();
 				
-				//remvoe当前行
+				//清空table
+				$(".parts_type").html("");
 				
 				
 				layer.close(index);
@@ -486,11 +495,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 				initZtree();
 
 				// 重新加载table
-				selectItem.name = typeName;
-				$("#categoriesName").html(typeName);
-				$("#partsTypeName").attr("aaa");
-				showTreeNodeInfo(selectItem);
-
+//				selectItem.name = typeName;
+//				$("#categoriesName").html(typeName);
+//				$("#partsTypeName").attr("aaa");
+//				showTreeNodeInfo(selectItem);
+				//清空table
+				$(".parts_type").html("");
 				
 				layer.msg("修改成功");
 				layer.close(index);

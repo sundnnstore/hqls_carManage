@@ -12,6 +12,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     };
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
+    	
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
         if (method == 'addCommodity') {
@@ -88,6 +89,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         layer.msg(titleInfo);
                         return;
                     } else {
+                    	//价格
                         var pric = parseFloat($('#price').val());
                         var disc = parseFloat($('#discount').val());
                         var curPrice = parseFloat($('#curPrice').val());
@@ -96,6 +98,13 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                             layer.msg(titleInfo);
                             return;
                         }
+                        
+                        //上传图片
+                        if(imgCount()<2){
+                        	layer.msg("请上传至少一个图片");
+                            return;
+                        }
+                        
                     }
                 }
                 switch (title) {
@@ -790,6 +799,12 @@ function delImg(obj) {
         appendImg(obj);
     }
 }
+
+//图片数量
+function imgCount(){
+	var count = $(".siteUpload").length;
+	return count;
+}
 //在配件树中选中配件后写入input中
 function beforeClick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
@@ -823,6 +838,7 @@ function onClick(e, treeId, treeNode) {
 }
 
 var treeTemp;
+
 // 配件树展示与收缩
 function showMenu(temp) {
     treeTemp = temp;
@@ -831,7 +847,9 @@ function showMenu(temp) {
     } else if (treeTemp == 'main') {
         $("#menuContent").css({ left: 0, top: "37px" }).slideToggle("fast");
     }
+    
 }
+
 
 /**
  * 配件树数据源
