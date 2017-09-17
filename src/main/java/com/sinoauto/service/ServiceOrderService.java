@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +70,8 @@ public class ServiceOrderService {
 	private ClientInfoMapper clientInfoMapper;
 	@Autowired
 	private ExtraOrderMapper extraOrderMapper;
+	
+	private static Logger LOG = LoggerFactory.getLogger(ServiceOrderService.class);
 
 	public ResponseEntity<RestModel<List<ServiceOrderDto>>> findServiceOrdersByOrderStatus(Integer orderStatus, Integer storeId, Integer pageIndex,
 			Integer pageSize) {
@@ -291,11 +295,41 @@ public class ServiceOrderService {
 		return res.getResult();
 	}
 
+	public String addExtraOrder(String extraProjectDesc, Double orderAmount, Integer orderType, String orderNo, String extraOrderNo) {
+		String url = "http://www.chexiaozhu.cn/Api/Mobile/AdditionalService.ashx";
+		Map<String, Object> params = new HashMap<>();
+		params.put("Handle", "adddata");
+		params.put("ServiceName", extraProjectDesc);
+		params.put("Amount", orderAmount);
+		params.put("Type", orderType);
+		params.put("BindingNumber", orderNo);
+		params.put("ServiceDescription", extraProjectDesc);
+		params.put("BserialNumber", extraOrderNo);
+		RespEntity res = HttpUtil.request("POST", url, null, params, null);
+		LOG.info("增项返回结果"+res.getResult());
+		return res.getResult();
+	}
+
+	@Transactional
 	public ResponseEntity<RestModel<String>> createExtraOrder(HqlsExtraOrder order) {
 		String extraOrderNo = UUID.randomUUID().toString();
 		order.setExtraOrderNo(extraOrderNo);
 		extraOrderMapper.insertExtraOrder(order);
-		return RestModel.success("增加成功！");
+		// 调用车小主添加增项服务订单接口
+		HqlsServiceOrder serviceOrder = serviceOrderMapper.getServiceOrderByOrderId(order.getServiceOrderId());
+		String res = addExtraOrder(order.getExtraProjectDesc(), order.getOrderAmount(), serviceOrder.getOrderType(), order.getOrderNo(),
+				extraOrderNo);
+		if (res.contains("-202")) {
+			return RestModel.success("增加增项订单成功");
+		} else if (res.contains("-505")) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "预约订单号已经不存在");
+		} else if (res.contains("-303")) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务订单号已经不存在");
+		} else if (res.contains("-404")) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "C端数据生成失败 ");
+		} else {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "其他错误！");
+		}
 	}
 
 	@Transactional
