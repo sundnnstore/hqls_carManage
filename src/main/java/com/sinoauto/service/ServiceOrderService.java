@@ -378,6 +378,7 @@ public class ServiceOrderService {
 					// 推送给IOSAPP端
 					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 					PushUtil.push2IOSByAPNS(parms);
+					PushUtil.push2Andriod(parms);
 					String title = "服务款";
 					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 					// 推送给安卓APP端
