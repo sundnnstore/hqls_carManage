@@ -420,7 +420,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			},
 			success : function(data) {
 				if (data.result.key == 1) {
-					layer.msg("存在子集不可删除");
+					layer.msg("存在子集或者分类下面存在商品不可删除");
 				} else {
 					// 删除图片
 					if(data.result.value!=null){
