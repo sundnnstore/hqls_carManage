@@ -55,7 +55,7 @@ public class FinanceFlowService {
 	// @Autowired
 	// private CashBackService cashBackService;
 
-	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
+	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,String operPerson,
 			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
@@ -71,7 +71,7 @@ public class FinanceFlowService {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			createTimeStr = sdf.format(createTime);
 		}
-		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName, mobile, createTimeStr, flowStatus,
+		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName,operPerson, mobile, createTimeStr, flowStatus,
 				checkStatus, payType);
 
 		return RestModel.success(flowList, (int) flowList.getTotal());
