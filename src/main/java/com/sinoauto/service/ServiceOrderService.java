@@ -83,10 +83,10 @@ public class ServiceOrderService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrderByCode(String token, String code) {
+	public ResponseEntity<RestModel<String>> finishOrderByCode(String token, String code,Integer storeId) {
 		Integer serviceOrderId = serviceOrderMapper.getOrderIdByCode(code);
 		if (serviceOrderId != null && serviceOrderId > 0) {
-			return finishOrder(token, serviceOrderId, code);
+			return finishOrder(token, serviceOrderId, code,storeId);
 		} else {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "核销码不正确！");
 		}
@@ -99,7 +99,7 @@ public class ServiceOrderService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId, String code) {
+	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId, String code,Integer storeId) {
 		// 判断服务订单是否已经完成，
 		// 未完成的订单，确认完成
 		// 推送给车小主，更新门店的余额,记录账单
@@ -112,6 +112,9 @@ public class ServiceOrderService {
 			Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 			HqlsUser user = userMapper.getUserByGloabUserId(userId);
 			HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(serviceOrderId);
+			if(order.getStoreId().intValue() != storeId.intValue()){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销店铺不一致!");
+			}
 			if (order.getOrderStatus() == 2) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单已完成");
 			}
@@ -255,6 +258,7 @@ public class ServiceOrderService {
 				// 推送给IOSAPP端
 				PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 				PushUtil.push2IOSByAPNS(parms);
+				PushUtil.push2Andriod(parms);
 				String title = "订单提醒";
 				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 				// 推送给安卓APP端
@@ -412,5 +416,5 @@ public class ServiceOrderService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "错误的订单号！");
 		}
 	}
-
+	
 }

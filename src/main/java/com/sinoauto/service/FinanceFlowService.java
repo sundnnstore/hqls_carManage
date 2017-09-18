@@ -328,7 +328,7 @@ public class FinanceFlowService {
 				// 推送消息给B端
 				HqlsUser user = userMapper.getUserByStoreId(flow.getStoreId());
 				if (user != null) {
-					PushAction pa = new PushAction("finance", 0, true, "");
+					PushAction pa = new PushAction("Finance", 0, true, "");
 					List<PushAction> action = new ArrayList<>();
 					action.add(pa);
 					String text = "您有一笔线下充值通过审核";
