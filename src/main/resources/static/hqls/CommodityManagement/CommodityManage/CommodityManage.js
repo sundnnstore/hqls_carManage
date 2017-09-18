@@ -905,17 +905,17 @@ var setting = {
 
 
 var settingQuery = {
-	    view: {
-	        dblClickExpand: false,
-	        autoCancelSelected: false
-	    },
-	    data: {
-	        simpleData: {
-	            enable: true
-	        }
-	    },
-	    callback: {
-	        //beforeClick: beforeClick, //检查
-	        onClick: onClick
-	    }
-	};
+    view: {
+        dblClickExpand: false,
+        autoCancelSelected: false
+    },
+    data: {
+        simpleData: {
+            enable: true
+        }
+    },
+    callback: {
+        //beforeClick: beforeClick, //检查
+        onClick: onClick
+    }
+};

@@ -241,7 +241,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			return;
 		}
 		var imgsrc = $("#commodityImgUrl").attr("src");
-		if(imgsrc.length<0||imgsrc==undefined){
+		if(imgsrc.length<0||imgsrc==undefined||imgsrc==''){
 			layer.msg("请上传图片");
 			return;
 		}
@@ -306,7 +306,7 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			return;
 		}
 		var imgsrc = $("#commodityImgUrl").attr("src");
-		if(imgsrc.length<0||imgsrc==undefined){
+		if(imgsrc.length<0||imgsrc==undefined||imgsrc==''){
 			layer.msg("请上传图片");
 			return;
 		}
@@ -451,10 +451,12 @@ layui.use([ 'jquery', 'layer', 'tree' ], function() {
 			},
 			success : function(data) {
 				$('#partsTypeName').val(item.name); // 配件类型名称
-				// $('#categoriesInfoEdit').find("input").attr("placeholder",item.name);
 				$('#categoriesInfoEdit select').val(data.result.partsType);
 				if(data.result.icon!=null){
+					//填充
 					$("#commodityImgUrl").attr("src",data.result.icon);
+					//禁用上传按钮
+					$(".commodityImg").attr("disabled", true);
 				}
 				
 			},
@@ -713,8 +715,16 @@ function change(obj) {
  */
 function delImg(obj) {
     var url = $(obj).parent().find("img").attr("src");
-    delFile(url);
-    appendimg();
+    if(url!=undefined&&url.length>0&&url!=''&&url!=null){
+    	delFile(url);
+    	appendimg();
+    	$(".commodityImg").attr("disabled",false);
+    }else{
+    	layer.msg("无可删除的图片",{time:500});
+    }
+    
+    
+    
     
 }
 
