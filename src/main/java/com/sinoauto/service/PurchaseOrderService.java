@@ -330,6 +330,7 @@ public class PurchaseOrderService {
 				Double originPrice = order.getTotalFee();
 				order.setPayFee(totalAmount);
 				order.setOrderStatus(2);
+				order.setShipAddressId(param.getAddressId());
 				order.setTotalFee(totalAmount);
 				order.setDiscountFee(new BigDecimal(order.getTotalFee()).subtract(new BigDecimal(originPrice)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 				purchaseOrderMapper.payOperation(order);
@@ -437,7 +438,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
 	
@@ -448,7 +449,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
  
