@@ -438,7 +438,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
 	
@@ -449,7 +449,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
  

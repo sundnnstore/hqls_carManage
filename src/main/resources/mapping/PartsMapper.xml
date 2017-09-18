@@ -111,7 +111,7 @@
 			<if test="partsCode!=null and partsCode!='' "> and pa.parts_code like CONCAT('%',#{partsCode},'%')</if>
 		 	<if test="partsName!=null and partsName!='' "> and pa.parts_name like CONCAT('%',#{partsName},'%')</if>
 		 	<if test="partsTopTypeId!=-1 and partsTopTypeId!=null"> and hpt.parts_type=#{partsTopTypeId}</if>
-		 	<if test="partsTypeId!=null and partsTypeId!=0"> and hpt.pid=#{partsTypeId} or hpt.parts_type_id=#{partsTypeId}</if>
+		 	<if test="partsTypeId!=null and partsTypeId!=0"> and (hpt.pid=#{partsTypeId} or hpt.parts_type_id=#{partsTypeId})</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
 		    order by  pa.create_time desc 
 	</select>

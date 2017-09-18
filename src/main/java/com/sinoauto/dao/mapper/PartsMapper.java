@@ -185,6 +185,14 @@ public interface PartsMapper {
 	public Integer findPartsTypeIdByPartsId(Integer partId);
 	
 	/**
+	 * 根据配件id查询配件类型id
+	 * @param partId
+	 * @return
+	 */
+	@Select("SELECT count(*) FROM hqls_parts WHERE parts_type_id=#{1}")
+	public Integer findPartsByPartsTypeId(Integer partsTypeId);
+	
+	/**
 	 * 查询父级ID
 	 * @param partsTypeId
 	 * @return
