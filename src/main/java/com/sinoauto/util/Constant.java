@@ -6,7 +6,7 @@ public class Constant {
 	// 极光推送APP_KEY
 	public static final String APP_KEY = "3638189b445792e8025a3c4c";
 	//APNS生产环境
-	public static final Boolean APNS_PRODUCTION = false;
+	public static final Boolean APNS_PRODUCTION = true;
 	//登录使用的同意UUID
 	public static final String UUID_LOGIN = "348c03e3-cca0-412d-be0a-e852e80564e3";
 	
