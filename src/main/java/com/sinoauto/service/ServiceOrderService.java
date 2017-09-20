@@ -275,7 +275,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCode(String code, String orderNo) {
-		String url = "http://www.chexiaozhu.cn/api/openapi/dataapi.ashx";
+		String url = "http://c.sinoauto.com/api/openapi/dataapi.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("method", "codeVerification");
 		params.put("check", "shopnum1Api");
@@ -288,7 +288,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCodeOfCard(String code, String orderNo, String storeCode) {
-		String url = "http://www.chexiaozhu.cn/Api/Mobile/MemberServiceCard.ashx";
+		String url = "http://c.sinoauto.com/Api/Mobile/MemberServiceCard.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("oid", orderNo);
 		params.put("Handle", "hexiao");
@@ -301,7 +301,7 @@ public class ServiceOrderService {
 	}
 
 	public String addExtraOrder(String extraProjectDesc, Double orderAmount, Integer orderType, String orderNo, String extraOrderNo) {
-		String url = "http://www.chexiaozhu.cn/Api/Mobile/AdditionalService.ashx";
+		String url = "http://c.sinoauto.com/Api/Mobile/AdditionalService.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("Handle", "adddata");
 		params.put("ServiceName", extraProjectDesc);
@@ -327,12 +327,16 @@ public class ServiceOrderService {
 		if (res.contains("-202")) {
 			return RestModel.success("增加增项订单成功");
 		} else if (res.contains("-505")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "预约订单号已经不存在");
 		} else if (res.contains("-303")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务订单号已经不存在");
 		} else if (res.contains("-404")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "C端数据生成失败 ");
 		} else {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "其他错误！");
 		}
 	}
