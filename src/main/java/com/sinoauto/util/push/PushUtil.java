@@ -1,6 +1,8 @@
 package com.sinoauto.util.push;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,44 +26,76 @@ import cn.jpush.api.push.model.notification.Notification;
 
 public class PushUtil {
 	public static Logger LOG = LoggerFactory.getLogger(PushUtil.class);
+
+	public static PushResult push2AndriodNotice(PushParms parms) {
+		JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY, null, ClientConfig.getInstance());
+		PushPayload payload = comboAndrid(parms);
+		try {
+			PushResult result = jpushClient.sendPush(payload);
+			LOG.info("Got result - ", result);
+			return result;
+		} catch (APIConnectionException e) {
+			LOG.error("Connection error, should retry later", e);
+			return null;
+		} catch (APIRequestException e) {
+			LOG.error("Should review the error, and fix the request", e);
+			LOG.error("HTTP Status: ", e.getStatus());
+			LOG.error("Error Code: ", e.getErrorCode());
+			LOG.error("Error Message: ", e.getErrorMessage());
+			return null;
+		}
+	}
+
 	
-	
-	 public static PushResult push2Andriod(PushParms parms) {
-	        JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY);
-	        try {
-	            SMS sms = SMS.content(new Gson().toJson(parms.getMessage()), 10);
-	            PushResult result = jpushClient.sendAndroidMessageWithAlias(parms.getAlert().getTitle(), new Gson().toJson(parms.getMessage()), sms, parms.getAccount());
-	            LOG.info("Got result - " + result);
-	            return result;
-	        } catch (APIConnectionException e) {
-	            LOG.error("Connection error. Should retry later. ", e);
-	            return null;
-	        } catch (APIRequestException e) {
-	            LOG.error("Error response from JPush server. Should review and fix it. ", e);
-	            LOG.info("HTTP Status: " + e.getStatus());
-	            LOG.info("Error Code: " + e.getErrorCode());
-	            LOG.info("Error Message: " + e.getErrorMessage());
-	            return null;
-	        }
-	    }
+	public static PushResult push2Andriod(PushParms parms) {
+		JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY);
+		try {
+			SMS sms = SMS.content(new Gson().toJson(parms.getMessage()), 10);
+			PushResult result = jpushClient.sendAndroidMessageWithAlias(parms.getAlert().getTitle(), new Gson().toJson(parms.getMessage()), sms,
+					parms.getAccount());
+			LOG.info("Got result - " + result);
+			return result;
+		} catch (APIConnectionException e) {
+			LOG.error("Connection error. Should retry later. ", e);
+			return null;
+		} catch (APIRequestException e) {
+			LOG.error("Error response from JPush server. Should review and fix it. ", e);
+			LOG.info("HTTP Status: " + e.getStatus());
+			LOG.info("Error Code: " + e.getErrorCode());
+			LOG.info("Error Message: " + e.getErrorMessage());
+			return null;
+		}
+	}
 
 	public static PushResult push2IOSByAPNS(PushParms parms) {
 		JPushClient jpushClient = new JPushClient(Constant.MASTER_SECRET, Constant.APP_KEY, null, ClientConfig.getInstance());
 		PushPayload payload = getPushPayload(parms);
 		try {
 			PushResult result = jpushClient.sendPush(payload);
-			LOG.info("Got result - " , result);
+			LOG.info("Got result - ", result);
 			return result;
 		} catch (APIConnectionException e) {
-			LOG.error("Connection error, should retry later" , e);
+			LOG.error("Connection error, should retry later", e);
 			return null;
 		} catch (APIRequestException e) {
-			LOG.error("Should review the error, and fix the request" , e);
-			LOG.error("HTTP Status: " , e.getStatus());
-			LOG.error("Error Code: " , e.getErrorCode());
-			LOG.error("Error Message: " , e.getErrorMessage());
+			LOG.error("Should review the error, and fix the request", e);
+			LOG.error("HTTP Status: ", e.getStatus());
+			LOG.error("Error Code: ", e.getErrorCode());
+			LOG.error("Error Message: ", e.getErrorMessage());
 			return null;
 		}
+	}
+
+	/**
+	 * 构建安卓
+	 * @return
+	 */
+	public static PushPayload comboAndrid(PushParms parms) {
+		Map<String, String> map = new HashMap<>();
+		map.put("module", parms.getMessage().getAction().get(0).getModule());
+		map.put("open", parms.getMessage().getAction().get(0).getOpen() + "");
+		return PushPayload.newBuilder().setPlatform(Platform.android()).setAudience(Audience.alias(parms.getAccount()))
+				.setNotification(Notification.android(parms.getAlert().getTitle(), parms.getAlert().getTitle(), map)).build();
 	}
 
 	/**
@@ -70,28 +104,23 @@ public class PushUtil {
 	 * @return
 	 */
 	public static PushPayload getPushPayload(PushParms parms) {
-		return PushPayload.newBuilder()
-						.setPlatform(Platform.ios())
-						.setAudience(Audience.alias(parms.getAccount()))
-						.setNotification(Notification.newBuilder()
-						.addPlatformNotification(IosNotification.newBuilder()
-						.setAlert(parms.getAlert().getTitle())
-						.setBadge(parms.getBadge())
-						.setSound(parms.getSound())
-						//.addExtra("from", "HQLS")
-						.addExtra("message", new Gson().toJson(parms.getMessage()))
+		return PushPayload.newBuilder().setPlatform(Platform.ios()).setAudience(Audience.alias(parms.getAccount()))
+				.setNotification(Notification.newBuilder()
+						.addPlatformNotification(IosNotification.newBuilder().setAlert(parms.getAlert().getTitle()).setBadge(parms.getBadge())
+								.setSound(parms.getSound())
+								// .addExtra("from", "HQLS")
+								.addExtra("message", new Gson().toJson(parms.getMessage())).build())
 						.build())
-						.build())
-						.setMessage(Message.content(new Gson().toJson(parms.getMessage())))
-						.setOptions(Options.newBuilder()
-											.setApnsProduction(Constant.APNS_PRODUCTION)
-											.build()).build();
+				.setMessage(Message.content(new Gson().toJson(parms.getMessage())))
+				.setOptions(Options.newBuilder().setApnsProduction(Constant.APNS_PRODUCTION).build()).build();
 	}
+
 	/**
 	 * 组装推送内容
 	 * @return
 	 */
-	public static PushParms comboPushParms(String account,List<PushAction> action,PushInfo info,String title,String subtitle,String body,Integer badge){
+	public static PushParms comboPushParms(String account, List<PushAction> action, PushInfo info, String title, String subtitle, String body,
+			Integer badge) {
 		PushParms parms = new PushParms();
 		parms.setAccount(account);
 		PushAlert alert = new PushAlert();

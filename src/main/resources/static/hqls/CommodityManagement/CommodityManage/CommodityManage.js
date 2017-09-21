@@ -12,6 +12,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     };
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
+    	
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
         if (method == 'addCommodity') {
@@ -88,6 +89,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         layer.msg(titleInfo);
                         return;
                     } else {
+                    	//价格
                         var pric = parseFloat($('#price').val());
                         var disc = parseFloat($('#discount').val());
                         var curPrice = parseFloat($('#curPrice').val());
@@ -96,6 +98,13 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                             layer.msg(titleInfo);
                             return;
                         }
+                        
+                        //上传图片
+                        if(imgCount()<2){
+                        	layer.msg("请上传至少一个图片");
+                            return;
+                        }
+                        
                     }
                 }
                 switch (title) {
@@ -790,6 +799,12 @@ function delImg(obj) {
         appendImg(obj);
     }
 }
+
+//图片数量
+function imgCount(){
+	var count = $(".siteUpload").length;
+	return count;
+}
 //在配件树中选中配件后写入input中
 function beforeClick(treeId, treeNode) {
     var check = (treeNode && !treeNode.isParent);
@@ -811,11 +826,19 @@ function beforeClick(treeId, treeNode) {
 function onClick(e, treeId, treeNode) {
     $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
     if (treeId == 'commodityTree') {
+    	var display = $("#menuContent").css("display");
+		if(display=="block"){
+			$("#menuContent").hide();
+		}
         // 保存id
         selectTreeId = treeNode.id;
         console.log("onClick--->" + treeNode.id);
         $("#commodityName").val(treeNode.name);
     } else {
+    	var display = $("#modelContent").css("display");
+		if(display=="block"){
+			$("#modelContent").hide();
+		}
         // 保存id
         selectTreeId = treeNode.id;
         $("#cName").val(treeNode.name);
@@ -823,6 +846,7 @@ function onClick(e, treeId, treeNode) {
 }
 
 var treeTemp;
+
 // 配件树展示与收缩
 function showMenu(temp) {
     treeTemp = temp;
@@ -831,7 +855,9 @@ function showMenu(temp) {
     } else if (treeTemp == 'main') {
         $("#menuContent").css({ left: 0, top: "37px" }).slideToggle("fast");
     }
+    
 }
+
 
 /**
  * 配件树数据源
@@ -879,17 +905,17 @@ var setting = {
 
 
 var settingQuery = {
-	    view: {
-	        dblClickExpand: false,
-	        autoCancelSelected: false
-	    },
-	    data: {
-	        simpleData: {
-	            enable: true
-	        }
-	    },
-	    callback: {
-	        //beforeClick: beforeClick, //检查
-	        onClick: onClick
-	    }
-	};
+    view: {
+        dblClickExpand: false,
+        autoCancelSelected: false
+    },
+    data: {
+        simpleData: {
+            enable: true
+        }
+    },
+    callback: {
+        //beforeClick: beforeClick, //检查
+        onClick: onClick
+    }
+};

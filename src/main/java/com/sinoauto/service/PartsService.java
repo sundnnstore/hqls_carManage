@@ -201,7 +201,7 @@ public class PartsService {
 			// 事物处理
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 		}
-		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION.getErrcode(), "新增商品信息异常");
+		return RestModel.error(HttpStatus.INTERNAL_SERVER_ERROR, ErrorStatus.SYSTEM_EXCEPTION,"新增数据异常");
 	}
 
 	/**

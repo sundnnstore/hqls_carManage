@@ -24,6 +24,9 @@ public interface PartsPicMapper {
 	@Select("select * from hqls_parts_pic where parts_id = #{1} order by sorting")
 	public List<HqlsPartsPic> findPartsPicsByPartsId(Integer partsId);
 	
+	@Select("select * from hqls_parts_pic where parts_id = #{1} order by sorting limit 0,5")
+	public List<HqlsPartsPic> findPartsPicsLimit5ByPartsId(Integer partsId);
+	
 	/**
 	 *  新增商品图片
 	 * 	@User liud
