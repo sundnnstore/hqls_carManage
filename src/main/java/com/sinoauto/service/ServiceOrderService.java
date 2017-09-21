@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,10 @@ import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class ServiceOrderService {
-
+	
+	
+	@Value("${cxz.url}")
+	private String cxzUrl;
 	@Autowired
 	private ServiceOrderMapper serviceOrderMapper;
 	@Autowired
@@ -275,7 +279,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCode(String code, String orderNo) {
-		String url = "http://c.sinoauto.com/api/openapi/dataapi.ashx";
+		String url = cxzUrl+"/api/openapi/dataapi.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("method", "codeVerification");
 		params.put("check", "shopnum1Api");
@@ -288,7 +292,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCodeOfCard(String code, String orderNo, String storeCode) {
-		String url = "http://c.sinoauto.com/Api/Mobile/MemberServiceCard.ashx";
+		String url = cxzUrl+"/Api/Mobile/MemberServiceCard.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("oid", orderNo);
 		params.put("Handle", "hexiao");
@@ -301,7 +305,7 @@ public class ServiceOrderService {
 	}
 
 	public String addExtraOrder(String extraProjectDesc, Double orderAmount, Integer orderType, String orderNo, String extraOrderNo) {
-		String url = "http://c.sinoauto.com/Api/Mobile/AdditionalService.ashx";
+		String url = cxzUrl+"/Api/Mobile/AdditionalService.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("Handle", "adddata");
 		params.put("ServiceName", extraProjectDesc);
