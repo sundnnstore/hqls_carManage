@@ -30,29 +30,26 @@ public interface UserMapper {
 
 	@Select("select * from hqls_user where user_id = (select user_id from hqls_user_store where store_id = #{1} and is_contact = 1 limit 1)")
 	public HqlsUser getUserByStoreId(Integer storeId);
-	
+
 	@Select("select mobile from hqls_user where user_id = #{userId}")
 	public String getUserByUserId(@Param("userId") Integer userId);
-	
+
 	@Update("UPDATE hqls_user set mobile=#{newMobile} where user_id = #{userId}")
-	public int updateUserByUserId(@Param("newMobile") String newMobile,@Param("userId") Integer userId);
-	
+	public int updateUserByUserId(@Param("newMobile") String newMobile, @Param("userId") Integer userId);
+
 	@Select("select * from hqls_user where user_id = #{1}")
 	public HqlsUser getUserById(Integer userId);
-	
+
 	@Update("update hqls_user set user_name = #{userName}, dml_time = now() where user_id = #{userId}")
 	public int updateUser(HqlsUser user);
-	
+
 	public UserDto getUserDtoByUserId(@Param("userId") Integer userId);
-	
-	@Select("SELECT hs.store_id FROM hqls_user_store  hus LEFT JOIN hqls_store hs "+
-			"ON hus.store_id = hs.store_id "+
-			"WHERE hus.user_id =( SELECT user_id FROM hqls_user WHERE global_user_id = #{1} AND is_useable =1) "+ 
-			"AND hs.is_useable = 1 LIMIT 1")
+
+	@Select("SELECT hs.store_id FROM hqls_user_store  hus LEFT JOIN hqls_store hs " + "ON hus.store_id = hs.store_id "
+			+ "WHERE hus.user_id =( SELECT user_id FROM hqls_user WHERE global_user_id = #{1} AND is_useable =1) " + "AND hs.is_useable = 1 LIMIT 1")
 	public Integer checkUser(Integer globalUserId);
-	
+
 	@Select("select * from hqls_user where mobile = #{1}")
 	public HqlsUser getUserByMobile(String mobile);
-	
 
 }
