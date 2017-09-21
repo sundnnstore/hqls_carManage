@@ -661,6 +661,7 @@ public class PurchaseOrderService {
 				// 推送给IOSAPP端
 				PushParms parms = PushUtil.comboPushParms(storeUser.getMobile(), action, null, text, "", null, 0);
 				PushUtil.push2IOSByAPNS(parms);
+				PushUtil.push2AndriodNotice(parms);
 				String title = "订单提醒";
 				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(storeUser.getUserId());
 				// 推送给安卓APP端
