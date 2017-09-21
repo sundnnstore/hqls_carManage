@@ -16,6 +16,8 @@ public class PurchaseOrderParamDto {
 
 	@ApiModelProperty("订单Id")
 	private Integer orderId;
+	@ApiModelProperty("订单号")
+	private String orderNo;
 	@ApiModelProperty("下单门店Id")
 	private Integer storeId;
 	@ApiModelProperty("购买商品集合")
@@ -112,6 +114,15 @@ public class PurchaseOrderParamDto {
 			this.totalFee = totalFee;
 		}
 	}
-	
 
+	public String getOrderNo() {
+		return orderNo;
+	}
+
+	public void setOrderNo(String orderNo) {
+		if (orderNo != null) {
+			this.orderNo = orderNo;
+		}
+	}
+	
 }
