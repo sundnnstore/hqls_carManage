@@ -113,12 +113,19 @@ public class PartsTypeService {
 		HqlsPartsType partsType = partsTypeMapper.findPartsTypeByPartsTypeId(partsTypeId);
 		CommonDto common = new CommonDto();
 		common.setValue(partsType.getIcon());
-		List<CommonDto> exitChildren = partsMapper.findPartsTypeListByPid(partsTypeId);
-		if (!exitChildren.isEmpty()) {
+		List<CommonDto> exitChildren = partsMapper.findPartsTypeListByPid(partsTypeId); //是否存在子集
+		if (!exitChildren.isEmpty()) { 
 			common.setKey(1);
 			return RestModel.success(common);
 		} else {
-			common.setKey(0);
+			//如果不存在子集,是否下面有商品
+			Integer count = partsMapper.findPartsByPartsTypeId(partsTypeId);
+			if(count>0){
+				common.setKey(1);
+			}else{
+				common.setKey(0);	
+			}
+			
 			return RestModel.success(common);
 		}
 	}

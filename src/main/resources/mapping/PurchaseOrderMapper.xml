@@ -24,13 +24,13 @@
 	
 	
 	<select id="findOrder" parameterType="Integer" resultMap="orderList">
-		select purchase_order_id, ship_address_id 
+		select purchase_order_id, ship_address_id, order_no 
 		from hqls_purchase_order 
 		where store_id = #{storeId}
 		<if test="orderStatus != null">
 			and order_status = #{orderStatus}  
 		</if>
-		 order by create_time desc
+		 order by dml_time desc
 	</select>
 	
 	<select id="getOrderByOrderId" parameterType="Integer" resultMap="shopCartInfo">

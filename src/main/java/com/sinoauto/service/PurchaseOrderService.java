@@ -330,6 +330,7 @@ public class PurchaseOrderService {
 				Double originPrice = order.getTotalFee();
 				order.setPayFee(totalAmount);
 				order.setOrderStatus(2);
+				order.setShipAddressId(param.getAddressId());
 				order.setTotalFee(totalAmount);
 				order.setDiscountFee(new BigDecimal(order.getTotalFee()).subtract(new BigDecimal(originPrice)).setScale(2, RoundingMode.HALF_UP).doubleValue());
 				purchaseOrderMapper.payOperation(order);
@@ -437,7 +438,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getPurchaseNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
 	
@@ -448,7 +449,7 @@ public class PurchaseOrderService {
 			BigDecimal eachOrderPrice = new BigDecimal(hqpart.getCurPrice()).multiply(new BigDecimal(p.getNum()));
 			result = result.add(eachOrderPrice);
 		}
-		result.setScale(2, RoundingMode.HALF_UP);
+		result = result.setScale(2, RoundingMode.HALF_UP);
 		return result.doubleValue();
 	}
  
@@ -660,6 +661,7 @@ public class PurchaseOrderService {
 				// 推送给IOSAPP端
 				PushParms parms = PushUtil.comboPushParms(storeUser.getMobile(), action, null, text, "", null, 0);
 				PushUtil.push2IOSByAPNS(parms);
+				PushUtil.push2AndriodNotice(parms);
 				String title = "订单提醒";
 				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(storeUser.getUserId());
 				// 推送给安卓APP端

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,10 @@ import com.sinoauto.util.push.PushUtil;
 
 @Service
 public class ServiceOrderService {
-
+	
+	
+	@Value("${cxz.url}")
+	private String cxzUrl;
 	@Autowired
 	private ServiceOrderMapper serviceOrderMapper;
 	@Autowired
@@ -83,10 +87,10 @@ public class ServiceOrderService {
 	}
 
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrderByCode(String token, String code) {
+	public ResponseEntity<RestModel<String>> finishOrderByCode(String token, String code,Integer storeId) {
 		Integer serviceOrderId = serviceOrderMapper.getOrderIdByCode(code);
 		if (serviceOrderId != null && serviceOrderId > 0) {
-			return finishOrder(token, serviceOrderId, code);
+			return finishOrder(token, serviceOrderId, code,storeId);
 		} else {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "核销码不正确！");
 		}
@@ -99,7 +103,7 @@ public class ServiceOrderService {
 	 * @return
 	 */
 	@Transactional
-	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId, String code) {
+	public ResponseEntity<RestModel<String>> finishOrder(String token, Integer serviceOrderId, String code,Integer storeId) {
 		// 判断服务订单是否已经完成，
 		// 未完成的订单，确认完成
 		// 推送给车小主，更新门店的余额,记录账单
@@ -112,6 +116,9 @@ public class ServiceOrderService {
 			Integer userId = rest.getResult().getUserId();// 当前登录人的userid
 			HqlsUser user = userMapper.getUserByGloabUserId(userId);
 			HqlsServiceOrder order = serviceOrderMapper.getServiceOrderByOrderId(serviceOrderId);
+			if(order.getStoreId().intValue() != storeId.intValue()){
+				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(),"核销店铺不一致!");
+			}
 			if (order.getOrderStatus() == 2) {
 				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "订单已完成");
 			}
@@ -255,6 +262,8 @@ public class ServiceOrderService {
 				// 推送给IOSAPP端
 				PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 				PushUtil.push2IOSByAPNS(parms);
+				//PushUtil.push2Andriod(parms);
+				PushUtil.push2AndriodNotice(parms);
 				String title = "订单提醒";
 				List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 				// 推送给安卓APP端
@@ -270,7 +279,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCode(String code, String orderNo) {
-		String url = "http://www.chexiaozhu.cn/api/openapi/dataapi.ashx";
+		String url = cxzUrl+"/api/openapi/dataapi.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("method", "codeVerification");
 		params.put("check", "shopnum1Api");
@@ -283,7 +292,7 @@ public class ServiceOrderService {
 	}
 
 	public String checkCodeOfCard(String code, String orderNo, String storeCode) {
-		String url = "http://www.chexiaozhu.cn/Api/Mobile/MemberServiceCard.ashx";
+		String url = cxzUrl+"/Api/Mobile/MemberServiceCard.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("oid", orderNo);
 		params.put("Handle", "hexiao");
@@ -296,7 +305,7 @@ public class ServiceOrderService {
 	}
 
 	public String addExtraOrder(String extraProjectDesc, Double orderAmount, Integer orderType, String orderNo, String extraOrderNo) {
-		String url = "http://www.chexiaozhu.cn/Api/Mobile/AdditionalService.ashx";
+		String url = cxzUrl+"/Api/Mobile/AdditionalService.ashx";
 		Map<String, Object> params = new HashMap<>();
 		params.put("Handle", "adddata");
 		params.put("ServiceName", extraProjectDesc);
@@ -322,12 +331,16 @@ public class ServiceOrderService {
 		if (res.contains("-202")) {
 			return RestModel.success("增加增项订单成功");
 		} else if (res.contains("-505")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "预约订单号已经不存在");
 		} else if (res.contains("-303")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务订单号已经不存在");
 		} else if (res.contains("-404")) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "C端数据生成失败 ");
 		} else {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "其他错误！");
 		}
 	}
@@ -374,6 +387,8 @@ public class ServiceOrderService {
 					// 推送给IOSAPP端
 					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 					PushUtil.push2IOSByAPNS(parms);
+					//PushUtil.push2Andriod(parms);
+					PushUtil.push2AndriodNotice(parms);
 					String title = "服务款";
 					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
 					// 推送给安卓APP端
@@ -412,5 +427,5 @@ public class ServiceOrderService {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "错误的订单号！");
 		}
 	}
-
+	
 }
