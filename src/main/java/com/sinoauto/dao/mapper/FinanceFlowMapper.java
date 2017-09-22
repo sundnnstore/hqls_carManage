@@ -1,5 +1,7 @@
 package com.sinoauto.dao.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -38,5 +40,11 @@ public interface FinanceFlowMapper {
 
 	@Update("update hqls_finance_flow set remark = #{remark} where order_no = #{orderNo} and store_id = #{storeId}")
 	public int updateOrderRemark(@Param("storeId") Integer storeId, @Param("orderNo") String orderNo, @Param("remark") String remark);
+	
+	@Select("SELECT * FROM hqls_finance_flow WHERE store_id = #{storeId} AND create_time >= CONCAT(DATE_SUB(#{queryDate}, INTERVAL 1 DAY),' 17:00:00')  AND create_time < CONCAT( #{queryDate},' 17:00:00')  AND flow_status = 1 AND change_type != 1 AND change_type != 2")
+	public List<HqlsFinanceFlow> findDailyFlowByStoreIdAndDate(@Param("storeId")Integer storeId,@Param("queryDate")String queryDate);
+	
+	@Select("SELECT * FROM hqls_finance_flow where DATE_SUB(DATE_FORMAT( CURDATE( ) , '%Y-%m-%d' ), INTERVAL #{days} DAY) < DATE_FORMAT( create_time, '%Y-%m-%d' ) AND store_id = #{storeId} AND flow_status = 1 AND change_type != 1 AND change_type != 2")
+	public List<HqlsFinanceFlow> findNearDaysFlows(@Param("storeId")Integer storeId,@Param("days")Integer days);
 
 }
