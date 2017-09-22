@@ -43,7 +43,7 @@ public class DateUtil {
 			month = month - 1;
 		}
 		int day = Integer.parseInt(nums[2]);
-		for (int i = days; i >= 1; i--) {
+		for (int i = days-1; i >= 0; i--) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(year, month, day);
 			calendar.add(Calendar.DATE, -i);
