@@ -460,7 +460,7 @@ public class FinanceFlowService {
 			}
 			for (String day : dayDesc) {
 				FinanceDetailDto f = new FinanceDetailDto();
-				f.setFinanceDate(day);
+				f.setFinanceDate(day.split("-")[1]+"."+day.split("-")[2]);
 				f.setTotalIncome(map.get(day).doubleValue());
 				financeDetails.add(f);
 			}
