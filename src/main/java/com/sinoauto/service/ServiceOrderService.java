@@ -326,7 +326,11 @@ public class ServiceOrderService {
 		extraOrderMapper.insertExtraOrder(order);
 		// 调用车小主添加增项服务订单接口
 		HqlsServiceOrder serviceOrder = serviceOrderMapper.getServiceOrderByOrderId(order.getServiceOrderId());
-		String res = addExtraOrder(order.getExtraProjectDesc(), order.getOrderAmount(), serviceOrder.getOrderType(), order.getOrderNo(),
+		Integer orderType = serviceOrder.getOrderType();
+		if(serviceOrder.getIsCard()){
+			orderType = 3;
+		}
+		String res = addExtraOrder(order.getExtraProjectDesc(), order.getOrderAmount(), orderType, order.getOrderNo(),
 				extraOrderNo);
 		if (res.contains("-202")) {
 			return RestModel.success("增加增项订单成功");
