@@ -439,11 +439,11 @@ public class FinanceFlowService {
 		BigDecimal totalIncome = new BigDecimal(0);
 		List<FinanceDetailDto> financeDetails = new ArrayList<>();
 		Map<String, BigDecimal> map = new HashMap<>();
+		List<String> dayDesc = DateUtil.getDateList(days);
+		for (String day : dayDesc) {// 加入日期
+			map.put(day, new BigDecimal(0));
+		}
 		if (finances != null && finances.size() > 0) {
-			List<String> dayDesc = DateUtil.getDateList(days);
-			for (String day : dayDesc) {// 加入日期
-				map.put(day, new BigDecimal(0));
-			}
 			for (HqlsFinanceFlow fina : finances) {
 				String d = sdf.format(fina.getCreateTime());
 				BigDecimal curMoney = map.get(d);
@@ -458,12 +458,12 @@ public class FinanceFlowService {
 				}
 				map.put(d, curMoney);
 			}
-			for (String day : dayDesc) {
-				FinanceDetailDto f = new FinanceDetailDto();
-				f.setFinanceDate(day.split("-")[1]+"."+day.split("-")[2]);
-				f.setTotalIncome(map.get(day).doubleValue());
-				financeDetails.add(f);
-			}
+		}
+		for (String day : dayDesc) {
+			FinanceDetailDto f = new FinanceDetailDto();
+			f.setFinanceDate(day.split("-")[1]+"."+day.split("-")[2]);
+			f.setTotalIncome(map.get(day).doubleValue());
+			financeDetails.add(f);
 		}
 		FinanceLogDto returnFinance = new FinanceLogDto();
 		returnFinance.setTotalExpenditure(totalExpenditure.doubleValue());
