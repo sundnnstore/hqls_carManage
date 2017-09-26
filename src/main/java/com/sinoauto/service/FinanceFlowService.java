@@ -26,11 +26,13 @@ import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.RebateMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.UserMapper;
+import com.sinoauto.dto.DailyFlowDto;
 import com.sinoauto.dto.FinanceDetailDto;
 import com.sinoauto.dto.FinanceLogDto;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowDto;
 import com.sinoauto.dto.FlowListDto;
+import com.sinoauto.dto.QueryFlowDto;
 import com.sinoauto.dto.RechargeDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
@@ -375,14 +377,47 @@ public class FinanceFlowService {
 	}
 
 	public ResponseEntity<RestModel<FinanceLogDto>> dailyFlow(Integer storeId, String queryDate) {
+		List<QueryFlowDto> flows = financeFlowMapper.findQueryFlows(storeId, queryDate);
+		List<QueryFlowDto> extraFlows = financeFlowMapper.findExtraFlows(storeId, queryDate);
 		List<HqlsFinanceFlow> finances = financeFlowMapper.findDailyFlowByStoreIdAndDate(storeId, queryDate);
 		FinanceLogDto finance = new FinanceLogDto();
+		Map<String, DailyFlowDto> map = new HashMap<>();
 		if (finances != null && finances.size() > 0) {
-			return RestModel.success(comboFlowDto(finances));
+			finance = comboFlowDto(finances);
+		} else {
+			finance.setTotalExpenditure(0.0);
+			finance.setTotalIncome(0.0);
 		}
-		finance.setTotalExpenditure(0.0);
-		finance.setTotalIncome(0.0);
-		finance.setFlowList(new ArrayList<>());
+		if (extraFlows != null && extraFlows.size() > 0) {
+			DailyFlowDto flowDto = new DailyFlowDto();
+			flowDto.setAmount(0.0);
+			flowDto.setServiceCount(0);
+			for (QueryFlowDto flow : extraFlows) {
+				flowDto.setServiceCount(flowDto.getServiceCount() + 1);
+				Double orderAmount = new BigDecimal(flow.getOrderAmount()).add(new BigDecimal(flowDto.getAmount()))
+						.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				flowDto.setAmount(orderAmount);
+			}
+			map.put("增项服务", flowDto);
+		}
+		if (flows != null && flows.size() > 0) {
+			for (QueryFlowDto flow : flows) {
+				DailyFlowDto flowDto = null;
+				if (map.containsKey(flow.getServiceTypeName())) {
+					flowDto = map.get(flow.getServiceTypeName());
+					flowDto.setServiceCount(flowDto.getServiceCount() + 1);
+					Double amount = new BigDecimal(flowDto.getAmount()).add(new BigDecimal(flow.getOrderAmount()))
+							.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					flowDto.setAmount(amount);
+				} else {
+					flowDto = new DailyFlowDto();
+					flowDto.setServiceCount(1);
+					flowDto.setAmount(flow.getOrderAmount());
+				}
+				map.put(flow.getServiceTypeName(), flowDto);
+			}
+		}
+		finance.setFlowList(map);
 		return RestModel.success(finance);
 	}
 
@@ -390,43 +425,15 @@ public class FinanceFlowService {
 		FinanceLogDto finance = new FinanceLogDto();
 		BigDecimal expenditure = new BigDecimal(0);
 		BigDecimal income = new BigDecimal(0);
-		List<FlowDto> flowList = new ArrayList<>();
-		SimpleDateFormat dateSdf = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat timeSdf = new SimpleDateFormat("HH:mm");
 		for (HqlsFinanceFlow orginal : finances) {
-			FlowDto flowDto = new FlowDto();
-			flowDto.setFlowStatus(orginal.getFlowStatus());
-			flowDto.setDate(dateSdf.format(orginal.getCreateTime()));
-			flowDto.setTime(timeSdf.format(orginal.getCreateTime()));
-			flowDto.setFinanceFlowId(orginal.getFinanceFlowId());
-			// 收入
-			if (orginal.getChargeType() == 1) {
-				flowDto.setMoney("+" + orginal.getChangeMoney());
-			}
-			// 支出
-			if (orginal.getChargeType() == 2) {
-				flowDto.setMoney("-" + orginal.getChangeMoney());
-			}
-
-			if (orginal.getChangeType() == 1) {
-				flowDto.setContent("充值");
-			} else if (orginal.getChangeType() == 2) {
-				flowDto.setContent("提现服务");
-			} else if (orginal.getChangeType() == 3) {
-				flowDto.setContent("采购");
+			if (orginal.getChangeType() == 3) {
 				expenditure = expenditure.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
 			} else if (orginal.getChangeType() == 4) {
-				flowDto.setContent("服务订单");
 				income = income.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
 			} else if (orginal.getChangeType() == 5) {
-				flowDto.setContent("消费返现");
 				income = income.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
-			} else {
-				flowDto.setContent("未知流水");
 			}
-			flowList.add(flowDto);
 		}
-		finance.setFlowList(flowList);
 		finance.setTotalExpenditure(expenditure.doubleValue());
 		finance.setTotalIncome(income.doubleValue());
 		return finance;
@@ -461,7 +468,7 @@ public class FinanceFlowService {
 		}
 		for (String day : dayDesc) {
 			FinanceDetailDto f = new FinanceDetailDto();
-			f.setFinanceDate(day.split("-")[1]+"."+day.split("-")[2]);
+			f.setFinanceDate(day.split("-")[1] + "." + day.split("-")[2]);
 			f.setTotalIncome(map.get(day).doubleValue());
 			financeDetails.add(f);
 		}

@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsFinanceFlow;
+import com.sinoauto.dto.QueryFlowDto;
 import com.sinoauto.dto.RechargeDto;
 
 @Mapper
@@ -46,5 +47,19 @@ public interface FinanceFlowMapper {
 	
 	@Select("SELECT * FROM hqls_finance_flow where DATE_SUB(DATE_FORMAT( CURDATE( ) , '%Y-%m-%d' ), INTERVAL #{days} DAY) < DATE_FORMAT( create_time, '%Y-%m-%d' ) AND store_id = #{storeId} AND flow_status = 1 AND change_type != 1 AND change_type != 2")
 	public List<HqlsFinanceFlow> findNearDaysFlows(@Param("storeId")Integer storeId,@Param("days")Integer days);
+	
+	@Select("SELECT hso.order_amount,hst.service_type_name from hqls_service_order hso "+
+			"LEFT JOIN "+
+			"hqls_service_type hst "+
+			"ON hso.service_type_id = hst.service_type_id "+
+			"WHERE hso.store_id = #{storeId} AND hso.finish_time >=CONCAT(DATE_SUB(#{queryDate}, INTERVAL 1 DAY),' 17:00:00') AND hso.finish_time <  CONCAT( #{queryDate},' 17:00:00')")
+	public List<QueryFlowDto> findQueryFlows(@Param("storeId")Integer storeId,@Param("queryDate")String queryDate);
+	
+	@Select("SELECT heo.order_amount,heo.extra_project_desc as serviceTypeName FROM hqls_extra_order heo "+
+			"LEFT JOIN hqls_service_order hso "+
+			"ON heo.service_order_id = hso.service_order_id "+
+			"WHERE heo.pay_status = 2 AND hso.store_id = #{storeId} "+
+			"AND heo.dml_time >=CONCAT(DATE_SUB(#{queryDate}, INTERVAL 1 DAY),' 17:00:00') AND heo.dml_time <  CONCAT( #{queryDate},' 17:00:00')")
+	public List<QueryFlowDto> findExtraFlows(@Param("storeId")Integer storeId,@Param("queryDate")String queryDate);
 
 }

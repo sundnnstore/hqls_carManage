@@ -150,6 +150,7 @@ public class ServiceOrderService {
 					financeFlow.setChangeType(4);
 					financeFlow.setChangeMoney(order.getOrderAmount());
 					financeFlow.setChargeType(1);
+					financeFlow.setFlowStatus(1);
 					financeFlow.setOperPerson(user.getUserName());
 					financeFlow.setIsDelete(0);
 					financeFlowMapper.insert(financeFlow);
