@@ -417,7 +417,13 @@ public class FinanceFlowService {
 				map.put(flow.getServiceTypeName(), flowDto);
 			}
 		}
-		finance.setFlowList(map);
+		List<DailyFlowDto> list = new ArrayList<>();
+		for (String key : map.keySet()) {
+			DailyFlowDto flow = map.get(key);
+			flow.setServiceTypeName(key);
+			list.add(flow);
+		}
+		finance.setFlowList(list);
 		return RestModel.success(finance);
 	}
 

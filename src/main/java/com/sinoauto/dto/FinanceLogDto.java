@@ -1,7 +1,6 @@
 package com.sinoauto.dto;
 
 import java.util.List;
-import java.util.Map;
 
 import io.swagger.annotations.ApiModelProperty;
 
@@ -14,7 +13,7 @@ public class FinanceLogDto {
 	@ApiModelProperty("详细日流水数据")
 	private List<FinanceDetailDto> finances;
 	@ApiModelProperty("具体到日流水详情")
-	private Map<String, DailyFlowDto> flowList;
+	private List<DailyFlowDto> flowList;
 
 	public Double getTotalExpenditure() {
 		return totalExpenditure;
@@ -46,11 +45,11 @@ public class FinanceLogDto {
 		}
 	}
 
-	public Map<String, DailyFlowDto> getFlowList() {
+	public List<DailyFlowDto> getFlowList() {
 		return flowList;
 	}
 
-	public void setFlowList(Map<String, DailyFlowDto> flowList) {
+	public void setFlowList(List<DailyFlowDto> flowList) {
 		if (flowList != null) {
 			this.flowList = flowList;
 		}
