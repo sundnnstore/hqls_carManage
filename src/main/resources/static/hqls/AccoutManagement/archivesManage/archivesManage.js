@@ -64,6 +64,7 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
 			    		}
 			    	});
                 } else if (title == '新增' || title == '编辑') {
+                	$.fn.zTree.init($("#roleTree"), setting, zNodes);
                 	var zTree = $.fn.zTree.getZTreeObj("roleTree"),
                 	nodes = zTree.getSelectedNodes(),
                 	roles = [];
