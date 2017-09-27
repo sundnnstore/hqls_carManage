@@ -1,6 +1,7 @@
 package com.sinoauto.service;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -445,8 +446,9 @@ public class FinanceFlowService {
 		return finance;
 	}
 
-	public ResponseEntity<RestModel<FinanceLogDto>> nearFlow(Integer storeId, Integer days) {
+	public ResponseEntity<RestModel<FinanceLogDto>> nearFlow(Integer storeId, Integer days) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat ff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		List<HqlsFinanceFlow> finances = financeFlowMapper.findNearDaysFlows(storeId, days);
 		BigDecimal totalExpenditure = new BigDecimal(0);
 		BigDecimal totalIncome = new BigDecimal(0);
@@ -458,18 +460,32 @@ public class FinanceFlowService {
 		}
 		if (finances != null && finances.size() > 0) {
 			for (HqlsFinanceFlow fina : finances) {
+				boolean flag = true;// 判断是否要计算
 				String d = sdf.format(fina.getCreateTime());
-				BigDecimal curMoney = map.get(d);
-				if (fina.getChangeType() == 3) {// 采购
-					totalExpenditure = totalExpenditure.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
-				} else if (fina.getChangeType() == 4) {// 服务订单
-					totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
-					curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
-				} else if (fina.getChangeType() == 5) {// 返现
-					totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
-					curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+				String formatDay = d + " 17:00:00";
+				Date formatDate = ff.parse(formatDay);
+				if (fina.getCreateTime().getTime() >= formatDate.getTime()) {// 大于当天五点
+					int index = DateUtil.getIndexOfEl(d, dayDesc);
+					if (index != -1) {//判断是否后面是否还有日期
+						d = dayDesc.get(index + 1);
+					} else {
+						flag = false;
+					}
 				}
-				map.put(d, curMoney);
+				if (flag) {
+					BigDecimal curMoney = map.get(d);
+					if (fina.getChangeType() == 3) {// 采购
+						totalExpenditure = totalExpenditure.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					} else if (fina.getChangeType() == 4) {// 服务订单
+						totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+						curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					} else if (fina.getChangeType() == 5) {// 返现
+						totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+						curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					}
+					map.put(d, curMoney);
+				}
+
 			}
 		}
 		for (String day : dayDesc) {

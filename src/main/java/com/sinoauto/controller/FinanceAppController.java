@@ -1,5 +1,7 @@
 package com.sinoauto.controller;
 
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -145,7 +147,12 @@ public class FinanceAppController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
 			@ApiImplicitParam(paramType = "query", name = "days", value = "查询天数", dataType = "Integer") })
 	public ResponseEntity<RestModel<FinanceLogDto>> nearFlow(Integer storeId, Integer days) {
-		return this.financeFlowService.nearFlow(storeId, days);
+		try {
+			return this.financeFlowService.nearFlow(storeId, days);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
 	}
 
 }

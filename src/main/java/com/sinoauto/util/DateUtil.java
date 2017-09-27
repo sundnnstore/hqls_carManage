@@ -30,7 +30,7 @@ public class DateUtil {
 		}
 		return dayDesc;
 	}
-	
+
 	public static List<String> getDateList(Integer days) {
 		Date curDate = new Date();
 		List<String> dayDesc = new ArrayList<>();
@@ -43,7 +43,7 @@ public class DateUtil {
 			month = month - 1;
 		}
 		int day = Integer.parseInt(nums[2]);
-		for (int i = days-1; i >= 0; i--) {
+		for (int i = days - 1; i >= 0; i--) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.set(year, month, day);
 			calendar.add(Calendar.DATE, -i);
@@ -51,6 +51,20 @@ public class DateUtil {
 			dayDesc.add(sdf.format(date));
 		}
 		return dayDesc;
+	}
+
+	public static int getIndexOfEl(String day, List<String> days) {
+		int index = -1;
+		for (int i = 0; i < days.size(); i++) {
+			if (days.get(i).equals(day)) {
+				index = i;
+				break;
+			}
+		}
+		if (index == days.size() - 1) {
+			index = -1;
+		}
+		return index;
 	}
 
 }
