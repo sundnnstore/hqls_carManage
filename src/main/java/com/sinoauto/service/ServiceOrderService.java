@@ -215,7 +215,14 @@ public class ServiceOrderService {
 			// 判断传过来的服务项目是否存在
 			HqlsServiceType serviceType = serviceTypeMapper.getServiceTypesByServiceTypeName(order.getServiceType());
 			if (serviceType == null) {
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务项目未正确匹配");
+				serviceType = new HqlsServiceType();
+				serviceType.setServiceTypeName(order.getServiceType());
+				serviceType.setServiceTypeContent(order.getServiceType());
+				serviceType.setIsUsable(true);
+				serviceType.setServiceAmount(0.0);
+				serviceType.setUrl("fromcxz");
+				serviceTypeMapper.insert(serviceType);
+				//return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务项目未正确匹配");
 			}
 			if (order.getIsCard() == null) {// 非年卡洗车服务，门店编码必传
 				order.setIsCard(false);// 设置非年卡标志
