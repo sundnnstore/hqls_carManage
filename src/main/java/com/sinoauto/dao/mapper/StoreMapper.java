@@ -59,7 +59,7 @@ public interface StoreMapper {
 			+ " from hqls_store sto left join hqls_user_store hqus on sto.store_id = hqus.store_id left join hqls_user us on hqus.user_id=us.user_id"
 			+ " left join hqls_store_finance hsf on sto.store_id = hsf.store_id "
 			+ " left join hqls_service_order hso on sto.store_id = hso.store_id"
-			+ " where sto.store_id = #{storeId} and hqus.is_contact=1")
+			+ " where sto.store_id = #{storeId}")
 	public StoreDto getStoreInfoByStoreId(@Param("storeId") Integer storeId);
 
 	public int updateStoreByStoreId(@Param("storeId") Integer storeId, @Param("storeName") String storeName,
