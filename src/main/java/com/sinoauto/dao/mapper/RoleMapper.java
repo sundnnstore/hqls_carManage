@@ -12,8 +12,8 @@ import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsRole;
-import com.sinoauto.dto.RoleDto;
 import com.sinoauto.dto.CommonDto;
+import com.sinoauto.dto.RoleDto;
 
 @Mapper
 public interface RoleMapper {
