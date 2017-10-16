@@ -12,14 +12,26 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     };
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
-    	
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
         if (method == 'addCommodity') {
             title = '新增';
+            //上传图片
+        	var picAppend = `
+             	<div class="siteUpload">
+                     <img id="commodityImgUrl" src="">
+                     <div class="layui-box layui-upload-button">
+                         <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">	                        
+                    	 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+                     </div>
+                     <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+                 </div>`;
+        	$(".uploadImg").append(picAppend);  // <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+        
             //显示配件品牌
             partsBrand();
             ButtonForbidden();
+            
         } else if (method == 'view') {
             title = '查看';
             Detailview($(this).parent().find("#partsId").val());
@@ -30,9 +42,10 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             title = '编辑';
             var partsId = $(this).parent().find("#partsId").val();
             //编辑方法
-            Detailview(partsId);
+            Detailview(partsId,method);
             ButtonForbidden();
         }
+       
         method && layer.open({
             resize: false,
             type: 1,
@@ -130,16 +143,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                 } else if (method == 'edit') {
                     afterEditPart(); //清空之前数据
                 }
-                var picAppend = `
-	                 	<div class="siteUpload">
-	                         <img id="commodityImgUrl" src="">
-	                         <div class="layui-box layui-upload-button">
-	                             <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-	                             <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-	                         </div>
-	                         <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-	                     </div>`;
-                $(".uploadImg").html(picAppend);
+                $(".uploadImg").html("");
                 $('#commodityBox').css("display", "none"); //隐藏
                 $('#addOption').css("display", "block"); //新增按钮显示
                 $(".attrExtra").html("");//清空
@@ -384,7 +388,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
      * 查看明细
      * @returns
      */
-    function Detailview(partsId) {
+    function Detailview(partsId,method) {
         $.ajax({
             url: "/getpartsdetail",
             type: "get",
@@ -392,7 +396,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             data: { "partsId": partsId },
             success: function(data) {
                 if (data.errcode == 0) {
-                    displayHtml(data, data.result.partsBrandId);
+                    displayHtml(data, data.result.partsBrandId,method);
                 } else {
                     layer.msg("undefined");
                 }
@@ -408,10 +412,10 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
      * @param data
      * @returns
      */
-    function displayHtml(data, partsBrandId) {
+    function displayHtml(data, partsBrandId,method) {
         var piclen, attrlen;
         if (data.result.partsPicList == null) {
-            piclen = 0;
+            piclen = 0; 
         } else {
             piclen = data.result.partsPicList.length;
         }
@@ -448,21 +452,25 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     			</div>
             `;
         }
-        //给一个上传用的图片
-        //    	pics+=`
-        //			<div class="siteUpload">
-        //            	<img id="commodityImgUrl" src="">
-        //            	<div class="layui-box layui-upload-button">
-        //                <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-        //                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>编辑图片上传</span>
-        //				</div>
-        //            	<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-        //			</div>
-        //		`;
-
+     
         //动态属性追加到指定位置
         $(".uploadImg").prepend(pics);
-
+        if(method == 'edit'){
+		    var imgSize = $(".siteUpload").length;
+		    if(imgSize==null||imgSize==undefined||imgSize<5){
+		    	var picAppend = `
+		         	<div class="siteUpload">
+		                 <img id="commodityImgUrl" src="">
+		                 <div class="layui-box layui-upload-button">
+		                     <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">	                        
+		                	 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+		                 </div>
+		                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+		             </div>`;
+		    	$(".uploadImg").append(picAppend); 
+		    }	
+        }
+        
         var flag = 0;
         for (var i = 0; i <= attrlen; i++) {
             //清空动态属性框,然后拼接显示
@@ -772,9 +780,9 @@ function appendImg(obj) {
                 <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
                 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
             </div>
-            <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+            
         </div>`;
-
+    //<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
     $(obj).parent().parent().parent().append(img);
     var flag = $(".siteUpload").length;
     if (flag == 6) {
