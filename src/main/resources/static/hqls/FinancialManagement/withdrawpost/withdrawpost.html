@@ -38,28 +38,26 @@
 	</div>
 </div>
 <div>
-	<table class="layui-table ">
-		<thead>
-			<tr>
-				<th>提现门店</th>
-				<th>门店联系人</th>
-				<th>联系人电话</th>
-				<th>提现金额</th>
-				<th>选择银行</th>
-				<th>银行账号</th>
-				<th>开户行</th>
-				<th>状态</th>
-				<th>操作人</th>
-				<th>操作</th>
-			</tr>
-		</thead>
-		<tbody id="log_tb">
-		</tbody>
-	</table>
+	<div class="tableContainer">
+		<table class="layui-table ">
+			<thead>
+				<tr>
+					<th style="min-width: 200px">提现门店</th>
+					<th style="min-width: 100px">门店联系人</th>
+					<th style="min-width: 100px">联系人电话</th>
+					<th style="min-width: 100px">提现金额</th>
+					<th style="min-width: 200px">选择银行</th>
+					<th style="min-width: 200px">银行账号</th>
+					<th style="min-width: 200px">开户行</th>
+					<th style="min-width: 100px">状态</th>
+					<th style="min-width: 100px">操作人</th>
+					<th style="min-width: 180px">操作</th>
+				</tr>
+			</thead>
+			<tbody id="log_tb">
+			</tbody>
+		</table>
+	</div>
 	<div id="pages" style="text-align: right;"></div>
-	<!-- <td class="operating">
-					<button class="layui-btn layui-btn-normal operating-btn">确认</button>
-					<button class="layui-btn layui-btn-danger operating-btn">拒绝</button>
-				</td> -->
 </div>
 <script type="text/javascript" src="FinancialManagement/withdrawpost/withdrawpost.js">
