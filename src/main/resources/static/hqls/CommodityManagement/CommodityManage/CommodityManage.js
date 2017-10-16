@@ -780,9 +780,8 @@ function appendImg(obj) {
                 <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
                 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
             </div>
-            
+            <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
         </div>`;
-    //<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
     $(obj).parent().parent().parent().append(img);
     var flag = $(".siteUpload").length;
     if (flag == 6) {
