@@ -147,28 +147,28 @@ layui.use(['laypage', 'layer', 'jquery'], function() {
      * 页面初始化加载角色列表
      * @returns
      */
-    function initRole() {
-    	$.ajax({
-    		url: '/findallrole',
-    		type: 'GET',
-    		async: false,
-    		success: function(data) {
-    			var html = "";
-    			html += `<option value="">全部</option>`;
-    			html += generatorRole(data.result);
-    			$('#role').html(html);
-    			zNodes = data.result;
-    		}
-    	});
-    }
-    function generatorRole(res) {
-    	var html = "";
-    	res.forEach(function(role, index, res) {
-			html += `<option value="${role.id}">${role.name}</option>`;
-		});
-    	return html;
-    }
-    initRole();
+//    function initRole() {
+//    	$.ajax({
+//    		url: '/findallrole',
+//    		type: 'GET',
+//    		async: false,
+//    		success: function(data) {
+//    			var html = "";
+//    			html += `<option value="">全部</option>`;
+//    			html += generatorRole(data.result);
+//    			$('#role').html(html);
+//    			zNodes = data.result;
+//    		}
+//    	});
+//    }
+//    function generatorRole(res) {
+//    	var html = "";
+//    	res.forEach(function(role, index, res) {
+//			html += `<option value="${role.id}">${role.name}</option>`;
+//		});
+//    	return html;
+//    }
+//    initRole();
     
     $('#searchArchives').click(function () {
     	search(1);
@@ -288,6 +288,29 @@ function onBodyDown(event) {
 
 // 角色树初始化
 $(document).ready(function() {
+	/**
+     * 页面初始化加载角色列表
+     * @returns
+     */
+	$.ajax({
+		url: '/findallrole',
+		type: 'GET',
+		async: false,
+		success: function(data) {
+			var html = "";
+			html += `<option value="">全部</option>`;
+			html += generatorRole(data.result);
+			$('#role').html(html);
+			zNodes = data.result;
+		}
+	});
+    function generatorRole(res) {
+    	var html = "";
+    	res.forEach(function(role, index, res) {
+			html += `<option value="${role.id}">${role.name}</option>`;
+		});
+    	return html;
+    }
 	$.fn.zTree.init($("#roleTree"), setting, zNodes);
 });
 // 角色树设置

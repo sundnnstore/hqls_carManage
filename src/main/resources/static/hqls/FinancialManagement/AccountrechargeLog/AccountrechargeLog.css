@@ -4,3 +4,8 @@
 .mylayui-form-label{
 	width: auto;
 }
+.tableContainer {
+    width: 100%;
+    overflow: auto;
+    margin-top: 10px;
+}
