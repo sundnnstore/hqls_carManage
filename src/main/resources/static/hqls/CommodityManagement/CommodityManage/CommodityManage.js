@@ -468,7 +468,9 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 		                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
 		             </div>`;
 		    	$(".uploadImg").append(picAppend); 
-		    }	
+		    }
+		    //隐藏最后一个图片的删除按钮
+		    hideLastImgDelIcon();
         }
         
         var flag = 0;
@@ -746,17 +748,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
  * @returns
  */
 function change(obj) {
-    var flag = $(".siteUpload").length;
-    if (flag == 5) {
-        upload(obj);
-        return;
-    } else if (flag > 5) {
-        layer.msg("最多只能上传五个");
-        return;
-    }
     //上传图片
     upload(obj);
-
 }
 
 function upload(obj) {
@@ -784,12 +777,15 @@ function appendImg(obj) {
         </div>`;
     $(obj).parent().parent().parent().append(img);
     var flag = $(".siteUpload").length;
+    //隐藏最后一个图片的删除按钮
+    hideLastImgDelIcon();
     if (flag == 6) {
         //隐藏最后一张图片
         $(".siteUpload:last").hide();
     } else {
         $(".siteUpload:last").show();
     }
+    
 }
 /**
  * 删除图片
@@ -805,6 +801,18 @@ function delImg(obj) {
     if (flag < 6) {
         appendImg(obj);
     }
+}
+
+//隐藏最后一个图片的删除按钮
+function hideLastImgDelIcon(){
+	var flag = $(".siteUpload").length;
+    $(".siteUpload .closeBtn").each(function(index){
+    	if((flag-1)==index){
+    		$(this).css("display","none");
+    	}else{
+    		$(this).css("display","block");
+    	}
+    });
 }
 
 //图片数量
