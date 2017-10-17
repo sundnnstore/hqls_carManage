@@ -398,7 +398,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                 } else {
                     layer.msg("undefined");
                 }
-
             },
             error: function(data) {
                 layer.msg("查看明细失败返回值" + data.errmsg);
@@ -444,7 +443,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	                <img id="commodityImgUrl${i}" src="${data.result.partsPicList[i].url}">
 	                <div class="layui-box layui-upload-button">
                 		<input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*" disabled="disabled">
-                		<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
+                		<span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
 					</div>
             		<span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
     			</div>
@@ -454,21 +453,26 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         //动态属性追加到指定位置
         $(".uploadImg").prepend(pics);
         if(method == 'edit'){
-		    var imgSize = $(".siteUpload").length;
-		    if(imgSize==null||imgSize==undefined||imgSize<5){
-		    	var picAppend = `
-		         	<div class="siteUpload">
-		                 <img id="commodityImgUrl" src="">
-		                 <div class="layui-box layui-upload-button">
-		                     <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">	                        
-		                	 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-		                 </div>
-		                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-		             </div>`;
-		    	$(".uploadImg").append(picAppend); 
-		    }
-		    //隐藏最后一个图片的删除按钮
+        	var picAppend = `
+	         	<div class="siteUpload">
+	                 <img id="commodityImgUrl" src="">
+	                 <div class="layui-box layui-upload-button">
+	                     <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">	                        
+	                	 <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
+	                 </div>
+	                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
+	             </div>`;
+        	if(piclen>=5){
+    	    	$(".uploadImg").append(picAppend); 
+    	        var flag = $(".siteUpload").length;
+		        //隐藏最后一张图片
+		        $(".siteUpload:last").hide();
+        	}else{
+        		$(".siteUpload:last").after(picAppend);
+        	}
+        	//隐藏最后一个图片的删除按钮
 		    hideLastImgDelIcon();
+		    
         }
         
         var flag = 0;
@@ -739,7 +743,7 @@ function change(obj) {
 }
 
 function upload(obj) {
-    var form = $("#form");
+    var form = $("#form"); 
     var imgUrl = uploadImg(form, obj);
     if (imgUrl != "") { //如果上传文件成功
         appendImg(obj);
@@ -750,20 +754,19 @@ function upload(obj) {
 
 }
 
-//追加图片
+//上传追加图片
 function appendImg(obj) {
     var img = `
 		<div class="siteUpload">
             <img id="commodityImgUrl" src="">
             <div class="layui-box layui-upload-button">
                 <input type="file" name="image" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*"> 
-                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>图片上传</span>
+                <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
             </div>
             <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
         </div>`;
     $(obj).parent().parent().parent().append(img);
     var flag = $(".siteUpload").length;
-    //隐藏最后一个图片的删除按钮
     hideLastImgDelIcon();
     if (flag == 6) {
         //隐藏最后一张图片
@@ -773,6 +776,7 @@ function appendImg(obj) {
     }
     
 }
+
 /**
  * 删除图片
  * @param obj 删除按钮
@@ -781,12 +785,12 @@ function appendImg(obj) {
 function delImg(obj) {
     var url = $(obj).parent().find("img").attr("src");
     delFile(url);
-    //干掉div
-    $(obj).parent().remove();
-    var flag = $(".siteUpload").length;
-    if (flag < 6) {
-        appendImg(obj);
+    $(obj).parent().remove(); 
+    var disp = $(".siteUpload:last").css("display");
+    if(disp=="none"){
+    	$(".siteUpload:last").show();
     }
+    hideLastImgDelIcon();
 }
 
 //隐藏最后一个图片的删除按钮
