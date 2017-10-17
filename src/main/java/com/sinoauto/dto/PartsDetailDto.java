@@ -32,6 +32,8 @@ public class PartsDetailDto {
 	private String partsUnit;
 	@ApiModelProperty("规格")
 	private String partsSpec;
+	@ApiModelProperty("适配车型")
+	private String fitModels;
 	@ApiModelProperty("配件品牌名称")
 	private String partsBrandName;
 	@ApiModelProperty("配件品牌Id")
@@ -241,4 +243,12 @@ public class PartsDetailDto {
 		this.typeName = typeName;
 	}
 
+	public String getFitModels() {
+		return fitModels;
+	}
+
+	public void setFitModels(String fitModels) {
+		this.fitModels = fitModels;
+	}
+	
 }

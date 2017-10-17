@@ -10,12 +10,20 @@
 	</resultMap>
 	
 	<select id="getPartsDetail" resultMap="detail" parameterType="Integer">
-		select parts.parts_id,parts.parts_brand_id, parts.parts_name,parts.parts_code, parts.parts_model, parts.parts_unit, parts.parts_spec,
+		SELECT parts.parts_id,parts.parts_brand_id, parts.parts_name,parts.parts_code, parts.parts_model, parts.parts_unit, parts.parts_spec,
 				parts.parts_factory, parts.origin, parts.shelf_life, parts.price, parts.discount, parts.cur_price,parts.is_usable,
-				brand.parts_brand_name,pt.parts_type_id,pt.type_name,pt.parts_type
-		from hqls_parts as parts, hqls_parts_brand as brand,hqls_parts_type pt
-		where parts.parts_brand_id = brand.parts_brand_id and parts.`parts_type_id`=pt.parts_type_id
-		and parts.parts_id = #{partsId} <!-- and parts.is_usable = 1 -->
+				brand.parts_brand_name,pt.parts_type_id,pt.type_name,pt.parts_type,
+			(
+				SELECT GROUP_CONCAT(model_name separator '；') AS model_name 
+				FROM hqls_car_model 
+				WHERE model_id IN ( SELECT model_id FROM hqls_parts_model WHERE parts_id = #{partsId} )
+			) 
+				AS fitModels
+
+		FROM hqls_parts parts
+		LEFT JOIN hqls_parts_brand brand ON parts.parts_brand_id = brand.parts_brand_id
+		LEFT JOIN hqls_parts_type pt ON parts.parts_type_id = pt.parts_type_id
+		WHERE parts.parts_id = #{partsId}
 	</select>
 	
 	<resultMap type="com.sinoauto.dto.PartsDesListDto" id="desList">
@@ -114,6 +122,73 @@
 		 	<if test="partsTypeId!=null and partsTypeId!=0"> and (hpt.pid=#{partsTypeId} or hpt.parts_type_id=#{partsTypeId})</if>
 		    <if test="partsId!=null"> and pa.parts_id=#{partsId}</if>
 		    order by  pa.create_time desc 
+	</select>
+	
+	<select id="findPartsByModelId" parameterType="Integer" resultType="com.sinoauto.dto.PartsListDto">
+		SELECT  
+				part.parts_id AS `partsId`, 
+				part.parts_name AS `partsName`, 
+				part.parts_type_id as `partsTypeId`,
+				part.cur_price as partsPrice,
+				(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
+		FROM 	
+				hqls_parts AS part
+		WHERE 
+				1=1
+				<if test="modelId != null">
+					and part.parts_id IN (SELECT hpm.parts_id FROM hqls_parts_model AS hpm WHERE hpm.model_id = #{modelId}) 
+				</if>
+	</select>
+	
+	<select id="findPartsTypeByModelId" parameterType="Integer" resultType="com.sinoauto.dto.CommonDto">
+		SELECT  
+				type.parts_type_id AS `key`, 
+				type.type_name AS `value`
+		FROM 	
+				hqls_parts_model AS hpm
+		LEFT JOIN
+				hqls_parts AS part ON hpm.parts_id = part.parts_id
+		LEFT JOIN
+				hqls_parts_type type ON part.parts_type_id = type.parts_type_id
+		WHERE 
+				hpm.model_id = #{modelId}
+	</select>
+	
+	<select id="findPartsListByCondition" resultType="com.sinoauto.dto.PartsListDto">
+		(
+			SELECT  
+					part.parts_id AS `partsId`, 
+					part.parts_name AS `partsName`, 
+					part.parts_type_id as `partsTypeId`,
+					part.cur_price as partsPrice,
+					(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
+			FROM 	
+					hqls_parts AS part
+			WHERE
+					<foreach collection="condition" item="item" index="index" separator="or">
+						parts_name LIKE CONCAT('%', #{item}, '%')
+					</foreach> 
+		)			
+		UNION
+		(
+			SELECT  
+					part.parts_id AS `partsId`, 
+					part.parts_name AS `partsName`, 
+					part.parts_type_id as `partsTypeId`,
+					part.cur_price as partsPrice,
+					(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
+			FROM 	
+					hqls_parts AS part
+			LEFT JOIN
+					hqls_parts_model middle ON part.parts_id = middle.parts_id
+			LEFT JOIN
+					hqls_car_model model ON middle.model_id = model.model_id
+			WHERE
+					<foreach collection="condition" item="item" index="index" separator="or">
+						model.model_name LIKE CONCAT('%', #{item}, '%')
+					</foreach> 
+		)
+		
 	</select>
 	
 </mapper>

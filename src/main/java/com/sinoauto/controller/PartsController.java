@@ -22,6 +22,7 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
@@ -67,7 +68,7 @@ public class PartsController {
 		return partsService.findAllParts(pageIndex, pageSize);
 	}
 	
-	@ApiOperation(value = "按配件Id查询配件列表", notes = "wuxiao")
+	@ApiOperation(value = "按配件类别Id查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbypid")
 	public ResponseEntity<RestModel<Object>> findPartsListByPid(
 			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
@@ -247,5 +248,60 @@ public class PartsController {
 	@PostMapping("update")
 	public ResponseEntity<RestModel<HqlsPartsType>> update(@RequestBody HqlsPartsType pt){
 		return partsTypeService.update(pt);
+	}
+	
+	/**
+	 * 查询所有车辆品牌
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "查询所有车辆品牌", notes = "wux")
+	@GetMapping("allbrands")
+	public ResponseEntity<RestModel<List<CommonDto>>> allBrands() {
+		return partsService.findAllBrands();
+	}
+	
+	/**
+	 * 根据品牌Id查询车系
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据品牌Id查询车系", notes = "wux")
+	@GetMapping("findseriesbybrandid")
+	public ResponseEntity<RestModel<List<CommonDto>>> findSeriesByBrandId(@RequestParam(value="brandId", required=true) Integer brandId) {
+		return partsService.findSeriesByBrandId(brandId);
+	}
+	
+	/**
+	 * 根据车系Id查询车型
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据车系Id查询车型", notes = "wux")
+	@GetMapping("findmodelsbyseriesid")
+	public ResponseEntity<RestModel<List<CommonDto>>> findModelsBySeriesId(@RequestParam(value="seriesId", required=true) Integer seriesId) {
+		return partsService.findModelsBySeriesId(seriesId);
+	}
+	
+	/**
+	 * 根据车型Id查询配件列表
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据车型Id查询配件列表", notes = "wux")
+	@GetMapping("findpartslistbymodelid")
+	public ResponseEntity<RestModel<Map<String, Object>>> findPartsListByModelId(@RequestParam(value="modelId", required=true) Integer modelId) {
+		return partsService.findPartsByModelId(modelId);
+	}
+	
+	/**
+	 * 根据条件（配件名称或车型名称）查询配件
+	 * @param condition
+	 * @return
+	 */
+	@ApiOperation(value = "根据条件（配件名称或车型名称）查询配件", notes = "wux")
+	@GetMapping("findpartslistbycondition")
+	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsListByCondition(@RequestParam(value="condition", required=false) String condition) {
+		return partsService.findPartsByCondition(condition);
 	}
 }
