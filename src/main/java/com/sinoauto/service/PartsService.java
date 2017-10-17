@@ -625,16 +625,11 @@ public class PartsService {
 	 * 	@return
 	 */
 	public PartsTreeRecursionDto partsTreeForEditAndView(Integer lastChildId, Integer operflag) {
-		//List<>
-		// 查询出当前partstypeid的父级别id
-//		Integer retId=null;
 		HqlsPartsType hqlsPartsType = partsMapper.findPidByPtId(lastChildId);
 		if(hqlsPartsType!=null){
 			if(hqlsPartsType.getPid()!=null&&hqlsPartsType.getPid()==0){ //如果到最顶层,返回对象,先倒过来查
-//				return partsTypeId;
 			}else{
 				System.out.println("pid----->"+hqlsPartsType.getPid());
-//				retId = findTopId(hqlsPartsType.getPid());
 			}
 		}else{//对象不存在
 			//retId =partsTypeId;

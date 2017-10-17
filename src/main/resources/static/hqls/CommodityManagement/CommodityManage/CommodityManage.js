@@ -433,7 +433,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("#discount").val(data.result.discount);
         $("#curPrice").val(data.result.curPrice);
         $("#origin").val(data.result.origin);
-        $("#partsFactory").val(data.result.partsFactory);
+        $("#partsFactory").val(data.result.partsFactory); 
         $("#shelfLife").val(data.result.shelfLife);
         $("#partsUnit").val(data.result.partsUnit);
         $(".attrExtra").html(""); //清空动态扩展属性的div
@@ -462,17 +462,13 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	                 </div>
 	                 <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
 	             </div>`;
+        	$(".uploadImg").append(picAppend);
         	if(piclen>=5){
-    	    	$(".uploadImg").append(picAppend); 
-    	        var flag = $(".siteUpload").length;
 		        //隐藏最后一张图片
 		        $(".siteUpload:last").hide();
-        	}else{
-        		$(".siteUpload:last").after(picAppend);
         	}
         	//隐藏最后一个图片的删除按钮
-		    hideLastImgDelIcon();
-		    
+		    hideLastImgDelIcon();  
         }
         
         var flag = 0;
@@ -518,7 +514,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         /**
          * 配件类型
          */
-        //    	$("#partsType").val(data.result.partsType);
+        //$("#partsType").val(data.result.partsType);
         if (data.result.partsType == 1) {
             $("#partsType").find("option[value='1']").prop("selected", true);
         } else if (data.result.partsType == 2) {
