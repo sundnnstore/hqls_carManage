@@ -19,16 +19,20 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
 import com.sinoauto.dao.bean.HqlsPartsPic;
 import com.sinoauto.dao.bean.HqlsPartsType;
+import com.sinoauto.dao.mapper.CarBrandMapper;
 import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -47,6 +51,9 @@ public class PartsService {
 
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
+	
+	@Autowired
+	private CarBrandMapper carBrandMapper;
 	
 	/**
 	 * 储存每次循环的节点的id,name
@@ -635,6 +642,90 @@ public class PartsService {
 			//retId =partsTypeId;
 		}
 		return null;
+	}
+	
+	/**
+	 * 查询所有车辆品牌
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllBrands() {
+		try {
+			return RestModel.success(carBrandMapper.findAllBrands());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	
+	/**
+	 * 根据品牌id查询车系
+	 * 
+	 * @param brandId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findSeriesByBrandId(Integer brandId) {
+		try {
+			return RestModel.success(carBrandMapper.findSeriesByBrandId(brandId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据品牌id查询车系
+	 * 
+	 * @param brandId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findModelsBySeriesId(Integer seriesId) {
+		try {
+			return RestModel.success(carBrandMapper.findModelsBySeriesId(seriesId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据车型Id查询配件
+	 * @param modelId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Map<String, Object>>> findPartsByModelId(Integer modelId) {
+		try {
+			List<PartsListDto> partsList = partsMapper.findPartsByModelId(modelId);
+			List<CommonDto> typeList = partsMapper.findPartsTypeByModelId(modelId);
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("partsList", partsList);
+			result.put("typeList", typeList);
+			return RestModel.success(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据配件名称或车型条件查询配件
+	 * @param condition
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsByCondition(String condition) {
+		try {
+			List<PartsListDto> partsList;
+			if (StringUtils.isEmpty(condition)) {
+				partsList  = partsMapper.findPartsByModelId(null);
+			} else {
+				String[] conditions = condition.split("\\ ");
+				partsList = partsMapper.findPartsListByCondition(conditions);
+			}
+			return RestModel.success(partsList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
 	}
 	
 }

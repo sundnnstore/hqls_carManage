@@ -13,6 +13,7 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -162,7 +163,7 @@ public interface PartsMapper {
 	 * 	@param partId
 	 * 	@return
 	 */
-	@Select("select * from hqls_parts_attr_extr where parts_id=#{partId}")
+	@Select("SELECT * from hqls_parts_attr_extr where parts_id = #{partId}")
 	public List<HqlsPartsAttrExtr> findPartsAttrExtrsByPartsId(@Param("partId")Integer partId);
 	
 	/**
@@ -208,4 +209,24 @@ public interface PartsMapper {
 	@Select("SELECT parts_id FROM hqls_parts WHERE parts_model=#{1}")
 	public Integer[] findPartsIdByCode(String partsCode);
 	
+	/**
+	 * 根据车型Id 查询配件列表
+	 * @param modelId
+	 * @return
+	 */
+	public List<PartsListDto> findPartsByModelId(@Param("modelId") Integer modelId);
+	
+	/**
+	 * 根据车型Id 查询配件类型
+	 * @param modelId
+	 * @return
+	 */
+	public List<CommonDto> findPartsTypeByModelId(@Param("modelId") Integer modelId);
+	
+	/**
+	 * 根据条件查询配件
+	 * @param condition
+	 * @return
+	 */
+	public List<PartsListDto> findPartsListByCondition(@Param("condition") String[] condition);
 }
