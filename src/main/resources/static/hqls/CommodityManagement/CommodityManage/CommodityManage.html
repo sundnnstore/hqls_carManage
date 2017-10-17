@@ -19,6 +19,7 @@
                         <!-- onclick="showMenu('main')" -->
                         <input type="text" id="commodityName" placeholder="请选择分类" class="layui-input" onclick="showMenu('main')" readonly/>
                         <!--  <ul id="commodityName"></ul> -->
+                       	<input type="hidden" value="" id="TheTreeIdOfSearch">
                     </li>
                 </ul>
             </div>
@@ -90,6 +91,7 @@
                 </div>
                 <div id="modelContent" class="menuContent">
                     <ul id="cTree" class="ztree" style="margin-top:0; width:160px;"></ul>
+                    <input type="hidden" value="" id="TheTreeIdOfAdd">
                 </div>
             </div>
         </div>
@@ -162,15 +164,8 @@
         <!-- 新增商品中的商品图片 -->
         <p class="uploadImgTitle">上传图片</p>
         <div class="uploadImg">
-            <div class="siteUpload">
-                <img id="commodityImgUrl" src="">
-                <div class="layui-box layui-upload-button">
-                    <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-                </div>
-                <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-            </div>
-        </div>
+	   
+        </div> 
         <!-- 新增商品中的否上架选项 -->
         <div class="state">
             <label class="layui-form-label">是否上架</label>
