@@ -166,7 +166,9 @@
 					hqls_parts AS part
 			WHERE
 					<foreach collection="condition" item="item" index="index" separator="or">
-						parts_name LIKE CONCAT('%', #{item}, '%')
+						<if test="item != ''">
+							parts_name LIKE CONCAT('%', #{item}, '%')
+						</if>
 					</foreach> 
 		)			
 		UNION
@@ -185,7 +187,9 @@
 					hqls_car_model model ON middle.model_id = model.model_id
 			WHERE
 					<foreach collection="condition" item="item" index="index" separator="or">
-						model.model_name LIKE CONCAT('%', #{item}, '%')
+						<if test="item != ''">
+							model.model_name LIKE CONCAT('%', #{item}, '%')
+						</if>
 					</foreach> 
 		)
 		
