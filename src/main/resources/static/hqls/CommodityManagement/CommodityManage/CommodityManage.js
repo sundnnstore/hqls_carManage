@@ -4,7 +4,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         form = layui.form,
         laypage = layui.laypage;
     var pageSize = 10;
-    selectTreeId = 0;
     // 弹出框
     var title; // 弹出框的标题
     var active = {
@@ -26,8 +25,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                      </div>
                      <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
                  </div>`;
-        	$(".uploadImg").append(picAppend);  // <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-        
+        	$(".uploadImg").append(picAppend);  
+        	hideLastImgDelIcon();//隐藏最后一个图片的删除按钮
             //显示配件品牌
             partsBrand();
             ButtonForbidden();
@@ -65,8 +64,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                         titleInfo = '请输入配件名称参数，该项必填！';
                         layer.msg(titleInfo);
                         return;
-                    } else if (selectTreeId == 0) {
-                        titleInfo = '请选择配件分类11111，该项必填!';
+                    } else if (!$("#TheTreeIdOfAdd").val()) {
+                        titleInfo = '请选择配件分类，该项必填!';
                         layer.msg(titleInfo);
                         return;
                     } else if (!$('#partsSpec').val()) {
@@ -176,7 +175,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                 layer.close(index); //如果设定了yes回调，需进行手工关闭
             },
             btn2: function(index, layero) {
-                // console.log(layero);
                 layer.close(index);
             },
             end: function() {
@@ -257,7 +255,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             async: false,
             data: {
                 "partsCode": $("#partsCodeQuery").val(),
-                "partsTypeId": selectTreeId, //暂无树形结构
+                "partsTypeId": $("#TheTreeIdOfSearch").val(), //暂无树形结构
                 "partsTopTypeId": $("#partsTypeTop").val(),
                 "partsName": $("#partsNameQuery").val(),
                 "pageSize": pageSize,
@@ -317,9 +315,9 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                 x.setRequestHeader("Content-Type", "application/json; charset=utf-8");
             },
             data: requestData(),
-            success: function(data) {
+            success: function(data) { 
                 var pageIndex = parseInt($(".layui-laypage-skip").val());
-                selectTreeId = 0; //全部
+                $("#TheTreeIdOfSearch").val(0);
                 getData(pageIndex);
                 layer.msg("添加商品成功");
                 layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
@@ -343,7 +341,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             data: requestData(),
             success: function(data) {
                 var pageIndex = parseInt($(".layui-laypage-skip").val());
-                selectTreeId = 0; //全部
+                $("#TheTreeIdOfSearch").val(0);
                 getData(pageIndex);
                 layer.msg("编辑商品成功");
                 layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
@@ -503,8 +501,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          *
          */
         $("#cName").val(data.result.typeName);
-        selectTreeId = data.result.partsTypeId;
-
+        $("#TheTreeIdOfAdd").val(data.result.partsTypeId);
         /**
          * 上下架
          */
@@ -601,7 +598,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".attrExtra .paramGroup").each(function(i) {
             var paramName = $(this).find(".paramName").val();;
             var paramContent = $(this).find(".paramContent").val();
-            console.log("paramName:" + paramName + "\nparamContent:" + paramContent);
             if (paramName != null && paramName != "" && paramContent != null && paramContent != "") {
                 attrExtra += "{\"attrKey\":\"" + paramName + "\",\"attrValue\":\"" + paramContent + "\"},";
             }
@@ -628,21 +624,17 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             partsId = $("#partsIdForOper").val() == undefined ? -1 : $("#partsIdForOper").val(),
             uable = $('input:radio:checked').val(),
             typeName = $("#cName").val() == undefined ? "" : $("#cName").val();
-        console.log(uable);
         var dataJson = "{" +
             "\"partsBrandId\":\"" + partsBrandId + "\"," +
-            //"\"partsCode\":\""+$("#partsCode").val()+"\"," +
-            "\"partsModel\":\"" + $("#partsModel").val() + "\"," +
+            "\"partsModel\":\"" + $("#partsModel").val() + "\"," + 
             "\"curPrice\":\"" + curPrice + "\"," +
             "\"discount\":\"" + discount + "\"," +
             "\"isUsable\":\"" + uable + "\"," +
             "\"origin\":\"" + $("#origin").val() + "\"," +
             "\"partsFactory\":\"" + $("#partsFactory").val() + "\"," +
             "\"partsSpec\":\"" + $("#partsSpec").val() + "\"," +
-            //"\"partsTypeId\":\""+partsTypeId+"\"," +
-            //"\"partsType\":\"" + $("#partsType").val() + "\"," +
             "\"partsUnit\":\"" + $("#partsUnit").val() + "\"," +
-            "\"partsTypeId\":\"" + selectTreeId + "\"," +
+            "\"partsTypeId\":\"" + $("#TheTreeIdOfAdd").val() + "\"," +
             //"\"pname\":\""+typeName+"\"," +
             "\"price\":\"" + $("#price").val() + "\"," +
             "\"shelfLife\":\"" + $("#shelfLife").val() + "\"," +
@@ -651,9 +643,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsId\":\"" + partsId + "\"," +
             "\"partsPics\":";
         dataJson += partsPics + ",";
-        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs;
+        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs; 
         dataJson += "}";
-        console.log("dataJson" + dataJson);
         dataJson = JSON.parse(dataJson); //解析成json对象
         var data = JSON.stringify(dataJson); //转换为json字符串
         return data;
@@ -668,7 +659,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         });
         $("#cName").val(""); //清空树形菜单数据
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
-        selectTreeId = 0; //清空树形菜单id
         //清空图片
         $(".uploadImg").html("");
         //将新增按钮变为可用
@@ -685,7 +675,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             $(this).val("");
         });
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
-        selectTreeId = 0; //清空树形菜单缓存id
         //清空动态参数div
         $(".attrExtra").html("");
         //清空图片
@@ -694,8 +683,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("input[name='isUnable']").attr("checked", false);
         //将编辑按钮变为可用
         $("#edit").removeAttr("disabled");
-        //清空
-
     }
 
     //点击查看按钮调用方法
@@ -712,7 +699,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".uploadImg").not(".uploadImg:first").html("");
         //将查看按钮变为可用
         $("#view").removeAttr("disabled");
-        selectTreeId = 0; //清空树形菜单id
     }
 
     //查看的时候禁用元素
@@ -845,19 +831,20 @@ function onClick(e, treeId, treeNode) {
 		if(display=="block"){
 			$("#menuContent").hide();
 		}
-        // 保存id
-        selectTreeId = treeNode.id;
-        console.log("onClick--->" + treeNode.id);
+		$("#TheTreeIdOfSearch").val(treeNode.id);
         $("#commodityName").val(treeNode.name);
-    } else {
-    	var display = $("#modelContent").css("display");
-		if(display=="block"){
-			$("#modelContent").hide();
-		}
-        // 保存id
-        selectTreeId = treeNode.id;
-        $("#cName").val(treeNode.name);
-    }
+    } 
+}
+
+//新增商品配件分类
+function onClickAdd(e, treeId, treeNode) {
+    $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
+	var display = $("#modelContent").css("display");
+	if(display=="block"){
+		$("#modelContent").hide();
+	}
+	$("#TheTreeIdOfAdd").val(treeNode.id);
+    $("#cName").val(treeNode.name);
 }
 
 var treeTemp;
@@ -914,7 +901,7 @@ var setting = {
     },
     callback: {
         beforeClick: beforeClick, //检查
-        onClick: onClick
+        onClick: onClickAdd
     }
 };
 
