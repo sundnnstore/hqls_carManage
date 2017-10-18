@@ -1,12 +1,15 @@
 package com.sinoauto.dao.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsModel;
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
@@ -229,4 +232,14 @@ public interface PartsMapper {
 	 * @return
 	 */
 	public List<PartsListDto> findPartsListByCondition(@Param("condition") String[] condition);
+	
+	/**
+	 *  插入图片
+	 * 	@User liud
+	 * 	@Date 2017年10月17日下午4:58:52
+	 * 	@param pm
+	 * 	@return
+	 */
+	@Insert("insert into hqls_parts_model (parts_id,model_id) VALUES (#{partsId}, #{modelId}, now() )")
+	public Integer insertPartsModel(HqlsPartsModel pm);
 }
