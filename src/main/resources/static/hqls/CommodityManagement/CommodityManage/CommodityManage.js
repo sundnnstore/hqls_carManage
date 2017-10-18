@@ -921,3 +921,21 @@ var settingQuery = {
         onClick: onClick
     }
 };
+
+/**
+ *  车型
+**/
+var tag_data = [
+    {id:1 ,name:'Chicago Bulls',desc:'芝加哥公牛'},
+    {id:2 ,name:'Cleveland Cavaliers',desc:'克里夫兰骑士'},
+    {id:3 ,name:'Detroit Pistons',desc:'底特律活塞'},
+    {id:4 ,name:'Indiana Pacers',desc:'印第安纳步行者'}
+];
+//showField：设置下拉列表中显示文本的列
+//keyField：设置下拉列表项目中项目的KEY值，用于提交表单
+//data：数据源，可以是JSON数据格式，也可以是URL
+$('#carBrand').selectPage({
+    showField : 'desc',
+    keyField : 'id',
+    data : tag_data
+});
