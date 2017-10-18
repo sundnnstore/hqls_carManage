@@ -195,4 +195,12 @@
 		
 	</select>
 	
+	<!-- 中台查询车型下拉框 -->
+	<select id="carModelCombobox" resultType="com.sinoauto.dto.CommonDto">
+		select model_id as `key` , model_name as `value` from hqls_car_model
+		where 1=1 
+		<if test="seriesId!=null"> and series_id=#{seriesId}</if>
+		<if test="modelName!=null and modelName!='' "> and model_name like CONCAT('%',#{modelName},'%')</if>
+	</select>
+	
 </mapper>

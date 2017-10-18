@@ -251,5 +251,5 @@ public interface PartsMapper {
 	 * 	@param modelName
 	 * 	@return
 	 */
-	public Page<CommonDto> carModelCombobox(Integer seriesId,String modelName);
+	public Page<CommonDto> carModelCombobox(@Param("seriesId")Integer seriesId,@Param("modelName") String modelName);
 }

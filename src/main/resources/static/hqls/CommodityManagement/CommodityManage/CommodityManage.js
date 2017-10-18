@@ -730,7 +730,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     }
     
     
-
+    carModel();
     /**
      * 车型
      */
@@ -743,9 +743,13 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                 dataType:"json",
                 delay:250,
                 data:function(params){
+                	console.log("params:",params);
                     return {
 //                    	modelName: params.term,
 //                        page: params.page || 1
+                    	pageIndex:1,
+                    	pageSize:2,
+                    	modelName: params.term,
                     	seriesId:6176
                     };
                 },
