@@ -304,4 +304,41 @@ public class PartsController {
 	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsListByCondition(@RequestParam(value="condition", required=false) String condition) {
 		return partsService.findPartsByCondition(condition);
 	}
+	
+	/**
+	 *  中台车系下拉框数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:22:46
+	 * 	@param brandId 品牌ID
+	 * 	@param serName 车型名称
+	 * 	@param pageIndex 页面索引
+	 * 	@param pageSize 页面大小
+	 * 	@return
+	 */
+	@ApiOperation(value = "车系下拉框,支持模糊查询,分页查询", notes = "liudon")
+	@GetMapping("seriescombobox")
+	public ResponseEntity<RestModel<List<CommonDto>>> carSeriesCombobox(
+			@RequestParam(value="brandId",required=true)Integer brandId,String serName,
+			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
+			@RequestParam(value="pageSize",required=true)Integer pageSize) {
+		return partsService.findSeriesByBrandId(brandId);
+	}
+	
+	/**
+	 *  
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:23:29
+	 * 	@param brandId
+	 * 	@return
+	 */
+	@ApiOperation(value = "车系下拉框,支持模糊查询,分页查询", notes = "liud")
+	@GetMapping("carmodelcombobox")
+	public ResponseEntity<RestModel<Page<CommonDto>>> carModelCombobox(
+			@RequestParam(value="seriesId",required=true)Integer seriesId,
+			String modelName,
+			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
+			@RequestParam(value="pageSize",required=true)Integer pageSize) {
+		return partsService.carModelCombobox(seriesId, modelName, pageIndex, pageSize);
+	}
+	
 }

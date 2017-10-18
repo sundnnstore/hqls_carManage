@@ -242,4 +242,14 @@ public interface PartsMapper {
 	 */
 	@Insert("insert into hqls_parts_model (parts_id,model_id) VALUES (#{partsId}, #{modelId}, now() )")
 	public Integer insertPartsModel(HqlsPartsModel pm);
+	
+	/**
+	 *  车型下拉框数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:41:53
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@return
+	 */
+	public Page<CommonDto> carModelCombobox(Integer seriesId,String modelName);
 }
