@@ -729,6 +729,46 @@ public class PartsService {
 	}
 	
 	/**
+	 *  车辆品牌查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:23:50
+	 * 	@param brandName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<CommonDto>>> carBrandCombobox(String brandName,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
+		try {
+			Page<CommonDto> page = partsMapper.carBrandCombobox(brandName);
+			return RestModel.success(page, (int) page.getTotal());
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车辆品牌查询异常");
+		}
+	} 
+	
+	
+	/**
+	 *  车型下拉数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:34:52
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<CommonDto>>> carSeriesCombobox(Integer brandId,String seriesName,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
+		try {
+			Page<CommonDto> page = partsMapper.carSeriesCombobox(brandId, seriesName);
+			return RestModel.success(page, (int) page.getTotal());
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车系查询异常");
+		}
+	} 
+	
+	/**
 	 *  车型下拉数据
 	 * 	@User liud
 	 * 	@Date 2017年10月18日下午5:34:52

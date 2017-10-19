@@ -244,6 +244,26 @@ public interface PartsMapper {
 	public Integer insertPartsModel(HqlsPartsModel pm);
 	
 	/**
+	 *  中台品牌查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:20:25
+	 * 	@param brandName
+	 * 	@return
+	 */
+	public Page<CommonDto> carBrandCombobox(@Param("brandName") String brandName);
+	
+	/**
+	 *  中台车系查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:19:48
+	 * 	@param brandId
+	 * 	@param seriesName
+	 * 	@return
+	 */
+	public Page<CommonDto> carSeriesCombobox(@Param("brandId") Integer brandId,@Param("seriesName") String seriesName);
+	
+	
+	/**
 	 *  车型下拉框数据
 	 * 	@User liud
 	 * 	@Date 2017年10月18日下午5:41:53
@@ -252,4 +272,6 @@ public interface PartsMapper {
 	 * 	@return
 	 */
 	public Page<CommonDto> carModelCombobox(@Param("seriesId")Integer seriesId,@Param("modelName") String modelName);
+
+
 }

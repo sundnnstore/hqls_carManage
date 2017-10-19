@@ -15,7 +15,9 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
         if (method == 'addCommodity') {
             title = '新增';
-            //上传图片
+            /**
+             * 图片上传
+             */
         	var picAppend = `
              	<div class="siteUpload">
                      <img id="commodityImgUrl" src="">
@@ -26,10 +28,22 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
                      <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
                  </div>`;
         	$(".uploadImg").append(picAppend);  
-        	hideLastImgDelIcon();//隐藏最后一个图片的删除按钮
-            //显示配件品牌
+        	hideLastImgDelIcon();
+        	
+        	/**
+        	 * 显示配件品牌
+        	 */
             partsBrand();
+            
+            /**
+             * 禁用其他点击按钮
+             */
             ButtonForbidden();
+            
+            /**
+             * 车型
+             */
+            
             
         } else if (method == 'view') {
             title = '查看';
@@ -729,55 +743,108 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("#searchCommodity").attr("disabled", false);
     }
     
-    
-    carModel();
     /**
-     * 车型
+     * 车辆功能
      */
-    function carModel(){
-    	$('#carModel').select2({
-            allowClear: true,
-            placeholder: "请选择一个车型",
-            ajax:{
-                url:"/carmodelcombobox",
-                dataType:"json",
-                delay:250,
-                data:function(params){
-                	console.log("params:",params);
-                    return {
-//                    	modelName: params.term,
-//                        page: params.page || 1
-                    	pageIndex:1,
-                    	pageSize:2,
-                    	modelName: params.term,
-                    	seriesId:6176
-                    };
-                },
-                cache:true,
-                processResults: function (res, params) {
-                    var options = [];
-                	if(res!=null){
-                		var result = res.result;
-                		for (var i = 0; i < result.length; i++) {
-                			var option = {"id":result[i].key,"text":result[i].value};
-                			options.push(option);
-    					}
-                	}
-                    return {
-                        results: options,
-                        pagination: {
-                            more:res.result
-                        }
-                    };
-                },
-                escapeMarkup: function (markup) { return markup; },
-                minimumInputLength: 1
-            }
-        	
-        });
-    }
+//    function car(){
+//    	/**
+//    	 * 默认显示车辆品牌
+//    	 */
+//    	select2Combobox(
+//	    			"carBrand",
+//	    			"/carbrandcombobox",
+//	    			"请选择品牌",
+//	    			5,
+//	    			1,
+//	    			"carbrand"
+//    			);
+//    	
+//    }
     
+    /**
+     * 选择框点击事件
+     * @returns
+     */
+//    function carClick(){
+//    	/**
+//    	 *  下拉框改变事件
+//    	 */
+//    	$("#carBrand").change(function(data){
+//    		//获取当前选中品牌的ID
+//    	});
+//    	
+//    	$("#carSeries").change(function(data){
+//    		//获取当前选中品牌的ID
+//    	});
+//    	
+//    	$("#carModel").change(function(data){
+//    		//获取当前选中品牌的ID
+//    	});
+//    }
     
+    /**
+     * select2 插件
+     * @param eleId 元素ID
+     * @param url 请求地址
+     * @param defaultText 默认显示文本
+     * @param pageSize 页面大小 , 当pageSize<4 的时候 scrolling 不显示 
+     * @param maxSelect 最多选择数量
+     * @param carFlag 车辆标记参数 1-品牌 2-车系 3-车型
+     * @returns
+     */
+//    function select2Combobox(eleId,url,defaultText,pageSize,maxSelect,carFlag){
+//    	$('#'+eleId).select2({
+//    		language : 'zh-CN',
+//            allowClear: true,
+//            placeholder: defaultText,
+//            maximumSelectionLength:maxSelect,
+//            ajax:{
+//                url:url,
+//                dataType:"json",
+//                delay:200,//millionsecond
+//                data:function(params){
+//                	var searchParam = {pageIndex:params.page || 1,pageSize:pageSize}; 
+//                	var appendPara;
+//                	switch (carFlag) {
+//						case "carbrand":
+//							appendPara = {brandName:params.term};
+//							searchParam=Object.assign(searchParam, appendPara);
+//							break;
+//						case "carseries":
+//							appendPara = {serName:params.term,brandId:6176};
+//							searchParam=Object.assign(searchParam, appendPara);
+//							break;
+//						case "carmodel":
+//							appendPara = {modelName:params.term,seriesId:6176};
+//							searchParam=Object.assign(searchParam, appendPara);
+//							break;
+//						default:
+//							break;
+//					}
+//                    return reqParam;
+//                },
+//                cache:true,
+//                processResults: function (res, params) {
+//                	params.page = params.page || 1;
+//                    var options = [];
+//                	if(res!=null){
+//                		var result = res.result;
+//                		for (var i = 0; i < result.length; i++) {
+//                			var option = {"id":result[i].key,"text":result[i].value};
+//                			options.push(option);
+//    					}
+//                	}
+//                    return {
+//                        results: options,
+//                        pagination: {
+//                            more: (params.page * pageSize) < res.totalCount
+//                        }
+//                    };
+//                },
+//            },
+//	    	escapeMarkup: function (markup) { return markup; } //防止sql注入
+//        });
+//    }
 });
 
 /**

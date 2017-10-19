@@ -203,4 +203,19 @@
 		<if test="modelName!=null and modelName!='' "> and model_name like CONCAT('%',#{modelName},'%')</if>
 	</select>
 	
+	<!-- 中台查询车系下拉框 -->
+	<select id="carSeriesCombobox" resultType="com.sinoauto.dto.CommonDto">
+		select series_id as `key` , series_name as `value` from hqls_car_series
+		where 1=1 
+		<if test="brandId!=null"> and brand_id=#{brandId}</if>
+		<if test="seriesName!=null and seriesName!='' "> and series_name like CONCAT('%',#{seriesName},'%')</if>
+	</select>
+	
+	<!-- 中台查询品牌下拉框 -->
+	<select id="carBrandCombobox" resultType="com.sinoauto.dto.CommonDto">
+		select brand_id as `key` , brand_name as `value` from hqls_car_brand
+		where 1=1
+		<if test="brandName!=null and brandName!='' "> and brand_name like CONCAT('%',#{brandName},'%')</if>
+	</select>
+	
 </mapper>

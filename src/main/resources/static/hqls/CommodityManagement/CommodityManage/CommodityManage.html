@@ -2,7 +2,6 @@
 <link rel="stylesheet" href="CommodityManagement/CommodityManage/CommodityManage.css">
 <link href="common/zTree/css/zTreeStyle.css"></link>
 <link href="common/select2/css/select2.min.css" rel="stylesheet" />
-
 <div class="commodity">
     商品管理
     <!-- 商品信息搜索 && 添加商品 -->
@@ -108,38 +107,31 @@
             <div class="layui-input-inline">
                 <label for="" class="layui-form-label">车辆品牌 </label>
                 <div class="layui-input-block">
-                    <select class="layui-select" style="width: 265px;height: 35px;" name="carBrand"><!-- js-example-basic-multiple -->
-						<option value="AL">Alabama</option>
-    					<option value="WY">Wyoming</option>
-    					<option value="AL">Alabama</option>
-    					<option value="WY">Wyoming</option>
-    					<option value="AL">Alabama</option>
-    					<option value="WY">Wyoming</option>
-					</select>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 车型 -->
-        <div class="head">
-            <div class="layui-input-inline">
-                <label for="" class="layui-form-label">车系</label>
-                <div class="layui-input-block">
-                    <select class="layui-select" style="width: 265px;height: 35px;" name="carSeries"><!-- js-example-basic-multiple  -->
-					</select>
-                </div>
-            </div>
-            
-            <div class="layui-input-inline">
-                <label for="" class="layui-form-label">车型</label>
-                <div class="layui-input-block">
-                    <select class="layui-select" id="carModel" style="width: 265px;height: 35px;" name="carModel[]" multiple="multiple">
+                    <select class="js-states form-control" id="carBrand" style="width: 265px;height: 35px;" name="carBrand"><!-- js-example-basic-multiple -->
 						
 					</select>
                 </div>
             </div>
         </div>
         
+        <!-- 车型 -->
+        <div class="head"> 
+            <div class="layui-input-inline">
+                <label for="" class="layui-form-label">车辆车系</label>
+                <div class="layui-input-block">
+                    <select class="layui-select" id="carSeries" style="width: 265px;height: 35px;" name="carSeries">
+					</select>
+                </div>
+            </div>
+            
+            <div class="layui-input-inline">
+                <label for="" class="layui-form-label">车辆车型</label>
+                <div class="layui-input-block ">
+                    <select class="layui-select" id="carModel" name="carModel[]" multiple="multiple" style="width: 265px;height: 35px;">
+					</select>
+                </div>
+            </div>
+        </div>
         <!-- 新增商品中的商品详情 -->
         <div class="modelTableContainer">
             <input type="hidden" value="" id="partsIdForOper">
@@ -221,6 +213,7 @@
 <script src="js/upload.js"></script> 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="common/zTree/js/jquery.ztree.core.js"></script>
-<script src="common/select2/js/select2.min.js"></script>
+<script src="common/select2/js/select2.full.min.js"></script>
+<script src="common/select2/js/i18n/zh-CN.js"></script>
 <script src="CommodityManagement/CommodityManage/CommodityManage.js"></script>
 
