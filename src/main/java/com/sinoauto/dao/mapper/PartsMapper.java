@@ -2,8 +2,10 @@ package com.sinoauto.dao.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
@@ -234,13 +236,14 @@ public interface PartsMapper {
 	public List<PartsListDto> findPartsListByCondition(@Param("condition") String[] condition);
 	
 	/**
-	 *  插入图片
+	 *  插入配件车型
 	 * 	@User liud
 	 * 	@Date 2017年10月17日下午4:58:52
 	 * 	@param pm
 	 * 	@return
 	 */
-	@Insert("insert into hqls_parts_model (parts_id,model_id) VALUES (#{partsId}, #{modelId}, now() )")
+	@Insert("insert into hqls_parts_model (parts_id,model_id,create_time) VALUES (#{partsId}, #{modelId}, now() )")
+	@Options(useGeneratedKeys=true,keyProperty="id")
 	public Integer insertPartsModel(HqlsPartsModel pm);
 	
 	/**
@@ -273,5 +276,13 @@ public interface PartsMapper {
 	 */
 	public Page<CommonDto> carModelCombobox(@Param("seriesId")Integer seriesId,@Param("modelName") String modelName);
 
-
+	/**
+	 *  删除配件车型关联表
+	 * 	@User liud
+	 * 	@Date 2017年10月20日下午5:27:10
+	 * 	@param partsId
+	 */
+	@Delete("delete from hqls_parts_model where parts_id =#{1}")
+	public void deletePartsCarModel(Integer partsId);
+	
 }

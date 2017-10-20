@@ -25,6 +25,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsModel;
 import com.sinoauto.dao.bean.HqlsPartsPic;
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dao.mapper.CarBrandMapper;
@@ -54,6 +55,7 @@ public class PartsService {
 	
 	@Autowired
 	private CarBrandMapper carBrandMapper;
+	
 	
 	/**
 	 * 储存每次循环的节点的id,name
@@ -230,6 +232,7 @@ public class PartsService {
 					partsMapper.update(partsOperDto);
 					List<HqlsPartsPic> partsPics = partsOperDto.getPartsPics();
 					List<HqlsPartsAttrExtr> partsAttrExtrs = partsOperDto.getPartsAttrExtrs();
+					List<CommonDto> partsModels = partsOperDto.getCarModels(); //配件车型
 					if (partsPics != null && !partsPics.isEmpty()) {
 						// 删除配件id对应的所有图片
 						partsPicMapper.delete(partsId);
@@ -238,11 +241,17 @@ public class PartsService {
 						// 删除配件的动态属性
 						partsAttrExtrMapper.delete(partsId);
 					}
-
-					// 插入配件图片,和配件动态属性
-					if (partsAttrExtrs != null || partsPics != null) {
+					
+					if(partsModels!=null && !partsModels.isEmpty()){
+						//删除配件车型
+						partsMapper.deletePartsCarModel(partsId);
+					}
+					// 插入配件图片,和配件动态属性,配件对应车型
+					if (partsAttrExtrs != null || partsPics != null || partsModels!=null ) {
 						insertPartsPicAndAttrExr(partsOperDto, partsId);
 					}
+					
+						
 				}
 			}
 			return RestModel.success();
@@ -266,6 +275,7 @@ public class PartsService {
 		 */
 		HqlsPartsAttrExtr hqlsPartsAttrExtr = null;// 插入配件动态属性表
 		HqlsPartsPic partsPic = null;// 插入配件图片
+		HqlsPartsModel partsModel = null;//配件对应车型
 
 		// 配件的配置属性
 		if (partsOperDto.getPartsAttrExtrs().size() > 0) {
@@ -279,7 +289,7 @@ public class PartsService {
 		}
 		// 配件图片
 		List<HqlsPartsPic> hqlsPartsPic = partsOperDto.getPartsPics();
-		if (partsOperDto.getPartsPics().size() > 0) {
+		if (hqlsPartsPic.size() > 0) {
 			for (int i = 0; i < hqlsPartsPic.size(); i++) {
 				partsPic = new HqlsPartsPic();
 				partsPic.setPartsId(partsId);
@@ -287,6 +297,17 @@ public class PartsService {
 				partsPic.setSorting(i + 1);
 				partsPic.setUrl(hqlsPartsPic.get(i).getUrl());
 				partsPicMapper.insert(partsPic);
+			}
+		}
+		
+		// 配件对应车型
+		List<CommonDto> hqlsPartsCarModel = partsOperDto.getCarModels();
+		if(hqlsPartsCarModel.size()>0){
+			for (int i = 0; i < hqlsPartsCarModel.size(); i++) {
+				partsModel = new HqlsPartsModel();
+				partsModel.setModelId(hqlsPartsCarModel.get(i).getId());
+				partsModel.setPartsId(partsId);
+				partsMapper.insertPartsModel(partsModel);
 			}
 		}
 	}

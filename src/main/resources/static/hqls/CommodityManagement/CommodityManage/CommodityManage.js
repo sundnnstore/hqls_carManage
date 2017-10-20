@@ -9,10 +9,15 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     var active = {
 
     };
+    //车辆参数
+    var carParam = {};
+    
+    
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
+
         if (method == 'addCommodity') {
             title = '新增';
             /**
@@ -34,6 +39,11 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         	 * 显示配件品牌
         	 */
             partsBrand();
+            
+            /**
+             * 车辆
+             */
+            car();
             
             /**
              * 禁用其他点击按钮
@@ -70,6 +80,12 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
             btnAlign: 'c', //按钮居中
             yes: function(index, layero) {
+            	/**
+            	 * 显示车辆信息
+            	 */
+//            	carModel();
+//            	return ;
+            	
                 if (title != '查看') {
                     //折扣
                     // 校验规格、型号、品牌必填
@@ -624,7 +640,28 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         attrExtra += "]";
         return attrExtra;
     }
-
+    
+    /**
+     * 封装新增的车型
+     * @returns
+     */
+    function carModel(){
+    	var carModelsJson = "[";
+    	/**
+    	 * 获取多选的值
+    	 */
+    	var models = $('#carModel').select2("data");
+    	for (var i = 0; i < models.length; i++) {
+    		carModelsJson+="{\"id\":\"" + models[i].id + "\"},";
+		}
+    	if (carModelsJson.indexOf(",") > 0) {
+    		carModelsJson = carModelsJson.substring(0, carModelsJson.length - 1);
+        }
+    	carModelsJson += "]";
+    	console.log("carModelsJson:",carModelsJson);
+    	return carModelsJson;
+    	
+    }
 
     /**
      * 封装新增和add的请求数据
@@ -633,6 +670,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     function requestData() {
         var partsAttrExtrs = attrExtra(); //扩展属性
         var partsPics = imgs(); //图片集合
+        var carModels = carModel();
         var partsBrandId = $("#partsBrandId").val() == undefined ? -1 : $("#partsBrandId").val(),
             curPrice = $("#curPrice").val() == undefined ? -1 : $("#curPrice").val(),
             discount = $("#discount").val() == undefined ? -1 : $("#discount").val(),
@@ -659,10 +697,12 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsId\":\"" + partsId + "\"," +
             "\"partsPics\":";
         dataJson += partsPics + ",";
-        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs; 
+        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs+",";
+        dataJson += "\"carModels\":" + carModels; 
         dataJson += "}";
         dataJson = JSON.parse(dataJson); //解析成json对象
         var data = JSON.stringify(dataJson); //转换为json字符串
+        console.log(data);
         return data;
     }
 
@@ -744,107 +784,228 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     }
     
     /**
-     * 车辆功能
-     */
-//    function car(){
-//    	/**
-//    	 * 默认显示车辆品牌
-//    	 */
-//    	select2Combobox(
-//	    			"carBrand",
-//	    			"/carbrandcombobox",
-//	    			"请选择品牌",
-//	    			5,
-//	    			1,
-//	    			"carbrand"
-//    			);
-//    	
-//    }
-    
-    /**
      * 选择框点击事件
      * @returns
      */
-//    function carClick(){
-//    	/**
-//    	 *  下拉框改变事件
-//    	 */
-//    	$("#carBrand").change(function(data){
-//    		//获取当前选中品牌的ID
-//    	});
-//    	
-//    	$("#carSeries").change(function(data){
-//    		//获取当前选中品牌的ID
-//    	});
-//    	
-//    	$("#carModel").change(function(data){
-//    		//获取当前选中品牌的ID
-//    	});
-//    }
+    function car(){
+    	
+    	var res ;
+    	
+    	/**
+    	 * 加载车辆品牌信息
+    	 */
+    	loadCarBrand();
+    	
+    	/**
+    	 * 车辆品牌选中事件
+    	 */
+    	$("#carBrand").on("select2:select",function(){
+    		res = $(this).select2("data");
+    		$("#brandId").val(res[0].id);
+    		/**
+    		 * 清空车系
+    		 */
+    		$("#carSeries").html("");
+    		
+    		/**
+    		 * 启用车系
+    		 */
+    		$("#carSeries").prop("disabled", false);
+    		
+    		/**
+    		 * 禁用车型
+    		 */
+    		$("#carModel").prop("disabled", true);
+    		
+    		loadCarSeries();
+    	});
+
+    	
+    	
+    	/**
+    	 *  车系选中事件
+    	 */
+    	$("#carSeries").on("select2:select",function(){
+    		res = $(this).select2("data");
+    		$("#seriesId").val(res[0].id);
+    		/**
+    		 * 禁用车型
+    		 */
+    		$("#carModel").prop("disabled", false);
+    		/**
+    		 * 加载车辆车型
+    		 */
+    		loadCarModel();
+    	});
+    }
     
     /**
-     * select2 插件
-     * @param eleId 元素ID
-     * @param url 请求地址
-     * @param defaultText 默认显示文本
-     * @param pageSize 页面大小 , 当pageSize<4 的时候 scrolling 不显示 
-     * @param maxSelect 最多选择数量
-     * @param carFlag 车辆标记参数 1-品牌 2-车系 3-车型
+	 * 加载品牌信息
+	 */
+    function loadCarBrand(){
+    	/**
+    	 * 显示placaholder
+    	 */
+    	$('#carSeries').select2({ language : 'zh-CN',placeholder: "请选择车辆车系"});
+    	$('#carModel').select2({ language : 'zh-CN',placeholder: "请选择车型"});
+    	
+    	/**
+    	 * 禁用车系、车型
+    	 */
+    	$("#carSeries").prop("disabled", true); 
+		$("#carModel").prop("disabled", true);
+		
+		
+    	$('#carBrand').select2({
+    		language : 'zh-CN',
+            placeholder: "请选择车辆品牌",
+            ajax:{
+                url:"/carbrandcombobox",
+                dataType:"json",
+                delay:200,//millionsecond
+                data:function(params){
+                    return {
+                    	pageIndex:params.page || 1,
+                    	pageSize:pageSize,
+                    	brandName:params.term,
+                    };
+                },
+                cache:true,
+                processResults: function (res, params) {
+                	params.page = params.page || 1;
+                    var options = [];
+                	if(res!=null){
+                		var result = res.result;
+                		for (var i = 0; i < result.length; i++) {
+                			var option = {"id":result[i].key,"text":result[i].value};
+                			options.push(option);
+    					}
+                	}
+                    return {
+                        results: options,
+                        pagination: {
+                            more: (params.page * pageSize) < res.totalCount
+                        }
+                    };
+                },
+            },
+	    	escapeMarkup: function (markup) { return markup; } //防止sql注入
+        });
+    }
+    
+    /**
+     * 加载车系信息
      * @returns
      */
-//    function select2Combobox(eleId,url,defaultText,pageSize,maxSelect,carFlag){
-//    	$('#'+eleId).select2({
-//    		language : 'zh-CN',
-//            allowClear: true,
-//            placeholder: defaultText,
-//            maximumSelectionLength:maxSelect,
-//            ajax:{
-//                url:url,
-//                dataType:"json",
-//                delay:200,//millionsecond
-//                data:function(params){
-//                	var searchParam = {pageIndex:params.page || 1,pageSize:pageSize}; 
-//                	var appendPara;
-//                	switch (carFlag) {
-//						case "carbrand":
-//							appendPara = {brandName:params.term};
-//							searchParam=Object.assign(searchParam, appendPara);
-//							break;
-//						case "carseries":
-//							appendPara = {serName:params.term,brandId:6176};
-//							searchParam=Object.assign(searchParam, appendPara);
-//							break;
-//						case "carmodel":
-//							appendPara = {modelName:params.term,seriesId:6176};
-//							searchParam=Object.assign(searchParam, appendPara);
-//							break;
-//						default:
-//							break;
-//					}
-//                    return reqParam;
-//                },
-//                cache:true,
-//                processResults: function (res, params) {
-//                	params.page = params.page || 1;
-//                    var options = [];
-//                	if(res!=null){
-//                		var result = res.result;
-//                		for (var i = 0; i < result.length; i++) {
-//                			var option = {"id":result[i].key,"text":result[i].value};
-//                			options.push(option);
-//    					}
-//                	}
-//                    return {
-//                        results: options,
-//                        pagination: {
-//                            more: (params.page * pageSize) < res.totalCount
-//                        }
-//                    };
-//                },
-//            },
-//	    	escapeMarkup: function (markup) { return markup; } //防止sql注入
-//        });
-//    }
+    function loadCarSeries(){
+		if($("#brandId").val()){
+			/**
+    		 * 清空车系
+    		 */
+    		$("#carSeries").html("");
+    		
+    		/**
+    		 * 清空车型
+    		 */
+    		$("#carModel").html("");
+    		
+    		$('#carSeries').select2({
+	    		language : 'zh-CN',
+	            placeholder: "请选择车辆车系",
+	            ajax:{
+	                url:"/carseriescombobox",
+	                dataType:"json",
+	                delay:200,//millionsecond
+	                data:function(params){
+	                    return {
+	                    	pageIndex:params.page || 1,
+	                    	pageSize:pageSize,
+	                    	serName:params.term,
+	                    	brandId:$("#brandId").val()
+	                    };
+	                },
+	                cache:true,
+	                processResults: function (res, params) {
+	                	params.page = params.page || 1;
+	                    var options = [];
+	                	if(res!=null){
+	                		var result = res.result;
+	                		for (var i = 0; i < result.length; i++) {
+	                			var option = {"id":result[i].key,"text":result[i].value};
+	                			options.push(option);
+	    					}
+	                	}
+	                    return {
+	                        results: options,
+	                        pagination: {
+	                            more: (params.page * pageSize) < res.totalCount
+	                        }
+	                    };
+	                },
+	            },
+		    	escapeMarkup: function (markup) { return markup; } //防止sql注入
+	        });
+
+		}else{
+			layer.msg("请先选择车辆品牌");
+		}
+	}
+
+    /**
+     * 加载车型信息
+     * @returns
+     */
+    /**
+	 * 加载车辆车型
+	 */
+	function loadCarModel(){
+		if($("#seriesId").val()){
+			
+    		/**
+    		 * 清空车型
+    		 */
+    		$("#carModel").html("");
+    		
+    		$('#carModel').select2({
+	    		language : 'zh-CN',
+	            placeholder: "请选择车型",
+	            ajax:{
+	                url:"/carmodelcombobox",
+	                dataType:"json",
+	                delay:200,//millionsecond
+	                data:function(params){
+	                    return {
+	                    	pageIndex:params.page || 1,
+	                    	pageSize:pageSize,
+	                    	modelName:params.term,
+	                    	seriesId:$("#seriesId").val()
+	                    };
+	                },
+	                //cache:true,
+	                processResults: function (res, params) {
+	                	params.page = params.page || 1;
+	                    var options = [];
+	                	if(res!=null){
+	                		var result = res.result;
+	                		for (var i = 0; i < result.length; i++) {
+	                			var option = {"id":result[i].key,"text":result[i].value};
+	                			options.push(option);
+	    					}
+	                	}
+	                    return {
+	                        results: options,
+	                        pagination: {
+	                            more: (params.page * pageSize) < res.totalCount
+	                        }
+	                    };
+	                },
+	            },
+		    	escapeMarkup: function (markup) { return markup; } //防止sql注入
+	        });
+		}else{
+			layer.msg("请先选择车辆车系");
+		}
+	}
 });
 
 /**
@@ -994,7 +1155,7 @@ function zNodes() {
             node = data;
         },
         error: function(data) {
-            layer.msg("页面查询失败");
+            layer.msg("页面查询失败"); 
         }
     });
     return node;

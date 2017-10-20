@@ -107,8 +107,8 @@
             <div class="layui-input-inline">
                 <label for="" class="layui-form-label">车辆品牌 </label>
                 <div class="layui-input-block">
-                    <select class="js-states form-control" id="carBrand" style="width: 265px;height: 35px;" name="carBrand"><!-- js-example-basic-multiple -->
-						
+                	<input type="hidden" id="brandId" value="">
+                    <select class="js-states form-control" id="carBrand" style="width: 265px;height: 35px;" name="carBrand">
 					</select>
                 </div>
             </div>
@@ -119,7 +119,8 @@
             <div class="layui-input-inline">
                 <label for="" class="layui-form-label">车辆车系</label>
                 <div class="layui-input-block">
-                    <select class="layui-select" id="carSeries" style="width: 265px;height: 35px;" name="carSeries">
+                	<input type="hidden" id="seriesId" value="">
+                    <select class="layui-select carSeries" id="carSeries" style="width: 265px;height: 35px;" name="carSeries">
 					</select>
                 </div>
             </div>
@@ -127,7 +128,9 @@
             <div class="layui-input-inline">
                 <label for="" class="layui-form-label">车辆车型</label>
                 <div class="layui-input-block ">
+                	<input type="hidden" id="modelId" value="">
                     <select class="layui-select" id="carModel" name="carModel[]" multiple="multiple" style="width: 265px;height: 35px;">
+						<span class="select2-selection__placeholder">请选择车辆车型</span>
 					</select>
                 </div>
             </div>
