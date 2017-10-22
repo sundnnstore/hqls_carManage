@@ -34,6 +34,7 @@ import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -807,6 +808,22 @@ public class PartsService {
 		} catch (Exception e) {
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车型查询异常");
 		}
-	} 
+	}
+	
+	/**
+	 *  查询配件车型明细
+	 * @param partsId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<PartsModelDto>> viewPartsModels(Integer partsId){
+		try {
+			PartsModelDto pmd = partsMapper.viewPartsModel(partsId);
+			if(pmd==null) pmd = new PartsModelDto();
+			return RestModel.success(pmd);
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"查询配件车型明细异常");
+		}
+	}
 	
 }

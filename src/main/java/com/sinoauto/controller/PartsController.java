@@ -23,6 +23,7 @@ import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
@@ -359,6 +360,13 @@ public class PartsController {
 			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
 			@RequestParam(value="pageSize",required=true)Integer pageSize) {
 		return partsService.carModelCombobox(seriesId, modelName, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "配件车型明细查询", notes = "liud")
+	@GetMapping("viewpartsmodel")
+	public ResponseEntity<RestModel<PartsModelDto>> viewPartsModel(
+			@RequestParam(value="partsId",required=true)Integer partsId) {
+		return partsService.viewPartsModels(partsId);
 	}
 	
 }

@@ -218,4 +218,27 @@
 		<if test="brandName!=null and brandName!='' "> and brand_name like CONCAT('%',#{brandName},'%')</if>
 	</select>
 	
+	
+	<!-- 配件对应车型  -->
+	<resultMap type="com.sinoauto.dto.PartsModelDto" id="partsCarModelDetail">
+		<collection property="carModels" column="parts_id" select="com.sinoauto.dao.mapper.PartsMapper.viewPartsModelByPartsId" />
+	</resultMap>
+	
+	<select id="viewPartsModel" resultMap="partsCarModelDetail">
+		SELECT
+			  hp.`parts_id`,
+			  cb.`brand_id` as carBrandId,
+			  cb.`brand_name` as carBrandName ,
+			  cs.`series_id` as carSeriesId,
+			  cs.`series_name` as carSeriesName
+			FROM `hqls_car_brand` cb
+			INNER JOIN hqls_car_series cs ON cb.`brand_id`=cs.`brand_id`
+			INNER JOIN hqls_car_model cm ON cs.`series_id`=cm.`series_id`
+			INNER JOIN hqls_parts_model pm ON pm.`model_id`=cm.`model_id`
+			INNER JOIN hqls_parts hp ON hp.`parts_id`=pm.`parts_id` 
+			WHERE 1=1 
+			<if test="partsId!=null and partsId!='' "> and hp.`parts_id`=#{partsId}</if>
+			GROUP BY cb.`brand_id`
+	</select>
+	
 </mapper>

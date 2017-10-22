@@ -19,6 +19,7 @@ import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
 import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -275,6 +276,24 @@ public interface PartsMapper {
 	 * 	@return
 	 */
 	public Page<CommonDto> carModelCombobox(@Param("seriesId")Integer seriesId,@Param("modelName") String modelName);
+	
+	/**
+	 * 查询 配件车型明细
+	 * @param partsId
+	 * @return
+	 */
+	public PartsModelDto viewPartsModel(@Param("partsId") Integer partsId);
+	
+	/**
+	 * 通过配件ID查询配件信息
+	 * @param partsId
+	 * @return
+	 */
+	@Select("SELECT cm.`model_id` as `key`,cm.`model_name` as `value`"
+			+ "FROM hqls_car_model cm "
+			+ "INNER JOIN hqls_parts_model pm ON pm.`model_id`=cm.`model_id` "
+			+ "INNER JOIN hqls_parts hp ON hp.`parts_id`=pm.`parts_id` WHERE hp.`parts_id`=#{partsId}")
+	public List<CommonDto> viewPartsModelByPartsId(@Param("partsId") Integer partsId);
 
 	/**
 	 *  删除配件车型关联表
