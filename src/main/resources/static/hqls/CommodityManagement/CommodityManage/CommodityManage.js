@@ -657,7 +657,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     		carModelsJson = carModelsJson.substring(0, carModelsJson.length - 1);
         }
     	carModelsJson += "]";
-    	console.log("carModelsJson:",carModelsJson);
     	return carModelsJson;
     	
     }
@@ -701,7 +700,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         dataJson += "}";
         dataJson = JSON.parse(dataJson); //解析成json对象
         var data = JSON.stringify(dataJson); //转换为json字符串
-        console.log(data);
+        //console.log(data);
         return data;
     }
 
@@ -910,14 +909,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     	});
     }
     
-    /**
-     * 品牌选中事件
-     */
-	$('#carBrand').on('select2:unselect', function (e) {
-		
-		var data = e.params.data;
-	    console.log(data);
-	});
     
     /**
      * 加载车系信息
@@ -1045,14 +1036,25 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    var data = e.params.data;
 	    $("#modelId").val(data.id);
   	    $("#modelId").attr("name",data.text);
-	    console.log("点击之后选中的数据:",data);
-	    var tr=`<tr>
-		    		<td>${$("#brandId").attr("name")}</td>
-		    		<td>${$("#seriesId").attr("name")}</td>
-		    		<td>${$("#modelId").attr("name")} <input type="hidden" value="${$("#modelId").val()}" class="carModelId"></td>
-		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
-		    	</tr>`;
-	    $(".parts_car_info").append(tr);
+  	    var isExistCarModelId=0;
+	    $(".parts_car_info tr").each(function(i){
+	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
+	    	if(alreadyExistCarModelId==data.id){
+	    		alert(alreadyExistCarModelId==data.id);
+	    		isExistCarModelId = 1;
+	    	}
+	    	
+	    });
+	    if(isExistCarModelId==0){
+	    	var tr=`<tr>
+	    		<td>${$("#brandId").attr("name")}</td>
+	    		<td>${$("#seriesId").attr("name")}</td>
+	    		<td>${$("#modelId").attr("name")} <input type="hidden" value="${$("#modelId").val()}" class="carModelId"></td>
+	    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
+	    	</tr>`;
+	    	$(".parts_car_info").append(tr);
+	    }
+  	    
 	});
 	
 	/**
