@@ -278,7 +278,7 @@ public class PartsService {
 		HqlsPartsModel partsModel = null;//配件对应车型
 
 		// 配件的配置属性
-		if (partsOperDto.getPartsAttrExtrs().size() > 0) {
+		if (partsOperDto.getPartsAttrExtrs()!=null&&partsOperDto.getPartsAttrExtrs().size() > 0) {
 			for (HqlsPartsAttrExtr partsAttrExtrs : partsOperDto.getPartsAttrExtrs()) {
 				hqlsPartsAttrExtr = new HqlsPartsAttrExtr();
 				hqlsPartsAttrExtr.setAttrKey(partsAttrExtrs.getAttrKey());
@@ -289,7 +289,7 @@ public class PartsService {
 		}
 		// 配件图片
 		List<HqlsPartsPic> hqlsPartsPic = partsOperDto.getPartsPics();
-		if (hqlsPartsPic.size() > 0) {
+		if (hqlsPartsPic!=null && hqlsPartsPic.size() > 0) {
 			for (int i = 0; i < hqlsPartsPic.size(); i++) {
 				partsPic = new HqlsPartsPic();
 				partsPic.setPartsId(partsId);
@@ -302,7 +302,7 @@ public class PartsService {
 		
 		// 配件对应车型
 		List<CommonDto> hqlsPartsCarModel = partsOperDto.getCarModels();
-		if(hqlsPartsCarModel.size()>0){
+		if(hqlsPartsCarModel!=null&&hqlsPartsCarModel.size()>0){
 			for (int i = 0; i < hqlsPartsCarModel.size(); i++) {
 				partsModel = new HqlsPartsModel();
 				partsModel.setModelId(hqlsPartsCarModel.get(i).getId());

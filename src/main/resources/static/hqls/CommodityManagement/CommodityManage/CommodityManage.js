@@ -371,7 +371,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             data: requestData(),
             success: function(data) {
                 var pageIndex = parseInt($(".layui-laypage-skip").val());
-                $("#TheTreeIdOfSearch").val(0);
+//                $("#TheTreeIdOfSearch").val(0);
+//                $("#commodityName").attr('placeholder','请选择分类');
                 getData(pageIndex);
                 layer.msg("编辑商品成功");
                 layer.close(index); // 如果必填校验出错，此时应不必关闭弹框；此处代码暂定，请根据需要进行修改
@@ -651,6 +652,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     	 * 获取多选的值
     	 */
     	var models = $('#carModel').select2("data");
+    	alert("models:"+models);
     	for (var i = 0; i < models.length; i++) {
     		carModelsJson+="{\"id\":\"" + models[i].id + "\"},";
 		}
@@ -670,7 +672,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     function requestData() {
         var partsAttrExtrs = attrExtra(); //扩展属性
         var partsPics = imgs(); //图片集合
-        var carModels = carModel();
+        //var carModels = carModel();
         var partsBrandId = $("#partsBrandId").val() == undefined ? -1 : $("#partsBrandId").val(),
             curPrice = $("#curPrice").val() == undefined ? -1 : $("#curPrice").val(),
             discount = $("#discount").val() == undefined ? -1 : $("#discount").val(),
@@ -697,8 +699,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsId\":\"" + partsId + "\"," +
             "\"partsPics\":";
         dataJson += partsPics + ",";
-        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs+",";
-        dataJson += "\"carModels\":" + carModels; 
+        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs;//+",";
+        //dataJson += "\"carModels\":" + carModels; 
         dataJson += "}";
         dataJson = JSON.parse(dataJson); //解析成json对象
         var data = JSON.stringify(dataJson); //转换为json字符串
