@@ -15,6 +15,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
+
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
 
@@ -49,11 +50,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
              * 禁用其他点击按钮
              */
             ButtonForbidden();
-            
-            /**
-             * 车型
-             */
-            
+      
             
         } else if (method == 'view') {
             title = '查看';
@@ -79,13 +76,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             content: $('#commodityBox'), // 内容
             btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
             btnAlign: 'c', //按钮居中
-            yes: function(index, layero) {
-            	/**
-            	 * 显示车辆信息
-            	 */
-//            	carModel();
-//            	return ;
-            	
+            yes: function(index, layero) {            	
                 if (title != '查看') {
                     //折扣
                     // 校验规格、型号、品牌必填
@@ -535,6 +526,15 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          */
         $("#cName").val(data.result.typeName);
         $("#TheTreeIdOfAdd").val(data.result.partsTypeId);
+        
+        
+        /**
+         * 配件车型
+         */
+        
+        
+        
+        
         /**
          * 上下架
          */
@@ -786,7 +786,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     }
     
     /**
-     * 选择框点击事件
+     * 车型选择框点击事件
      * @returns
      */
     function car(){
@@ -844,7 +844,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     /**
 	 * 加载品牌信息
 	 */
-    function loadCarBrand(){
+    function loadCarBrand(){ 
     	/**
     	 * 显示placaholder
     	 */
@@ -893,6 +893,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             },
 	    	escapeMarkup: function (markup) { return markup; } //防止sql注入
         });
+
     }
     
     /**
@@ -1007,6 +1008,22 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 		}else{
 			layer.msg("请先选择车辆车系");
 		}
+	}
+	
+	/**
+	 * 编辑车型
+	 * 
+	 */
+	function editCar(partsId){
+		$.ajax({
+            url: "/viewpartsmodel",
+            type: "get",
+            async: false,
+            data:{partsId:partsId},
+            success: function(data) {
+            	car();
+            }
+        });
 	}
 });
 
