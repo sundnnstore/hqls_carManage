@@ -1,6 +1,5 @@
 package com.sinoauto.dto;
 
-import java.util.List;
 
 /**
  * 配件车型
@@ -14,10 +13,9 @@ public class PartsModelDto {
 	private String carBrandName;
 	private Integer carSeriesId;
 	private String carSeriesName;
-	/**
-	 * 配件车型
-	 */
-	private List<CommonDto> carModels;
+	private Integer carModelId;
+	private String carModelName;
+
 	public Integer getCarBrandId() {
 		return carBrandId;
 	}
@@ -36,13 +34,7 @@ public class PartsModelDto {
 	public void setCarSeriesId(Integer carSeriesId) {
 		this.carSeriesId = carSeriesId;
 	}
-	
-	public List<CommonDto> getCarModels() {
-		return carModels;
-	}
-	public void setCarModels(List<CommonDto> carModels) {
-		this.carModels = carModels;
-	}
+
 	public Integer getPartsId() {
 		return partsId;
 	}
@@ -54,6 +46,18 @@ public class PartsModelDto {
 	}
 	public void setCarSeriesName(String carSeriesName) {
 		this.carSeriesName = carSeriesName;
+	}
+	public Integer getCarModelId() {
+		return carModelId;
+	}
+	public void setCarModelId(Integer carModelId) {
+		this.carModelId = carModelId;
+	}
+	public String getCarModelName() {
+		return carModelName;
+	}
+	public void setCarModelName(String carModelName) {
+		this.carModelName = carModelName;
 	}
 	
 }

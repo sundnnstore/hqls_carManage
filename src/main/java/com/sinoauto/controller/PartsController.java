@@ -364,7 +364,7 @@ public class PartsController {
 	
 	@ApiOperation(value = "配件车型明细查询", notes = "liud")
 	@GetMapping("viewpartsmodel")
-	public ResponseEntity<RestModel<PartsModelDto>> viewPartsModel(
+	public ResponseEntity<RestModel<List<PartsModelDto>>> viewPartsModel(
 			@RequestParam(value="partsId",required=true)Integer partsId) {
 		return partsService.viewPartsModels(partsId);
 	}

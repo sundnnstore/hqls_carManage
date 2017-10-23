@@ -815,10 +815,10 @@ public class PartsService {
 	 * @param partsId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<PartsModelDto>> viewPartsModels(Integer partsId){
+	public ResponseEntity<RestModel<List<PartsModelDto>>> viewPartsModels(Integer partsId){
 		try {
-			PartsModelDto pmd = partsMapper.viewPartsModel(partsId);
-			if(pmd==null) pmd = new PartsModelDto();
+			List<PartsModelDto> pmd = partsMapper.viewPartsModel(partsId);
+			if(pmd==null) pmd = new ArrayList<>();
 			return RestModel.success(pmd);
 		} catch (Exception e) {
 			System.out.println(e);

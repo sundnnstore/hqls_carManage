@@ -15,7 +15,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     
     // 触发弹框事件
     $('.commodity').on('click', 'button', function() {
-
         var method = $(this).data('method');
         $('.closeBtn').removeAttr('style'); // 移除查看状态下的图片右上角删除样式的隐藏效果
 
@@ -76,7 +75,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             content: $('#commodityBox'), // 内容
             btn: title == '查看' ? ['确定', '取消'] : ['提交', '取消'],
             btnAlign: 'c', //按钮居中
-            yes: function(index, layero) {            	
+            yes: function(index, layero) {
                 if (title != '查看') {
                     //折扣
                     // 校验规格、型号、品牌必填
@@ -530,8 +529,10 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         
         /**
          * 配件车型
+         * 
          */
-        
+        alert("配件ID："+data.result.partsId);
+        showPartsCarModel(data.result.partsId);
         
         
         
@@ -648,14 +649,11 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
      */
     function carModel(){
     	var carModelsJson = "[";
-    	/**
-    	 * 获取多选的值
-    	 */
-    	var models = $('#carModel').select2("data");
-    	alert("models:"+models);
-    	for (var i = 0; i < models.length; i++) {
-    		carModelsJson+="{\"id\":\"" + models[i].id + "\"},";
-		}
+    	if($(".parts_car_info tr").length>0){
+    		$(".parts_car_info tr").each(function(i){
+        		carModelsJson+="{\"id\":\"" + $(this).find(".carModelId").val() + "\"},";
+        	});
+    	}
     	if (carModelsJson.indexOf(",") > 0) {
     		carModelsJson = carModelsJson.substring(0, carModelsJson.length - 1);
         }
@@ -672,7 +670,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     function requestData() {
         var partsAttrExtrs = attrExtra(); //扩展属性
         var partsPics = imgs(); //图片集合
-        //var carModels = carModel();
+        var carModels = carModel();
         var partsBrandId = $("#partsBrandId").val() == undefined ? -1 : $("#partsBrandId").val(),
             curPrice = $("#curPrice").val() == undefined ? -1 : $("#curPrice").val(),
             discount = $("#discount").val() == undefined ? -1 : $("#discount").val(),
@@ -699,8 +697,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             "\"partsId\":\"" + partsId + "\"," +
             "\"partsPics\":";
         dataJson += partsPics + ",";
-        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs;//+",";
-        //dataJson += "\"carModels\":" + carModels; 
+        dataJson += "\"partsAttrExtrs\":" + partsAttrExtrs+",";
+        dataJson += "\"carModels\":" + carModels; 
         dataJson += "}";
         dataJson = JSON.parse(dataJson); //解析成json对象
         var data = JSON.stringify(dataJson); //转换为json字符串
@@ -719,6 +717,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("#modelContent a").removeClass('curSelectedNode'); //移除样式
         //清空图片
         $(".uploadImg").html("");
+        //清空车型
+        $(".parts_car_info").html("");
         //将新增按钮变为可用
         $("#addCommodity").removeAttr("disabled");
     }
@@ -737,6 +737,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".attrExtra").html("");
         //清空图片
         $(".uploadImg").not(".uploadImg:first").html("");
+        //清空车型
+        $(".parts_car_info").html("");
         //radio还原
         $("input[name='isUnable']").attr("checked", false);
         //将编辑按钮变为可用
@@ -755,6 +757,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".attrExtra").html("");
         //清空图片
         $(".uploadImg").not(".uploadImg:first").html("");
+        //清空车型
+        $(".parts_car_info").html("");
         //将查看按钮变为可用
         $("#view").removeAttr("disabled");
     }
@@ -791,7 +795,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
      */
     function car(){
     	
-    	var res ;
+    	var res;
     	
     	/**
     	 * 加载车辆品牌信息
@@ -893,8 +897,26 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             },
 	    	escapeMarkup: function (markup) { return markup; } //防止sql注入
         });
-
+    	
+    	/**
+    	 * 车辆品牌点击事件
+    	 */
+    	$('#carBrand').on('select2:select', function (e) {
+    	     var data = e.params.data;
+    	     $("#brandId").val(data.id);
+    	     $("#brandId").attr("name",data.text);
+    	    
+    	});
     }
+    
+    /**
+     * 品牌选中事件
+     */
+	$('#carBrand').on('select2:unselect', function (e) {
+		
+		var data = e.params.data;
+	    console.log(data);
+	});
     
     /**
      * 加载车系信息
@@ -948,30 +970,33 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	            },
 		    	escapeMarkup: function (markup) { return markup; } //防止sql注入
 	        });
-
 		}else{
 			layer.msg("请先选择车辆品牌");
 		}
 	}
-
+    
     /**
-     * 加载车型信息
-     * @returns
-     */
+	 * 车系选中事件
+	 */
+	$('#carSeries').on('select2:select', function (e) {
+	     var data = e.params.data;
+	     $("#seriesId").val(data.id);
+	     $("#seriesId").attr("name",data.text);
+	});
+    
     /**
 	 * 加载车辆车型
 	 */
 	function loadCarModel(){
 		if($("#seriesId").val()){
-			
     		/**
     		 * 清空车型
     		 */
     		$("#carModel").html("");
-    		
     		$('#carModel').select2({
 	    		language : 'zh-CN',
 	            placeholder: "请选择车型",
+	            maximumSelectionLength:3,
 	            ajax:{
 	                url:"/carmodelcombobox",
 	                dataType:"json",
@@ -1005,23 +1030,57 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	            },
 		    	escapeMarkup: function (markup) { return markup; } //防止sql注入
 	        });
+    		
+    		
 		}else{
 			layer.msg("请先选择车辆车系");
 		}
 	}
 	
 	/**
-	 * 编辑车型
+	 * 车型选中事件
+	 */
+	$('#carModel').on('select2:select', function (e) {
+	    var data = e.params.data;
+	    $("#modelId").val(data.id);
+  	    $("#modelId").attr("name",data.text);
+	    console.log("点击之后选中的数据:",data);
+	    var tr=`<tr>
+		    		<td>${$("#brandId").attr("name")}</td>
+		    		<td>${$("#seriesId").attr("name")}</td>
+		    		<td>${$("#modelId").attr("name")} <input type="hidden" value="${$("#modelId").val()}" class="carModelId"></td>
+		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
+		    	</tr>`;
+	    $(".parts_car_info").append(tr);
+	});
+	
+	/**
+	 * 显示车型
 	 * 
 	 */
-	function editCar(partsId){
+	function showPartsCarModel(partsId){
 		$.ajax({
             url: "/viewpartsmodel",
             type: "get",
             async: false,
             data:{partsId:partsId},
             success: function(data) {
+            	//初始化车型选择器选择器控件
             	car();
+            	//拼接数据
+            	if(data.result!=null){
+            		var tr="";
+            		for (var i = 0; i < data.result.length; i++) {
+            			tr+=`<tr>
+        		    		<td>${data.result[i].carBrandName}</td>
+        		    		<td>${data.result[i].carSeriesName}</td>
+        		    		<td>${data.result[i].carModelName} <input type="hidden" value="${data.result[i].carModelId}" class="carModelId"></td>
+        		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
+        		    	</tr>`;
+            			
+					}
+            		$(".parts_car_info").append(tr);
+            	}
             }
         });
 	}
