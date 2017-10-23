@@ -531,7 +531,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          * 配件车型
          * 
          */
-        alert("配件ID："+data.result.partsId);
         showPartsCarModel(data.result.partsId);
         
         
@@ -771,6 +770,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         });
         $("#view").attr("disabled", "disabled");
         $('.closeBtn').css('display', 'none');
+        $('.parts_car_info tr').find("button").removeAttr("onclick");
+        $('.parts_car_info tr').find("button").attr("disabled", "disabled");
     }
     //按钮禁用
     function ButtonForbidden() {
