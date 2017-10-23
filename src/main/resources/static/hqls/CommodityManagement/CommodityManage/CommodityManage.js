@@ -1040,7 +1040,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    $(".parts_car_info tr").each(function(i){
 	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
 	    	if(alreadyExistCarModelId==data.id){
-	    		alert(alreadyExistCarModelId==data.id);
 	    		isExistCarModelId = 1;
 	    	}
 	    	
