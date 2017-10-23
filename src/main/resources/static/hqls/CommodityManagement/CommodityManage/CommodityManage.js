@@ -527,8 +527,14 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $("#TheTreeIdOfAdd").val(data.result.partsTypeId);
         
         
+        
         /**
-         * 配件车型
+         * 启用配件车型选择器
+         */
+    	car();
+    	
+    	/**
+         * 查询配件车型
          * 
          */
         showPartsCarModel(data.result.partsId);
@@ -1067,9 +1073,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             async: false,
             data:{partsId:partsId},
             success: function(data) {
-            	//初始化车型选择器选择器控件
-            	car();
-            	//拼接数据
+            	//车型配件数据
             	if(data.result!=null){
             		var tr="";
             		for (var i = 0; i < data.result.length; i++) {
