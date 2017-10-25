@@ -525,16 +525,13 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          */
         $("#cName").val(data.result.typeName);
         $("#TheTreeIdOfAdd").val(data.result.partsTypeId);
-        
-        
-        
+    
         /**
          * 启用配件车型选择器
          */
     	car();
-    	
     	/**
-         * 查询配件车型
+         * 查询已选择配件车型
          * 
          */
         showPartsCarModel(data.result.partsId);
