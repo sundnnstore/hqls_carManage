@@ -1083,7 +1083,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	        	if(data.result!=null){
 	        		var tr="",res = data.result ;
 	        		for (var i = 0; i < res.length; i++) {
-	        			//用 `` 符号则绑定的事件 在layui.use里面定义无法加载
 	        			tr+="<tr>";
 	        			tr+='	<td>'+res[i].carBrandName+'</td>';
 	        			tr+='	<td>'+res[i].carSeriesName+'</td>';
@@ -1113,7 +1112,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	 * @returns
 	 */
 	function initPartsCarModelPage(totalCount, pageIndex,partsId) {
-	    if (totalCount <= pageSize) totalCount = pageSize + 1;
+		if (totalCount <= pageSize) totalCount = pageSize + 1;
 	    //page
 	    laypage({
 	        cont: 'pageOfPartsModel',
