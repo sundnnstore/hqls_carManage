@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>华汽连锁</title>
     <style>
-        div.header{
-            height: 44px;
-            text-align: center;
-        }
        div.iosbox,div.Androidbox{
         height: 100px;
         text-align: center;
@@ -32,9 +28,7 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        华汽连锁
-    </div>
+    
     <div style="text-align:center;margin-top:80px">
         <img src="img/hqls.png" alt="" width="60" height="60">
     </div>
@@ -73,6 +67,7 @@
             // alert("跳转到ios的下载地址")
             // $('div.iosbox a').attr('href',iosUrl);
             $('div.Androidbox').css('display',"none");
+            $(".ljxz").html("前往App Store 下载");
         }else{
             alert("不是 在手机上运行的")
         }
