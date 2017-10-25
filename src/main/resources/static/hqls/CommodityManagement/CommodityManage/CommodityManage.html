@@ -138,6 +138,28 @@
             </table>
         </div>
         
+        <div class="modelTableContainer">
+            <input type="hidden" value="" id="partsIdForOper">
+            <caption class="caption">
+                 	 选中车型(备注:已经选过得车型不会显示在下面)
+            </caption >
+            	
+            <div class="showSelectCarModel" style="width: 100% ;height: 100%;">
+            	<table class="layui-table">
+	                <thead>
+	                    <tr>
+	                        <th style="min-width: 150px">车辆品牌</th>
+	                        <th style="min-width: 150px">车辆车系</th>
+	                        <th style="min-width: 100px">车辆车型</th>
+	                        <th style="min-width: 150px">操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody class="parts_car_selected_info"> 
+	                	
+	                </tbody>
+            	</table>
+            </div>
+        </div>
         
          <div class="modelTableContainer">
             <input type="hidden" value="" id="partsIdForOper">
@@ -147,20 +169,20 @@
             	
             <div class="showSelectCarModel" style="width: 100% ;height: 100%;">
             	<table class="layui-table">
-                <thead>
-                    <tr>
-                        <th style="min-width: 150px">车辆品牌</th>
-                        <th style="min-width: 150px">车辆车系</th>
-                        <th style="min-width: 100px">车辆车型</th>
-                        <th style="min-width: 150px">操作</th>
-                    </tr>
-                </thead>
-                <tbody class="parts_car_info"> 
-                	
-                </tbody>
-            </table>
+	                <thead>
+	                    <tr>
+	                        <th style="min-width: 150px">车辆品牌</th>
+	                        <th style="min-width: 150px">车辆车系</th>
+	                        <th style="min-width: 100px">车辆车型</th>
+	                        <th style="min-width: 150px">操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody class="parts_car_info"> 
+	                	
+	                </tbody>
+            	</table>
             </div>
-				
+			<div id="pageOfPartsModel" style="text-align: right;"></div>	
         </div>
         
         

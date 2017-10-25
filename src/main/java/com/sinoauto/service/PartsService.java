@@ -20,7 +20,6 @@ import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.util.StringUtils;
-
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
@@ -243,10 +242,6 @@ public class PartsService {
 						partsAttrExtrMapper.delete(partsId);
 					}
 					
-					if(partsModels!=null && !partsModels.isEmpty()){
-						//删除配件车型
-						partsMapper.deletePartsCarModel(partsId);
-					}
 					// 插入配件图片,和配件动态属性,配件对应车型
 					if (partsAttrExtrs != null || partsPics != null || partsModels!=null ) {
 						insertPartsPicAndAttrExr(partsOperDto, partsId);
@@ -815,15 +810,32 @@ public class PartsService {
 	 * @param partsId
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<PartsModelDto>>> viewPartsModels(Integer partsId){
+	public ResponseEntity<RestModel<Page<PartsModelDto>>> viewPartsModels(Integer partsId,Integer pageIndex,Integer pageSize){
 		try {
-			List<PartsModelDto> pmd = partsMapper.viewPartsModel(partsId);
-			if(pmd==null) pmd = new ArrayList<>();
-			return RestModel.success(pmd);
+			PageHelper.startPage(pageIndex, pageSize);
+			Page<PartsModelDto> pmd = partsMapper.viewPartsModel(partsId);
+			if(pmd==null) pmd = new Page<>();
+			return RestModel.success(pmd,(int)pmd.getTotal());
 		} catch (Exception e) {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"查询配件车型明细异常");
 		}
+	}
+	
+	/**
+	 * 删除配件车型关联
+	 * 	@User liud
+	 * 	@Date 2017年10月25日下午2:14:48
+	 * 	@param carModelId
+	 */
+	public boolean deletePartsCarModelByModelId(Integer carModelId){
+		try{
+			partsMapper.deletePartsCarModelByModelId(carModelId);
+		}catch (Exception e) {
+			return false;
+		}
+		return true;
+		
 	}
 	
 }

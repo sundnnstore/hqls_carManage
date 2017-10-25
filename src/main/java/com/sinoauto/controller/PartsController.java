@@ -3,7 +3,6 @@ package com.sinoauto.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
@@ -364,9 +364,17 @@ public class PartsController {
 	
 	@ApiOperation(value = "配件车型明细查询", notes = "liud")
 	@GetMapping("viewpartsmodel")
-	public ResponseEntity<RestModel<List<PartsModelDto>>> viewPartsModel(
-			@RequestParam(value="partsId",required=true)Integer partsId) {
-		return partsService.viewPartsModels(partsId);
+	public ResponseEntity<RestModel<Page<PartsModelDto>>> viewPartsModel(
+			@RequestParam(value="partsId",required=true)Integer partsId,
+			@RequestParam(value="pageIndex",required=true) Integer pageIndex,
+			@RequestParam(value="pageSize",required=true) Integer pageSize) {
+		return partsService.viewPartsModels(partsId,pageIndex,pageSize);
+	}
+	
+	@ApiOperation(value = "删除配件车型关联表ID", notes = "liud")
+	@DeleteMapping("delpartscarmodel")
+	public @ResponseBody boolean deletePartsCarModelByModelId(@RequestParam(value="carModelId",required=true) Integer carModelId){
+		return partsService.deletePartsCarModelByModelId(carModelId);
 	}
 	
 }
