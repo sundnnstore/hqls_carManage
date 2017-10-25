@@ -534,7 +534,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
          * 查询已选择配件车型
          * 
          */
-        //showPartsCarModel(data.result.partsId);
+        showPartsCarModel(data.result.partsId);
         
         
         
