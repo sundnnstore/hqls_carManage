@@ -74,6 +74,12 @@ public class PartsOperDto {
 	@ApiModelProperty("配件扩展参数集合")
 	List<HqlsPartsAttrExtr> partsAttrExtrs;
 	
+	/**
+	 * 配件对应车型
+	 */
+	@ApiModelProperty("配件对应车型")
+	List<CommonDto> carModels;
+	
 	public Integer getPartsId() {
 		return partsId;
 	}
@@ -206,6 +212,12 @@ public class PartsOperDto {
 	}
 	public void setPname(String pname) {
 		this.pname = pname;
+	}
+	public List<CommonDto> getCarModels() {
+		return carModels;
+	}
+	public void setCarModels(List<CommonDto> carModels) {
+		this.carModels = carModels;
 	}
 	
 }

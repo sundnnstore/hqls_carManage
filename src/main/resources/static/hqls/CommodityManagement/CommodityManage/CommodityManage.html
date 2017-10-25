@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="common/zTree/css/zTreeStyle.css" type="text/css">
 <link rel="stylesheet" href="CommodityManagement/CommodityManage/CommodityManage.css">
 <link href="common/zTree/css/zTreeStyle.css"></link>
+<link href="common/select2/css/select2.min.css" rel="stylesheet" />
 <div class="commodity">
     商品管理
     <!-- 商品信息搜索 && 添加商品 -->
@@ -19,6 +20,7 @@
                         <!-- onclick="showMenu('main')" -->
                         <input type="text" id="commodityName" placeholder="请选择分类" class="layui-input" onclick="showMenu('main')" readonly/>
                         <!--  <ul id="commodityName"></ul> -->
+                       	<input type="hidden" value="" id="TheTreeIdOfSearch">
                     </li>
                 </ul>
             </div>
@@ -90,6 +92,7 @@
                 </div>
                 <div id="modelContent" class="menuContent">
                     <ul id="cTree" class="ztree" style="margin-top:0; width:160px;"></ul>
+                    <input type="hidden" value="" id="TheTreeIdOfAdd">
                 </div>
             </div>
         </div>
@@ -100,12 +103,72 @@
                     <input type="text" name="" id="partsFactory" class="layui-input" value="" />
                 </div>
             </div>
+            
         </div>
+        
+        <div class="modelTableContainer">
+            <input type="hidden" value="" id="partsIdForOper">
+            <table class="layui-table">
+                <caption class="caption" style="color: #5B5B5B;">
+                 	 车辆选择器
+                </caption>
+                <tbody>
+                    <tr>
+                        <td class="common">车辆品牌</td>
+                        <td class="common">
+                        	<input type="hidden" id="brandId" value="" name="">
+		                    <select class="js-states form-control" id="carBrand"  name="carBrand"> 
+							</select>
+                        </td>
+                        <td class="common">车辆车系 </td>
+                        <td class="common">
+							<input type="hidden" id="seriesId" value="" name="">
+		                    <select class="layui-select carSeries" id="carSeries"  name="carSeries" style="width: 200px;height: 35px;">
+							</select>
+						</td>
+                        <td class="common">车辆型号 </td>
+                        <td class="common">
+                            <input type="hidden" id="modelId" value="" name="">
+		                    <select class="layui-select form-control" id="carModel" name="carModel[]"  style="width: 200px;height: 35px;" multiple="multiple" >
+								<span class="select2-selection__placeholder">请选择车辆车型</span>
+							</select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        
+         <div class="modelTableContainer">
+            <input type="hidden" value="" id="partsIdForOper">
+            <caption class="caption">
+                 	 已经选车型
+            </caption >
+            	
+            <div class="showSelectCarModel" style="width: 100% ;height: 100%;">
+            	<table class="layui-table">
+                <thead>
+                    <tr>
+                        <th style="min-width: 150px">车辆品牌</th>
+                        <th style="min-width: 150px">车辆车系</th>
+                        <th style="min-width: 100px">车辆车型</th>
+                        <th style="min-width: 150px">操作</th>
+                    </tr>
+                </thead>
+                <tbody class="parts_car_info"> 
+                	
+                </tbody>
+            </table>
+            </div>
+				
+        </div>
+        
+        
         <!-- 新增商品中的商品详情 -->
         <div class="modelTableContainer">
             <input type="hidden" value="" id="partsIdForOper">
             <table class="layui-table">
-                <caption class="caption">
+                <caption class="caption" style="color: #272727">
                     商品详情
                     <span id="addOption" class="newParam">+</span>
                 </caption>
@@ -162,15 +225,8 @@
         <!-- 新增商品中的商品图片 -->
         <p class="uploadImgTitle">上传图片</p>
         <div class="uploadImg">
-            <div class="siteUpload">
-                <img id="commodityImgUrl" src="">
-                <div class="layui-box layui-upload-button">
-                    <input type="file" name="file" class="commodityImg" class="layui-upload-file" onchange="change(this)" accept="image/*">
-                    <span class="layui-upload-icon"><i class="layui-icon">&#xe61f;</i>上传图片</span>
-                </div>
-                <span class="closeBtn" onclick="delImg(this)"><i class="layui-icon">&#x1006;</i></span>
-            </div>
-        </div>
+	   
+        </div> 
         <!-- 新增商品中的否上架选项 -->
         <div class="state">
             <label class="layui-form-label">是否上架</label>
@@ -186,7 +242,10 @@
     是否确认<span id="chooseState"></span>?
 </div>
 <!-- 文件上传 -->
-<script src="js/upload.js"></script>
+<script src="js/upload.js"></script> 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="common/zTree/js/jquery.ztree.core.js"></script>
+<script src="common/select2/js/select2.full.min.js"></script>
+<script src="common/select2/js/i18n/zh-CN.js"></script>
 <script src="CommodityManagement/CommodityManage/CommodityManage.js"></script>
+
