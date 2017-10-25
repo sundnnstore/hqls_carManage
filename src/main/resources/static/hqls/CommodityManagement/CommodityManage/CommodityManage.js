@@ -1071,19 +1071,19 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
             data:{partsId:partsId},
             success: function(data) {
             	//车型配件数据
-            	if(data.result!=null){
-            		var tr="";
-            		for (var i = 0; i < data.result.length; i++) {
-            			tr+=`<tr>
-        		    		<td>${data.result[i].carBrandName}</td>
-        		    		<td>${data.result[i].carSeriesName}</td>
-        		    		<td>${data.result[i].carModelName} <input type="hidden" value="${data.result[i].carModelId}" class="carModelId"></td>
-        		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
-        		    	</tr>`;
-            			
-					}
-            		$(".parts_car_info").append(tr);
-            	}
+//            	if(data.result!=null){
+//            		var tr="";
+//            		for (var i = 0; i < data.result.length; i++) {
+//            			tr+=`<tr>
+//        		    		<td>${data.result[i].carBrandName}</td>
+//        		    		<td>${data.result[i].carSeriesName}</td>
+//        		    		<td>${data.result[i].carModelName} <input type="hidden" value="${data.result[i].carModelId}" class="carModelId"></td>
+//        		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
+//        		    	</tr>`;
+//            			
+//					}
+//            		$(".parts_car_info").append(tr);
+//            	}
             }
         });
 	}
