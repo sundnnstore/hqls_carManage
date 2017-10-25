@@ -224,7 +224,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	                </td>
 	            </tr>
 	        `;
-        $('.modelTableContainer tbody').append(html);
+        $('.modelTableContainer .addExtra').append(html);
     });
     
     /**
