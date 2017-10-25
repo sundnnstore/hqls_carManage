@@ -529,7 +529,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         /**
          * 启用配件车型选择器
          */
-    	//car();
+    	car();
     	/**
          * 查询已选择配件车型
          * 
