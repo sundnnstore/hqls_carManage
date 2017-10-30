@@ -1125,7 +1125,6 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	 * @returns
 	 */
 	function initPartsCarModelPage(totalCount, pageIndex,partsId) {
-		if (totalCount <= pageSize) totalCount = pageSize + 1;
 	    //page
 	    laypage({
 	        cont: 'pageOfPartsModel',
