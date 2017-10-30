@@ -997,12 +997,11 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     		$('#carModel').select2({
 	    		language : 'zh-CN',
 	            placeholder: "请选择车型",
-	            maximumSelectionLength:3,
 	            ajax:{
 	                url:"/carmodelcombobox",
 	                dataType:"json",
 	                delay:200,//millionsecond
-	                data:function(params){
+	                data:function(params){ 
 	                    return {
 	                    	pageIndex:params.page || 1,
 	                    	pageSize:pageSize,
@@ -1046,6 +1045,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    $("#modelId").val(data.id);
   	    $("#modelId").attr("name",data.text);
   	    var isExistCarModelId=0;
+  	    
+  	    // 已选择的
 	    $(".parts_car_info tr").each(function(i){
 	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
 	    	if(alreadyExistCarModelId==data.id){
@@ -1053,6 +1054,16 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    	}
 	    	
 	    });
+	    
+	    //选中的
+	    $(".parts_car_selected_info tr").each(function(i){
+	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
+	    	if(alreadyExistCarModelId==data.id){
+	    		isExistCarModelId = 1;
+	    	}
+	    	
+	    });
+	    
 	    if(isExistCarModelId==0){
 	    	var tr=`<tr>
 	    		<td>${$("#brandId").attr("name")}</td>
@@ -1061,6 +1072,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
 	    	</tr>`; 
 	    	$(".parts_car_selected_info").append(tr);
+	    }else{
+	    	layer.msg("车型已选过,请选择其他车型",{time:2000});
 	    }
   	    
 	});
