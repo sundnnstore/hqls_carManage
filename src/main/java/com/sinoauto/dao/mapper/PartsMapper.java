@@ -282,16 +282,8 @@ public interface PartsMapper {
 	 * @param partsId
 	 * @return
 	 */
-	public List<PartsModelDto> viewPartsModel(@Param("partsId") Integer partsId);
+	public Page<PartsModelDto> viewPartsModel(@Param("partsId") Integer partsId);
 	
-
-	/**
-	 *  删除配件车型关联表
-	 * 	@User liud
-	 * 	@Date 2017年10月20日下午5:27:10
-	 * 	@param partsId
-	 */
-	@Delete("delete from hqls_parts_model where parts_id =#{1}")
-	public void deletePartsCarModel(Integer partsId);
-	
+	@Delete("delete from hqls_parts_model where model_id =#{1}")
+	public void deletePartsCarModelByModelId(Integer modelId);
 }

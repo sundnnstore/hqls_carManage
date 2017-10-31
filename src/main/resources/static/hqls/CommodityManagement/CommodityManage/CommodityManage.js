@@ -224,7 +224,7 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	                </td>
 	            </tr>
 	        `;
-        $('.modelTableContainer tbody').append(html);
+        $('.modelTableContainer .addExtra').append(html);
     });
     
     /**
@@ -532,10 +532,10 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     	car();
     	/**
          * 查询已选择配件车型
-         * 
+         * 参数1 --- 配件ID  
+         * 参数2 --- 初始化页面
          */
-        showPartsCarModel(data.result.partsId);
-        
+        showPartsCarModel(data.result.partsId,1);
         
         
         /**
@@ -651,8 +651,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
      */
     function carModel(){
     	var carModelsJson = "[";
-    	if($(".parts_car_info tr").length>0){
-    		$(".parts_car_info tr").each(function(i){
+    	if($(".parts_car_selected_info tr").length>0){
+    		$(".parts_car_selected_info tr").each(function(i){
         		carModelsJson+="{\"id\":\"" + $(this).find(".carModelId").val() + "\"},";
         	});
     	}
@@ -720,12 +720,14 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".uploadImg").html("");
         //清空车型
         $(".parts_car_info").html("");
+        //清空选中车型
+        $(".parts_car_selected_info").html("");
         //将新增按钮变为可用
         $("#addCommodity").removeAttr("disabled");
     }
 
     /**
-     * 编辑之后清空
+     * 点击编辑按钮之后清空
      * @returns
      */
     function afterEditPart() {
@@ -740,6 +742,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".uploadImg").not(".uploadImg:first").html("");
         //清空车型
         $(".parts_car_info").html("");
+        //清空选中车型
+        $(".parts_car_selected_info").html("");
         //radio还原
         $("input[name='isUnable']").attr("checked", false);
         //将编辑按钮变为可用
@@ -760,6 +764,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
         $(".uploadImg").not(".uploadImg:first").html("");
         //清空车型
         $(".parts_car_info").html("");
+        //清空选中车型
+        $(".parts_car_selected_info").html("");
         //将查看按钮变为可用
         $("#view").removeAttr("disabled");
     }
@@ -991,12 +997,11 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
     		$('#carModel').select2({
 	    		language : 'zh-CN',
 	            placeholder: "请选择车型",
-	            maximumSelectionLength:3,
 	            ajax:{
 	                url:"/carmodelcombobox",
 	                dataType:"json",
 	                delay:200,//millionsecond
-	                data:function(params){
+	                data:function(params){ 
 	                    return {
 	                    	pageIndex:params.page || 1,
 	                    	pageSize:pageSize,
@@ -1040,6 +1045,8 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    $("#modelId").val(data.id);
   	    $("#modelId").attr("name",data.text);
   	    var isExistCarModelId=0;
+  	    
+  	    // 已选择的
 	    $(".parts_car_info tr").each(function(i){
 	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
 	    	if(alreadyExistCarModelId==data.id){
@@ -1047,47 +1054,138 @@ layui.use(['jquery', 'layer', 'form', 'laypage', 'upload', 'tree'], function() {
 	    	}
 	    	
 	    });
+	    
+	    //选中的
+	    $(".parts_car_selected_info tr").each(function(i){
+	    	var alreadyExistCarModelId = $(this).find(".carModelId").val();
+	    	if(alreadyExistCarModelId==data.id){
+	    		isExistCarModelId = 1;
+	    	}
+	    	
+	    });
+	    
 	    if(isExistCarModelId==0){
 	    	var tr=`<tr>
 	    		<td>${$("#brandId").attr("name")}</td>
 	    		<td>${$("#seriesId").attr("name")}</td>
 	    		<td>${$("#modelId").attr("name")} <input type="hidden" value="${$("#modelId").val()}" class="carModelId"></td>
 	    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
-	    	</tr>`;
-	    	$(".parts_car_info").append(tr);
+	    	</tr>`; 
+	    	$(".parts_car_selected_info").append(tr);
+	    }else{
+	    	layer.msg("车型已选过,请选择其他车型",{time:2000});
 	    }
   	    
 	});
 	
+	
 	/**
-	 * 显示车型
+	 * 车型
 	 * 
 	 */
-	function showPartsCarModel(partsId){
+	function showPartsCarModel(partsId,pageIndex){
 		$.ajax({
-            url: "/viewpartsmodel",
-            type: "get",
-            async: false,
-            data:{partsId:partsId},
-            success: function(data) {
-            	//车型配件数据
-            	if(data.result!=null){
-            		var tr="";
-            		for (var i = 0; i < data.result.length; i++) {
-            			tr+=`<tr>
-        		    		<td>${data.result[i].carBrandName}</td>
-        		    		<td>${data.result[i].carSeriesName}</td>
-        		    		<td>${data.result[i].carModelName} <input type="hidden" value="${data.result[i].carModelId}" class="carModelId"></td>
-        		    		<td><button class="layui-btn"  type="button" onclick="javascript:$(this).parent().parent().remove();">删除</button></td>
-        		    	</tr>`;
-            			
+	        url: "/viewpartsmodel",
+	        type: "get",
+	        async: false,
+	        data:{"partsId":partsId,"pageIndex":pageIndex,"pageSize":pageSize},
+	        success: function(data) {
+	        	/**
+	        	 * 组装数据
+	        	 */
+	        	if(data.result!=null){
+	        		var tr="",res = data.result ;
+	        		for (var i = 0; i < res.length; i++) {
+	        			tr+="<tr>";
+	        			tr+='	<td>'+res[i].carBrandName+'</td>';
+	        			tr+='	<td>'+res[i].carSeriesName+'</td>';
+	        			tr+='	<td>'+res[i].carModelName+'<input type="hidden" value="'+res[i].carModelId+'" class="carModelId"></td>';
+	        			tr+='	<td><button class="layui-btn delCarModel" type="button" name="'+res[i].carModelId+','+res[i].partsId+','+pageIndex+'" >删除</button></td>';
+	        			tr+='</tr>"';
 					}
-            		$(".parts_car_info").append(tr);
-            	}
-            }
-        });
+	        		$(".parts_car_info").html("");
+	        		$(".parts_car_info").append(tr);
+	        	}
+	        	
+	        	
+	        	/**
+	        	 * 分页插件
+	        	 */
+	        	initPartsCarModelPage(data.totalCount, pageIndex,partsId);
+	        }
+	    });
 	}
+
+
+	/**
+	 * 配件车型分页插件
+	 * @param totalCount
+	 * @param pageIndex
+	 * @param partsId
+	 * @returns
+	 */
+	function initPartsCarModelPage(totalCount, pageIndex,partsId) {
+	    //page
+	    laypage({
+	        cont: 'pageOfPartsModel',
+	        pages: Math.ceil(totalCount / pageSize), // 总的分页数
+	        groups: 5, // 展示的页数
+	        first: 1,
+	        last: Math.ceil(totalCount / pageSize),
+	        skip: true,
+	        curr: pageIndex,
+	        jump: function(obj, first) {
+	            //alert("初始化成功"+obj.curr);
+	            if (!first) {
+	            	showPartsCarModel(partsId,obj.curr);
+	            }
+	        }
+	    });
+
+	}
+	
+	/**
+	 * 删除事件
+	 */
+	$(document).on("click",".delCarModel",function(){  
+		 var delVal =  $(this).attr("name");
+		 var paramArray = delVal.split(",");
+		 if(paramArray[0]!=undefined&&paramArray[1]!=undefined&&paramArray[2]!=undefined){
+			 delCarModel(paramArray[0],paramArray[1],paramArray[2]);
+		 }
+		 
+    }); 
+
+	/**
+	 * 删除配件车型
+	 * @param carModelId
+	 * @returns
+	 */
+	function delCarModel(carModelId,partsId,pageIndex){
+		$.ajax({
+	        url: "/delpartscarmodel?carModelId=" + carModelId,
+	        type: "DELETE",
+	        async: false,
+	        success: function(data) {
+	        	if(data){
+		        	layer.msg("删除成功");
+	        	}else{
+	        		layer.msg("删除失败");
+	        		//调到指定页面
+	        		showPartsCarModel(partsId,pageIndex);
+	        	}
+	        	//重新加载数据
+	        	showPartsCarModel(partsId,1);
+	        },
+	        error:function(){
+	        	layer.msg("删除异常");
+	        }
+	    });
+	}
+
+
 });
+
 
 /**
  * 图片上传
@@ -1150,7 +1248,10 @@ function delImg(obj) {
     hideLastImgDelIcon();
 }
 
-//隐藏最后一个图片的删除按钮
+/**
+ * 隐藏最后一个图片的删除按钮
+ * @returns
+ */
 function hideLastImgDelIcon(){
 	var flag = $(".siteUpload").length;
     $(".siteUpload .closeBtn").each(function(index){
@@ -1162,51 +1263,22 @@ function hideLastImgDelIcon(){
     });
 }
 
-//图片数量
+/**
+ * 图片数量
+ * @returns
+ */
 function imgCount(){
 	var count = $(".siteUpload").length;
 	return count;
 }
-//在配件树中选中配件后写入input中
-function beforeClick(treeId, treeNode) {
-    var check = (treeNode && !treeNode.isParent);
-    if (!check) {
-    	 var treeObj = $.fn.zTree.getZTreeObj(treeId);
-    	 treeObj.expandNode(treeNode);
-         layer.msg("存在子类不可选！",{time:500});
-    }
-    return check;
-}
+
 
 /**
- * 
- * @param e 当前元素
- * @param treeId id="cTree"
- * @param treeNode  当前节点
+ * 配件树
+ * @param treeId
+ * @param treeNode
  * @returns
  */
-function onClick(e, treeId, treeNode) {
-    $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
-    if (treeId == 'commodityTree') {
-    	var display = $("#menuContent").css("display");
-		if(display=="block"){
-			$("#menuContent").hide();
-		}
-		$("#TheTreeIdOfSearch").val(treeNode.id);
-        $("#commodityName").val(treeNode.name);
-    } 
-}
-
-//新增商品配件分类
-function onClickAdd(e, treeId, treeNode) {
-    $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
-	var display = $("#modelContent").css("display");
-	if(display=="block"){
-		$("#modelContent").hide();
-	}
-	$("#TheTreeIdOfAdd").val(treeNode.id);
-    $("#cName").val(treeNode.name);
-}
 
 var treeTemp;
 
@@ -1244,12 +1316,63 @@ function zNodes() {
 
 var zNodes = zNodes();
 
-// 配件树初始化
+/**
+ * 配件树初始化
+ */
 $(document).ready(function() {
     $.fn.zTree.init($("#commodityTree"), settingQuery, zNodes);
     $.fn.zTree.init($("#cTree"), setting, zNodes);
 });
-// 配件树设置
+
+function beforeClick(treeId, treeNode) {
+    var check = (treeNode && !treeNode.isParent);
+    if (!check) {
+    	 var treeObj = $.fn.zTree.getZTreeObj(treeId);
+    	 treeObj.expandNode(treeNode);
+         layer.msg("存在子类不可选！",{time:500});
+    }
+    return check;
+}
+
+/**
+ * 
+ * @param e 当前元素
+ * @param treeId id="cTree"
+ * @param treeNode  当前节点
+ * @returns
+ */
+function onClick(e, treeId, treeNode) {
+    $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
+    if (treeId == 'commodityTree') {
+    	var display = $("#menuContent").css("display");
+		if(display=="block"){
+			$("#menuContent").hide();
+		}
+		$("#TheTreeIdOfSearch").val(treeNode.id);
+        $("#commodityName").val(treeNode.name);
+    } 
+}
+
+/**
+ * 新增商品配件分类
+ * @param e
+ * @param treeId
+ * @param treeNode
+ * @returns
+ */
+function onClickAdd(e, treeId, treeNode) {
+    $(e.target).parents('li').siblings('li').find('.curSelectedNode').removeClass('curSelectedNode');
+	var display = $("#modelContent").css("display");
+	if(display=="block"){
+		$("#modelContent").hide();
+	}
+	$("#TheTreeIdOfAdd").val(treeNode.id);
+    $("#cName").val(treeNode.name);
+}
+
+/**
+ * 配件树设置
+ */
 var setting = {
     view: {
         dblClickExpand: false,
@@ -1282,3 +1405,4 @@ var settingQuery = {
         onClick: onClick
     }
 };
+

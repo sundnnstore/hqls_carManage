@@ -129,7 +129,7 @@
                         <td class="common">车辆型号 </td>
                         <td class="common">
                             <input type="hidden" id="modelId" value="" name="">
-		                    <select class="layui-select form-control" id="carModel" name="carModel[]"  style="width: 200px;height: 35px;" multiple="multiple" >
+		                    <select class="layui-select form-control" id="carModel" name="carModel[]"  style="width: 200px;height: 35px;" >
 								<span class="select2-selection__placeholder">请选择车辆车型</span>
 							</select>
                         </td>
@@ -138,29 +138,51 @@
             </table>
         </div>
         
-        
-         <div class="modelTableContainer">
+        <div class="modelTableContainer">
             <input type="hidden" value="" id="partsIdForOper">
             <caption class="caption">
-                 	 已经选车型
+                 	 选中车型(备注:已经选过的车型不会显示在下面)
             </caption >
             	
             <div class="showSelectCarModel" style="width: 100% ;height: 100%;">
             	<table class="layui-table">
-                <thead>
-                    <tr>
-                        <th style="min-width: 150px">车辆品牌</th>
-                        <th style="min-width: 150px">车辆车系</th>
-                        <th style="min-width: 100px">车辆车型</th>
-                        <th style="min-width: 150px">操作</th>
-                    </tr>
-                </thead>
-                <tbody class="parts_car_info"> 
-                	
-                </tbody>
-            </table>
+	                <thead>
+	                    <tr>
+	                        <th style="min-width: 150px">车辆品牌</th>
+	                        <th style="min-width: 150px">车辆车系</th>
+	                        <th style="min-width: 100px">车辆车型</th>
+	                        <th style="min-width: 150px">操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody class="parts_car_selected_info"> 
+	                	
+	                </tbody>
+            	</table>
             </div>
-				
+        </div>
+        
+         <div class="modelTableContainer">
+            <input type="hidden" value="" id="partsIdForOper">
+            <caption class="caption">
+                 	 已选车型
+            </caption >
+            	
+            <div class="showSelectCarModel" style="width: 100% ;height: 100%;">
+            	<table class="layui-table">
+	                <thead>
+	                    <tr>
+	                        <th style="min-width: 150px">车辆品牌</th>
+	                        <th style="min-width: 150px">车辆车系</th>
+	                        <th style="min-width: 100px">车辆车型</th>
+	                        <th style="min-width: 150px">操作</th>
+	                    </tr>
+	                </thead>
+	                <tbody class="parts_car_info"> 
+	                	
+	                </tbody>
+            	</table>
+            </div>
+			<div id="pageOfPartsModel" style="text-align: right;"></div>	
         </div>
         
         
@@ -172,7 +194,7 @@
                     商品详情
                     <span id="addOption" class="newParam">+</span>
                 </caption>
-                <tbody>
+                <tbody class="addExtra">
                     <tr>
                         <td class="common">规格 *</td>
                         <td class="common"><input type="text" name="" id="partsSpec" class="layui-input" placeholder="请输入规格" value=""></td>
