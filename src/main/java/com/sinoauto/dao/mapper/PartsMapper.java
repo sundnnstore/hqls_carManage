@@ -204,8 +204,8 @@ public interface PartsMapper {
 	public Double getCurPriceById(Integer partsId);
 	
 	//@Select("SELECT parts_id FROM hqls_parts WHERE left(parts_code, 10)=#{1}")
-	//@Select("SELECT parts_id FROM hqls_parts WHERE parts_code=#{1}")
-	@Select("SELECT parts_id FROM hqls_parts WHERE parts_model=#{1}")
+	//@Select("SELECT parts_id FROM hqls_parts WHERE parts_code like concat('%',#{1},'%')")
+	@Select("SELECT parts_id FROM hqls_parts WHERE parts_code=#{1}")
 	public Integer[] findPartsIdByCode(String partsCode);
 	
 }
