@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>华汽连锁</title>
+    <style>
+       div.iosbox,div.Androidbox{
+        height: 100px;
+        text-align: center;
+        line-height: 100px;
+
+       }
+       .btnbox{
+        text-align: center;
+        padding: 0px 20px;
+        margin-top: 20px;
+       }
+       .ljxz{
+           width: 100%;
+           background-color: #ca1c1d;
+           font-size: 18px;
+           border: none;
+           border-radius: 4px;
+           height:49px;
+           color: #fff;
+       }
+    </style>
+</head>
+<body>
+    
+    <div style="text-align:center;margin-top:80px">
+        <img src="img/hqls.png" alt="" width="60" height="60">
+    </div>
+    <div class="Androidbox">
+        当前系统为android系统
+    </div>
+    <div class="iosbox">
+        当前系统为ios系统
+    </div>
+    <div style="text-align:center">
+        软件版本号 <span>1.2.0</span>
+    </div>
+    <div class="btnbox">
+        <button class="ljxz">立即下载</button>
+    </div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    var iosUrl="https://itunes.apple.com/us/app/%E5%8D%8E%E6%B1%BD%E8%BF%9E%E9%94%81/id1277056425?l=zh&ls=1&mt=8";
+    var androidUrl="http://b.sinoauto.com/version/hqls.apk";
+    var temp="";
+    $(function(){
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if(isAndroid==true){
+            //隐藏ios的div
+            // alert("跳转到Android的下载位置");
+            $('div.iosbox').css('display',"none");
+            temp=androidUrl;
+            $(' a.ljxz').attr('href',androidUrl);
+
+        }else if(isiOS==true){
+            // window.location.href = iosUrl;  
+            temp=iosUrl;
+            // alert("跳转到ios的下载地址")
+            // $('div.iosbox a').attr('href',iosUrl);
+            $('div.Androidbox').css('display',"none");
+            $(".ljxz").html("前往App Store 下载");
+        }else{
+            alert("不是 在手机上运行的")
+        }
+        // $(' a.ljxz').attr('href',temp);
+
+    })
+    $('.ljxz').click(function(){
+        if(temp!=""){
+            console.log(temp);
+            window.location.href=temp
+        }
+    })
+</script>
+</html>

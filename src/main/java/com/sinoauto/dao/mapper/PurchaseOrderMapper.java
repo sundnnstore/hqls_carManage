@@ -5,15 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
 import org.apache.ibatis.annotations.Update;
 
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsPurchaseOrder;
+import com.sinoauto.dto.PurchaseOrderDto;
 import com.sinoauto.dto.PurchaseOrderParamDto;
 import com.sinoauto.dto.PurchaseOrderQueryDto;
 import com.sinoauto.dto.ShopCartInfoDto;
-import com.sinoauto.dto.PurchaseOrderDto;
 
 @Mapper
 public interface PurchaseOrderMapper {

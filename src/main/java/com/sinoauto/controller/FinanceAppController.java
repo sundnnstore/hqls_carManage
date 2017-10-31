@@ -1,5 +1,7 @@
 package com.sinoauto.controller;
 
+import java.text.ParseException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sinoauto.dto.FinanceLogDto;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowListDto;
 import com.sinoauto.entity.ErrorStatus;
@@ -94,8 +97,8 @@ public class FinanceAppController {
 	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
 			@ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页面索引", dataType = "Integer", required = true),
 			@ApiImplicitParam(paramType = "query", name = "pageSize", value = "页面大小", dataType = "Integer", required = true) })
-	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId, Integer pageIndex, Integer  pageSize) {
-		return this.financeFlowService.findFlowByStoreId(storeId ,pageIndex, pageSize);
+	public ResponseEntity<RestModel<FlowListDto>> flow(Integer storeId, Integer pageIndex, Integer pageSize) {
+		return this.financeFlowService.findFlowByStoreId(storeId, pageIndex, pageSize);
 	}
 
 	@GetMapping("detail")
@@ -125,10 +128,31 @@ public class FinanceAppController {
 			@ApiImplicitParam(paramType = "query", name = "changeMoney", value = "汇款金额", dataType = "Double"),
 			@ApiImplicitParam(paramType = "query", name = "transactionNo", value = "汇款流水单号", dataType = "String") })
 	public ResponseEntity<RestModel<Integer>> audit(Integer storeId, Double changeMoney, String transactionNo) {
-		if(null != this.financeFlowService.findFlowByTransactionNo(transactionNo)){
+		if (null != this.financeFlowService.findFlowByTransactionNo(transactionNo)) {
 			return RestModel.error(HttpStatus.NOT_ACCEPTABLE, ErrorStatus.EXISTS_DATA, "该汇款单号已存在！");
 		}
 		return this.financeFlowService.insertRemitFlow(storeId, changeMoney, transactionNo);
+	}
+
+	@ApiOperation(value = "查询日流水", notes = "tangwt")
+	@PostMapping("dailyflow")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "queryDate", value = "查询日期", dataType = "String") })
+	public ResponseEntity<RestModel<FinanceLogDto>> dailyFlow(Integer storeId, String queryDate) {
+		return this.financeFlowService.dailyFlow(storeId, queryDate);
+	}
+
+	@ApiOperation(value = "查询多日流水", notes = "tangwt")
+	@PostMapping("nearflow")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "storeId", value = "门店ID", dataType = "Integer"),
+			@ApiImplicitParam(paramType = "query", name = "days", value = "查询天数", dataType = "Integer") })
+	public ResponseEntity<RestModel<FinanceLogDto>> nearFlow(Integer storeId, Integer days) {
+		try {
+			return this.financeFlowService.nearFlow(storeId, days);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
 	}
 
 }

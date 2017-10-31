@@ -1,9 +1,13 @@
 package com.sinoauto.service;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,17 @@ import com.sinoauto.dao.mapper.FinanceFlowMapper;
 import com.sinoauto.dao.mapper.RebateMapper;
 import com.sinoauto.dao.mapper.StoreFinanceMapper;
 import com.sinoauto.dao.mapper.UserMapper;
+import com.sinoauto.dto.DailyFlowDto;
+import com.sinoauto.dto.FinanceDetailDto;
+import com.sinoauto.dto.FinanceLogDto;
 import com.sinoauto.dto.FlowDetailDto;
 import com.sinoauto.dto.FlowDto;
 import com.sinoauto.dto.FlowListDto;
+import com.sinoauto.dto.QueryFlowDto;
 import com.sinoauto.dto.RechargeDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
+import com.sinoauto.util.DateUtil;
 import com.sinoauto.util.push.GeTuiUtil;
 import com.sinoauto.util.push.PushAction;
 import com.sinoauto.util.push.PushParms;
@@ -55,8 +64,9 @@ public class FinanceFlowService {
 	// @Autowired
 	// private CashBackService cashBackService;
 
-	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,String operPerson,
-			String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex, Integer pageSize) {
+	public ResponseEntity<RestModel<List<RechargeDto>>> findFlowListByContidion(Integer changeType, Integer storeId, String customerName,
+			String operPerson, String mobile, Date createTime, Integer flowStatus, Integer checkStatus, Integer payType, Integer pageIndex,
+			Integer pageSize) {
 		if (pageIndex != null && pageSize != null) {
 			PageHelper.startPage(pageIndex, pageSize);
 		}
@@ -71,8 +81,8 @@ public class FinanceFlowService {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			createTimeStr = sdf.format(createTime);
 		}
-		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName,operPerson, mobile, createTimeStr, flowStatus,
-				checkStatus, payType);
+		Page<RechargeDto> flowList = financeFlowMapper.findFlowListByContidion(changeType, storeId, customerName, operPerson, mobile, createTimeStr,
+				flowStatus, checkStatus, payType);
 
 		return RestModel.success(flowList, (int) flowList.getTotal());
 	}
@@ -278,9 +288,9 @@ public class FinanceFlowService {
 			flowDto.setPayType("微信");
 		} else if (hqlsFlow.getPayType() == 3) {
 			flowDto.setPayType("线下");
-		} else if(hqlsFlow.getPayType() == 0){
+		} else if (hqlsFlow.getPayType() == 0) {
 			flowDto.setPayType("余额支付");
-		}else {
+		} else {
 			flowDto.setPayType("未知");
 		}
 
@@ -311,9 +321,10 @@ public class FinanceFlowService {
 	 * @param remark
 	 * @return
 	 */
-	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark,String operateUserName) {
+	public ResponseEntity<RestModel<Integer>> updateCheckStatus(Integer financeFlowId, Integer changeType, Integer checkStatus, String remark,
+			String operateUserName) {
 		try {
-			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark,operateUserName);
+			Integer affectRows = this.financeFlowMapper.updateCheckStatus(financeFlowId, checkStatus, remark, operateUserName);
 			// 提现审核失败，返还给账户
 			if (changeType == 2 && 3 == checkStatus) {
 				HqlsFinanceFlow flow = this.financeFlowMapper.findFlow(financeFlowId);
@@ -335,7 +346,7 @@ public class FinanceFlowService {
 					// 推送给IOSAPP端
 					PushParms parms = PushUtil.comboPushParms(user.getMobile(), action, null, text, "", null, 0);
 					PushUtil.push2IOSByAPNS(parms);
-					//PushUtil.push2Andriod(parms);
+					// PushUtil.push2Andriod(parms);
 					PushUtil.push2AndriodNotice(parms);
 					String title = "线下充值";
 					List<String> clientIds = clientInfoMapper.findAllCIdsByUserId(user.getUserId());
@@ -364,6 +375,130 @@ public class FinanceFlowService {
 	public HqlsFinanceFlow findFlowByTransactionNo(String transactionNo) {
 		HqlsFinanceFlow hqlsFlow = this.financeFlowMapper.getFlowByTransactionNo(transactionNo);
 		return hqlsFlow;
+	}
+
+	public ResponseEntity<RestModel<FinanceLogDto>> dailyFlow(Integer storeId, String queryDate) {
+		List<QueryFlowDto> flows = financeFlowMapper.findQueryFlows(storeId, queryDate);
+		List<QueryFlowDto> extraFlows = financeFlowMapper.findExtraFlows(storeId, queryDate);
+		List<HqlsFinanceFlow> finances = financeFlowMapper.findDailyFlowByStoreIdAndDate(storeId, queryDate);
+		FinanceLogDto finance = new FinanceLogDto();
+		Map<String, DailyFlowDto> map = new HashMap<>();
+		if (finances != null && finances.size() > 0) {
+			finance = comboFlowDto(finances);
+		} else {
+			finance.setTotalExpenditure(0.0);
+			finance.setTotalIncome(0.0);
+		}
+		if (extraFlows != null && extraFlows.size() > 0) {
+			DailyFlowDto flowDto = new DailyFlowDto();
+			flowDto.setAmount(0.0);
+			flowDto.setServiceCount(0);
+			for (QueryFlowDto flow : extraFlows) {
+				flowDto.setServiceCount(flowDto.getServiceCount() + 1);
+				Double orderAmount = new BigDecimal(flow.getOrderAmount()).add(new BigDecimal(flowDto.getAmount()))
+						.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+				flowDto.setAmount(orderAmount);
+			}
+			map.put("增项服务", flowDto);
+		}
+		if (flows != null && flows.size() > 0) {
+			for (QueryFlowDto flow : flows) {
+				DailyFlowDto flowDto = null;
+				if (map.containsKey(flow.getServiceTypeName())) {
+					flowDto = map.get(flow.getServiceTypeName());
+					flowDto.setServiceCount(flowDto.getServiceCount() + 1);
+					Double amount = new BigDecimal(flowDto.getAmount()).add(new BigDecimal(flow.getOrderAmount()))
+							.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+					flowDto.setAmount(amount);
+				} else {
+					flowDto = new DailyFlowDto();
+					flowDto.setServiceCount(1);
+					flowDto.setAmount(flow.getOrderAmount());
+				}
+				map.put(flow.getServiceTypeName(), flowDto);
+			}
+		}
+		List<DailyFlowDto> list = new ArrayList<>();
+		for (String key : map.keySet()) {
+			DailyFlowDto flow = map.get(key);
+			flow.setServiceTypeName(key);
+			list.add(flow);
+		}
+		finance.setFlowList(list);
+		return RestModel.success(finance);
+	}
+
+	public FinanceLogDto comboFlowDto(List<HqlsFinanceFlow> finances) {
+		FinanceLogDto finance = new FinanceLogDto();
+		BigDecimal expenditure = new BigDecimal(0);
+		BigDecimal income = new BigDecimal(0);
+		for (HqlsFinanceFlow orginal : finances) {
+			if (orginal.getChangeType() == 3) {
+				expenditure = expenditure.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+			} else if (orginal.getChangeType() == 4) {
+				income = income.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+			} else if (orginal.getChangeType() == 5) {
+				income = income.add(new BigDecimal(orginal.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+			}
+		}
+		finance.setTotalExpenditure(expenditure.doubleValue());
+		finance.setTotalIncome(income.doubleValue());
+		return finance;
+	}
+
+	public ResponseEntity<RestModel<FinanceLogDto>> nearFlow(Integer storeId, Integer days) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat ff = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<HqlsFinanceFlow> finances = financeFlowMapper.findNearDaysFlows(storeId, days);
+		BigDecimal totalExpenditure = new BigDecimal(0);
+		BigDecimal totalIncome = new BigDecimal(0);
+		List<FinanceDetailDto> financeDetails = new ArrayList<>();
+		Map<String, BigDecimal> map = new HashMap<>();
+		List<String> dayDesc = DateUtil.getDateList(days);
+		for (String day : dayDesc) {// 加入日期
+			map.put(day, new BigDecimal(0));
+		}
+		if (finances != null && finances.size() > 0) {
+			for (HqlsFinanceFlow fina : finances) {
+				boolean flag = true;// 判断是否要计算
+				String d = sdf.format(fina.getCreateTime());
+				String formatDay = d + " 17:00:00";
+				Date formatDate = ff.parse(formatDay);
+				if (fina.getCreateTime().getTime() >= formatDate.getTime()) {// 大于当天五点
+					int index = DateUtil.getIndexOfEl(d, dayDesc);
+					if (index != -1) {//判断是否后面是否还有日期
+						d = dayDesc.get(index + 1);
+					} else {
+						flag = false;
+					}
+				}
+				if (flag) {
+					BigDecimal curMoney = map.get(d);
+					if (fina.getChangeType() == 3) {// 采购
+						totalExpenditure = totalExpenditure.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					} else if (fina.getChangeType() == 4) {// 服务订单
+						totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+						curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					} else if (fina.getChangeType() == 5) {// 返现
+						totalIncome = totalIncome.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+						curMoney = curMoney.add(new BigDecimal(fina.getChangeMoney())).setScale(2, BigDecimal.ROUND_HALF_UP);
+					}
+					map.put(d, curMoney);
+				}
+
+			}
+		}
+		for (String day : dayDesc) {
+			FinanceDetailDto f = new FinanceDetailDto();
+			f.setFinanceDate(day.split("-")[1] + "." + day.split("-")[2]);
+			f.setTotalIncome(map.get(day).doubleValue());
+			financeDetails.add(f);
+		}
+		FinanceLogDto returnFinance = new FinanceLogDto();
+		returnFinance.setTotalExpenditure(totalExpenditure.doubleValue());
+		returnFinance.setTotalIncome(totalIncome.doubleValue());
+		returnFinance.setFinances(financeDetails);
+		return RestModel.success(returnFinance);
 	}
 
 }

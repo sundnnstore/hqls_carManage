@@ -1,18 +1,25 @@
 package com.sinoauto.dao.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsModel;
 import com.sinoauto.dao.bean.HqlsPartsType;
 import com.sinoauto.dto.CommonDto;
 import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -162,7 +169,7 @@ public interface PartsMapper {
 	 * 	@param partId
 	 * 	@return
 	 */
-	@Select("select * from hqls_parts_attr_extr where parts_id=#{partId}")
+	@Select("SELECT * from hqls_parts_attr_extr where parts_id = #{partId}")
 	public List<HqlsPartsAttrExtr> findPartsAttrExtrsByPartsId(@Param("partId")Integer partId);
 	
 	/**
@@ -208,4 +215,75 @@ public interface PartsMapper {
 	@Select("SELECT parts_id FROM hqls_parts WHERE parts_code=#{1}")
 	public Integer[] findPartsIdByCode(String partsCode);
 	
+	/**
+	 * 根据车型Id 查询配件列表
+	 * @param modelId
+	 * @return
+	 */
+	public List<PartsListDto> findPartsByModelId(@Param("modelId") Integer modelId);
+	
+	/**
+	 * 根据车型Id 查询配件类型
+	 * @param modelId
+	 * @return
+	 */
+	public List<CommonDto> findPartsTypeByModelId(@Param("modelId") Integer modelId);
+	
+	/**
+	 * 根据条件查询配件
+	 * @param condition
+	 * @return
+	 */
+	public List<PartsListDto> findPartsListByCondition(@Param("condition") String[] condition);
+	
+	/**
+	 *  插入配件车型
+	 * 	@User liud
+	 * 	@Date 2017年10月17日下午4:58:52
+	 * 	@param pm
+	 * 	@return
+	 */
+	@Insert("insert into hqls_parts_model (parts_id,model_id,create_time) VALUES (#{partsId}, #{modelId}, now() )")
+	@Options(useGeneratedKeys=true,keyProperty="id")
+	public Integer insertPartsModel(HqlsPartsModel pm);
+	
+	/**
+	 *  中台品牌查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:20:25
+	 * 	@param brandName
+	 * 	@return
+	 */
+	public Page<CommonDto> carBrandCombobox(@Param("brandName") String brandName);
+	
+	/**
+	 *  中台车系查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:19:48
+	 * 	@param brandId
+	 * 	@param seriesName
+	 * 	@return
+	 */
+	public Page<CommonDto> carSeriesCombobox(@Param("brandId") Integer brandId,@Param("seriesName") String seriesName);
+	
+	
+	/**
+	 *  车型下拉框数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:41:53
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@return
+	 */
+	public Page<CommonDto> carModelCombobox(@Param("seriesId")Integer seriesId,@Param("modelName") String modelName);
+	
+	/**
+	 * 查询 配件车型明细
+	 * @param partsId
+	 * @return
+	 */
+	public Page<PartsModelDto> viewPartsModel(@Param("partsId") Integer partsId);
+	
+	@Delete("delete from hqls_parts_model where model_id =#{1}")
+	public void deletePartsCarModelByModelId(Integer modelId);
 }

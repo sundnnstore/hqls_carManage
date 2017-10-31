@@ -19,16 +19,21 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.sinoauto.dao.bean.HqlsParts;
 import com.sinoauto.dao.bean.HqlsPartsAttrExtr;
+import com.sinoauto.dao.bean.HqlsPartsModel;
 import com.sinoauto.dao.bean.HqlsPartsPic;
 import com.sinoauto.dao.bean.HqlsPartsType;
+import com.sinoauto.dao.mapper.CarBrandMapper;
 import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
@@ -47,6 +52,10 @@ public class PartsService {
 
 	@Autowired
 	private PartsAttrExtrMapper partsAttrExtrMapper;
+	
+	@Autowired
+	private CarBrandMapper carBrandMapper;
+	
 	
 	/**
 	 * 储存每次循环的节点的id,name
@@ -223,6 +232,7 @@ public class PartsService {
 					partsMapper.update(partsOperDto);
 					List<HqlsPartsPic> partsPics = partsOperDto.getPartsPics();
 					List<HqlsPartsAttrExtr> partsAttrExtrs = partsOperDto.getPartsAttrExtrs();
+					List<CommonDto> partsModels = partsOperDto.getCarModels(); //配件车型
 					if (partsPics != null && !partsPics.isEmpty()) {
 						// 删除配件id对应的所有图片
 						partsPicMapper.delete(partsId);
@@ -231,11 +241,13 @@ public class PartsService {
 						// 删除配件的动态属性
 						partsAttrExtrMapper.delete(partsId);
 					}
-
-					// 插入配件图片,和配件动态属性
-					if (partsAttrExtrs != null || partsPics != null) {
+					
+					// 插入配件图片,和配件动态属性,配件对应车型
+					if (partsAttrExtrs != null || partsPics != null || partsModels!=null ) {
 						insertPartsPicAndAttrExr(partsOperDto, partsId);
 					}
+					
+						
 				}
 			}
 			return RestModel.success();
@@ -259,9 +271,10 @@ public class PartsService {
 		 */
 		HqlsPartsAttrExtr hqlsPartsAttrExtr = null;// 插入配件动态属性表
 		HqlsPartsPic partsPic = null;// 插入配件图片
+		HqlsPartsModel partsModel = null;//配件对应车型
 
 		// 配件的配置属性
-		if (partsOperDto.getPartsAttrExtrs().size() > 0) {
+		if (partsOperDto.getPartsAttrExtrs()!=null&&partsOperDto.getPartsAttrExtrs().size() > 0) {
 			for (HqlsPartsAttrExtr partsAttrExtrs : partsOperDto.getPartsAttrExtrs()) {
 				hqlsPartsAttrExtr = new HqlsPartsAttrExtr();
 				hqlsPartsAttrExtr.setAttrKey(partsAttrExtrs.getAttrKey());
@@ -272,7 +285,7 @@ public class PartsService {
 		}
 		// 配件图片
 		List<HqlsPartsPic> hqlsPartsPic = partsOperDto.getPartsPics();
-		if (partsOperDto.getPartsPics().size() > 0) {
+		if (hqlsPartsPic!=null && hqlsPartsPic.size() > 0) {
 			for (int i = 0; i < hqlsPartsPic.size(); i++) {
 				partsPic = new HqlsPartsPic();
 				partsPic.setPartsId(partsId);
@@ -280,6 +293,17 @@ public class PartsService {
 				partsPic.setSorting(i + 1);
 				partsPic.setUrl(hqlsPartsPic.get(i).getUrl());
 				partsPicMapper.insert(partsPic);
+			}
+		}
+		
+		// 配件对应车型
+		List<CommonDto> hqlsPartsCarModel = partsOperDto.getCarModels();
+		if(hqlsPartsCarModel!=null&&hqlsPartsCarModel.size()>0){
+			for (int i = 0; i < hqlsPartsCarModel.size(); i++) {
+				partsModel = new HqlsPartsModel();
+				partsModel.setModelId(hqlsPartsCarModel.get(i).getId());
+				partsModel.setPartsId(partsId);
+				partsMapper.insertPartsModel(partsModel);
 			}
 		}
 	}
@@ -625,21 +649,193 @@ public class PartsService {
 	 * 	@return
 	 */
 	public PartsTreeRecursionDto partsTreeForEditAndView(Integer lastChildId, Integer operflag) {
-		//List<>
-		// 查询出当前partstypeid的父级别id
-//		Integer retId=null;
 		HqlsPartsType hqlsPartsType = partsMapper.findPidByPtId(lastChildId);
 		if(hqlsPartsType!=null){
 			if(hqlsPartsType.getPid()!=null&&hqlsPartsType.getPid()==0){ //如果到最顶层,返回对象,先倒过来查
-//				return partsTypeId;
 			}else{
 				System.out.println("pid----->"+hqlsPartsType.getPid());
-//				retId = findTopId(hqlsPartsType.getPid());
 			}
 		}else{//对象不存在
 			//retId =partsTypeId;
 		}
 		return null;
+	}
+	
+	/**
+	 * 查询所有车辆品牌
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllBrands() {
+		try {
+			return RestModel.success(carBrandMapper.findAllBrands());
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	
+	/**
+	 * 根据品牌id查询车系
+	 * 
+	 * @param brandId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findSeriesByBrandId(Integer brandId) {
+		try {
+			return RestModel.success(carBrandMapper.findSeriesByBrandId(brandId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据品牌id查询车系
+	 * 
+	 * @param brandId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> findModelsBySeriesId(Integer seriesId) {
+		try {
+			return RestModel.success(carBrandMapper.findModelsBySeriesId(seriesId));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据车型Id查询配件
+	 * @param modelId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Map<String, Object>>> findPartsByModelId(Integer modelId) {
+		try {
+			List<PartsListDto> partsList = partsMapper.findPartsByModelId(modelId);
+			List<CommonDto> typeList = partsMapper.findPartsTypeByModelId(modelId);
+			Map<String, Object> result = new HashMap<String, Object>();
+			result.put("partsList", partsList);
+			result.put("typeList", typeList);
+			return RestModel.success(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 * 根据配件名称或车型条件查询配件
+	 * @param condition
+	 * @return
+	 */
+	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsByCondition(String condition) {
+		try {
+			List<PartsListDto> partsList;
+			if (StringUtils.isEmpty(condition)) {
+				partsList  = partsMapper.findPartsByModelId(null);
+			} else {
+				String[] conditions = condition.split("\\ ");
+				partsList = partsMapper.findPartsListByCondition(conditions);
+			}
+			return RestModel.success(partsList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
+		}
+	}
+	
+	/**
+	 *  车辆品牌查询
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:23:50
+	 * 	@param brandName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<CommonDto>>> carBrandCombobox(String brandName,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
+		try {
+			Page<CommonDto> page = partsMapper.carBrandCombobox(brandName);
+			return RestModel.success(page, (int) page.getTotal());
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车辆品牌查询异常");
+		}
+	} 
+	
+	
+	/**
+	 *  车型下拉数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:34:52
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<CommonDto>>> carSeriesCombobox(Integer brandId,String seriesName,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
+		try {
+			Page<CommonDto> page = partsMapper.carSeriesCombobox(brandId, seriesName);
+			return RestModel.success(page, (int) page.getTotal());
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车系查询异常");
+		}
+	} 
+	
+	/**
+	 *  车型下拉数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:34:52
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	public ResponseEntity<RestModel<Page<CommonDto>>> carModelCombobox(Integer seriesId,String modelName,Integer pageIndex,Integer pageSize){
+		PageHelper.startPage(pageIndex, pageSize);
+		try {
+			Page<CommonDto> page = partsMapper.carModelCombobox(seriesId, modelName);
+			return RestModel.success(page, (int) page.getTotal());
+		} catch (Exception e) {
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"车型查询异常");
+		}
+	}
+	
+	/**
+	 *  查询配件车型明细
+	 * @param partsId
+	 * @return
+	 */
+	public ResponseEntity<RestModel<Page<PartsModelDto>>> viewPartsModels(Integer partsId,Integer pageIndex,Integer pageSize){
+		try {
+			PageHelper.startPage(pageIndex, pageSize);
+			Page<PartsModelDto> pmd = partsMapper.viewPartsModel(partsId);
+			if(pmd==null) pmd = new Page<>();
+			return RestModel.success(pmd,(int)pmd.getTotal());
+		} catch (Exception e) {
+			System.out.println(e);
+			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"查询配件车型明细异常");
+		}
+	}
+	
+	/**
+	 * 删除配件车型关联
+	 * 	@User liud
+	 * 	@Date 2017年10月25日下午2:14:48
+	 * 	@param carModelId
+	 */
+	public boolean deletePartsCarModelByModelId(Integer carModelId){
+		try{
+			partsMapper.deletePartsCarModelByModelId(carModelId);
+		}catch (Exception e) {
+			return false;
+		}
+		return true;
+		
 	}
 	
 }

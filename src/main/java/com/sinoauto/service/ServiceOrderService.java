@@ -150,6 +150,7 @@ public class ServiceOrderService {
 					financeFlow.setChangeType(4);
 					financeFlow.setChangeMoney(order.getOrderAmount());
 					financeFlow.setChargeType(1);
+					financeFlow.setFlowStatus(1);
 					financeFlow.setOperPerson(user.getUserName());
 					financeFlow.setIsDelete(0);
 					financeFlowMapper.insert(financeFlow);
@@ -214,7 +215,14 @@ public class ServiceOrderService {
 			// 判断传过来的服务项目是否存在
 			HqlsServiceType serviceType = serviceTypeMapper.getServiceTypesByServiceTypeName(order.getServiceType());
 			if (serviceType == null) {
-				return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务项目未正确匹配");
+				serviceType = new HqlsServiceType();
+				serviceType.setServiceTypeName(order.getServiceType());
+				serviceType.setServiceTypeContent(order.getServiceType());
+				serviceType.setIsUsable(true);
+				serviceType.setServiceAmount(0.0);
+				serviceType.setUrl("fromcxz");
+				serviceTypeMapper.insert(serviceType);
+				//return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.INVALID_DATA.getErrcode(), "服务项目未正确匹配");
 			}
 			if (order.getIsCard() == null) {// 非年卡洗车服务，门店编码必传
 				order.setIsCard(false);// 设置非年卡标志
@@ -326,7 +334,11 @@ public class ServiceOrderService {
 		extraOrderMapper.insertExtraOrder(order);
 		// 调用车小主添加增项服务订单接口
 		HqlsServiceOrder serviceOrder = serviceOrderMapper.getServiceOrderByOrderId(order.getServiceOrderId());
-		String res = addExtraOrder(order.getExtraProjectDesc(), order.getOrderAmount(), serviceOrder.getOrderType(), order.getOrderNo(),
+		Integer orderType = serviceOrder.getOrderType();
+		if(serviceOrder.getIsCard()){
+			orderType = 3;
+		}
+		String res = addExtraOrder(order.getExtraProjectDesc(), order.getOrderAmount(), orderType, order.getOrderNo(),
 				extraOrderNo);
 		if (res.contains("-202")) {
 			return RestModel.success("增加增项订单成功");

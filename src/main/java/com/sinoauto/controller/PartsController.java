@@ -3,7 +3,6 @@ package com.sinoauto.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.Page;
 import com.sinoauto.dao.bean.HqlsParts;
@@ -22,6 +22,8 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
+import com.sinoauto.dto.PartsListDto;
+import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
@@ -67,7 +69,7 @@ public class PartsController {
 		return partsService.findAllParts(pageIndex, pageSize);
 	}
 	
-	@ApiOperation(value = "按配件Id查询配件列表", notes = "wuxiao")
+	@ApiOperation(value = "按配件类别Id查询配件列表", notes = "wuxiao")
 	@GetMapping(value = "findpartsbypid")
 	public ResponseEntity<RestModel<Object>> findPartsListByPid(
 			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
@@ -248,4 +250,131 @@ public class PartsController {
 	public ResponseEntity<RestModel<HqlsPartsType>> update(@RequestBody HqlsPartsType pt){
 		return partsTypeService.update(pt);
 	}
+	
+	/**
+	 * 查询所有车辆品牌
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "查询所有车辆品牌", notes = "wux")
+	@GetMapping("allbrands")
+	public ResponseEntity<RestModel<List<CommonDto>>> allBrands() {
+		return partsService.findAllBrands();
+	}
+	
+	/**
+	 * 根据品牌Id查询车系
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据品牌Id查询车系", notes = "wux")
+	@GetMapping("findseriesbybrandid")
+	public ResponseEntity<RestModel<List<CommonDto>>> findSeriesByBrandId(@RequestParam(value="brandId", required=true) Integer brandId) {
+		return partsService.findSeriesByBrandId(brandId);
+	}
+	
+	/**
+	 * 根据车系Id查询车型
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据车系Id查询车型", notes = "wux")
+	@GetMapping("findmodelsbyseriesid")
+	public ResponseEntity<RestModel<List<CommonDto>>> findModelsBySeriesId(@RequestParam(value="seriesId", required=true) Integer seriesId) {
+		return partsService.findModelsBySeriesId(seriesId);
+	}
+	
+	/**
+	 * 根据车型Id查询配件列表
+	 * @return
+	 * @author wuxiao
+	 */
+	@ApiOperation(value = "根据车型Id查询配件列表", notes = "wux")
+	@GetMapping("findpartslistbymodelid")
+	public ResponseEntity<RestModel<Map<String, Object>>> findPartsListByModelId(@RequestParam(value="modelId", required=true) Integer modelId) {
+		return partsService.findPartsByModelId(modelId);
+	}
+	
+	/**
+	 * 根据条件（配件名称或车型名称）查询配件
+	 * @param condition
+	 * @return
+	 */
+	@ApiOperation(value = "根据条件（配件名称或车型名称）查询配件", notes = "wux")
+	@GetMapping("findpartslistbycondition")
+	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsListByCondition(@RequestParam(value="condition", required=false) String condition) {
+		return partsService.findPartsByCondition(condition);
+	}
+	
+	/**
+	 *  中台车辆品牌下拉
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:16:39
+	 * 	@param brandName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	@ApiOperation(value = "车辆品牌下拉框,支持模糊查询,分页查询", notes = "liud")
+	@GetMapping("carbrandcombobox")
+	public ResponseEntity<RestModel<Page<CommonDto>>> carSeriesCombobox(String brandName,
+			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
+			@RequestParam(value="pageSize",required=true)Integer pageSize) {
+		return partsService.carBrandCombobox(brandName, pageIndex, pageSize);
+	}
+	
+	/**
+	 *  中台车系下拉框数据
+	 * 	@User liud
+	 * 	@Date 2017年10月18日下午5:22:46
+	 * 	@param brandId 品牌ID
+	 * 	@param serName 车型名称
+	 * 	@param pageIndex 页面索引
+	 * 	@param pageSize 页面大小
+	 * 	@return
+	 */
+	@ApiOperation(value = "车系下拉框,支持模糊查询,分页查询", notes = "liud")
+	@GetMapping("carseriescombobox")
+	public ResponseEntity<RestModel<Page<CommonDto>>> carSeriesCombobox(
+			@RequestParam(value="brandId",required=true)Integer brandId,String serName,
+			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
+			@RequestParam(value="pageSize",required=true)Integer pageSize) {
+		return partsService.carSeriesCombobox(brandId, serName, pageIndex, pageSize);
+	}
+	
+	/**
+	 *  中台车型下拉框数据
+	 * 	@User liud
+	 * 	@Date 2017年10月19日下午5:15:35
+	 * 	@param seriesId
+	 * 	@param modelName
+	 * 	@param pageIndex
+	 * 	@param pageSize
+	 * 	@return
+	 */
+	@ApiOperation(value = "车型下拉框,支持模糊查询,分页查询", notes = "liud")
+	@GetMapping("carmodelcombobox")
+	public ResponseEntity<RestModel<Page<CommonDto>>> carModelCombobox(
+			@RequestParam(value="seriesId",required=true)Integer seriesId,
+			String modelName,
+			@RequestParam(value="pageIndex",required=true)Integer pageIndex, 
+			@RequestParam(value="pageSize",required=true)Integer pageSize) {
+		return partsService.carModelCombobox(seriesId, modelName, pageIndex, pageSize);
+	}
+	
+	@ApiOperation(value = "配件车型明细查询", notes = "liud")
+	@GetMapping("viewpartsmodel")
+	public ResponseEntity<RestModel<Page<PartsModelDto>>> viewPartsModel(
+			@RequestParam(value="partsId",required=true)Integer partsId,
+			@RequestParam(value="pageIndex",required=true) Integer pageIndex,
+			@RequestParam(value="pageSize",required=true) Integer pageSize) {
+		return partsService.viewPartsModels(partsId,pageIndex,pageSize);
+	}
+	
+	@ApiOperation(value = "删除配件车型关联表ID", notes = "liud")
+	@DeleteMapping("delpartscarmodel")
+	public @ResponseBody boolean deletePartsCarModelByModelId(@RequestParam(value="carModelId",required=true) Integer carModelId){
+		return partsService.deletePartsCarModelByModelId(carModelId);
+	}
+	
 }
