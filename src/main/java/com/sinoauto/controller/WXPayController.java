@@ -10,7 +10,7 @@ import io.swagger.annotations.Api;
  * @date 2017-08-28 16:17:54
  */
 
-@Api(tags = "微信服务端SDK")
+@Api(tags = "微信服务端SDK") 
 @RestController
 public class WXPayController {
 	
