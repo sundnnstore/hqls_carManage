@@ -21,6 +21,6 @@ public class SwaggerConfig {
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("华汽连锁一期接口").description("").termsOfServiceUrl("http://www.sinoauto.com/").version("1.0").build();
+		return new ApiInfoBuilder().title("华汽连锁一期接口").description("API").termsOfServiceUrl("http://www.sinoauto.com/").version("1.0").build();
 	}
 }
