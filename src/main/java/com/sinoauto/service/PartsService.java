@@ -665,16 +665,28 @@ public class PartsService {
 	 * 查询所有车辆品牌
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllBrands(String brandName) {
+	public ResponseEntity<RestModel<Object>> findAllBrands(String brandName) {
 		try {
 			List<CommonDto> list = null;
 			if (StringUtils.isEmpty(brandName)) {
 				list = carBrandMapper.findAllBrands();
+				Map<String, List<CommonDto>> map = new HashMap<String, List<CommonDto>>();
+				for (CommonDto com: list) {
+					String firstChar = com.getFirstChar();
+					if (map.containsKey(firstChar)) {
+						map.get(firstChar).add(com);
+					} else {
+						List<CommonDto> comList = new ArrayList<CommonDto>();
+						comList.add(com);
+						map.put(firstChar, comList);
+					}
+				}
+				return RestModel.success(map);
 			} else {
 				brandName = brandName.trim();
 				list = carBrandMapper.findBrandsByName(brandName);
+				return RestModel.success(list);
 			}
-			return RestModel.success(list);
 		} catch (Exception e) {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);

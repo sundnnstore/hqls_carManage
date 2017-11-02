@@ -258,7 +258,7 @@ public class PartsController {
 	 */
 	@ApiOperation(value = "查询所有车辆品牌/按品牌名称查询", notes = "wux")
 	@GetMapping("allbrands")
-	public ResponseEntity<RestModel<List<CommonDto>>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
+	public ResponseEntity<RestModel<Object>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
 		return partsService.findAllBrands(brandName);
 	}
 	
