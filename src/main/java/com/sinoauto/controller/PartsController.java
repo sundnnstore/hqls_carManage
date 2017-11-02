@@ -256,10 +256,10 @@ public class PartsController {
 	 * @return
 	 * @author wuxiao
 	 */
-	@ApiOperation(value = "查询所有车辆品牌", notes = "wux")
+	@ApiOperation(value = "查询所有车辆品牌/按品牌名称查询", notes = "wux")
 	@GetMapping("allbrands")
-	public ResponseEntity<RestModel<List<CommonDto>>> allBrands() {
-		return partsService.findAllBrands();
+	public ResponseEntity<RestModel<List<CommonDto>>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
+		return partsService.findAllBrands(brandName);
 	}
 	
 	/**
@@ -375,6 +375,12 @@ public class PartsController {
 	@DeleteMapping("delpartscarmodel")
 	public @ResponseBody boolean deletePartsCarModelByModelId(@RequestParam(value="carModelId",required=true) Integer carModelId){
 		return partsService.deletePartsCarModelByModelId(carModelId);
+	}
+	
+	@ApiOperation(value = "查询所有热门品牌", notes = "liud")
+	@GetMapping("hotbrand")
+	public ResponseEntity<RestModel<List<CommonDto>>> hotBrand() {
+		return partsService.queryAllHotBrand();
 	}
 	
 }

@@ -19,6 +19,13 @@ public interface CarBrandMapper {
 	public List<CommonDto> findAllBrands();
 	
 	/**
+	 * 查询所有品牌信息
+	 * @return
+	 */
+	@Select("SELECT brand.brand_id AS `key`, brand.brand_name AS `value` FROM hqls_car_brand AS brand WHERE brand.brand_name like CONCAT('%',#{1},'%') and dml_flag <> -3")
+	public List<CommonDto> findBrandsByName(String brandName);
+	
+	/**
 	 * 根据品牌Id查询车系
 	 * @param brandId
 	 * @return
@@ -34,4 +41,7 @@ public interface CarBrandMapper {
 	@Select("SELECT model.model_id AS `key`, model.model_name AS `value` FROM hqls_car_model AS model WHERE model.series_id = #{seriesId} AND dml_flag <> -3")
 	public List<CommonDto> findModelsBySeriesId(@Param("seriesId") Integer seriesId);
 	
+	@Select("SELECT hot.brand_id as `key`, brand.brand_name as `value`, brand.logo_url as `name` "
+			+ "from hqls_hot_brand hot, hqls_car_brand brand where hot.brand_id = brand.brand_id order by hot.brand_sort")
+	public List<CommonDto> queryHotBrandFromDataBase();
 }

@@ -665,9 +665,16 @@ public class PartsService {
 	 * 查询所有车辆品牌
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<CommonDto>>> findAllBrands() {
+	public ResponseEntity<RestModel<List<CommonDto>>> findAllBrands(String brandName) {
 		try {
-			return RestModel.success(carBrandMapper.findAllBrands());
+			List<CommonDto> list = null;
+			if (StringUtils.isEmpty(brandName)) {
+				list = carBrandMapper.findAllBrands();
+			} else {
+				brandName = brandName.trim();
+				list = carBrandMapper.findBrandsByName(brandName);
+			}
+			return RestModel.success(list);
 		} catch (Exception e) {
 			System.out.println(e);
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
@@ -836,6 +843,20 @@ public class PartsService {
 		}
 		return true;
 		
+	}
+	
+	/**
+	 * 查询所有热门品牌
+	 * @return
+	 * @author wuxiao
+	 */
+	public ResponseEntity<RestModel<List<CommonDto>>> queryAllHotBrand() {
+		try {
+			return RestModel.success(carBrandMapper.queryHotBrandFromDataBase());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION,"查询热门品牌异常");
 	}
 	
 }
