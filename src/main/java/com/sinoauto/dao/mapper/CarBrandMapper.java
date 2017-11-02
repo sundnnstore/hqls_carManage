@@ -42,6 +42,6 @@ public interface CarBrandMapper {
 	public List<CommonDto> findModelsBySeriesId(@Param("seriesId") Integer seriesId);
 	
 	@Select("SELECT hot.brand_id as `key`, brand.brand_name as `value`, brand.logo_url as `name` "
-			+ "from hqls_hot_brand hot, hqls_car_brand brand where hot.brand_id = brand.brand_id order by hot.brand_sort")
+			+ "from hqls_hot_brand hot, hqls_car_brand brand where hot.brand_id = brand.brand_id order by hot.brand_sort limit 0,10")
 	public List<CommonDto> queryHotBrandFromDataBase();
 }
