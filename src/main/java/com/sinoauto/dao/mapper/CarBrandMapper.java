@@ -15,15 +15,7 @@ public interface CarBrandMapper {
 	 * 查询所有品牌信息
 	 * @return
 	 */
-	@Select("SELECT brand.brand_id AS `key`, brand.brand_name AS `value`, brand.first_char as `firstChar`, brand.logo_url as `name` FROM hqls_car_brand AS brand WHERE dml_flag <> -3")
-	public List<CommonDto> findAllBrands();
-	
-	/**
-	 * 查询所有品牌信息
-	 * @return
-	 */
-	@Select("SELECT brand.brand_id AS `key`, brand.brand_name AS `value`, brand.logo_url as `name` FROM hqls_car_brand AS brand WHERE brand.brand_name like CONCAT('%',#{1},'%') and dml_flag <> -3")
-	public List<CommonDto> findBrandsByName(String brandName);
+	public List<CommonDto> findBrandsByName(@Param("brandName") String brandName);
 	
 	/**
 	 * 根据品牌Id查询车系

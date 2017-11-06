@@ -258,7 +258,7 @@ public class PartsController {
 	 */
 	@ApiOperation(value = "查询所有车辆品牌/按品牌名称查询", notes = "wux")
 	@GetMapping("allbrands")
-	public ResponseEntity<RestModel<Object>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
+	public ResponseEntity<RestModel<Map<String, List<CommonDto>>>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
 		return partsService.findAllBrands(brandName);
 	}
 	
@@ -377,7 +377,7 @@ public class PartsController {
 		return partsService.deletePartsCarModelByModelId(carModelId);
 	}
 	
-	@ApiOperation(value = "查询所有热门品牌", notes = "liud")
+	@ApiOperation(value = "查询所有热门品牌", notes = "wux")
 	@GetMapping("hotbrand")
 	public ResponseEntity<RestModel<List<CommonDto>>> hotBrand() {
 		return partsService.queryAllHotBrand();
