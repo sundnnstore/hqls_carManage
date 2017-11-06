@@ -14,20 +14,20 @@ import java.util.Map;
 
 public class KdniaoTrackQueryAPI {
 	//DEMO
-		/*public static void main(String[] args) {
-			KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
-			try {
-				String result = api.getOrderTracesByJson("HTKY", "70732318495459");
-				System.out.print(result);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}*/
+//		public static void main(String[] args) {
+//			KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
+//			try {
+//				String result = api.getOrderTracesByJson("HTKY", "71132906292353", "快递", "134");
+//				System.out.print(result);
+//				
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
 		
-		//电商ID
+		//电商ID  1300942
 		private String EBusinessID="1300942";
-		//电商加密私钥，快递鸟提供，注意保管，不要泄漏
+		//电商加密私钥，快递鸟提供，注意保管，不要泄漏   850c814f-99f1-461f-aea4-98c642d82e63
 		private String AppKey="850c814f-99f1-461f-aea4-98c642d82e63";
 		//请求url
 		private String ReqURL="http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx";	
