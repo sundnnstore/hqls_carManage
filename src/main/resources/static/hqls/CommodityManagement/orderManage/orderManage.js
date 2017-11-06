@@ -58,7 +58,10 @@ layui.use(['layer', 'jquery', 'laypage'], function() {
 				//右上角关闭的回调
 				$('#cover').css('display', 'none');
 			},
-			shade: 0
+			shade: 0,
+			end: function() {
+				id.css('display', 'none');
+			}
 		})
 	}
 	
