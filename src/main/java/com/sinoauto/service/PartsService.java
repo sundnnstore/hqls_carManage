@@ -32,12 +32,12 @@ import com.sinoauto.dao.mapper.PartsAttrExtrMapper;
 import com.sinoauto.dao.mapper.PartsPicMapper;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
-import com.sinoauto.dto.PartsListDto;
 import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
+import com.sinoauto.dto.PartsTypeAndPartsListDto;
 import com.sinoauto.entity.ErrorStatus;
 import com.sinoauto.entity.RestModel;
 
@@ -108,7 +108,7 @@ public class PartsService {
 		return RestModel.success(false);
 	}
 
-	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer pageIndex, Integer pageSize) {
+	public ResponseEntity<RestModel<Object>> findListByPid(Integer partsTypeId, Integer modelId, Integer pageIndex, Integer pageSize) {
 		// 查询此类别下的子类数量
 		int count = partsMapper.getPartsCountByPid(partsTypeId);
 		// 返回类型
@@ -126,7 +126,7 @@ public class PartsService {
 		}
 		// 此类别下没有子类，展示商品列表
 		else {
-			Page<PartsDesListDto> page = partsMapper.findPartsListByTypeId(partsTypeId, null);
+			Page<PartsDesListDto> page = partsMapper.findPartsListByTypeId(partsTypeId, modelId, null);
 			objList = page;
 			totalCount = (int) page.getTotal();
 		}
@@ -137,7 +137,7 @@ public class PartsService {
 		if (condition != null) {
 			condition = condition.trim();
 		}
-		return RestModel.success(partsMapper.findPartsListByTypeId(partsTypeId, condition));
+		return RestModel.success(partsMapper.findPartsListByTypeId(partsTypeId, null, condition));
 	}
 	
 	public ResponseEntity<RestModel<PartsDetailDto>> getPartsDetail(Integer partsId) {
@@ -721,39 +721,28 @@ public class PartsService {
 	}
 	
 	/**
-	 * 根据车型Id查询配件
-	 * @param modelId
-	 * @return
-	 */
-	public ResponseEntity<RestModel<Map<String, Object>>> findPartsByModelId(Integer modelId) {
-		try {
-			List<PartsListDto> partsList = partsMapper.findPartsByModelId(modelId);
-			List<CommonDto> typeList = partsMapper.findPartsTypeByModelId(modelId);
-			Map<String, Object> result = new HashMap<String, Object>();
-			result.put("partsList", partsList);
-			result.put("typeList", typeList);
-			return RestModel.success(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);
-		}
-	}
-	
-	/**
 	 * 根据配件名称或车型条件查询配件
 	 * @param condition
 	 * @return
 	 */
-	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsByCondition(String condition) {
+	public ResponseEntity<RestModel<List<PartsTypeAndPartsListDto>>> findPartsByCondition(String condition) {
 		try {
-			List<PartsListDto> partsList;
+			// 条件为空时，不返回数据
 			if (StringUtils.isEmpty(condition)) {
-				partsList  = partsMapper.findPartsByModelId(null);
+				return RestModel.success();
 			} else {
 				String[] conditions = condition.split("\\ ");
-				partsList = partsMapper.findPartsListByCondition(conditions);
+				// 先查询出条件对应的配件类型
+				List<PartsTypeAndPartsListDto> typeList = partsMapper.findPartsTypeByCondition(conditions);
+				if (typeList == null || typeList.isEmpty()) {
+					return RestModel.success();
+				}
+				// 再查询出每个类型下对应该条件的配件列表
+				for (PartsTypeAndPartsListDto type: typeList) {
+					type.setPartsList(partsMapper.findPartsByTypeAndCondition(type.getPartsTypeId(), conditions));
+				}
+				return RestModel.success(typeList);
 			}
-			return RestModel.success(partsList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RestModel.error(HttpStatus.BAD_REQUEST, ErrorStatus.SYSTEM_EXCEPTION);

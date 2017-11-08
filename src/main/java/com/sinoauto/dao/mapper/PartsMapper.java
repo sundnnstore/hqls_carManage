@@ -24,6 +24,7 @@ import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
+import com.sinoauto.dto.PartsTypeAndPartsListDto;
 
 @Mapper
 public interface PartsMapper {
@@ -65,7 +66,7 @@ public interface PartsMapper {
 	 * @param partTypeId
 	 * @return
 	 */
-	public Page<PartsDesListDto> findPartsListByTypeId(@Param("partTypeId") Integer partTypeId, @Param("condition") String condition);
+	public Page<PartsDesListDto> findPartsListByTypeId(@Param("partTypeId") Integer partTypeId, @Param("modelId") Integer modelId, @Param("condition") String condition);
 	
 	@Select("select count(1) from hqls_parts_type as type where type.pid = #{1}")
 	public int getPartsCountByPid(Integer pid);
@@ -216,25 +217,18 @@ public interface PartsMapper {
 	public Integer[] findPartsIdByCode(String partsCode);
 	
 	/**
-	 * 根据车型Id 查询配件列表
-	 * @param modelId
-	 * @return
-	 */
-	public List<PartsListDto> findPartsByModelId(@Param("modelId") Integer modelId);
-	
-	/**
-	 * 根据车型Id 查询配件类型
-	 * @param modelId
-	 * @return
-	 */
-	public List<CommonDto> findPartsTypeByModelId(@Param("modelId") Integer modelId);
-	
-	/**
-	 * 根据条件查询配件
+	 * 根据条件查询配件类型
 	 * @param condition
 	 * @return
 	 */
-	public List<PartsListDto> findPartsListByCondition(@Param("condition") String[] condition);
+	public List<PartsListDto> findPartsByTypeAndCondition(@Param("partsTypeId") Integer partsTypeId, @Param("condition") String[] condition);
+	
+	/**
+	 * 根据条件查询配件类型
+	 * @param condition
+	 * @return
+	 */
+	public List<PartsTypeAndPartsListDto> findPartsTypeByCondition(@Param("condition") String[] condition);
 	
 	/**
 	 *  插入配件车型
