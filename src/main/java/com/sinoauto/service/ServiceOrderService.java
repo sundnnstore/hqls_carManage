@@ -426,7 +426,7 @@ public class ServiceOrderService {
 					for (int i = 0; i < serviceTypes.size(); i++) {
 						sb.append(serviceTypes.get(i));
 						if (i < serviceTypes.size() - 1) {
-							sb.append(".");
+							sb.append(",");
 						}
 					}
 				}
