@@ -14,6 +14,8 @@ public class CommonDto {
 	// 数据值
 	private String value;
 	
+	private String firstChar;
+	
 	// 档案管理页面zTree用数据结构
 	private Integer id;
 	private String name;
@@ -55,4 +57,13 @@ public class CommonDto {
 		}
 		
 	}
+
+	public String getFirstChar() {
+		return firstChar;
+	}
+
+	public void setFirstChar(String firstChar) {
+		this.firstChar = firstChar;
+	}
+	
 }

@@ -12,6 +12,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @EnableTransactionManagement
 @Configuration
+//@PropertySource("classpath:application-test.properties")
 public class DataSourceConfiguration {
 
 	@Value("${spring.datasource.username}")

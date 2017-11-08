@@ -37,14 +37,24 @@
 	<select id="findPartsListByTypeId" resultMap="desList">
 		select parts.parts_id, parts.parts_name, parts.parts_model, parts.parts_unit, 
 				parts.parts_spec, parts.cur_price, brand.parts_brand_name
-		from hqls_parts as parts
-		left join hqls_parts_brand as brand on parts.parts_brand_id = brand.parts_brand_id 
-		where parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
+		from 
+			hqls_parts as parts
+		left join 
+			hqls_parts_brand as brand on parts.parts_brand_id = brand.parts_brand_id 
+		<if test="modelId != null">
+		left join
+			hqls_parts_model as model on parts.parts_id = model.parts_id
+		</if>
+		where 1=1
 		<if test="condition != null and condition != ''">
 			and (parts.parts_name like CONCAT('%', #{condition} ,'%')
 				or parts.parts_spec like CONCAT('%', #{condition} ,'%')
 				or parts.parts_model like CONCAT('%', #{condition} ,'%'))
 		</if>
+		<if test="modelId != null">
+			and model.model_id = #{modelId}
+		</if>
+		and parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
 	</select>
 	
 	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
@@ -124,37 +134,7 @@
 		    order by  pa.create_time desc 
 	</select>
 	
-	<select id="findPartsByModelId" parameterType="Integer" resultType="com.sinoauto.dto.PartsListDto">
-		SELECT  
-				part.parts_id AS `partsId`, 
-				part.parts_name AS `partsName`, 
-				part.parts_type_id as `partsTypeId`,
-				part.cur_price as partsPrice,
-				(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
-		FROM 	
-				hqls_parts AS part
-		WHERE 
-				1=1
-				<if test="modelId != null">
-					and part.parts_id IN (SELECT hpm.parts_id FROM hqls_parts_model AS hpm WHERE hpm.model_id = #{modelId}) 
-				</if>
-	</select>
-	
-	<select id="findPartsTypeByModelId" parameterType="Integer" resultType="com.sinoauto.dto.CommonDto">
-		SELECT  
-				type.parts_type_id AS `key`, 
-				type.type_name AS `value`
-		FROM 	
-				hqls_parts_model AS hpm
-		LEFT JOIN
-				hqls_parts AS part ON hpm.parts_id = part.parts_id
-		LEFT JOIN
-				hqls_parts_type type ON part.parts_type_id = type.parts_type_id
-		WHERE 
-				hpm.model_id = #{modelId}
-	</select>
-	
-	<select id="findPartsListByCondition" resultType="com.sinoauto.dto.PartsListDto">
+	<select id="findPartsByTypeAndCondition" resultType="com.sinoauto.dto.PartsListDto">
 		(
 			SELECT  
 					part.parts_id AS `partsId`, 
@@ -164,23 +144,68 @@
 					(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
 			FROM 	
 					hqls_parts AS part
+			WHERE 
+					part.parts_type_id = #{partsTypeId}
+			AND
+					<foreach collection="condition" open="(" close=")" item="item" index="index" separator="or">
+						<if test="item != ''">
+							part.parts_name LIKE CONCAT('%', #{item}, '%')
+						</if>
+					</foreach>
+		)
+		UNION
+		(		
+			SELECT  
+					part.parts_id AS `partsId`, 
+					part.parts_name AS `partsName`, 
+					part.parts_type_id as `partsTypeId`,
+					part.cur_price as partsPrice,
+					(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
+			FROM 	
+					hqls_parts AS part
+			LEFT JOIN
+					hqls_parts_model AS model ON part.parts_id = model.parts_id
+			LEFT JOIN 
+					hqls_car_model AS car ON model.model_id = car.model_id
+			WHERE 
+					part.parts_type_id = #{partsTypeId}
+			AND
+					<foreach collection="condition" open="(" close=")" item="item" index="index" separator="or">
+						<if test="item != ''">
+							car.model_name LIKE CONCAT('%', #{item}, '%')
+						</if>
+					</foreach> 
+		)
+	</select>
+	
+	
+	<select id="findPartsTypeByCondition" resultType="com.sinoauto.dto.PartsTypeAndPartsListDto">
+		(
+			SELECT  
+					type.parts_type_id AS `partsTypeId`, 
+					type.type_name AS `typeName`, 
+					type.icon as `icon`
+			FROM 	
+					hqls_parts_type AS type
+			LEFT JOIN
+					hqls_parts AS parts ON type.parts_type_id = parts.parts_type_id
 			WHERE
 					<foreach collection="condition" item="item" index="index" separator="or">
 						<if test="item != ''">
-							parts_name LIKE CONCAT('%', #{item}, '%')
+							parts.parts_name LIKE CONCAT('%', #{item}, '%')
 						</if>
 					</foreach> 
 		)			
 		UNION
 		(
 			SELECT  
-					part.parts_id AS `partsId`, 
-					part.parts_name AS `partsName`, 
-					part.parts_type_id as `partsTypeId`,
-					part.cur_price as partsPrice,
-					(SELECT pic.url FROM hqls_parts_pic AS pic WHERE pic.parts_id = part.parts_id ORDER BY sorting LIMIT 0,1) as `picUrl`
+					type.parts_type_id AS `partsTypeId`, 
+					type.type_name AS `typeName`, 
+					type.icon as `icon`
 			FROM 	
-					hqls_parts AS part
+					hqls_parts_type AS type
+			LEFT JOIN
+					hqls_parts AS part ON type.parts_type_id = part.parts_type_id
 			LEFT JOIN
 					hqls_parts_model middle ON part.parts_id = middle.parts_id
 			LEFT JOIN

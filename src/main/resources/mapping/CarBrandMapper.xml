@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CarBrandMapper">
+
+	
+	<select id="findBrandsByName" parameterType="String" resultType="com.sinoauto.dto.CommonDto">
+		SELECT 
+			brand.brand_id AS `key`, 
+			brand.brand_name AS `value`, 
+			brand.first_char as `firstChar`, 
+			brand.logo_url as `name` 
+		FROM 
+			hqls_car_brand AS brand 
+		WHERE 
+			1=1
+		<if test="brandName != null">
+			and brand.brand_name like CONCAT('%', #{brandName}, '%')
+		</if>
+		 	and dml_flag != -3
+	</select>
+
+
+</mapper>

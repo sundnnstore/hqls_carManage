@@ -22,11 +22,11 @@ import com.sinoauto.dto.PartsDesListDto;
 import com.sinoauto.dto.PartsDetailDto;
 import com.sinoauto.dto.PartsDto;
 import com.sinoauto.dto.PartsLevelDto;
-import com.sinoauto.dto.PartsListDto;
 import com.sinoauto.dto.PartsModelDto;
 import com.sinoauto.dto.PartsOperDto;
 import com.sinoauto.dto.PartsQueryDto;
 import com.sinoauto.dto.PartsTreeRecursionDto;
+import com.sinoauto.dto.PartsTypeAndPartsListDto;
 import com.sinoauto.dto.PartsTypeDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.PartsBrandService;
@@ -60,7 +60,7 @@ public class PartsController {
 		return partsService.findListByType(partsType, pageIndex, pageSize);
 	}
 	
-	@ApiOperation(value = "查询所有配件列表", notes = "wuxiao")
+	@ApiOperation(value = "查询所有配件类型列表", notes = "wuxiao")
 	@GetMapping(value = "findallparts")
 	public ResponseEntity<RestModel<Map<String, Object>>> findAllParts(
 			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
@@ -73,10 +73,11 @@ public class PartsController {
 	@GetMapping(value = "findpartsbypid")
 	public ResponseEntity<RestModel<Object>> findPartsListByPid(
 			@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId,
+			@RequestParam(value = "modelId", required = false) Integer modelId,
 			@RequestParam(value = "pageIndex", required = false) Integer pageIndex,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		
-		return partsService.findListByPid(partsTypeId, pageIndex, pageSize);
+		return partsService.findListByPid(partsTypeId, modelId, pageIndex, pageSize);
 	}
 	
 	@ApiOperation(value = "按配件名称、规格或型号查询配件", notes = "wuxiao")
@@ -88,6 +89,7 @@ public class PartsController {
 		return partsService.findPartsByConditon(partsTypeId, condition);
 	}
 	
+	@Deprecated
 	@ApiOperation(value = "按配件Id查询配件是否有子类列表", notes = "wuxiao")
 	@GetMapping(value = "haschildtype")
 	public ResponseEntity<RestModel<Boolean>> hasChildType(@RequestParam(value = "partsTypeId", required = true) Integer partsTypeId) {
@@ -256,10 +258,10 @@ public class PartsController {
 	 * @return
 	 * @author wuxiao
 	 */
-	@ApiOperation(value = "查询所有车辆品牌", notes = "wux")
+	@ApiOperation(value = "查询所有车辆品牌/按品牌名称查询", notes = "wux")
 	@GetMapping("allbrands")
-	public ResponseEntity<RestModel<List<CommonDto>>> allBrands() {
-		return partsService.findAllBrands();
+	public ResponseEntity<RestModel<Map<String, List<CommonDto>>>> allBrands(@RequestParam(value="brandName", required=false) String brandName) {
+		return partsService.findAllBrands(brandName);
 	}
 	
 	/**
@@ -285,24 +287,14 @@ public class PartsController {
 	}
 	
 	/**
-	 * 根据车型Id查询配件列表
-	 * @return
-	 * @author wuxiao
-	 */
-	@ApiOperation(value = "根据车型Id查询配件列表", notes = "wux")
-	@GetMapping("findpartslistbymodelid")
-	public ResponseEntity<RestModel<Map<String, Object>>> findPartsListByModelId(@RequestParam(value="modelId", required=true) Integer modelId) {
-		return partsService.findPartsByModelId(modelId);
-	}
-	
-	/**
 	 * 根据条件（配件名称或车型名称）查询配件
 	 * @param condition
 	 * @return
 	 */
 	@ApiOperation(value = "根据条件（配件名称或车型名称）查询配件", notes = "wux")
 	@GetMapping("findpartslistbycondition")
-	public ResponseEntity<RestModel<List<PartsListDto>>> findPartsListByCondition(@RequestParam(value="condition", required=false) String condition) {
+	public ResponseEntity<RestModel<List<PartsTypeAndPartsListDto>>> findPartsListByCondition(
+			@RequestParam(value="condition", required=false) String condition) {
 		return partsService.findPartsByCondition(condition);
 	}
 	
@@ -375,6 +367,12 @@ public class PartsController {
 	@DeleteMapping("delpartscarmodel")
 	public @ResponseBody boolean deletePartsCarModelByModelId(@RequestParam(value="carModelId",required=true) Integer carModelId){
 		return partsService.deletePartsCarModelByModelId(carModelId);
+	}
+	
+	@ApiOperation(value = "查询所有热门品牌", notes = "wux")
+	@GetMapping("hotbrand")
+	public ResponseEntity<RestModel<List<CommonDto>>> hotBrand() {
+		return partsService.queryAllHotBrand();
 	}
 	
 }
