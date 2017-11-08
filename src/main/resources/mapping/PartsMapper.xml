@@ -41,9 +41,11 @@
 			hqls_parts as parts
 		left join 
 			hqls_parts_brand as brand on parts.parts_brand_id = brand.parts_brand_id 
+		<if test="modelId != null">
 		left join
 			hqls_parts_model as model on parts.parts_id = model.parts_id
-		where parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
+		</if>
+		where 1=1
 		<if test="condition != null and condition != ''">
 			and (parts.parts_name like CONCAT('%', #{condition} ,'%')
 				or parts.parts_spec like CONCAT('%', #{condition} ,'%')
@@ -52,6 +54,7 @@
 		<if test="modelId != null">
 			and model.model_id = #{modelId}
 		</if>
+		and parts.parts_type_id = #{partTypeId} and parts.is_usable = 1
 	</select>
 	
 	<select id="checkShopCart" resultMap="desList" parameterType="Integer">
