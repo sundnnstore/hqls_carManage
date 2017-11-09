@@ -8,7 +8,4 @@ import io.swagger.annotations.Api;
 @Api(tags="测试接口")
 public class TestController {
 
-	
-	
-	
 }
