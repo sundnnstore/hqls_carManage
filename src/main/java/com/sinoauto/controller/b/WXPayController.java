@@ -1,4 +1,4 @@
-package com.sinoauto.controller;
+package com.sinoauto.controller.b;
 
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,4 +1,4 @@
-package com.sinoauto.controller;
+package com.sinoauto.controller.b;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
