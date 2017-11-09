@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CServiceOrderCouponMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        order_coupon_id, order_id, coupon_type, coupon_id, discount_amount, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CserviceOrderCoupon" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_service_order_coupon (
+	        order_id, coupon_type, coupon_id, discount_amount, create_time
+	    ) VALUES (
+	        #{orderId}, #{couponType}, #{couponId}, #{discountAmount}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CserviceOrderCoupon">
+	   UPDATE c_service_order_coupon SET
+		   order_id = #{orderId}, 
+		   coupon_type = #{couponType}, 
+		   coupon_id = #{couponId}, 
+		   discount_amount = #{discountAmount}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   order_coupon_id = #{orderCouponId}
+	</update>
+	
+</mapper>

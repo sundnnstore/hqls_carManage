@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CouponMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        coupon_id, coupon_name, coupon_desc, logo_url, is_enable, is_need_car, is_discount, create_user_id, value, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="Ccoupon" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_coupon (
+	        coupon_name, coupon_desc, logo_url, is_enable, is_need_car, is_discount, create_user_id, value, create_time
+	    ) VALUES (
+	        #{couponName}, #{couponDesc}, #{logoUrl}, #{isEnable}, #{isNeedCar}, #{isDiscount}, #{createUserId}, #{value}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="Ccoupon">
+	   UPDATE c_coupon SET
+		   coupon_name = #{couponName}, 
+		   coupon_desc = #{couponDesc}, 
+		   logo_url = #{logoUrl}, 
+		   is_enable = #{isEnable}, 
+		   is_need_car = #{isNeedCar}, 
+		   is_discount = #{isDiscount}, 
+		   create_user_id = #{createUserId}, 
+		   value = #{value}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   coupon_id = #{couponId}
+	</update>
+	
+</mapper>

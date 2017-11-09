@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CExtraOrderMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        extra_order_id, order_id, extra_order_no, extra_project_desc, order_amount, pay_status, create_time, dml_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CextraOrder" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_extra_order (
+	        order_id, extra_order_no, extra_project_desc, order_amount, pay_status, create_time, dml_time
+	    ) VALUES (
+	        #{orderId}, #{extraOrderNo}, #{extraProjectDesc}, #{orderAmount}, #{payStatus}, #{createTime}, #{dmlTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CextraOrder">
+	   UPDATE c_extra_order SET
+		   order_id = #{orderId}, 
+		   extra_order_no = #{extraOrderNo}, 
+		   extra_project_desc = #{extraProjectDesc}, 
+		   order_amount = #{orderAmount}, 
+		   pay_status = #{payStatus}, 
+		   create_time = #{createTime}, 
+		   dml_time = #{dmlTime}
+	   WHERE 
+		   extra_order_id = #{extraOrderId}
+	</update>
+	
+</mapper>

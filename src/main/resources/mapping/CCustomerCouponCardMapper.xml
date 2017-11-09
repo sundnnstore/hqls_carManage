@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CCustomerCouponCardMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        customer_coupon_card_id, coupon_card_id, customer_car_id, begin_time, end_time, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CcustomerCouponCard" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_customer_coupon_card (
+	        coupon_card_id, customer_car_id, begin_time, end_time, create_time
+	    ) VALUES (
+	        #{couponCardId}, #{customerCarId}, #{beginTime}, #{endTime}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CcustomerCouponCard">
+	   UPDATE c_customer_coupon_card SET
+		   coupon_card_id = #{couponCardId}, 
+		   customer_car_id = #{customerCarId}, 
+		   begin_time = #{beginTime}, 
+		   end_time = #{endTime}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   customer_coupon_card_id = #{customerCouponCardId}
+	</update>
+	
+</mapper>

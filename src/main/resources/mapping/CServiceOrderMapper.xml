@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CServiceOrderMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        order_id, order_no, order_status, order_type, store_id, contacts, contacts_mobile, customer_id, customer_car_id, service_time, fault_desc, service_project_id, order_total_amount, discount_amount, actual_payment_amount, qr_code, qr_code_url, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CserviceOrder" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_service_order (
+	        order_no, order_status, order_type, store_id, contacts, contacts_mobile, customer_id, customer_car_id, service_time, fault_desc, service_project_id, order_total_amount, discount_amount, actual_payment_amount, qr_code, qr_code_url, create_time
+	    ) VALUES (
+	        #{orderNo}, #{orderStatus}, #{orderType}, #{storeId}, #{contacts}, #{contactsMobile}, #{customerId}, #{customerCarId}, #{serviceTime}, #{faultDesc}, #{serviceProjectId}, #{orderTotalAmount}, #{discountAmount}, #{actualPaymentAmount}, #{qrCode}, #{qrCodeUrl}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CserviceOrder">
+	   UPDATE c_service_order SET
+		   order_no = #{orderNo}, 
+		   order_status = #{orderStatus}, 
+		   order_type = #{orderType}, 
+		   store_id = #{storeId}, 
+		   contacts = #{contacts}, 
+		   contacts_mobile = #{contactsMobile}, 
+		   customer_id = #{customerId}, 
+		   customer_car_id = #{customerCarId}, 
+		   service_time = #{serviceTime}, 
+		   fault_desc = #{faultDesc}, 
+		   service_project_id = #{serviceProjectId}, 
+		   order_total_amount = #{orderTotalAmount}, 
+		   discount_amount = #{discountAmount}, 
+		   actual_payment_amount = #{actualPaymentAmount}, 
+		   qr_code = #{qrCode}, 
+		   qr_code_url = #{qrCodeUrl}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   order_id = #{orderId}
+	</update>
+	
+</mapper>

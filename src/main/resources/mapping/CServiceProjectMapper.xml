@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CServiceProjectMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        service_project_id, service_project_name, amount, project_logo_url, store_id, pid, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CserviceProject" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_service_project (
+	        service_project_name, amount, project_logo_url, store_id, pid, create_time
+	    ) VALUES (
+	        #{serviceProjectName}, #{amount}, #{projectLogoUrl}, #{storeId}, #{pid}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CserviceProject">
+	   UPDATE c_service_project SET
+		   service_project_name = #{serviceProjectName}, 
+		   amount = #{amount}, 
+		   project_logo_url = #{projectLogoUrl}, 
+		   store_id = #{storeId}, 
+		   pid = #{pid}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   service_project_id = #{serviceProjectId}
+	</update>
+	
+</mapper>
