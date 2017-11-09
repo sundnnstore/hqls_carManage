@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CcustomerFinanceFlowMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        finance_flow_id, customer_id, balance_type, pay_type, finance_type, amount, order_no, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CcustomerFinanceFlow" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_customer_finance_flow (
+	        customer_id, balance_type, pay_type, finance_type, amount, order_no, create_time
+	    ) VALUES (
+	        #{customerId}, #{balanceType}, #{payType}, #{financeType}, #{amount}, #{orderNo}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CcustomerFinanceFlow">
+	   UPDATE c_customer_finance_flow SET
+		   customer_id = #{customerId}, 
+		   balance_type = #{balanceType}, 
+		   pay_type = #{payType}, 
+		   finance_type = #{financeType}, 
+		   amount = #{amount}, 
+		   order_no = #{orderNo}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   finance_flow_id = #{financeFlowId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.sinoauto.dao.mapper.CcustomerCarMapper">
+
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="allColumns">
+        customer_car_id, customer_id, car_no, car_model_id, car_color, mileage, vin_no, insurance_company_id, insurance_expiration_time, is_default, create_time
+	</sql>
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="CcustomerCar" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO c_customer_car (
+	        customer_id, car_no, car_model_id, car_color, mileage, vin_no, insurance_company_id, insurance_expiration_time, is_default, create_time
+	    ) VALUES (
+	        #{customerId}, #{carNo}, #{carModelId}, #{carColor}, #{mileage}, #{vinNo}, #{insuranceCompanyId}, #{insuranceExpirationTime}, #{isDefault}, #{createTime}        
+	    )
+	</insert>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CcustomerCar">
+	   UPDATE c_customer_car SET
+		   customer_id = #{customerId}, 
+		   car_no = #{carNo}, 
+		   car_model_id = #{carModelId}, 
+		   car_color = #{carColor}, 
+		   mileage = #{mileage}, 
+		   vin_no = #{vinNo}, 
+		   insurance_company_id = #{insuranceCompanyId}, 
+		   insurance_expiration_time = #{insuranceExpirationTime}, 
+		   is_default = #{isDefault}, 
+		   create_time = #{createTime}
+	   WHERE 
+		   customer_car_id = #{customerCarId}
+	</update>
+	
+</mapper>
