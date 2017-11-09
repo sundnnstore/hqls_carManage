@@ -23,6 +23,7 @@ public class RestModel<T> {
 	@JsonInclude(Include.NON_NULL)
 	private T result;
 	@ApiModelProperty("总条数")
+	@JsonInclude(Include.NON_DEFAULT)
 	private int totalCount;
 
 	public int getErrcode() {
