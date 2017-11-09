@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version 1.0, 2017-11-09
  */
 
-public class Ccustomer implements Serializable {
+public class CCustomer implements Serializable {
 	
     private static final long serialVersionUID = 1L;
 

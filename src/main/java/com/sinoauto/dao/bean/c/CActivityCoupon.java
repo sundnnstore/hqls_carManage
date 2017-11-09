@@ -12,7 +12,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version 1.0, 2017-11-09
  */
 
-public class CactivityCoupon implements Serializable {
+public class CActivityCoupon implements Serializable {
 	
     private static final long serialVersionUID = 1L;
 
