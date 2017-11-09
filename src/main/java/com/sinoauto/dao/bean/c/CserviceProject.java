@@ -5,8 +5,6 @@ import java.util.Date;
 
 import io.swagger.annotations.ApiModelProperty;
 
-
-
 /**
  * 服务项目表服务项目表<br>
  * @author tangwt
@@ -14,8 +12,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 
 public class CserviceProject implements Serializable {
-	
-    private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 1L;
 
 	@ApiModelProperty("服务项目ID")
 	private Integer serviceProjectId;
@@ -25,13 +23,17 @@ public class CserviceProject implements Serializable {
 	private Double amount;
 	@ApiModelProperty("项目logoURL")
 	private String projectLogoUrl;
+	@ApiModelProperty("项目描述（用户移动端判断跳转）")
+	private String projectDesc;
+	@ApiModelProperty("项目排序")
+	private Integer projectSort;
 	@ApiModelProperty("门店ID")
 	private Integer storeId;
 	@ApiModelProperty("父级ID")
 	private Integer pid;
 	@ApiModelProperty("创建时间")
 	private Date createTime;
-	
+
 	/**
 	 * 设置服务项目ID
 	 * @param serviceProjectId 服务项目ID
@@ -39,6 +41,7 @@ public class CserviceProject implements Serializable {
 	public void setServiceProjectId(Integer serviceProjectId) {
 		this.serviceProjectId = serviceProjectId;
 	}
+
 	/**
 	 * 获取服务项目ID
 	 * @return 服务项目ID
@@ -46,6 +49,7 @@ public class CserviceProject implements Serializable {
 	public Integer getServiceProjectId() {
 		return this.serviceProjectId;
 	}
+
 	/**
 	 * 设置服务项目名称
 	 * @param serviceProjectName 服务项目名称
@@ -53,6 +57,7 @@ public class CserviceProject implements Serializable {
 	public void setServiceProjectName(String serviceProjectName) {
 		this.serviceProjectName = serviceProjectName;
 	}
+
 	/**
 	 * 获取服务项目名称
 	 * @return 服务项目名称
@@ -60,6 +65,7 @@ public class CserviceProject implements Serializable {
 	public String getServiceProjectName() {
 		return this.serviceProjectName;
 	}
+
 	/**
 	 * 设置服务项目金额
 	 * @param amount 服务项目金额
@@ -67,6 +73,7 @@ public class CserviceProject implements Serializable {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+
 	/**
 	 * 获取服务项目金额
 	 * @return 服务项目金额
@@ -74,6 +81,7 @@ public class CserviceProject implements Serializable {
 	public Double getAmount() {
 		return this.amount;
 	}
+
 	/**
 	 * 设置项目logoURL
 	 * @param projectLogoUrl 项目logoURL
@@ -81,6 +89,7 @@ public class CserviceProject implements Serializable {
 	public void setProjectLogoUrl(String projectLogoUrl) {
 		this.projectLogoUrl = projectLogoUrl;
 	}
+
 	/**
 	 * 获取项目logoURL
 	 * @return 项目logoURL
@@ -88,6 +97,7 @@ public class CserviceProject implements Serializable {
 	public String getProjectLogoUrl() {
 		return this.projectLogoUrl;
 	}
+
 	/**
 	 * 设置门店ID
 	 * @param storeId 门店ID
@@ -95,6 +105,7 @@ public class CserviceProject implements Serializable {
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
 	}
+
 	/**
 	 * 获取门店ID
 	 * @return 门店ID
@@ -102,6 +113,7 @@ public class CserviceProject implements Serializable {
 	public Integer getStoreId() {
 		return this.storeId;
 	}
+
 	/**
 	 * 设置父级ID
 	 * @param pid 父级ID
@@ -109,6 +121,7 @@ public class CserviceProject implements Serializable {
 	public void setPid(Integer pid) {
 		this.pid = pid;
 	}
+
 	/**
 	 * 获取父级ID
 	 * @return 父级ID
@@ -116,6 +129,7 @@ public class CserviceProject implements Serializable {
 	public Integer getPid() {
 		return this.pid;
 	}
+
 	/**
 	 * 设置创建时间
 	 * @param createTime 创建时间
@@ -123,6 +137,7 @@ public class CserviceProject implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
+
 	/**
 	 * 获取创建时间
 	 * @return 创建时间
@@ -131,5 +146,24 @@ public class CserviceProject implements Serializable {
 		return this.createTime;
 	}
 
-}
+	public String getProjectDesc() {
+		return projectDesc;
+	}
 
+	public void setProjectDesc(String projectDesc) {
+		if (projectDesc != null) {
+			this.projectDesc = projectDesc;
+		}
+	}
+
+	public Integer getProjectSort() {
+		return projectSort;
+	}
+
+	public void setProjectSort(Integer projectSort) {
+		if (projectSort != null) {
+			this.projectSort = projectSort;
+		}
+	}
+
+}
