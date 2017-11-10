@@ -547,7 +547,11 @@ public class PurchaseOrderService {
 			String logisticsNo = order.getLogisticsNo();
 			// 没有走物流的情况
 			if (null == logisticsId || StringUtils.isEmpty(logisticsNo)) {
-				return RestModel.success(logisticsLogMapper.findLogisticsLogs(orderId));
+				List<HqlsLogisticsLog> logList = logisticsLogMapper.findLogisticsLogs(orderId);
+				if (logList == null || logList.isEmpty()) {
+					return RestModel.success(0);
+				}
+				return RestModel.success(logList);
 			}
 			HqlsLogisticsCompany company = logisticsCompanyMapper.getById(logisticsId);
 			HqlsShipAddress address = shipAddressMapper.getShipAddressById(order.getShipAddressId());
