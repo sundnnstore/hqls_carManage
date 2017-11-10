@@ -6,9 +6,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sinoauto.dto.c.ProjectDto;
+import com.sinoauto.dto.c.ProjectOrderDto;
 import com.sinoauto.entity.RestModel;
 import com.sinoauto.service.c.ProjectService;
 
@@ -35,6 +37,16 @@ public class ProjectController {
 	@GetMapping("findprojectsbyfirstprojectid")
 	public ResponseEntity<RestModel<List<ProjectDto>>> findProjectsByFirstProjectId(Integer projectId) {
 		return projectService.findProjectsByFirstProjectId(projectId);
+	}
+	
+	
+	@ApiOperation(value = "单击小项目进入项目购买流程", notes = "tangwt")
+	@ApiImplicitParams({ @ApiImplicitParam(paramType = "query", name = "projectId", value = "项目ID", required = true, dataType = "int"),
+		@ApiImplicitParam(paramType = "query", name = "lat", value = "用户当前位置经度", required = false, dataType = "double"),
+		@ApiImplicitParam(paramType = "query", name = "lng", value = "用户当前位置纬度", required = false, dataType = "double")})
+	@GetMapping("getprojectorderinfo")
+	public ResponseEntity<RestModel<ProjectOrderDto>> getProjectOrderInfo(@RequestHeader String Authorization, Integer projectId,Double lat,Double lng) {
+		return projectService.getProjectOrderInfo(Authorization, projectId, lat, lng);
 	}
 
 }
