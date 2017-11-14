@@ -39,5 +39,26 @@
 	   WHERE 
 		   order_id = #{orderId}
 	</update>
+
+	<select id="findOrderByStatus" parameterType="java.lang.Integer" resultType="com.sinoauto.dto.c.serviceOrderListDto">
+		select order.order_id as orderId,
+			order.order_no as orderNo,
+			order.order_total_amount as orderAmount,
+			store.store_name as storeName,
+			stoer.back_url as storePicUrl,
+			project.service_project_name as projectName
+		from
+			c_service_order order
+		left join
+			hqls_store store on order.store_id = store.order_id
+		left join
+			c_service_project project on order.service_project_id = project.service_project_id
+		where
+			1=1
+		<if test="status == 1 || status == 2">
+			and order.order_status = #{status}
+		</if>
+			order by order.create_time desc
+	</select>
 	
 </mapper>

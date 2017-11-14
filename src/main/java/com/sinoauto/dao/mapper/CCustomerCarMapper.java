@@ -1,5 +1,8 @@
 package com.sinoauto.dao.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -41,5 +44,21 @@ public interface CCustomerCarMapper {
 	 * @author Wuxiao
 	 */
 	public int insert(@Param("car") CCustomerCar car);
+
+	/**
+	 * 查询客户所有车辆
+	 * @param customerId
+	 * @author Wuxiao
+	 */
+	@Select("select * from c_customer_car where customer_id = #{customerId}")
+	public List<CCustomerCar> findAllCars(@Param("customerId") Integer customerId);
+
+	/**
+	 * 根据主键删除车辆
+	 * @param customerCarId 主键ID
+	 * @author Wuxiao
+	 */
+	@Delete("delete from c_customer_car where customer_car_id = #{customerCarId}")
+	public int deleteCarByPrimaryKey(@Param("customerCarId") Integer customerCarId);
 	
 }

@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sinoauto.dto.c.AddCarInfoDto;
+import com.sinoauto.dto.c.AddOrUpdateCarInfoDto;
 import com.sinoauto.dto.c.CustomerLoginDto;
 import com.sinoauto.dto.c.CustomerUpdateInfoDto;
 import com.sinoauto.entity.RestModel;
-import com.sinoauto.service.c.CCustomerService;
+import com.sinoauto.service.c.CustomerService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 public class CustomerController {
 	
 	@Autowired
-	private CCustomerService customerService;
+	private CustomerService customerService;
 
 	@ApiOperation(value = "顾客登录获取个人信息和token", notes = "wuxiao")
 	@GetMapping("c/login")
@@ -65,7 +65,7 @@ public class CustomerController {
 	
 	@ApiOperation(value = "选车型/添加车辆信息", notes = "wuxiao")
 	@PostMapping("c/addcarinfo")
-	public ResponseEntity<RestModel<String>> addCarInfo(@RequestBody AddCarInfoDto carInfo,
+	public ResponseEntity<RestModel<String>> addCarInfo(@RequestBody AddOrUpdateCarInfoDto carInfo,
 			@RequestHeader String Authorization) {
 		
 		return null;
