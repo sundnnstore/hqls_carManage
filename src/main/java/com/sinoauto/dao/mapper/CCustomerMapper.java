@@ -11,5 +11,12 @@ public interface CCustomerMapper {
 	
 	@Select("select * from c_customer where global_user_id = #{userId}")
 	public CCustomer getCustomerByUserId(@Param("userId")Integer userId);
+	
+	public int insert(@Param("customer")CCustomer customer);
+	
+	@Select("select * from c_customer where mobile = #{mobile}")
+	public CCustomer getCustomerByMobile(@Param("mobile") String mobile);
+	
+	public int update(@Param("customer")CCustomer customer);
 
 }

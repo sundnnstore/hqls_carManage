@@ -8,16 +8,16 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="Ccustomer" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.sinoauto.dao.bean.c.CCustomer" useGeneratedKeys="true" keyProperty="customerId">
 	    INSERT INTO c_customer (
 	        customer_name, global_user_id, head_url, gender, birthday, mobile, balance, is_active, inviter_user_id, create_time
 	    ) VALUES (
-	        #{customerName}, #{globalUserId}, #{headUrl}, #{gender}, #{birthday}, #{mobile}, #{balance}, #{isActive}, #{inviterUserId}, #{createTime}        
+	        #{customerName}, #{globalUserId}, #{headUrl}, #{gender}, #{birthday}, #{mobile}, #{balance}, #{isActive}, #{inviterUserId}, now()        
 	    )
 	</insert>
 
 	<!-- 修改 -->
-	<update id="update" parameterType="Ccustomer">
+	<update id="update" parameterType="com.sinoauto.dao.bean.c.CCustomer">
 	   UPDATE c_customer SET
 		   customer_name = #{customerName}, 
 		   global_user_id = #{globalUserId}, 
@@ -27,8 +27,7 @@
 		   mobile = #{mobile}, 
 		   balance = #{balance}, 
 		   is_active = #{isActive}, 
-		   inviter_user_id = #{inviterUserId}, 
-		   create_time = #{createTime}
+		   inviter_user_id = #{inviterUserId} 
 	   WHERE 
 		   customer_id = #{customerId}
 	</update>

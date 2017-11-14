@@ -8,11 +8,11 @@
 	</sql>
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="CcustomerCar" useGeneratedKeys="true" keyProperty="id">
+	<insert id="insert" parameterType="com.sinoauto.dao.bean.c.CCustomerCar" useGeneratedKeys="true" keyProperty="customerCarId">
 	    INSERT INTO c_customer_car (
 	        customer_id, car_no, car_model_id, car_color, mileage, vin_no, insurance_company_id, insurance_expiration_time, is_default, create_time
 	    ) VALUES (
-	        #{customerId}, #{carNo}, #{carModelId}, #{carColor}, #{mileage}, #{vinNo}, #{insuranceCompanyId}, #{insuranceExpirationTime}, #{isDefault}, #{createTime}        
+	        #{customerId}, #{carNo}, #{carModelId}, #{carColor}, #{mileage}, #{vinNo}, #{insuranceCompanyId}, #{insuranceExpirationTime}, #{isDefault}, now()       
 	    )
 	</insert>
 
